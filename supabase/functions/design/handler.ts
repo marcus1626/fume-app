@@ -162,7 +162,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
       name: `${t.creative.title ?? "Creative"}, graphic design`,
       words,
       choice: { ...(choice ?? {}), verdict, ...(scores ? { review: scores } : {}), ...(kept ? { kept: true } : {}), ...(keptWhy ? { not_kept: keptWhy } : {}), ...(planned ? { planned: true } : {}), ...(blind ? { blind } : {}), ...(second ? { second } : {}) },
-      layout: out.layout ?? null,
+      layout: out.layout ? { ...(out.layout as Record<string, unknown>), ...placed(out) } : null,
       checks: out.checks ?? [],
       attempts: out.attempts ?? [],
       findings,
@@ -187,12 +187,24 @@ const AGAIN_BEFORE_MS = 55_000;
 type Laid = {
   out: {
     ok?: boolean; width?: number; height?: number; layout?: unknown; checks?: unknown[]; attempts?: unknown[];
+    boxes?: Record<string, { x: number; y: number; w: number; h: number }>; logo?: unknown;
     png: { bytes: number; sha256: string }; fig: { bytes: number; sha256: string };
   };
   findings: { severity: string; what: string; by: string }[];
   verdict: string | null;
   scores: { onBrand: number; craft: number | null; like: string[] } | null;
 };
+
+/** Where the service put each part, as shares of the frame, and the logo it placed (or null when it left it off), so
+ *  the Studio lists the layers as they are in the picture. */
+export function placed(out: Laid["out"]): { boxes?: Record<string, { x: number; y: number; w: number; h: number }>; logo?: unknown } {
+  const W = out.width, H = out.height;
+  const share = (n: number, of: number) => Math.round((n / of) * 10_000) / 10_000;
+  const boxes = out.boxes && W && H
+    ? Object.fromEntries(Object.entries(out.boxes).filter(([, b]) => b && [b.x, b.y, b.w, b.h].every(Number.isFinite)).map(([n, b]) => [n, { x: share(b.x, W), y: share(b.y, H), w: share(b.w, W), h: share(b.h, H) }]))
+    : undefined;
+  return { ...(boxes ? { boxes } : {}), ...("logo" in out ? { logo: out.logo ?? null } : {}) };
+}
 
 /** How good a laid-out design is, from the service's checks and Fume's own review: the higher, the better. */
 export function rank(a: Laid): number {

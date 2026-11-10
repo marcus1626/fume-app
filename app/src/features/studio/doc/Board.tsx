@@ -184,6 +184,9 @@ export function Board({
   const scored = !comparing && shown?.state === "done" && measuresOf(shown.evaluation).length > 0 ? shown : undefined;
   const scoresOpen = scoresOn && Boolean(scored);
 
+  // A live design's picture is the PNG Fume made, which carries its words (the design file is where they move, FLOWS
+  // §34.5): the board shows it as made and draws no words over it, until the designer lays the words out by hand.
+  const madeWords = (v: RenderVersion) => Boolean(v.design && !v.drawn && !layers.some((l) => l.belongsTo === v.id));
   const figure = (v: RenderVersion, label: string | undefined, withLayers: boolean) => (
     <figure className="ui-desk-figure" key={v.id}>
       <span
@@ -211,7 +214,7 @@ export function Board({
         )}
         {withLayers && isDesign && (
           <CanvasLayers
-            layers={layers}
+            layers={madeWords(v) ? layers.filter((l) => l.kind === "image") : layers}
             variables={doc.variables}
             format={format}
             brandName={brandName}

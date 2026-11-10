@@ -221,6 +221,11 @@ export interface VersionDesign {
     ground: "photo" | "gradient" | "flat";
     /** The design system's colour role, by name. */
     colour: string;
+    /** Where each part sits in the made picture, 0–1 of the frame (Headline, Subline, CTA, Logo, Words). Live only,
+     *  from 10 Nov 2026; an older design has none. */
+    boxes?: Record<string, { x: number; y: number; w: number; h: number }>;
+    /** Whether Fume placed the logo, and where; unknown on an older design. */
+    logo?: { where: string; variant?: string } | null;
   };
   checks: DesignCheck[];
   findings: DesignFinding[];

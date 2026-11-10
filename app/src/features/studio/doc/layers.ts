@@ -224,6 +224,9 @@ const round = (n: number) => Math.round(n * 10000) / 10000;
 
 // ─── Fume's design as layers ─────────────────────────────────────────────────
 
+/** The design service's name for each part of the words. */
+const BOX_OF = { headline: "Headline", subline: "Subline", cta: "CTA" } as const;
+
 const LOGO_AT: Record<string, { x: number; y: number }> = {
   top_left: { x: 0, y: 0 },
   top_centre: { x: 0.5, y: 0 },
@@ -278,6 +281,8 @@ export function designedLayers(v: RenderVersion, book: DesignBook | undefined, f
   ): Layer | undefined => {
     if (!text) return undefined;
     const l = at(role);
+    // Live: where the design service set the words in the made picture.
+    const box = d.layout?.boxes?.[BOX_OF[role]];
     const layer: Layer = {
       id: id(role),
       kind: "text",
@@ -286,15 +291,15 @@ export function designedLayers(v: RenderVersion, book: DesignBook | undefined, f
       // The plain style too, for where the words are drawn without the design system (Check's edit).
       style: role === "headline" ? "headline" : role === "subline" ? "small" : "body",
       text: l?.text ?? text,
-      x: l ? l.x / 100 : margin,
-      y: l ? l.y / 100 : fallbackY,
-      w: l ? l.w / 100 : 1 - 2 * margin,
+      x: l ? l.x / 100 : (box?.x ?? margin),
+      y: l ? l.y / 100 : (box?.y ?? fallbackY),
+      w: l ? l.w / 100 : (box?.w ?? 1 - 2 * margin),
       h: 0,
       align: l?.align ?? d.layout?.align ?? "left",
       ...(l && role !== "cta" ? { colour: l.colour } : {}),
       visible: Boolean(l) || !drawn,
     };
-    return { ...layer, h: heightOf(layer, book, format) };
+    return { ...layer, h: box?.h ?? heightOf(layer, book, format) };
   };
   const foot = 1 - (grid?.safeBottomPx ?? 96) / H;
   const cta = words("cta", d.words?.cta, foot - 0.06);
@@ -306,22 +311,26 @@ export function designedLayers(v: RenderVersion, book: DesignBook | undefined, f
   if (head) out.push(head);
   // The logo: where the design system places it on this format, as wide as it says; hidden, since Fume adds it only
   // where the label does not show the name.
+  // Live, the design says whether Fume placed it, where, and which version of it.
+  const placedLogo = d.layout?.logo;
+  const logoBox = placedLogo ? d.layout?.boxes?.Logo : undefined;
   const place = book?.logo.placements.find((p) => p.format === format);
-  const w = (place?.widthPct ?? 20) / 100;
-  const spot = LOGO_AT[place?.where ?? "top_left"]!;
-  const h = (w * W * 0.24) / H;
+  const w = logoBox?.w ?? (place?.widthPct ?? 20) / 100;
+  const spot = LOGO_AT[placedLogo?.where ?? place?.where ?? "top_left"] ?? LOGO_AT.top_left!;
+  const h = logoBox?.h ?? (w * W * 0.24) / H;
   out.push({
     id: id("logo"),
     kind: "logo",
     name: "Logo",
     component: "logo",
-    x: round(spot.x === 0 ? margin : spot.x === 1 ? 1 - margin - w : (1 - w) / 2),
-    y: round(spot.y === 0 ? (grid?.safeTopPx ?? 72) / H : foot - h),
+    x: logoBox?.x ?? round(spot.x === 0 ? margin : spot.x === 1 ? 1 - margin - w : (1 - w) / 2),
+    y: logoBox?.y ?? round(spot.y === 0 ? (grid?.safeTopPx ?? 72) / H : foot - h),
     w,
     h,
     variant:
-      d.layout?.colour === "on_photo" ? book?.logo.versions.find((x) => /revers/i.test(x.name))?.name : undefined,
-    visible: false,
+      placedLogo?.variant ??
+      (d.layout?.colour === "on_photo" ? book?.logo.versions.find((x) => /revers/i.test(x.name))?.name : undefined),
+    visible: Boolean(placedLogo),
   });
   return out;
 }

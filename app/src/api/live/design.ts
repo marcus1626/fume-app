@@ -75,6 +75,27 @@ export async function readDesigns(
   return { layers, books, docs };
 }
 
+/** Where the design service put each part, and the logo it placed, as the design function keeps them (10 Nov). */
+function placedOf(l: Json): Pick<NonNullable<VersionDesign["layout"]>, "boxes" | "logo"> {
+  const out: Pick<NonNullable<VersionDesign["layout"]>, "boxes" | "logo"> = {};
+  const share = (x: unknown) => (typeof x === "number" && x >= 0 && x <= 1 ? x : undefined);
+  if (l.boxes && typeof l.boxes === "object") {
+    const boxes: Record<string, { x: number; y: number; w: number; h: number }> = {};
+    for (const [name, b] of Object.entries(l.boxes as Record<string, Json>)) {
+      const [x, y, w, h] = [share(b?.x), share(b?.y), share(b?.w), share(b?.h)];
+      if (x !== undefined && y !== undefined && w !== undefined && h !== undefined) boxes[name] = { x, y, w, h };
+    }
+    if (Object.keys(boxes).length) out.boxes = boxes;
+  }
+  if (l.logo === null) out.logo = null;
+  else if (l.logo && typeof l.logo === "object") {
+    const where = str((l.logo as Json).where);
+    const variant = str((l.logo as Json).variant);
+    if (where) out.logo = { where, ...(variant ? { variant } : {}) };
+  }
+  return out;
+}
+
 const CHECKS = new Set<DesignCheck["check"]>(["fits", "lines", "contrast", "busy", "covers", "font"]);
 const str = (x: unknown) => (typeof x === "string" ? x : undefined);
 const num = (x: unknown) => (typeof x === "number" && Number.isFinite(x) ? x : undefined);
@@ -141,6 +162,7 @@ export function toVersionDesign(
             // The brand's own block of colour is a flat ground under the words.
             ground: ground === "gradient" ? "gradient" : ground === "flat" || ground === "block" ? "flat" : "photo",
             colour: str(l.colour) ?? "on_photo",
+            ...placedOf(l),
           },
         }
       : {}),

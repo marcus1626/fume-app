@@ -1,5 +1,5 @@
 import { assertEquals } from "jsr:@std/assert@1";
-import { type Deps, designLayer, handleDesign } from "./handler.ts";
+import { type Deps, designLayer, handleDesign, placed } from "./handler.ts";
 import { keepClearOf, layoutsOf, type Take, wordsOf } from "./layer.ts";
 
 const take: Take = {
@@ -318,4 +318,11 @@ Deno.test("a design Fume's own review sends back is laid out once more, and the 
   late.d.service.settle = () => Promise.resolve();
   await designLayer(take, late.d);
   assertEquals(late.calls.lay.length, 1);
+});
+
+Deno.test("the layout keeps where each part sits, as shares of the frame, and the logo placed", () => {
+  const out = { width: 1000, height: 2000, boxes: { Headline: { x: 100, y: 500, w: 800, h: 200 }, Bad: { x: NaN, y: 0, w: 1, h: 1 } }, logo: { where: "top_left", variant: "Reversed", contrast: 6 }, png: { bytes: 1, sha256: "a" }, fig: { bytes: 1, sha256: "b" } };
+  assertEquals(placed(out), { boxes: { Headline: { x: 0.1, y: 0.25, w: 0.8, h: 0.1 } }, logo: { where: "top_left", variant: "Reversed", contrast: 6 } });
+  assertEquals(placed({ png: out.png, fig: out.fig }), {});
+  assertEquals(placed({ ...out, logo: null, boxes: undefined }), { logo: null });
 });
