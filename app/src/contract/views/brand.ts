@@ -17,6 +17,7 @@ import type {
   Understanding,
 } from "../entities/brand";
 import type { Product } from "../entities/products";
+import type { BrandFootage } from "../entities/video";
 
 export interface BrandDnaView {
   dna: BrandDna;
@@ -43,6 +44,8 @@ export interface BrandAssetsView {
   presets: BrandPreset[];
   models: BrandModel[];
   references: BrandReference[];
+  /** The brand's own footage, for the Video studio (FLOWS §27). */
+  footage?: BrandFootage[];
 }
 
 /** The brand's books (FLOWS §30), newest version first: only the versions the reader may see. A customer reads a

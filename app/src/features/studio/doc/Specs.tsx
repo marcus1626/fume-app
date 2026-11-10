@@ -1,8 +1,8 @@
 // The desk's left panel (FLOWS §9.1): specs only. The mode picker on top (a grid menu in a popover, filtered by the
 // studio), then folding sections with only the specs the mode uses: format, count and image model; the brand's
 // references (library, upload, make one); the product and its Product Truth, each fact changeable for this creative or
-// for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design shows the layers in
-// place of the product's data.
+// for the product itself (FLOWS §9.5); the brand's models with their state (FLOWS §9.6). Design has its own left panel
+// since round 15: the frame and its layers, as in Figma (Layers.tsx).
 // The panel scrolls when its open part is taller than it. The product is one row with only what needs a look under it:
 // the details the picked version reads wrong and the facts changed for this creative; "All 20 facts" opens the whole
 // product in a right panel over the board. A mode switch asks first, in the popover, and says what carries over, what
@@ -46,15 +46,7 @@ import {
   useProductKinds,
   useStudioKit,
 } from "../../../api/hooks";
-import type {
-  BrandAssetsView,
-  CreativeDocument,
-  Format,
-  Layer,
-  ProductOverride,
-  Specs,
-  StudioMode,
-} from "../../../contract";
+import type { BrandAssetsView, CreativeDocument, Format, ProductOverride, Specs, StudioMode } from "../../../contract";
 import * as copy from "../../../copy";
 import { AllProductsSheet, confirmed } from "../../fume/AllProducts";
 import { fidelity, pct, valueWords } from "../../products/spec";
@@ -72,16 +64,12 @@ export interface SpecsProps {
   mode?: StudioMode;
   modes: StudioMode[];
   specs: Specs;
-  layers: Layer[];
   assets?: BrandAssetsView;
   brandName: string;
   approver: string;
   name: (id: string | undefined) => string;
   onSpecs: (specs: Specs, key: string) => void;
-  onLayers: (layers: Layer[], key: string) => void;
   onMode: (modeId: string) => void;
-  selectedLayer?: string;
-  onSelectLayer: (id: string | undefined) => void;
 }
 
 export function SpecsPanel(props: SpecsProps) {
@@ -91,6 +79,8 @@ export function SpecsPanel(props: SpecsProps) {
   const sections: StudioFold[] = [];
   const placements = usePlacements().data;
   const placement = placements && mode?.output === "creative" ? placementOf(specs, placements) : undefined;
+  // Round 15 (PROPOSED 9 Nov 2026), Marcus: scores come after something is made, so they are never this panel's first
+  // section; the shown version's scores open from the board ("Scores" on the rail, or the warning above the picture).
 
   sections.push({
     id: "Output",
@@ -124,21 +114,22 @@ export function SpecsPanel(props: SpecsProps) {
             onChange={(n) => props.onSpecs({ ...specs, count: n }, "count")}
           />
         )}
-        <StudioSelect
-          label="Generator"
-          id="spec-model"
-          value={specs.imageModel}
-          options={IMAGE_MODELS.map((m) => ({ value: m, label: m }))}
-          help="Fume’s people only."
-          onChange={(m) => props.onSpecs({ ...specs, imageModel: m }, "imageModel")}
-        />
+        {/* Only where a picture is generated (round 15): never on a layout of words */}
+        {!isDesign && (
+          <StudioSelect
+            label="Generator"
+            id="spec-model"
+            value={specs.imageModel}
+            options={IMAGE_MODELS.map((m) => ({ value: m, label: m }))}
+            help="Fume’s people only."
+            onChange={(m) => props.onSpecs({ ...specs, imageModel: m }, "imageModel")}
+          />
+        )}
       </>
     ),
   });
 
-  if (isDesign)
-    sections.push({ id: "Layers", title: "Layers", meta: props.layers.length, children: <LayerList {...props} /> });
-  else if (uses.has("product"))
+  if (!isDesign && uses.has("product"))
     sections.push({
       id: "Product",
       title: "Product",
@@ -175,7 +166,7 @@ export function SpecsPanel(props: SpecsProps) {
         key={`${doc.modeId}-${doc.studio}`}
         label="Specs"
         sections={sections}
-        initialOpen={["Product", "Layers", "Output", "References", "Models"].filter((id) =>
+        initialOpen={["Scores", "Product", "Output", "References", "Models"].filter((id) =>
           sections.some((s) => s.id === id),
         )}
       />
@@ -192,6 +183,11 @@ const listWords = (xs: string[]) => (xs.length < 2 ? xs.join("") : `${xs.slice(0
 /** What a switch from one mode to another does, in one sentence: the sections that carry over, the ones set aside (the
  *  last version keeps them, so going back or reopening that version brings them back), the versions. */
 export function switchWords(doc: CreativeDocument, from: StudioMode | undefined, to: StudioMode): string {
+  // A video's two modes show the same edit in other panels (FLOWS §34.6): a switch never changes the edit.
+  if (doc.studio === "video")
+    return `The same video in other panels: ${
+      to.id === "m-video-motion" ? "the styles, and a track for each layer" : "the library, and the shots on one track"
+    }. Nothing in the edit changes.`;
   const keys = new Set(to.variables.map((v) => v.key));
   const sections = from?.sections ?? [];
   // A mode's "Product" section is where the product sits in the frame; the product itself is a spec.
@@ -216,7 +212,7 @@ export function switchWords(doc: CreativeDocument, from: StudioMode | undefined,
   return `${parts.join("; ")}.${doc.versions.length ? " The versions stay." : ""}`;
 }
 
-function ModePicker({
+export function ModePicker({
   doc,
   mode,
   modes,
@@ -797,48 +793,6 @@ function Models({ specs, onSpecs, assets, name, approver }: SpecsProps) {
           </li>
         );
       })}
-    </ul>
-  );
-}
-
-// ─── Layers (Design) ─────────────────────────────────────────────────────────
-
-const layerIcon = { image: "image", text: "type", logo: "tag", shape: "square" } as const;
-
-function LayerList({ layers, onLayers, selectedLayer, onSelectLayer }: SpecsProps) {
-  return (
-    <ul className="ui-desk-layer-list" aria-label="Layers">
-      {[...layers].reverse().map((l) => (
-        <li key={l.id} className="ui-desk-layer-row" aria-current={selectedLayer === l.id ? "true" : undefined}>
-          <button
-            type="button"
-            className="ui-desk-layer-pick"
-            disabled={l.locked}
-            onClick={() => onSelectLayer(selectedLayer === l.id ? undefined : l.id)}
-          >
-            <Icon name={layerIcon[l.kind]} />
-            <span className="ui-desk-layer-name">{l.name}</span>
-            {l.locked && <Icon name="lock" className="ui-desk-layer-lock" />}
-          </button>
-          {!l.locked && (
-            <Button
-              size="sm"
-              variant="quiet"
-              iconOnly
-              icon="eye"
-              className="ui-desk-layer-eye"
-              data-hidden={l.visible ? undefined : ""}
-              aria-label={l.visible ? `Hide ${l.name}` : `Show ${l.name}`}
-              onClick={() =>
-                onLayers(
-                  layers.map((x) => (x.id === l.id ? { ...x, visible: !x.visible } : x)),
-                  `layer-${l.id}-visible`,
-                )
-              }
-            />
-          )}
-        </li>
-      ))}
     </ul>
   );
 }

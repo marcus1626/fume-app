@@ -243,8 +243,39 @@ export type DesignRole =
 export type DesignFormat = "feed" | "square" | "story" | "banner";
 export type DesignStyleName =
   "display" | "h1" | "h2" | "subline" | "body" | "caption" | "label" | "cta" | "price" | "legal";
+/** The nine parts of a creative the design engine places words with. Round 15 (PROPOSED 9 Nov 2026): a component's
+ *  `role`; the components Fume writes are still named by it. */
 export type DesignComponentName =
   "headline" | "subline" | "body" | "cta" | "price" | "badge" | "legal" | "product_name" | "logo";
+
+/** Round 15 (PROPOSED 9 Nov 2026): what a component of the brand's own is built from. */
+export type DesignComponentBase = "text" | "button" | "badge" | "shape" | "image" | "logo";
+
+/** One component of the design system. Round 15 (PROPOSED 9 Nov 2026): components are the brand's own. Fume writes
+ *  the nine the design engine knows, each named by its role; the brand's people add their own from a base, name them,
+ *  set them in the brand's tokens and take any out. Code that places words finds a component by its role
+ *  (domain/designComponents.ts `componentFor`), never by a name the brand may change. */
+export interface DesignComponent {
+  /** One of the nine roles for the components Fume writes; any name the brand gives one of its own ("Wheel"). */
+  name: DesignComponentName | (string & {});
+  purpose: string;
+  style: DesignStyleName;
+  colour: DesignRole;
+  background: DesignRole | null;
+  radius: "none" | "small" | "large" | "pill";
+  paddingPx: number;
+  rules: string[];
+  /** Round 15: what the design engine places with it. Left out on the nine Fume writes (their name is their role) and
+   *  on a component of the brand's own that only a designer places. One component per role. */
+  role?: DesignComponentName;
+  /** Round 15: what it is built from; left out on the nine Fume writes (read from the role). */
+  base?: DesignComponentBase;
+  /** Round 15: its width and height at a frame 1080 wide, when its words do not set them: a shape, an image, a round
+   *  badge (with pill corners it is a circle). */
+  sizePx?: number;
+  /** Round 15: the words the book shows it with ("25 %"); the nine take theirs from the examples. */
+  sample?: string;
+}
 
 /** The brand's design system for its campaign creatives. Sizes are in pixels at a frame 1080 pixels wide; code builds
  *  the CSS and measures the contrast of every pair that carries words. */
@@ -286,16 +317,7 @@ export interface DesignBook {
     placements: { format: DesignFormat; where: LogoPlace; widthPct: number }[];
   };
   photoText: { rules: string[]; scrim: "none" | "gradient" | "flat"; scrimOpacity: number };
-  components: {
-    name: DesignComponentName;
-    purpose: string;
-    style: DesignStyleName;
-    colour: DesignRole;
-    background: DesignRole | null;
-    radius: "none" | "small" | "large" | "pill";
-    paddingPx: number;
-    rules: string[];
-  }[];
+  components: DesignComponent[];
   rules: { do: string[]; dont: string[] };
   /** Examples of graphic design: the layers on a photograph, in per cent of the frame. */
   examples: {
@@ -413,6 +435,77 @@ interface BookVersion {
   checkedAt?: Instant;
   approvedBy?: Id;
   approvedAt?: Instant;
+  /** The lines Fume's people changed by hand in this version, edited in place (FLOWS §34.3, PROPOSED). */
+  edits?: BookEditMark[];
+  /** Round 15 (PROPOSED 9 Nov 2026): what the Engine proposes for this version. Only Fume's people read them. */
+  proposals?: BookProposal[];
+}
+
+/** Round 15 (PROPOSED 9 Nov 2026): a block the Engine proposes for a draft of a book, read from the brand's own
+ *  material: a component for the design system, or a block of the Tone of Voice. It sits beside the book, never in its
+ *  body: Fume's expert adds it ("Add it", `answerBookProposal`) or sets it aside ("Not now"). So nothing proposed
+ *  reaches a creative before it is added and its version is checked, and a customer never reads a proposal. */
+export interface BookProposal {
+  id: Id;
+  /** A component for the design system. */
+  component?: DesignComponent;
+  /** A block for the Tone of Voice's How we speak. */
+  block?: VoiceTrait;
+  /** Why the Engine proposes it, in a sentence. */
+  why: string;
+  /** What it read it from, as the end of "The Engine proposes this, from …": "the set's offer story and 3 past offers". */
+  from: string;
+  state: "open" | "added" | "set_aside";
+  createdAt: Instant;
+  answeredBy?: Id;
+  answeredAt?: Instant;
+}
+
+/** One edit to a book's words in place (FLOWS §34.3, PROPOSED): the path of a line in the body, as
+ *  "speak.traits.1.do" or "identity.believe.2", and its new words. `to: null` takes an item out of a list; an index one
+ *  past a list's end adds an item; `insert` puts one in before the item at that index (an undo of taking it out). */
+export interface BookEdit {
+  path: string;
+  to: string | null;
+  insert?: boolean;
+  /** With insert, the undo of taking a line out: the line comes back as it was, with the mark it had (null: a line
+   *  nobody had changed), not as a new line. */
+  mark?: BookEditMark | null;
+  // Round 15 (PROPOSED 9 Nov 2026): a book's blocks are open. Two lists hold blocks, not lines: the Tone of Voice's
+  // blocks ("speak.traits") and the design system's components ("components"). In them a block is put in whole, moved,
+  // or taken out whole (`to: null` on its path, as a line). A component's settings ("components.8.style",
+  // ".colour", ".background", ".radius", ".paddingPx", ".sizePx", ".role", ".name") take words: the brand's token's
+  // name, figures for pixels, "none" for no ground or no role (domain/bookEdits.ts).
+  /** A whole block, put in before the block at the path's index (added at the end at the list's length); `to` is null. */
+  item?: VoiceTrait | DesignComponent;
+  /** With item, the undo of taking a block out: the marks its lines had, at the place it comes back to. */
+  marks?: BookEditMark[];
+  /** The block at the path moves to this place in its list; `to` is null. */
+  moveTo?: number;
+}
+
+/** A line someone changed by hand: who, when, and what it said before (null for an item they added). */
+export interface BookEditMark {
+  path: string;
+  by: Id;
+  at: Instant;
+  from: string | null;
+  /** Round 15 (PROPOSED 9 Nov 2026): a block that came in from the Engine's proposal, by "Add it". */
+  proposal?: Id;
+}
+
+/** One line of copy, held against the brand's Tone of Voice (FLOWS §34.3, PROPOSED): the same reading as the plan's
+ *  copy check (§31), for a line someone tries on the Tone of Voice page. */
+export interface CopyLineCheck {
+  text: string;
+  channel?: VoiceChannel;
+  /** "5 of 6 words": its length against the channel's, when the channel has one. */
+  length?: { words: number; max: number };
+  findings: { kind: "avoided_word" | "unbacked_claim" | "off_voice" | "too_long"; words?: string; note: string }[];
+  /** Fume's version of the line in the voice, when it found something. */
+  rewrite?: string;
+  /** The version of the Tone of Voice it read. */
+  version: number;
 }
 
 /** One version of a book; no body while it is being written, or when writing it failed. */

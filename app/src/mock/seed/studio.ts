@@ -1,10 +1,12 @@
 // The Studio: creative documents with their versions and the Engine's reads, the placements a creative is made for,
 // and the kit and sessions of the earlier Studio.
+import { designEvaluation, withMeasures } from "../measures";
 import type {
   CastMember,
   CreativeDocument,
   CreativeType,
   DetailFind,
+  EnginePrompt,
   Generation,
   Layer,
   ProductFix,
@@ -18,6 +20,7 @@ import type {
 import { models } from "./brandAssets";
 import { at, img, ok } from "./helpers";
 import { defaults } from "./studioModes";
+import { videoDocuments } from "./video";
 
 // ─── Creative documents ─────────────────────────────────────────────────────
 
@@ -53,28 +56,140 @@ const version = (
   ...extra,
 });
 
+// The prompt behind a render, as the Engine keeps it (FLOWS §29): what it had to carry and what the checks said.
+const codeChecks: EnginePrompt["codeChecks"] = [
+  { text: "No words for the picture to print", pass: true },
+  { text: "No studio equipment in the frame", pass: true },
+  { text: "No file names or links", pass: true },
+  { text: "None of LYSNE's forbidden words", pass: true },
+  { text: "The locked parts unchanged: the product's name, size and pictures", pass: true },
+];
+const carried = (item: string, note?: string) => ({ item, verdict: "carried" as const, ...(note ? { note } : {}) });
+const lysneFindings = [
+  carried("Night Body Oil, 100 ml, amber glass with a burgundy matte cap", "From the verified facts, word for word"),
+  carried("Warm low light from one side, like a lamp in the evening"),
+  carried("Linen, travertine and walnut; nothing glossy"),
+  carried("The bottle is the one sharp thing; the rest falls soft"),
+  { item: "No people, no hands", verdict: "not_visible" as const, note: "Nothing in the picture to show it" },
+];
+// What the Engine had for a LYSNE prompt, piece by piece (engine_prompts.ledger): what went in, how the check looked for
+// it, and why the rest stayed out.
+type Ledger = NonNullable<EnginePrompt["ledger"]>;
+const fact = (what: string, why?: string): Ledger[number] =>
+  why
+    ? { source: "product_fact", what, used: false, why }
+    : { source: "product_fact", what, used: true, how: "verbatim", passed: true };
+const meant = (source: Ledger[number]["source"], what: string): Ledger[number] => ({
+  source,
+  what,
+  used: true,
+  how: "meaning",
+  passed: true,
+});
+const left = (source: Ledger[number]["source"], what: string, why: string): Ledger[number] => ({
+  source,
+  what,
+  used: false,
+  why,
+});
+const read = (source: Ledger[number]["source"], what: string): Ledger[number] => ({
+  source,
+  what,
+  used: true,
+  how: "guidance",
+});
+const lysneLedger: Ledger = [
+  fact("Bottle: 100 ml amber glass bottle"),
+  fact("Cap: Burgundy matte cap, never glossy"),
+  fact("Label: The LYSNE wordmark in white on the front"),
+  fact("Scent: Cedar, vetiver and bergamot", "A scent fact is for the words, not the picture."),
+  fact("Use: Massage into damp skin before bed", "A use fact is for the words, not the picture."),
+  fact("Travel size: 30 ml", "Not verified yet."),
+  meant("brand_rule", "Imagery: Warm low light from one side, like a lamp in the evening"),
+  meant("brand_rule", "Imagery: Linen, travertine and walnut; nothing glossy"),
+  meant("brand_rule", "Imagery: No people, no hands"),
+  left(
+    "brand_rule",
+    "Voice: Quiet and unhurried, never salesy",
+    "A voice rule is for the words and the layout, not the picture.",
+  ),
+  left(
+    "brand_rule",
+    "Claims: Never say it helps you sleep",
+    "A claims rule is for the words and the layout, not the picture.",
+  ),
+  meant("taste", "Analog film, soft halation"),
+  meant("taste", "Shallow depth of field"),
+  meant("taste", "Avoid hard flash and clinical white"),
+  left("taste", "Brass and gold details", "Not sure enough yet (48 %)."),
+  meant("brain", "Picture: The bottle on a bedside ledge at dusk"),
+  meant("brain", "Colour: Burgundy #5B1A23 (accent)"),
+  meant("brain", "Market: Norway, women 30 to 50"),
+  left("brain", "Colour: Bone #EDE6DA (ground)", "A text or ground colour is for layouts."),
+  left("brain", "Picture: Morning light in a white bathroom", "Proposed, not confirmed by the brand."),
+  left("brain", "Audience: Reads slowly, buys once she trusts it", "About the words or the business, not the picture."),
+  read("lesson", "Avoid: Hands in the frame read as stock"),
+  read("lesson", "Prefer: The bottle low in the frame, with air above it"),
+  read("lesson", "Prefer: Travertine reads warmer than marble"),
+  { source: "picture", what: "The product's own photograph", used: true, how: "reference" },
+  read("plan", "An approved prompt: Analog 35 mm photograph, warm evening light from a single lamp…"),
+];
+/** The ledger of the stopped try: the cap and the rule against gloss went in, and the check did not find them. */
+const blockedLedger: Ledger = lysneLedger.map((e) =>
+  e.what.startsWith("Cap:") || e.what.includes("nothing glossy") ? { ...e, passed: false } : e,
+);
+
+const prompt = (text: string, extra: Partial<EnginePrompt> = {}): EnginePrompt => ({
+  status: "validated",
+  model: "Nano Banana Pro",
+  method: "Product on a surface",
+  text,
+  tries: 1,
+  findings: lysneFindings,
+  codeChecks,
+  llmUsd: 0.002,
+  ledger: lysneLedger,
+  ...extra,
+});
+const scenePrompt = (place: string) =>
+  `Analog 35 mm photograph, warm evening light from a single lamp to the left. A 100 ml amber glass bottle with a burgundy matte cap, LYSNE Night Body Oil, stands ${place} on a travertine ledge beside folded linen. Walnut wall softly out of focus behind it. The bottle is the only sharp thing; shallow depth of field, fine film grain, soft halation, warm brown shadows. Calm, unhurried, the hour before sleep.`;
+
 const sceneVars = { ...defaults("m-scene") };
 
-/** The email header's layers in the Design studio. */
+/** The email header's layers in the Design studio: the words at the top, clear of the label; the logo reversed on
+ *  the dark picture, as LYSNE's design system asks. */
 export const layoutLayers: Layer[] = [
   {
     id: "ly-img",
     kind: "image",
-    name: "Image v3",
+    name: "Picture",
     x: 0,
     y: 0,
     w: 1,
     h: 1,
-    image: img("05-01"),
+    image: img("05-01", "story"),
     visible: true,
     locked: true,
+    fit: "fill",
+  },
+  {
+    id: "ly-body",
+    kind: "text",
+    name: "Line",
+    x: 0.08,
+    y: 0.24,
+    w: 0.6,
+    h: 0.05,
+    text: "Night Body Oil · 100 ml",
+    style: "small",
+    visible: true,
   },
   {
     id: "ly-head",
     kind: "text",
     name: "Headline",
     x: 0.08,
-    y: 0.72,
+    y: 0.13,
     w: 0.84,
     h: 0.1,
     text: "For the hour before sleep.",
@@ -82,18 +197,16 @@ export const layoutLayers: Layer[] = [
     visible: true,
   },
   {
-    id: "ly-body",
-    kind: "text",
-    name: "Line",
+    id: "ly-logo",
+    kind: "logo",
+    name: "LYSNE logo",
     x: 0.08,
-    y: 0.83,
-    w: 0.6,
+    y: 0.07,
+    w: 0.2,
     h: 0.05,
-    text: "Night Body Oil · 100 ml",
-    style: "small",
     visible: true,
+    variant: "Wordmark, reversed",
   },
-  { id: "ly-logo", kind: "logo", name: "LYSNE logo", x: 0.08, y: 0.07, w: 0.2, h: 0.05, visible: true },
 ];
 
 const seeded: CreativeDocument[] = [
@@ -134,7 +247,13 @@ const seeded: CreativeDocument[] = [
     layers: [],
     versions: [
       version("rv-1", 1, "05-08", 90, sceneVars, {
-        evaluation: { ...ok, productTruth: "flag", notes: ["Cap reads glossy"] },
+        evaluation: {
+          ...ok,
+          productTruth: "flag",
+          notes: ["Cap reads glossy"],
+          scores: { product: 74, engine: 85, why: [{ score: "product", text: "The cap reads glossy; it is matte" }] },
+        },
+        prompt: prompt(scenePrompt("in the centre")),
       }),
       version(
         "rv-2",
@@ -142,7 +261,11 @@ const seeded: CreativeDocument[] = [
         "04-06",
         60,
         { ...sceneVars, productSize: 34 },
-        { instruction: "Make the bottle a little bigger" },
+        {
+          instruction: "Make the bottle a little bigger",
+          evaluation: { ...ok, scores: { product: 88, engine: 87 } },
+          prompt: prompt(scenePrompt("a little larger in the frame, in the centre"), { tries: 2 }),
+        },
       ),
       version(
         "rv-3",
@@ -150,7 +273,73 @@ const seeded: CreativeDocument[] = [
         "05-01",
         20,
         { ...sceneVars, productSize: 28, productPlace: "low" },
-        { instruction: "Move the bottle lower, more air above" },
+        {
+          instruction: "Move the bottle lower, more air above",
+          // The size on the label reads 200 ml (the product fix's demo), so the product is under the bar on Size
+          evaluation: {
+            ...ok,
+            productTruth: "flag",
+            scores: {
+              product: 74,
+              engine: 91,
+              why: [{ score: "product", text: "The size on the label reads 200 ml; it is 100 ml" }],
+            },
+          },
+          prompt: prompt(scenePrompt("low in the frame with calm air above it")),
+        },
+      ),
+      // Anna's ask works against two of LYSNE's rules. The Engine says so and renders it anyway: the picture carries a
+      // warning and its scores, and Anna decides (FLOWS §34.1, PROPOSED).
+      version(
+        "rv-4",
+        4,
+        "05-01g",
+        6,
+        { ...sceneVars, productSize: 28, productPlace: "low" },
+        {
+          instruction: "Add a glossy reflection on the cap",
+          evaluation: {
+            productTruth: "flag",
+            brandRules: "flag",
+            artefacts: "none",
+            notes: ["The cap reads glossy"],
+            scores: {
+              product: 64,
+              engine: 58,
+              why: [
+                { score: "engine", text: "A glossy reflection, where LYSNE allows nothing glossy" },
+                { score: "product", text: "The cap reads glossy; it is matte" },
+              ],
+            },
+          },
+          prompt: prompt(
+            scenePrompt("low in the frame with calm air above it").replace(
+              "a burgundy matte cap",
+              "a burgundy cap with a glossy reflection",
+            ),
+            {
+              status: "warned",
+              reason: "A glossy cap works against the verified facts and the brand's rule: nothing glossy.",
+              tries: 3,
+              llmUsd: 0.006,
+              ledger: blockedLedger,
+              findings: [
+                {
+                  item: "Burgundy matte cap, never glossy (verified fact)",
+                  verdict: "against",
+                  note: "The instruction asks for a glossy reflection on the cap",
+                },
+                {
+                  item: "Linen, travertine and walnut; nothing glossy",
+                  verdict: "against",
+                  note: "A glossy reflection is the one thing the rule rules out",
+                },
+                ...lysneFindings.slice(1, 2),
+                ...lysneFindings.slice(3),
+              ],
+            },
+          ),
+        },
       ),
     ],
     pickedVersionId: "rv-3",
@@ -275,12 +464,18 @@ const seeded: CreativeDocument[] = [
     slot: "Email · header",
     studio: "design",
     modeId: "m-layout",
-    variables: defaults("m-layout"),
+    // The words sit at the top, clear of the label (round 15: Align is where they are on the canvas).
+    variables: { ...defaults("m-layout"), align: "top" },
     specs: specs({ format: "story", count: 1 }),
     overrides: [],
     layers: layoutLayers,
     edits: [],
-    versions: [version("rv-email-1", 1, "05-01", 15, defaults("m-layout"), { specs: specs({ format: "story" }) })],
+    versions: [
+      version("rv-email-1", 1, "05-01", 15, defaults("m-layout"), {
+        image: img("05-01", "story"),
+        specs: specs({ format: "story" }),
+      }),
+    ],
     pickedVersionId: "rv-email-1",
     state: "draft",
     by: "u-anna",
@@ -330,18 +525,28 @@ const fixes: Record<string, ProductFix[]> = {
   ],
 };
 
+/** A version's scores as its studio scores it (FLOWS §35.3): a design by what code measured on it, else a picture or
+ *  a video from its two scores. */
+function scored(d: CreativeDocument, v: CreativeDocument["versions"][number]) {
+  if (v.design?.state === "made") return designEvaluation(v.evaluation, v.design.checks, v.number);
+  return withMeasures(v.evaluation, d.studio, v.number);
+}
+
 /** Every document with what the Engine read on its renders, its fixes and its look sources; a feed render is placed in
  *  the Instagram feed. */
-export const documents: CreativeDocument[] = seeded.map((d) => ({
-  ...d,
-  versions:
-    d.id === "doc-autumn-m3"
+export const documents: CreativeDocument[] = [
+  ...seeded.map((d) => ({
+    ...d,
+    versions: (d.id === "doc-autumn-m3"
       ? d.versions.map((v) => (detailFinds[v.id] ? { ...v, details: detailFinds[v.id] } : v))
-      : d.versions,
-  fixes: fixes[d.id] ?? [],
-  sources: d.sources ?? { Light: "brand", Camera: "brand" },
-  specs: d.studio === "render" && d.specs.format === "feed" ? { ...d.specs, placementId: "pl-ig-feed" } : d.specs,
-}));
+      : d.versions
+    ).map((v) => ({ ...v, evaluation: scored(d, v) })),
+    fixes: fixes[d.id] ?? [],
+    sources: d.sources ?? { Light: "brand", Camera: "brand" },
+    specs: d.studio === "render" && d.specs.format === "feed" ? { ...d.specs, placementId: "pl-ig-feed" } : d.specs,
+  })),
+  ...videoDocuments,
+];
 
 // ─── Placements: the format picker (the one list, in src/domain/placements.ts) ───────
 

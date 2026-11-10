@@ -4,8 +4,11 @@ import {
   FumeError,
   type Batch,
   type Campaign,
+  type EngineField,
   type EngineMessage,
   type EngineRunDraft,
+  type EngineThread,
+  type EngineTopic,
   type Format,
   type FumeApi,
   type Id,
@@ -16,8 +19,30 @@ import { canBeMade } from "../domain/products";
 import type { Mock } from "./context";
 import { qaViews } from "./quality";
 import { img } from "./seed/helpers";
+import { writeFor } from "./engineWrite";
 
-type Calls = "engineChat" | "engineSay" | "answerEngineWidget" | "batches" | "startBatch";
+type Calls =
+  "engineChat" | "engineSay" | "answerEngineWidget" | "engineThreads" | "engineWrite" | "batches" | "startBatch";
+
+/** Words that ask back about an earlier chat, left out when finding what it was about. */
+const BACK_WORDS = new Set([
+  "what",
+  "said",
+  "about",
+  "earlier",
+  "last",
+  "time",
+  "remind",
+  "agree",
+  "decide",
+  "that",
+  "this",
+  "with",
+  "again",
+]);
+
+/** Whether two messages are in the same thread: the same project, or both in the brand's Everything. */
+const sameTopic = (a?: EngineTopic, b?: EngineTopic) => a?.kind === b?.kind && a?.id === b?.id;
 
 /** Renders in the demo come from this pool, so every new version looks different. */
 export const POOL: Record<string, string[]> = {
@@ -115,7 +140,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
   const now = () => m.now();
   const later = (fn: () => void, ticks = 12) => setTimeout(fn, m.latency * ticks);
 
-  function engineSays(workspaceId: Id, text: string, widget?: EngineMessage["widget"]) {
+  function engineSays(workspaceId: Id, text: string, widget?: EngineMessage["widget"], topic?: EngineTopic) {
     const msg: EngineMessage = {
       id: m.nextId("em"),
       workspaceId,
@@ -123,6 +148,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
       text,
       at: now(),
       ...(widget ? { widget } : {}),
+      ...(topic ? { topic } : {}),
     };
     db.engineMessages.push(msg);
     m.emit({ type: "engine.message", message: structuredClone(msg) });
@@ -186,13 +212,19 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
 
   /** Everything said since the last run, in order: her words and her answers; a later one wins. The draft rides on
    *  the Engine's messages, so the chat's "The run" panel shows what it has been told. */
-  function draftOf(workspaceId: Id): Draft & { words: string; ordered: boolean } {
+  function draftOf(workspaceId: Id, topic?: EngineTopic): Draft & { words: string; ordered: boolean } {
     const list = db.engineMessages
-      .filter((x) => x.workspaceId === workspaceId)
+      .filter((x) => x.workspaceId === workspaceId && sameTopic(x.topic, topic))
       .sort((a, b) => a.at.localeCompare(b.at));
     const lastRun = list.map((x) => x.widget?.kind).lastIndexOf("batch");
     const recent = list.slice(lastRun + 1);
     const d: Draft = {};
+    // In a campaign's thread the run is for that campaign, once its plan is approved (Round 15)
+    const own = topic?.kind === "campaign" ? db.campaigns.find((c) => c.id === topic.id) : undefined;
+    if (own) {
+      if (engineMayMake(own)) d.campaign = own.name;
+      else d.refused = own.name;
+    }
     let ordered = false;
     for (const msg of recent) {
       if (msg.author.kind === "person") {
@@ -225,7 +257,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
 
   /** The Engine offers products to tick: a collection named in the words, else the whole catalogue. Products whose
    *  facts the customer has not confirmed come along locked. */
-  function offerProducts(workspaceId: Id, words: string) {
+  function offerProducts(workspaceId: Id, words: string, topic?: EngineTopic) {
     const all = db.products.filter((p) => p.workspaceId === workspaceId);
     const collection = db.collections.find(
       (c) =>
@@ -241,20 +273,21 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
       workspaceId,
       `${where}. ${locked ? `${locked} wait for ${customerName(workspaceId)} to confirm their facts, so they are locked. ` : ""}Tick the ones to make for.`,
       { kind: "products", productIds: offered.map((p) => p.id) },
+      topic,
     );
-    msg.run = { ...draftWords(draftOf(workspaceId)), asking: "products" };
+    msg.run = { ...draftWords(draftOf(workspaceId, topic)), asking: "products" };
   }
 
   /** One question at a time until the run is clear, then the run. The count per product and the campaign are always
    *  asked; the mode only when her words don't name it; only campaigns whose plan is approved are offered. */
-  function askNext(workspaceId: Id) {
-    const s = draftOf(workspaceId);
+  function askNext(workspaceId: Id, topic?: EngineTopic) {
+    const s = draftOf(workspaceId, topic);
     const ask = (asking: EngineRunDraft["asking"], text: string, question: string, options: string[]) => {
-      const msg = engineSays(workspaceId, text, { kind: "choice", question, options });
+      const msg = engineSays(workspaceId, text, { kind: "choice", question, options }, topic);
       msg.run = { ...draftWords(s), asking };
       return msg;
     };
-    if (!s.productIds) return offerProducts(workspaceId, s.words);
+    if (!s.productIds) return offerProducts(workspaceId, s.words, topic);
     if (!s.modeId)
       return ask("mode", "Which mode should they be made in?", "Which mode?", [
         ...MODES.map((x) => x.name),
@@ -303,10 +336,33 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
         workspaceId,
         `Making ${what} for ${campaign ? campaign.name : "the product page"} in ${mode?.name ?? "Packshot"} mode, ${shape}: ${productIds.length} × ${perProduct}. ${where}`,
         { kind: "batch", batchId: batch.id },
+        topic,
       );
       msg.run = final;
       if (inCheck) land(batch.id, campaign);
     }, 3);
+  }
+
+  /** "Ask about this": what the field says now, and a line the Engine would write for it, which she can put by the
+   *  field to keep or drop there (Round 15). */
+  function answerField(workspaceId: Id, field: EngineField, topic: EngineTopic | undefined, t: string) {
+    const wrote = writeFor(db, field);
+    // A question about the line ("Is it on brand?") gets an answer; asked to write, a line to put by the field
+    const writes = !isQuestion(t) || /\b(write|shorter|longer|again|rewrite|simpler|tighter|another|better)\b/.test(t);
+    if (!writes)
+      return engineSays(
+        workspaceId,
+        `It keeps to ${brandName(workspaceId)}’s rules as it stands. ${wrote.why} Ask me to write it, and I put a line by the field.`,
+        undefined,
+        topic,
+      );
+    if (wrote.text.trim() === field.value.trim()) return engineSays(workspaceId, wrote.why, undefined, topic);
+    engineSays(
+      workspaceId,
+      `I would write it like this. ${wrote.why} Put it by the field to keep it or drop it there.`,
+      { kind: "suggestion", field, text: wrote.text },
+      topic,
+    );
   }
 
   /** Whether Check shows a creative with no campaign ("Product page"): a probe item goes in and out of the table in
@@ -431,35 +487,88 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
     },
     startBatch,
 
-    async engineChat(workspaceId) {
+    async engineChat(workspaceId, topic) {
       m.mustStaff();
       return wait(
         db.engineMessages
-          .filter((x) => x.workspaceId === workspaceId)
+          .filter((x) => x.workspaceId === workspaceId && sameTopic(x.topic, topic))
           .sort((a, b) => a.at.localeCompare(b.at))
           .map(agencyWords),
       );
     },
-    async engineSay(workspaceId, text) {
+    async engineThreads(workspaceId) {
       m.mustStaff();
+      const own = db.engineMessages.filter((x) => x.workspaceId === workspaceId);
+      const latest = (list: { at: string }[]) =>
+        list
+          .map((x) => x.at)
+          .sort()
+          .at(-1);
+      const brand = own.filter((x) => !x.topic);
+      const threads: EngineThread[] = [];
+      for (const c of db.campaigns.filter((x) => x.workspaceId === workspaceId)) {
+        const said = own.filter((x) => x.topic?.kind === "campaign" && x.topic.id === c.id);
+        if (said.length)
+          threads.push({
+            topic: { kind: "campaign", id: c.id },
+            title: c.name,
+            count: said.length,
+            lastAt: latest(said),
+          });
+      }
+      // A document's thread is its Engine changes: her words and what the Engine changed, each a turn of two
+      for (const d of db.documents.filter((x) => x.workspaceId === workspaceId)) {
+        const edits = d.video ? d.video.edits : d.edits;
+        if (edits.length)
+          threads.push({
+            topic: { kind: "document", id: d.id },
+            title: d.title,
+            count: edits.length * 2,
+            lastAt: latest(edits),
+          });
+      }
+      threads.sort((a, b) => (b.lastAt ?? "").localeCompare(a.lastAt ?? ""));
+      return wait([{ title: "Everything", count: brand.length, lastAt: latest(brand) }, ...threads]);
+    },
+    async engineWrite(field) {
+      m.mustStaff();
+      // The Engine takes a moment to write, as a person would; then the line and what it wrote it from.
+      await new Promise((resolve) => setTimeout(resolve, m.latency * 6));
+      return wait(writeFor(db, field));
+    },
+    async engineSay(workspaceId, text, about) {
+      m.mustStaff();
+      const topic = about?.topic?.kind === "campaign" ? about.topic : undefined;
+      const field = about?.field;
+      const page = about?.page;
       const msg: EngineMessage = {
         id: m.nextId("em"),
         workspaceId,
         author: { kind: "person", userId: m.me().id },
         text,
         at: now(),
+        ...(topic ? { topic } : {}),
+        ...(field ? { field } : {}),
+        ...(page ? { page } : {}),
       };
       db.engineMessages.push(msg);
       const t = text.toLowerCase();
+      const says = (words: string, widget?: EngineMessage["widget"]) => engineSays(workspaceId, words, widget, topic);
       later(() => {
+        // Asked about a field ("Ask about this"): what it says, a line for it, put by the field when she wants it.
+        if (field && !isWorkOrder(t)) return answerField(workspaceId, field, topic, t);
         // A question about the work gets an answer, never a run.
         if (isQuestion(t) && aboutCheck(t) && !/\b(make|render|create)\b/.test(t)) {
           const qa = db.qaItems.filter(
-            (i) => i.workspaceId === workspaceId && (i.state === "waiting" || i.state === "fixing"),
+            (i) =>
+              i.workspaceId === workspaceId &&
+              (i.state === "waiting" || i.state === "fixing") &&
+              (!topic || i.campaignId === topic.id),
           );
           const order = [...qa].sort((a, b) => a.dueAt.localeCompare(b.dueAt));
           const brand = brandName(workspaceId);
-          if (!order.length) return engineSays(workspaceId, `Nothing from ${brand} waits for a check.`);
+          const own = topic ? db.campaigns.find((c) => c.id === topic.id)?.name : undefined;
+          if (!order.length) return says(`Nothing from ${own ?? brand} waits for a check.`);
           const first = order[0];
           const campaign = db.campaigns.find((c) => c.id === first.campaignId);
           // The creative's one name, as Check shows it: its product before "Feed 6" when the title leaves it out.
@@ -469,8 +578,7 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
               : undefined;
           const firstName = first.title.includes(" · ") || !only ? first.title : `${only} · ${first.title}`;
           const fixing = order.filter((i) => i.state === "fixing").length;
-          const a = engineSays(
-            workspaceId,
+          const a = says(
             `${order.length === 1 ? "One creative" : `${order.length} creatives`} from ${brand} ${order.length === 1 ? "is" : "are"} in Check${fixing ? `, ${fixing} of them with the Engine for a fix` : ""}. Due first: ${firstName}${campaign ? ` for ${campaign.name}` : ", for the product page"}.`,
           );
           a.answer = { kind: "check", itemIds: order.map((i) => i.id) };
@@ -480,13 +588,13 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
         const change = /^(mode|count|campaign|format):/.exec(t);
         if (change) {
           const open = db.engineMessages
-            .filter((x) => x.workspaceId === workspaceId && x.author.kind === "engine")
+            .filter((x) => x.workspaceId === workspaceId && sameTopic(x.topic, topic) && x.author.kind === "engine")
             .at(-1);
           const waits =
             open?.widget &&
             ((open.widget.kind === "choice" && !open.widget.answer) ||
               (open.widget.kind === "products" && !open.widget.picked));
-          const d = draftOf(workspaceId);
+          const d = draftOf(workspaceId, topic);
           const said = draftWords(d);
           const line =
             change[1] === "mode"
@@ -498,22 +606,43 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
                 : change[1] === "campaign"
                   ? said.campaign
                   : said.format;
-          if (d.refused) return askNext(workspaceId);
-          const ok = engineSays(workspaceId, line ? `${line}, then.` : "I didn’t read that. Pick from the list.");
+          if (d.refused) return askNext(workspaceId, topic);
+          const ok = says(line ? `${line}, then.` : "I didn’t read that. Pick from the list.");
           ok.run = { ...said, asking: open?.run?.asking };
-          if (!waits) later(() => askNext(workspaceId), 3);
+          if (!waits) later(() => askNext(workspaceId, topic), 3);
           return;
+        }
+        // Asked back about an earlier chat ("What did we say about the hook?"): the Engine remembers what it said, in
+        // a chat from before this web session too (round 16).
+        if (/\b(what did (we|you|i) (say|agree|decide)|remind me|last time|earlier)\b/.test(t)) {
+          const words = (t.match(/[a-z]{4,}/g) ?? []).filter((w) => !BACK_WORDS.has(w));
+          const thread = db.engineMessages.filter(
+            (x) => x.workspaceId === workspaceId && sameTopic(x.topic, topic) && x.id !== msg.id,
+          );
+          const asked = [...thread]
+            .reverse()
+            .find((x) => x.author.kind === "person" && words.some((w) => x.text.toLowerCase().includes(w)));
+          const answer = asked && thread.find((x) => x.author.kind === "engine" && x.at >= asked.at);
+          if (asked && answer) {
+            const days = Math.round((Date.parse(now().slice(0, 10)) - Date.parse(asked.at.slice(0, 10))) / 864e5);
+            const when = days === 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
+            return says(
+              `${when}${asked.page ? `, in ${asked.page.charAt(0).toLowerCase()}${asked.page.slice(1)}` : ""}, you asked “${asked.text}” I said: ${answer.text}`,
+            );
+          }
         }
         if (/(open|studio)/.test(t) && !isWorkOrder(t)) {
           const d = db.documents
-            .filter((x) => x.workspaceId === workspaceId)
+            .filter((x) => x.workspaceId === workspaceId && (!topic || x.campaignId === topic.id))
             .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))[0];
-          if (d) return engineSays(workspaceId, `Opening ${d.title}.`, { kind: "document", documentId: d.id });
+          if (d) return says(`Opening ${d.title}.`, { kind: "document", documentId: d.id });
         }
-        if (isWorkOrder(t) || draftOf(workspaceId).ordered) return askNext(workspaceId);
-        engineSays(
-          workspaceId,
-          `I make creatives for ${brandName(workspaceId)}. Tell me what to make, for example “4 packshots of the gift sets for the product page”, or ask what waits for a check.`,
+        if (isWorkOrder(t) || draftOf(workspaceId, topic).ordered) return askNext(workspaceId, topic);
+        const campaign = topic ? db.campaigns.find((c) => c.id === topic.id) : undefined;
+        says(
+          campaign
+            ? `I know ${campaign.name}: its brief, its plan and its creatives. Ask me about a line of the plan, or tell me what to make once the plan is approved.`
+            : `I make creatives for ${brandName(workspaceId)}. Tell me what to make, for example “4 packshots of the gift sets for the product page”, or ask what waits for a check.`,
         );
       }, 6);
       return wait(msg).then(agencyWords);
@@ -531,9 +660,11 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
         if (!ids.length) throw new FumeError("invalid", "Pick a product whose facts are confirmed.");
         msg.widget.picked = ids;
       } else if (msg.widget.kind === "choice") msg.widget.answer = answer.choice;
+      const topic = msg.topic;
       // An answer changed further up while a later question is still open: the open question stays (no second ask).
       const after = db.engineMessages.filter(
-        (x) => x.workspaceId === workspaceId && x.author.kind === "engine" && x.at > msg.at,
+        (x) =>
+          x.workspaceId === workspaceId && sameTopic(x.topic, topic) && x.author.kind === "engine" && x.at > msg.at,
       );
       const stillOpen = after.some(
         (x) =>
@@ -542,9 +673,9 @@ export function productionCalls(m: Mock): Pick<FumeApi, Calls> {
       );
       if (stillOpen) {
         const last = after.at(-1)!;
-        last.run = { ...draftWords(draftOf(workspaceId)), asking: last.run?.asking };
+        last.run = { ...draftWords(draftOf(workspaceId, topic)), asking: last.run?.asking };
         m.emit({ type: "engine.message", message: structuredClone(last) });
-      } else later(() => askNext(workspaceId), 5);
+      } else later(() => askNext(workspaceId, topic), 5);
       return wait(msg);
     },
   };

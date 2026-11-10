@@ -1,6 +1,8 @@
-// Send to check, with a stop for open product errors: when the picked version still reads a product detail wrong
-// ("Reads 200 ml · should be 100 ml") and no fix is under way, the designer sees it first and chooses: fix it first
-// (the Engine's product fix, a new version) or send anyway (the expert sees the flag in Check). Sending says which
+// Send to check, with a question for open product errors and pictures under the bar: when the picked version still
+// reads a product detail wrong ("Reads 200 ml · should be 100 ml") and no fix is under way, or the Engine scores it
+// under the bar (FLOWS §34.1), the designer sees it first and chooses: fix it first (the Engine's product fix, a new
+// version) or send anyway (the expert sees the flag or the warning in Check). The designer always has the last word;
+// the question only makes sure she saw it before anyone else does. Sending says which
 // version left for Check, offers Undo, and, when the creative was opened from Check, takes her back to the item she
 // came from (the item then shows the new version).
 import {
@@ -26,6 +28,8 @@ import {
 import { isDemo } from "../../../api/client";
 import type { CreativeDocument } from "../../../contract";
 import * as copy from "../../../copy";
+import { isUnderBar, SCORE_BAR } from "../../../domain/scores";
+import { scoreLine } from "./scores";
 
 /** The product details the picked version reads wrong, with no fix running. */
 export function useOpenFlags(doc: CreativeDocument) {
@@ -63,6 +67,8 @@ export function SendToCheck({
   const agency = Boolean(useSession().data?.user.agency); // the agency's own team checks
   const [asking, setAsking] = useState(false);
   const { picked, flags } = useOpenFlags(doc);
+  const under = isUnderBar(picked) ? picked : undefined;
+  const ask = flags.length > 0 || Boolean(under);
 
   const send = (withFlags: boolean) => {
     onBefore();
@@ -73,7 +79,7 @@ export function SendToCheck({
       () => {
         toast.done(`Version ${number ?? ""} of ${name} sent to check`, {
           description: withFlags
-            ? `${agency ? "Your team sees" : "The expert sees"} the ${flags.length === 1 ? "product flag" : "product flags"} in Check.`
+            ? `${agency ? "Your team sees" : "The expert sees"} ${under ? "the warning and the scores" : `the ${flags.length === 1 ? "product flag" : "product flags"}`} in Check.`
             : onSent
               ? "It takes the place of the version Check had."
               : agency
@@ -128,7 +134,7 @@ export function SendToCheck({
         icon="send"
         loading={toCheck.isPending}
         disabled={disabled}
-        onClick={() => (flags.length ? setAsking(true) : send(false))}
+        onClick={() => (ask ? setAsking(true) : send(false))}
       >
         Send to check
       </Button>
@@ -136,20 +142,34 @@ export function SendToCheck({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              {flags.length === 1 ? "1 product detail is wrong" : `${flags.length} product details are wrong`}
+              {under
+                ? `Version ${under.number} is under the bar`
+                : flags.length === 1
+                  ? "1 product detail is wrong"
+                  : `${flags.length} product details are wrong`}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              {what}. Fix it first, or send it anyway and the expert sees the flag in Check.
+              {under
+                ? `${scoreLine(under)}, the bar is ${SCORE_BAR}. ${under.evaluation.scores?.why?.[0]?.text ?? ""}. It’s your call: the expert sees the warning in Check.`
+                : `${what}. Fix it first, or send it anyway and the expert sees the flag in Check.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Later</AlertDialogCancel>
-            <Button variant="glass-clear" onClick={() => (setAsking(false), send(true))}>
-              Send anyway
-            </Button>
-            <AlertDialogAction variant="white" icon="refresh-cw" onClick={fixFirst}>
-              Fix it first
-            </AlertDialogAction>
+            {flags.length > 0 ? (
+              <>
+                <Button variant="glass-clear" onClick={() => (setAsking(false), send(true))}>
+                  Send anyway
+                </Button>
+                <AlertDialogAction variant="white" icon="refresh-cw" onClick={fixFirst}>
+                  Fix it first
+                </AlertDialogAction>
+              </>
+            ) : (
+              <AlertDialogAction variant="white" icon="send" onClick={() => send(true)}>
+                Send anyway
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

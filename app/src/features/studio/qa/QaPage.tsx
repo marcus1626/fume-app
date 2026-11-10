@@ -1,7 +1,7 @@
 // Check (FLOWS §10, §24.3): the one check workspace for Fume's experts and an agency's creatives, the same page in both
 // frames. Everything the Engine made that waits for a check, by due date and risk, grouped by campaign. /studio/qa and
 // /agency/check show every brand or client; /studio/b/:id/qa and /agency/b/:id/check one.
-// - Tabs at the top, Plans · Images · Designs (Video later), each with how many wait; the list shows that kind only,
+// - Tabs at the top, Plans · Images · Designs · Video, each with how many wait; the list shows that kind only,
 //   and the keys and "the next one" stay inside it. Plans that wait on Fume's expert are Fume's only; a plan opens
 //   beside the list with "Check the plan".
 // - On a desk (1024 px and wider) a fixed-height workspace, never a scrolling page: the list | the creative fitted to
@@ -18,15 +18,14 @@
 //   located notes.
 // - A version sent back from the Studio comes back to the same creative ("Version 2 from the Studio · Anna, 14:32"),
 //   with Before | After over the creative.
+// - A video (FLOWS §34.7) is checked the same way, on a clock: it plays in the well, the strip under it shows its shots
+//   with the Engine's findings and her pins at their second (QaVideo.tsx).
 // - ?run=<batch> shows one Engine run's creatives, ?campaign=<id> one campaign's: a filter pill with its ×, and "Show
 //   all" as a quiet link.
 import {
   Badge,
   Button,
   CheckMark,
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
   Field,
   FieldDescription,
   FieldGroup,
@@ -78,20 +77,44 @@ import {
   useQaEdit,
   useQaFeedback,
   useQaQueue,
+  useQaSettleFinding,
   useQaToStudio,
   useQaUncheck,
   useSession,
   useStudioCampaigns,
 } from "../../../api/hooks";
-import type { Evaluation, Id, Layer, QaItem, QaPin, QaView, StudioCampaignRow } from "../../../contract";
+import type { Format, Id, Layer, QaFinding, QaItem, QaPin, QaView, StudioCampaignRow } from "../../../contract";
 import * as copy from "../../../copy";
 import { due, now, time, when } from "../../../lib/time";
 import { Nothing, Page, Query } from "../../../shell/Page";
 import { brandBase, checkPath, frameRoot, type StaffFrameKind } from "../../../shell/scope";
 import { vars } from "../../brand/board";
+import { bookWords, DesignChecks, DesignFindings, DrawnWords, useSeesDesign } from "../doc/graphic";
 import { formatName } from "../parts";
 import { useNames } from "./names";
 import { fixer } from "../../../lib/fixer";
+import { Player } from "../doc/video/Player";
+import { PIN_NEAR, QaReel, useQaVideo } from "./QaVideo";
+import {
+  EngineComment,
+  engineRows,
+  findingKind,
+  findingLine,
+  FlagComment,
+  Fold,
+  FormatStrip,
+  HoldsFold,
+  NoteComment,
+  SaidComment,
+  ScoreChip,
+  ScorePanel,
+  SettledComment,
+  severityOrder,
+  ThreadHead,
+  type QaFlag,
+  type QaNote,
+} from "./QaComments";
+import { timecode } from "../../../domain/video";
 
 /** The end card's place in the address (?item=end): past the last creative that waits. */
 const END = "end";
@@ -107,16 +130,19 @@ export const qaName = (v: QaView) =>
  *  declare). */
 const runOf = (item: QaItem) => (item as QaItem & { runId?: Id }).runId;
 
-/** What Check holds, as its tabs. Video comes later. */
-type Kind = "plans" | "images" | "designs";
+/** What Check holds, as its tabs. */
+type Kind = "plans" | "images" | "designs" | "video";
 const KINDS: { id: Kind; label: string; noun: string }[] = [
   { id: "plans", label: "Plans", noun: "plans" },
   { id: "images", label: "Images", noun: "images" },
   { id: "designs", label: "Designs", noun: "designs" },
+  { id: "video", label: "Video", noun: "videos" },
 ];
-const isKind = (k: string | null): k is Kind => k === "plans" || k === "images" || k === "designs";
-/** A creative's tab: a Design creative's, else Images (what Image renders). */
-const kindOf = (v: QaView): Exclude<Kind, "plans"> => (v.item.studio === "design" ? "designs" : "images");
+const isKind = (k: string | null): k is Kind => KINDS.some((x) => x.id === k);
+/** A creative's tab: a video in Video (FLOWS §34.7); a Design creative's or one Fume designed in Designs (round 14);
+ *  else Images. */
+const kindOf = (v: QaView): Exclude<Kind, "plans"> =>
+  v.item.studio === "video" ? "video" : v.item.studio === "design" || v.item.design ? "designs" : "images";
 const planWaits = (r: StudioCampaignRow) => r.campaign.waits?.plan === "in_check";
 
 export function QaPage() {
@@ -170,6 +196,7 @@ export function QaPage() {
     plans: plans.filter(planWaits).length,
     images: all.filter((v) => kindOf(v) === "images" && open(v)).length,
     designs: all.filter((v) => kindOf(v) === "designs" && open(v)).length,
+    video: all.filter((v) => kindOf(v) === "video" && open(v)).length,
   };
   const asked = params.get("kind");
   const selectedAny = all.find((v) => v.item.id === selectedId);
@@ -177,15 +204,17 @@ export function QaPage() {
     ? "images"
     : counts.designs
       ? "designs"
-      : counts.plans
-        ? "plans"
-        : all.some((v) => kindOf(v) === "images")
-          ? "images"
-          : all.length
-            ? "designs"
-            : plans.length
-              ? "plans"
-              : "images";
+      : counts.video
+        ? "video"
+        : counts.plans
+          ? "plans"
+          : all.some((v) => kindOf(v) === "images")
+            ? "images"
+            : all.length
+              ? "designs"
+              : plans.length
+                ? "plans"
+                : "images";
   const kind: Kind = isKind(asked)
     ? asked
     : selectedAny
@@ -313,12 +342,14 @@ export function QaPage() {
         toast.done(`Check undone: ${qaName(v)}`, { description: "It waits for a check again." });
         reopen(v.item.id);
       }, failed("The check wasn’t undone")),
-    tell: (v, text, pins) =>
-      feedback.mutateAsync({ itemId: v.item.id, text, pins }).then(
+    tell: (v, text, pins, findingIds) =>
+      feedback.mutateAsync({ itemId: v.item.id, text, pins, findingIds }).then(
         () => {
+          // Everything that went: her comments, the pins and the Engine's comments she chose (round 15)
+          const went = (text ? text.split("\n").filter((l) => l.trim()).length : 0) + pins.length;
           toast.done(`${fixer.withIt}: ${qaName(v)}`, {
-            description: pins.length
-              ? `${copy.count(pins.length, "pinned note")} with it. Its fix comes back here.`
+            description: went
+              ? `${copy.count(went, "comment")} with it. Its fix comes back here.`
               : "Its fix comes back here to check.",
           });
           if (shownId.current === v.item.id) after(v.item.id);
@@ -396,9 +427,6 @@ export function QaPage() {
                     {k.label}
                   </SegmentedOption>
                 ))}
-                <SegmentedOption value="video" disabled aria-disabled="true" title="Video is coming later">
-                  Video <span className="ui-desk-later">Later</span>
-                </SegmentedOption>
               </SegmentedControl>
               {filtered && only && (
                 <div className="ui-qa-filter" role="group" aria-label="Filter">
@@ -646,6 +674,7 @@ function QaList({
                       {[
                         v.item.risk === "high" && v.item.state !== "checked" ? "High risk" : undefined,
                         `Due ${due(v.item.dueAt)}`,
+                        v.item.formats?.length ? `${v.item.formats.length + 1} formats` : undefined,
                       ]
                         .filter(Boolean)
                         .join(" · ")}
@@ -875,8 +904,8 @@ interface QaActions {
   /** `accept`: the faults on the product the expert accepts as they check (QaItem.holds). */
   check: (v: QaView, accept?: Id[]) => Promise<void>;
   undo: (v: QaView) => Promise<void>;
-  /** True once the Engine has it. */
-  tell: (v: QaView, text: string, pins: QaPin[]) => Promise<boolean>;
+  /** True once the Engine has it; `findingIds` are the Engine's own findings the note takes up. */
+  tell: (v: QaView, text: string, pins: QaPin[], findingIds: Id[]) => Promise<boolean>;
 }
 
 /** A pin's note is written beside it; where the well has no room for it on either side (the box's width and the pin,
@@ -904,28 +933,43 @@ function QaFocus({
   const navigate = useNavigate();
   const edit = useQaEdit();
   const toStudio = useQaToStudio();
+  const settle = useQaSettleFinding();
+  const seesDesign = useSeesDesign();
   const tellRef = useRef<HTMLTextAreaElement>(null);
+  // the field at the panel's foot: a comment she is writing
   const [text, setText] = useState("");
   const textLayers = (item.layers ?? []).filter((l) => l.kind === "text");
   const [words, setWords] = useState<Record<string, string>>({});
   const [active, setActive] = useState<string>();
   const [shown, setShown] = useState<"after" | "before">("after");
-  // the pins she drops on the creative, and the one she is writing
-  const [pins, setPins] = useState<QaPin[]>([]);
+  const [scoresOpen, setScoresOpen] = useState(false);
+  // An ad's formats (FLOWS §35.2): the master, or one made from it, shown in the well; undefined is the master.
+  const [fmt, setFmt] = useState<Format>();
+  const shownFormat = item.formats?.find((f) => f.format === fmt);
+  // Her comments, pinned or not, and the Engine's she chose: they go to the Engine together with Tell the Engine.
+  const [notes, setNotes] = useState<QaNote[]>([]);
+  const [chosen, setChosen] = useState<string[]>([]);
+  const nextNote = useRef(1);
   const [draft, setDraft] = useState<{
     x: number;
     y: number;
     side: "right" | "left" | "center";
     flipY: boolean;
+    /** On a video, the second it is dropped on. */
+    at?: number;
   } | null>(null);
   const [draftText, setDraftText] = useState("");
-  const [activePin, setActivePin] = useState<number>();
+  // the comment (and its pin) that is open: "f:<finding>", "n:<note>"
+  const [focus, setFocus] = useState<string>();
   const dirty = textLayers.some((l) => words[l.id] !== undefined && words[l.id] !== l.text);
+  // A video (FLOWS §34.7): its edit, its clock and the brand's call to action, to play it in the well.
+  const { video, edit: reel, clock, cta } = useQaVideo(item);
   // Words on a photograph take the brand's chosen light ground colour (its packshot white).
   const ink = useBrandAssets(item.workspaceId).data?.presets.find((p) => p.kind === "background")?.hex;
   const busy = act.busy || edit.isPending || toStudio.isPending;
   const checked = item.state === "checked";
   const fixing = item.state === "fixing";
+  const acting = !checked && !fixing;
   const failed = (what: string) => (e: Error) => toast.error(what, { description: e.message });
 
   const changedLayers = (): Layer[] =>
@@ -943,29 +987,96 @@ function QaFocus({
       },
     );
 
-  // A clear fault on the product stops the check until the expert decides: they fix it, or accept it with their name.
-  const holds = item.holds ?? [];
-  const [holding, setHolding] = useState(false);
-  const markChecked = (accepted = false) => {
+  // The Engine's findings (FLOWS §29.6, §35.1): each is a comment. "Fix with the Engine" sends it on with Tell the
+  // Engine, "Not a problem" sets it aside. A critical one that is still open stops the check, as in the database.
+  const findings = item.findings ?? [];
+  const openFindings = findings
+    .filter((f) => f.status === "open")
+    .sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+  const settled = findings.filter((f) => f.status !== "open");
+  const stopping = openFindings.find((f) => f.severity === "critical");
+  // The Engine's checks on a video's edit, with their second (what a finding says already is left out).
+  const videoFlags: QaFlag[] = (reel?.checks ?? [])
+    .filter((c) => c.state === "flag" && !(c.id === "ck-product" && findings.some((f) => f.dimension === "product")))
+    .map((c) => ({ text: c.note ? `${c.label}: ${c.note}` : c.label, at: c.at }));
+  const videoHolds = (reel?.checks ?? []).filter((c) => c.state === "pass").map((c) => c.label);
+  const { byEye, flags, holds } = engineRows(item.evaluation, findings, videoFlags);
+
+  // Numbers on the creative: the Engine's pins first, then hers, in the order they were made. A number never moves
+  // (round 15, as in Frame.io): a comment set aside keeps its number, and only the open ones show.
+  const numbered = [...findings]
+    .filter((f) => f.spot && !video)
+    .sort((a, b) => severityOrder[a.severity] - severityOrder[b.severity]);
+  const spotted = numbered.filter((f) => f.status === "open");
+  const pinNo = (f: QaFinding) => numbered.indexOf(f) + 1;
+  const pinned = notes.filter((n) => n.spot);
+  const numberOf = (n: QaNote) => numbered.length + pinned.indexOf(n) + 1;
+  const pins: QaPin[] = pinned.map((n) => ({
+    n: numberOf(n),
+    x: n.spot!.x,
+    y: n.spot!.y,
+    text: n.text,
+    at: n.at,
+    ...(n.format ? { format: n.format } : {}),
+  }));
+  const toEngine = notes.length + chosen.length;
+
+  const isChosen = (key: string) => chosen.includes(key);
+  const choose = (key: string) => setChosen((c) => (c.includes(key) ? c.filter((k) => k !== key) : [...c, key]));
+  const settleFinding = (f: QaFinding, status: "accepted" | "open") =>
+    settle.mutate(
+      { itemId: item.id, findingId: f.id, status },
+      {
+        onSuccess: () => {
+          if (status === "accepted") setChosen((c) => c.filter((k) => k !== `f:${f.id}`));
+        },
+        onError: failed(status === "accepted" ? "The finding wasn’t set aside" : "The finding wasn’t opened again"),
+      },
+    );
+  // A pin on the creative opens its comment in the thread, and the other way round.
+  const dom = (key: string) => `${item.id}-c-${key.replace(":", "-")}`;
+  const openComment = (key: string) => {
+    setFocus(key);
+    requestAnimationFrame(() =>
+      document.getElementById(dom(key))?.scrollIntoView({ block: "nearest", behavior: "smooth" }),
+    );
+  };
+
+  const markChecked = () => {
     if (busy || checked) return;
     if (fixing) {
       toast.info(`${fixer.withIt}: nothing to check yet`, { description: "Its fix comes back here." });
       return;
     }
-    if (holds.length && !accepted) {
-      setHolding(true);
+    if (stopping) {
+      toast.info(`Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first`, {
+        description: `${fixer.fixWith}, or say it is not a problem.`,
+      });
+      openComment(`f:${stopping.id}`);
       return;
     }
-    const go = () => void act.check(view, accepted ? holds.map((h) => h.id) : undefined);
+    const go = () => void act.check(view);
     if (dirty) saveWords(go);
     else go();
+  };
+
+  // A comment written in the field joins the thread; on a video it carries the second the playhead stands on.
+  const addNote = () => {
+    const said = text.trim();
+    if (!said) return false;
+    const at = video ? Math.round(clock.t * 10) / 10 : undefined;
+    const id = nextNote.current++;
+    setNotes((n) => [...n, { id, text: said, ...(at !== undefined ? { at } : {}) }]);
+    setText("");
+    openComment(`n:${id}`);
+    return true;
   };
 
   // One creative, one worker: a creative a designer has open in the Studio goes to the Engine only after a yes.
   const [asking, setAsking] = useState(false);
   const tell = (sure = false) => {
-    const said = text.trim();
-    if (!said && !pins.length) {
+    const typed = text.trim();
+    if (!typed && !toEngine) {
       tellRef.current?.focus();
       return;
     }
@@ -974,11 +1085,26 @@ function QaFocus({
       setAsking(true);
       return;
     }
-    void act.tell(view, said, pins).then((sent) => {
-      if (!sent) return;
-      setText("");
-      setPins([]);
-    });
+    const pickedFindings = openFindings.filter((f) => isChosen(`f:${f.id}`));
+    const lines = [
+      ...notes.filter((n) => !n.spot).map((n) => (n.at !== undefined ? `${timecode(n.at, true)} · ${n.text}` : n.text)),
+      ...(typed ? [video ? `${timecode(clock.t, true)} · ${typed}` : typed] : []),
+      ...pickedFindings.map(findingLine),
+      ...flags.filter((r) => isChosen(`r:${r.text}`)).map((r) => `${r.text.replace(/[.\s]+$/, "")}.`),
+    ];
+    void act
+      .tell(
+        view,
+        lines.join("\n"),
+        pins,
+        pickedFindings.map((f) => f.id),
+      )
+      .then((sent) => {
+        if (!sent) return;
+        setText("");
+        setNotes([]);
+        setChosen([]);
+      });
   };
 
   const openStudio = () => {
@@ -990,7 +1116,7 @@ function QaFocus({
   };
 
   // a click on the creative drops a pin and opens its note beside it
-  const pinnable = !checked && !fixing && shown === "after";
+  const pinnable = acting && shown === "after";
   const dropPin = (e: ReactMouseEvent<HTMLElement>) => {
     if (!pinnable) return;
     const r = e.currentTarget.getBoundingClientRect();
@@ -1001,20 +1127,34 @@ function QaFocus({
     const right = well.right - e.clientX;
     const left = e.clientX - well.left;
     const side = right >= ROOM_X ? "right" : left >= ROOM_X ? "left" : "center";
-    setDraft({ x, y, side, flipY: well.bottom - e.clientY < ROOM_Y });
+    // On a video the pin goes on the frame shown: the video stops there while she writes.
+    if (video) clock.setPlaying(false);
+    const at = video ? Math.round(clock.t * 10) / 10 : undefined;
+    setDraft({ x, y, side, flipY: well.bottom - e.clientY < ROOM_Y, at });
     setDraftText("");
-    setActivePin(undefined);
+    setFocus(undefined);
   };
   const addPin = () => {
     const note = draftText.trim();
     if (!draft || !note) return;
-    setPins((p) => [...p, { n: p.length + 1, x: draft.x, y: draft.y, text: note }]);
+    const id = nextNote.current++;
+    setNotes((n) => [
+      ...n,
+      {
+        id,
+        text: note,
+        spot: { x: draft.x, y: draft.y },
+        ...(draft.at !== undefined ? { at: draft.at } : {}),
+        ...(shownFormat ? { format: shownFormat.format } : {}),
+      },
+    ]);
     setDraft(null);
     setDraftText("");
+    openComment(`n:${id}`);
   };
-  const removePin = (n: number) => setPins((p) => p.filter((x) => x.n !== n).map((x, i) => ({ ...x, n: i + 1 })));
+  const removeNote = (id: number) => setNotes((n) => n.filter((x) => x.id !== id));
 
-  // C checked, F tell the Engine, S Studio. Never while typing in a field; the arrows are the page's.
+  // C checked, F a comment for the Engine, S Studio. Never while typing in a field; the arrows are the page's.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
@@ -1029,23 +1169,37 @@ function QaFocus({
       if (k === "c") markChecked();
       else if (k === "f" && !checked) {
         e.preventDefault();
-        tellRef.current?.focus();
+        if (toEngine && !text.trim()) tell();
+        else tellRef.current?.focus();
       } else if (k === "s") openStudio();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const latest = item.feedback.at(-1);
-  const before = shown === "before" && item.previous;
-  const image = before ? item.previous!.image : item.image;
+  const before = shown === "before" && item.previous && !shownFormat;
+  const image = before ? item.previous!.image : (shownFormat?.image ?? item.image);
   const version = before ? item.previous!.version : (item.version ?? 1);
+  const format = shownFormat?.format ?? item.format;
+  // A pin shows on the format it was dropped on; the Engine's on the master.
+  const onFormat = (n: QaNote) => (n.format ?? item.format) === format;
   const pinStyle = (p: { x: number; y: number }) =>
     ({ "--x": `${p.x * 100}%`, "--y": `${p.y * 100}%` }) as CSSProperties;
+  // On a video a pin shows on the frame around its second; the strip under it shows them all.
+  const onFrame = (p: { at?: number }) => p.at === undefined || Math.abs(clock.t - p.at) <= PIN_NEAR;
+  const seek = (at: number) => {
+    clock.setPlaying(false);
+    clock.seek(at);
+  };
+  const onSeek = reel ? seek : undefined;
+  const live = fixing ? item.feedback.at(-1) : undefined;
+  const earlier = item.feedback.filter((f) => f !== live);
+  const count = openFindings.length + (acting ? flags.length : 0) + notes.length + (live ? 1 : 0);
+  const me = names.user(names.me);
 
   return (
     <>
-      <section className="ui-qa-stage" aria-label={`${name}, ${formatName(item.format)}`} data-ui-toast-anchor>
+      <section className="ui-qa-stage" aria-label={`${name}, ${formatName(item.format)}`}>
         <div className="ui-qa-stage-bar">
           <div className="ui-qa-stage-start">
             {item.previous ? (
@@ -1059,7 +1213,7 @@ function QaFocus({
               </SegmentedControl>
             ) : (
               <span className="ui-qa-stage-meta">
-                {formatName(item.format)} · V{version}
+                {formatName(format)} · V{version}
               </span>
             )}
           </div>
@@ -1089,17 +1243,32 @@ function QaFocus({
           </div>
         </div>
         <div className="ui-qa-fit">
-          <div className="ui-qa-shot" data-format={item.format}>
+          <div className="ui-qa-shot" data-format={format}>
             <figure
               className="ui-qa-creative"
-              data-format={item.format}
+              data-format={format}
               data-pinnable={pinnable ? "" : undefined}
               style={ink ? vars({ "--layer-ink": ink }) : undefined}
+              data-video={reel ? "" : undefined}
               onClick={dropPin}
-              title={pinnable ? "Click to pin a note" : undefined}
+              title={pinnable ? (video ? "Click to pin a comment on this frame" : "Click to pin a comment") : undefined}
             >
-              <img src={image} alt={`${name}, version ${version}`} draggable={false} />
+              {reel ? (
+                <Player
+                  edit={reel}
+                  t={clock.t}
+                  playing={clock.playing}
+                  safe={false}
+                  brandName={workspace.brandName}
+                  title={name}
+                  cta={cta}
+                />
+              ) : (
+                <img src={image} alt={`${name}, version ${version}`} draggable={false} />
+              )}
+              {!before && !shownFormat && item.drawn && <DrawnWords drawing={item.drawn} />}
               {!before &&
+                !shownFormat &&
                 (item.layers ?? [])
                   .filter((l) => l.visible && (l.kind === "text" || l.kind === "logo"))
                   .map((l) => (
@@ -1117,23 +1286,41 @@ function QaFocus({
                   ))}
             </figure>
             {!before &&
-              pins.map((p) => (
+              !shownFormat &&
+              spotted.map((f) => (
                 <button
-                  key={p.n}
+                  key={f.id}
                   type="button"
-                  className={activePin === p.n ? "ui-qg-pin is-active" : "ui-qg-pin"}
-                  style={pinStyle(p)}
-                  aria-label={`Pin ${p.n}: ${p.text}`}
-                  title={p.text}
-                  onClick={() => setActivePin(activePin === p.n ? undefined : p.n)}
+                  className={focus === `f:${f.id}` ? "ui-qg-pin is-active" : "ui-qg-pin"}
+                  data-from="engine"
+                  style={pinStyle(f.spot!)}
+                  aria-label={`Pin ${pinNo(f)}, from the ${fixer.author}: ${f.finding}`}
+                  title={f.finding}
+                  onClick={() => openComment(`f:${f.id}`)}
                 >
-                  {p.n}
+                  {pinNo(f)}
                 </button>
               ))}
+            {!before &&
+              pinned
+                .filter((n) => onFrame(n) && onFormat(n))
+                .map((n) => (
+                  <button
+                    key={n.id}
+                    type="button"
+                    className={focus === `n:${n.id}` ? "ui-qg-pin is-active" : "ui-qg-pin"}
+                    style={pinStyle(n.spot!)}
+                    aria-label={`Pin ${numberOf(n)}: ${n.text}`}
+                    title={n.text}
+                    onClick={() => openComment(`n:${n.id}`)}
+                  >
+                    {numberOf(n)}
+                  </button>
+                ))}
             {draft && (
               <>
                 <span className="ui-qg-pin" data-state="draft" style={pinStyle(draft)} aria-hidden="true">
-                  {pins.length + 1}
+                  {numbered.length + pinned.length + 1}
                 </span>
                 <Glass
                   className="ui-qa-pinbox"
@@ -1141,12 +1328,12 @@ function QaFocus({
                   data-side={draft.side}
                   data-flip-y={draft.flipY ? "" : undefined}
                   role="group"
-                  aria-label={`Pin ${pins.length + 1}`}
+                  aria-label={`Pin ${numbered.length + pinned.length + 1}`}
                 >
                   <Textarea
                     autoFocus
                     rows={2}
-                    aria-label={`What is wrong here, pin ${pins.length + 1}`}
+                    aria-label={`What is wrong here, pin ${numbered.length + pinned.length + 1}`}
                     placeholder="What is wrong here?"
                     value={draftText}
                     onChange={(e) => setDraftText(e.target.value)}
@@ -1174,150 +1361,251 @@ function QaFocus({
             )}
           </div>
         </div>
+        {item.formats && item.formats.length > 0 && (
+          <FormatStrip
+            master={{ format: item.format, image: before ? item.previous!.image : item.image }}
+            formats={item.formats}
+            shown={shownFormat?.format}
+            pins={pinned.reduce<Partial<Record<Format, number>>>((all, n) => {
+              const f = n.format ?? item.format;
+              return { ...all, [f]: (all[f] ?? 0) + 1 };
+            }, {})}
+            onShow={(f) => {
+              setFmt(f);
+              setDraft(null);
+            }}
+          />
+        )}
+        {reel && (
+          <QaReel
+            edit={reel}
+            t={clock.t}
+            playing={clock.playing}
+            findings={findings}
+            pins={pins}
+            onToggle={clock.toggle}
+            onSeek={seek}
+          />
+        )}
       </section>
 
-      <aside className="ui-qa-panel" aria-label={`Check ${name}`}>
+      {/* Round 15: toasts rise in the panel, above the comment box and the decision, next to the Undo's own button;
+          never over the creative or its formats */}
+      <aside className="ui-qa-panel" aria-label={`Check ${name}`} data-ui-toast-anchor>
         <div className="ui-qa-panel-body">
-          {/* 1. Where it stands */}
+          {/* 1. Where it stands: its name, one line on its state, when it is due and how it scored */}
           <header className="ui-qa-head">
             <h2 className="ui-qa-title">{name}</h2>
-            <p className="ui-qa-sub">{[workspace.brandName, campaign.name, formatName(item.format)].join(" · ")}</p>
-            <p className="ui-qa-state" aria-live="polite">
+            <p className="ui-qa-sub">
+              {[
+                workspace.brandName,
+                campaign.name,
+                item.formats?.length ? `${item.formats.length + 1} formats` : formatName(item.format),
+              ].join(" · ")}
+            </p>
+            {/* "Waiting for a check" is what everything here does: the line speaks only when there is more to say */}
+            <p className="ui-qa-state" aria-live="polite" hidden={plainWaiting(item)}>
               <QaStatus item={item} who={names.who} />
             </p>
-            {item.state !== "checked" && (
-              <div className="ui-qa-badges">
-                {item.risk === "high" && <Badge variant="ink">High risk</Badge>}
+            <div className="ui-qa-badges">
+              {!checked && item.risk === "high" && <Badge variant="ink">High risk</Badge>}
+              {!checked && (
                 <Badge icon="clock">
                   Due {due(item.dueAt)}, {time(item.dueAt)}
                 </Badge>
-              </div>
-            )}
+              )}
+              <ScoreChip
+                id={item.id}
+                evaluation={item.evaluation}
+                open={scoresOpen}
+                onToggle={() => setScoresOpen((o) => !o)}
+              />
+            </div>
+            {scoresOpen && <ScorePanel key={item.id} id={item.id} evaluation={item.evaluation} />}
           </header>
 
-          {/* 2. What the Engine found */}
-          <Evaluated
-            evaluation={item.evaluation}
-            id={item.id}
-            against={view.against}
-            format={item.format}
-            brandDna={campaign.brandDnaVersion}
-          >
-            {/* 2b. What was said to the Engine before: one folded line, so it never sits under the decision */}
-            {item.feedback.length > 0 && (
-              <Collapsible className="ui-qa-against">
-                <CollapsibleTrigger>{`${fixer.said} · ${item.feedback.length}`}</CollapsibleTrigger>
-                <CollapsibleContent>
-                  <ol className="ui-qa-history" aria-label={fixer.said}>
-                    {item.feedback.map((f) => (
-                      <li key={f.id} className="ui-qa-said">
-                        <span className="ui-qa-said-who">
-                          {names.Who(f.by)} · <time dateTime={f.at}>{time(f.at)}</time> ·{" "}
-                          {f.state === "sent" ? fixer.withItLower : fixer.fixed}
-                        </span>
-                        {f.text && <p>{f.text}</p>}
-                        {(f.pins ?? []).map((p) => (
-                          <p key={p.n} className="ui-qa-said-pin">
-                            <span className="ui-qa-pin-num" aria-hidden="true">
-                              {p.n}
-                            </span>
-                            <span>{p.text}</span>
-                          </p>
-                        ))}
-                      </li>
-                    ))}
-                  </ol>
-                </CollapsibleContent>
-              </Collapsible>
+          {/* 2. The thread: the Engine's comments, then hers; what was settled before folds under them */}
+          <section className="ui-qa-thread" aria-labelledby={`${item.id}-comments`}>
+            <ThreadHead id={item.id} count={count} />
+            {byEye && (
+              <p className="ui-qa-c-info">Not evaluated by Fume: check the product and the brand rules by eye.</p>
             )}
-          </Evaluated>
-
-          {/* 3. A design's words, changed right here */}
-          {textLayers.length > 0 && !checked && (
-            <section className="ui-qa-part" aria-labelledby={`${item.id}-words`}>
-              <h3 className="ui-qa-part-title" id={`${item.id}-words`}>
-                Words on the creative
-              </h3>
-              <FieldGroup>
-                {textLayers.map((l) => (
-                  <Field key={l.id}>
-                    <FieldLabel htmlFor={`${item.id}-${l.id}`}>{l.name}</FieldLabel>
-                    <Input
-                      id={`${item.id}-${l.id}`}
-                      value={words[l.id] ?? l.text ?? ""}
-                      onChange={(e) => setWords((w) => ({ ...w, [l.id]: e.target.value }))}
-                      onFocus={() => setActive(l.id)}
-                      onBlur={() => setActive(undefined)}
-                      onKeyDown={(e) => e.key === "Escape" && e.currentTarget.blur()}
-                    />
-                  </Field>
+            {count > 0 ? (
+              <ol className="ui-qa-comments">
+                {openFindings.map((f) => (
+                  <EngineComment
+                    key={f.id}
+                    f={f}
+                    n={f.spot && !video ? pinNo(f) : undefined}
+                    dom={dom(`f:${f.id}`)}
+                    active={focus === `f:${f.id}`}
+                    chosen={isChosen(`f:${f.id}`)}
+                    acting={acting}
+                    settling={settle.isPending && settle.variables?.findingId === f.id}
+                    onFocus={() => {
+                      setFocus(`f:${f.id}`);
+                      if (f.spot) setFmt(undefined);
+                    }}
+                    onChoose={() => choose(`f:${f.id}`)}
+                    onSettle={() => settleFinding(f, "accepted")}
+                    onSeek={onSeek}
+                  />
                 ))}
-              </FieldGroup>
-              {dirty && (
-                <div className="ui-qa-tell-foot">
-                  <FieldDescription>Not changed yet. Mark checked changes them too.</FieldDescription>
-                  <div className="ui-app-row">
-                    <Button variant="quiet" size="sm" onClick={() => setWords({})}>
-                      Undo
-                    </Button>
-                    <Button variant="secondary" size="sm" loading={edit.isPending} onClick={() => saveWords()}>
-                      Change the words
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </section>
-          )}
+                {acting &&
+                  flags.map((r, i) => (
+                    <FlagComment
+                      key={r.text}
+                      flag={r}
+                      dom={dom(`r:${i}`)}
+                      chosen={isChosen(`r:${r.text}`)}
+                      acting={acting}
+                      onChoose={() => choose(`r:${r.text}`)}
+                      onSeek={onSeek}
+                    />
+                  ))}
+                {live && <SaidComment said={live} user={names.user(live.by)} who={names.Who} live />}
+                {notes.map((n) => (
+                  <NoteComment
+                    key={n.id}
+                    note={n}
+                    n={n.spot ? numberOf(n) : undefined}
+                    dom={dom(`n:${n.id}`)}
+                    user={me}
+                    active={focus === `n:${n.id}`}
+                    onFocus={() => {
+                      setFocus(`n:${n.id}`);
+                      if (n.spot) setFmt(n.format);
+                    }}
+                    onRemove={() => removeNote(n.id)}
+                    onSeek={onSeek}
+                  />
+                ))}
+              </ol>
+            ) : (
+              <p className="ui-qa-c-info">
+                {checked
+                  ? "Nothing was left open."
+                  : `Nothing flagged. ${video ? "Pause and click the frame" : "Click the creative"} to pin a comment, or write one below.`}
+              </p>
+            )}
 
-          {/* 4. Tell the Engine: words, and the pins on the creative */}
-          {!checked && (
-            <section className="ui-qa-part" aria-labelledby={`${item.id}-tell`}>
-              <h3 className="ui-qa-part-title" id={`${item.id}-tell`}>
-                {fixer.tell}
-              </h3>
-              {pins.length > 0 && (
-                <ol className="ui-qa-pins" aria-label="Pinned notes">
-                  {pins.map((p) => (
-                    <li key={p.n} className="ui-qa-pin-row" data-active={activePin === p.n ? "" : undefined}>
-                      <span className="ui-qa-pin-num" aria-hidden="true">
-                        {p.n}
-                      </span>
-                      <span className="ui-qa-pin-text">{p.text}</span>
-                      <Button
-                        size="sm"
-                        variant="quiet"
-                        iconOnly
-                        icon="x"
-                        aria-label={`Remove pin ${p.n}`}
-                        onClick={() => removePin(p.n)}
-                      />
-                    </li>
+            {/* 3. Folds: what was said and settled before, what holds, the graphic design, the words */}
+            {(earlier.length > 0 || settled.length > 0) && (
+              <Fold label={copy.count(earlier.length + settled.length, "earlier comment")}>
+                <ol className="ui-qa-comments">
+                  {settled.map((f) => (
+                    <SettledComment
+                      key={f.id}
+                      f={f}
+                      who={names.who}
+                      acting={acting}
+                      undoing={settle.isPending && settle.variables?.findingId === f.id}
+                      onUndo={() => settleFinding(f, "open")}
+                    />
+                  ))}
+                  {earlier.map((s) => (
+                    <SaidComment key={s.id} said={s} user={names.user(s.by)} who={names.Who} />
                   ))}
                 </ol>
-              )}
+              </Fold>
+            )}
+            <HoldsFold
+              holds={[...holds, ...videoHolds]}
+              against={view.against}
+              format={item.format}
+              brandDna={campaign.brandDnaVersion}
+              byEye={byEye}
+            />
+            {/* The graphic design Fume laid on the picture (FLOWS §33): Fume's people only, read-only */}
+            {seesDesign && item.design && item.design.state === "made" && (
+              <Fold
+                label={`The graphic design${item.design.book ? ` · design system ${bookWords(item.design.book).toLowerCase()}` : ""}`}
+              >
+                <div className="ui-qa-fold-body">
+                  <p className="ui-qa-design-line">
+                    {`Fume laid the plan’s words on V${item.design.fromNumber}. Code measured it; Fume’s review looked at it.`}
+                  </p>
+                  <DesignFindings design={item.design} tone="page" />
+                  <DesignChecks checks={item.design.checks} tone="page" compact />
+                </div>
+              </Fold>
+            )}
+            {/* A design's words, changed right here */}
+            {textLayers.length > 0 && !checked && (
+              <Fold label={`Words on the creative · ${textLayers.length}`} defaultOpen={dirty}>
+                <div className="ui-qa-fold-body">
+                  <FieldGroup>
+                    {textLayers.map((l) => (
+                      <Field key={l.id}>
+                        <FieldLabel htmlFor={`${item.id}-${l.id}`}>{l.name}</FieldLabel>
+                        <Input
+                          id={`${item.id}-${l.id}`}
+                          value={words[l.id] ?? l.text ?? ""}
+                          onChange={(e) => setWords((w) => ({ ...w, [l.id]: e.target.value }))}
+                          onFocus={() => setActive(l.id)}
+                          onBlur={() => setActive(undefined)}
+                          onKeyDown={(e) => e.key === "Escape" && e.currentTarget.blur()}
+                        />
+                      </Field>
+                    ))}
+                  </FieldGroup>
+                  {dirty && (
+                    <div className="ui-qa-tell-foot">
+                      <FieldDescription>Not changed yet. Mark checked changes them too.</FieldDescription>
+                      <div className="ui-app-row">
+                        <Button variant="quiet" size="sm" onClick={() => setWords({})}>
+                          Undo
+                        </Button>
+                        <Button variant="secondary" size="sm" loading={edit.isPending} onClick={() => saveWords()}>
+                          Change the words
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Fold>
+            )}
+          </section>
+        </div>
+
+        {/* 4. Write a comment: it joins the thread and goes with Tell the Engine */}
+        {acting && (
+          <form
+            className="ui-qa-compose"
+            data-ui-foot
+            onSubmit={(e) => {
+              e.preventDefault();
+              addNote();
+            }}
+          >
+            <label className="ui-sr-only" htmlFor={`${item.id}-write`}>
+              A comment for the {fixer.author}
+            </label>
+            <div className="ui-qa-compose-row">
               <Textarea
+                id={`${item.id}-write`}
                 ref={tellRef}
-                aria-labelledby={`${item.id}-tell`}
-                placeholder={
-                  pins.length ? "Anything else, in words" : "What is wrong? Or click the creative to pin it."
-                }
+                rows={1}
+                placeholder="Write a comment"
                 value={text}
-                disabled={fixing}
                 onChange={(e) => setText(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
                     e.preventDefault();
                     tell();
-                  }
-                  if (e.key === "Escape") e.currentTarget.blur();
+                  } else if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+                    e.preventDefault();
+                    addNote();
+                  } else if (e.key === "Escape") e.currentTarget.blur();
                 }}
               />
-              {item.studio === "render" && !fixing && (
+              {item.studio === "render" && (
                 <Button
-                  className="ui-qa-chip"
                   variant="quiet"
-                  size="sm"
+                  iconOnly
                   icon="package"
+                  aria-label="Fix with the real product"
+                  title="Fix with the real product"
                   onClick={() => {
                     setText((t) => (t.trim() ? t : "Fix with the real product: "));
                     requestAnimationFrame(() => {
@@ -1326,31 +1614,44 @@ function QaFocus({
                       el?.setSelectionRange(el.value.length, el.value.length);
                     });
                   }}
-                >
-                  Fix with the real product
-                </Button>
+                />
               )}
-            </section>
-          )}
-        </div>
+              <Button
+                type="submit"
+                variant="quiet"
+                iconOnly
+                icon="arrow-up"
+                aria-label="Add the comment"
+                shortcut="↵"
+                disabled={!text.trim()}
+              />
+            </div>
+          </form>
+        )}
 
         {/* 5. The decision, at the same place for every creative */}
         <footer className="ui-qa-foot" data-ui-foot>
           {checked ? (
-            <>
-              <div className="ui-qa-foot-row">
-                <Button variant="secondary" icon="undo-2" loading={act.undoing} onClick={() => void act.undo(view)}>
-                  Undo the check
-                </Button>
-              </div>
-            </>
+            <div className="ui-qa-foot-row">
+              <Button variant="secondary" icon="undo-2" loading={act.undoing} onClick={() => void act.undo(view)}>
+                Undo the check
+              </Button>
+            </div>
           ) : (
             <>
+              {stopping && !fixing && (
+                <p className="ui-qa-foot-note" id={`${item.id}-stops`}>
+                  {isChosen(`f:${stopping.id}`)
+                    ? `The ${findingKind[stopping.dimension].toLowerCase()} finding goes with Tell the Engine. Mark checked once it is fixed.`
+                    : `Decide the ${findingKind[stopping.dimension].toLowerCase()} finding first: a fix, or not a problem.`}
+                </p>
+              )}
               <Button
                 className="ui-qa-foot-main ui-qa-mark"
                 icon="fume-check"
-                onClick={() => markChecked()}
-                disabled={fixing}
+                onClick={markChecked}
+                disabled={fixing || Boolean(stopping)}
+                aria-describedby={stopping && !fixing ? `${item.id}-stops` : undefined}
                 loading={act.checking}
               >
                 Mark checked
@@ -1365,7 +1666,7 @@ function QaFocus({
                   loading={act.telling}
                   onClick={() => tell()}
                 >
-                  {pins.length ? `${fixer.tell} · ${pins.length}` : fixer.tell}
+                  {toEngine ? `${fixer.tell} · ${toEngine}` : fixer.tell}
                   <Kbd className="ui-qa-key">F</Kbd>
                 </Button>
                 <Button
@@ -1381,33 +1682,6 @@ function QaFocus({
               </div>
             </>
           )}
-          {latest?.state === "sent" && fixing && (
-            <p className="ui-qa-foot-note">
-              <TextShimmer>{fixer.fixing}</TextShimmer>
-            </p>
-          )}
-          <AlertDialog open={holding} onOpenChange={setHolding}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {holds.length === 1
-                    ? "Fume found a fault on the product"
-                    : `Fume found ${holds.length} faults on the product`}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {holds.map((h) => h.text).join(" ")}{" "}
-                  {holds.length === 1 ? "Fix it, or accept it as it is" : "Fix them, or accept them as they are"}: your
-                  name goes with the check.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Fix it first</AlertDialogCancel>
-                <AlertDialogAction variant="white" icon="fume-check" onClick={() => markChecked(true)}>
-                  Accept and mark checked
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
           <AlertDialog open={asking} onOpenChange={setAsking}>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -1434,6 +1708,10 @@ function QaFocus({
   );
 }
 
+/** Waiting for a check, and nothing more to say about it. */
+const plainWaiting = (item: QaItem) =>
+  item.state === "waiting" && !item.sentAt && item.feedback.at(-1)?.state !== "fixed";
+
 /** Where it stands, in one line, updated in place. */
 function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
   if (item.state === "checked")
@@ -1454,7 +1732,7 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
         {said?.text
           ? `: “${said.text.replace(/[.\s]+$/, "")}”`
           : said?.pins?.length
-            ? `: ${copy.count(said.pins.length, "pinned note")}`
+            ? `: ${copy.count(said.pins.length, "pinned comment")}`
             : ""}
       </>
     );
@@ -1469,101 +1747,6 @@ function QaStatus({ item, who }: { item: QaItem; who: (id?: Id) => string }) {
     );
   if (item.feedback.at(-1)?.state === "fixed") return <>The Engine’s fix is back. Check it again.</>;
   return <>Waiting for a check</>;
-}
-
-/** The Engine's own evaluation of what it made, in words, and what it is checked against (the per-rule list, read-only,
- *  folded). */
-function Evaluated({
-  evaluation,
-  id,
-  against,
-  format,
-  brandDna,
-  children,
-}: {
-  evaluation: Evaluation;
-  id: string;
-  against: QaView["against"];
-  format: QaItem["format"];
-  brandDna?: number;
-  /** Folds that belong with the findings (what was said to the Engine), 8 under them rather than 24. */
-  children?: ReactNode;
-}) {
-  // Not evaluated yet (made by hand): nothing is said to hold or to be off; the expert checks by eye.
-  const byEye = evaluation.evaluated === false;
-  const rows: { result: "pass" | "flag"; text: string }[] = [
-    ...(byEye
-      ? [
-          { result: "flag" as const, text: "Product Truth: not evaluated by Fume, check it by eye" },
-          { result: "flag" as const, text: "Brand rules: not evaluated by Fume, check them by eye" },
-        ]
-      : [
-          {
-            result: evaluation.productTruth,
-            text: evaluation.productTruth === "pass" ? "Product Truth holds" : "Product Truth is off",
-          },
-          {
-            result: evaluation.brandRules,
-            text: evaluation.brandRules === "pass" ? "Brand rules hold" : "A brand rule is broken",
-          },
-          {
-            result: evaluation.artefacts === "none" ? ("pass" as const) : ("flag" as const),
-            text:
-              evaluation.artefacts === "none"
-                ? "No artefacts"
-                : evaluation.artefacts === "minor"
-                  ? "A minor artefact"
-                  : "A major artefact",
-          },
-        ]),
-    ...evaluation.notes.map((n) => ({ result: byEye ? ("pass" as const) : ("flag" as const), text: n })),
-    ...(evaluation.checks ?? []),
-  ];
-  // By eye, the two "check it by eye" rows are not flags of their own: only what Fume found on the file counts.
-  const flagged = rows.filter((r) => r.result === "flag").length - (byEye ? 2 : 0);
-  const f = copy.format[format];
-  // The channel line follows the creative's own format (the brand's list is written for a feed).
-  const lines = (against ?? []).map((a) =>
-    a.area === "channel" ? { ...a, against: `${f.label} ${f.size}; nothing important in the outer 6 %.` } : a,
-  );
-  return (
-    <section className="ui-qa-part" aria-labelledby={`${id}-found`}>
-      <h3 className="ui-qa-part-title" id={`${id}-found`}>
-        {fixer.found}{" "}
-        {byEye
-          ? `· ${flagged ? `${copy.count(flagged, "flag")}, the rest by eye` : "check it by eye"}`
-          : flagged
-            ? `· ${copy.count(flagged, "flag")}`
-            : "· nothing flagged"}
-      </h3>
-      <ul className="ui-qa-notes">
-        {rows.map((r, i) => (
-          <li key={i} className="ui-qa-note" data-result={r.result}>
-            <Icon name={r.result === "pass" ? "circle-check" : "circle-alert"} />
-            {r.text}
-          </li>
-        ))}
-      </ul>
-      {lines.length > 0 && (
-        <Collapsible className="ui-qa-against">
-          <CollapsibleTrigger>
-            {brandDna ? `Checked against Brand DNA v${brandDna}` : "What it is checked against"}
-          </CollapsibleTrigger>
-          <CollapsibleContent>
-            <dl className="ui-qa-against-list">
-              {lines.map((a) => (
-                <div key={a.area + a.label} className="ui-qa-against-row">
-                  <dt>{a.label}</dt>
-                  <dd>{a.against}</dd>
-                </div>
-              ))}
-            </dl>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
-      {children}
-    </section>
-  );
 }
 
 // ─── The end of the queue ─────────────────────────────────────────────────

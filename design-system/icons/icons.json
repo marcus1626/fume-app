@@ -327,6 +327,41 @@
       "note": ""
     },
     {
+      "name": "lock-open",
+      "lucide": "lock-open",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "An unlocked layer, on the row under the pointer (round 16)."
+    },
+    {
+      "name": "eye-off",
+      "lucide": "eye-off",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "A hidden layer: the filled eye with Lucide's slash, cut clear of the eye (round 16, Marcus 9 Nov)."
+    },
+    {
+      "name": "text-align-start",
+      "lucide": "text-align-start",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words set to the left (round 16)."
+    },
+    {
+      "name": "text-align-center",
+      "lucide": "text-align-center",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words centred (round 16)."
+    },
+    {
+      "name": "text-align-end",
+      "lucide": "text-align-end",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "Words set to the right (round 16)."
+    },
+    {
       "name": "mail",
       "lucide": "mail",
       "kind": "filled",
@@ -577,6 +612,69 @@
       "kind": "filled",
       "status": "PROPOSED",
       "note": ""
+    },
+    {
+      "name": "film",
+      "lucide": "film",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "a shot in the Video studio (FLOWS §27)"
+    },
+    {
+      "name": "music",
+      "lucide": "music",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "the sound track in the Video studio (FLOWS §27)"
+    },
+    {
+      "name": "captions",
+      "lucide": "captions",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "captions in the Video studio (FLOWS §27)"
+    },
+    {
+      "name": "volume-2",
+      "lucide": "volume-2",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "an audio track that is heard (round 16, the video editor)"
+    },
+    {
+      "name": "volume-x",
+      "lucide": "volume-x",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "a muted audio track (round 16, the video editor)"
+    },
+    {
+      "name": "timer",
+      "lucide": "timer",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "the stopwatch: a property with keyframes, as in After Effects (round 16)"
+    },
+    {
+      "name": "hand",
+      "lucide": "hand",
+      "kind": "line",
+      "status": "PROPOSED",
+      "note": "move around the storyboard (round 16)"
+    },
+    {
+      "name": "mouse-pointer-2",
+      "lucide": "mouse-pointer-2",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "pick and move on the storyboard (round 16)"
+    },
+    {
+      "name": "spline",
+      "lucide": "spline",
+      "kind": "filled",
+      "status": "PROPOSED",
+      "note": "an easing curve (round 16, the curve editor)"
     },
     {
       "name": "mic",

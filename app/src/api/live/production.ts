@@ -31,6 +31,7 @@ import { placements } from "../../mock/seed/studio";
 import { defaults, modes } from "../../mock/seed/studioModes";
 import type { Live } from "./context";
 import { CREATIVE, VERSION, fileUrls, uploadFile, type CreativeRow, type VersionRow } from "./map";
+import { failureOf, modelName, readPrompts, toEnginePrompt } from "./engine";
 import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 // ─── Rows ────────────────────────────────────────────────────────────────────
@@ -63,6 +64,7 @@ export interface CandidateRow {
   origin: "engine" | "manual";
   note: string | null;
   made_by: string | null;
+  attempt_id: string | null;
   created_at: string;
   /** What the Engine saw when it looked at its own picture (20261104170000_engine_evaluation.sql); null until then. */
   evaluation?: StoredEvaluation | null;
@@ -82,7 +84,7 @@ export interface StoredDetail {
   ok: boolean;
   note?: string;
 }
-export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, created_at, evaluation, details";
+export const CANDIDATE = "id, job_id, file_id, origin, note, made_by, attempt_id, created_at, evaluation, details";
 /** A detail's id: the picture it was read on, and its number there. Its token (the real product's cut-out) has the same. */
 export const detailId = (candidateId: Id, n: number) => `${candidateId}:${n}`;
 /** A surgical fix on a picture (docs/mvp/picture-fix.md); staff-only, so a customer reads none. */
@@ -255,7 +257,7 @@ export async function readDocuments(
   const candidates = jobIds.length
     ? await rows<CandidateRow>(supabase().from("candidates").select(CANDIDATE).in("job_id", jobIds).order("created_at"))
     : [];
-  const [files, fixRows] = await Promise.all([
+  const [files, fixRows, prompts] = await Promise.all([
     fileUrls([
       ...candidates.map((c) => c.file_id),
       ...childVersions.map((v) => v.file_id),
@@ -273,6 +275,8 @@ export async function readDocuments(
             .order("created_at"),
         )
       : Promise.resolve([] as FixRow[]),
+    // The prompts behind the Engine's renders: Fume's own people get them, anyone else none.
+    readPrompts(jobs.filter((j) => j.mode === "engine").map((j) => j.id)),
   ]);
 
   return creatives.map((cr) => {
@@ -304,47 +308,74 @@ export async function readDocuments(
       ...desk.specs,
       format,
     };
-    const list: RenderVersion[] = pictures.map((c, i) => ({
-      id: c.id,
-      number: i + 1,
-      image: files.get(c.file_id)?.url ?? "",
-      at: c.created_at,
-      by: c.made_by ?? "",
-      state: "done",
-      variables,
-      specs,
-      evaluation: evaluationOf(c),
-      ...(c.details?.length
-        ? {
-            details: c.details.map((d) => ({
-              tokenId: detailId(c.id, d.n),
-              region: d.box,
-              read: d.kind === "part" ? d.reads || "not compared" : d.reads || "nothing legible",
-              ok: d.ok,
-              ...(d.kind === "part" ? { kind: "part" as const, ...(d.note ? { note: d.note } : {}) } : {}),
-            })),
-          }
-        : {}),
-      instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
-      cost: 0,
-    }));
-    // The Engine at work on this creative: the next version, rendering. The Engine is asked again now and then, so a
-    // picture that was still being made when its run ended is collected.
-    for (const j of jobs.filter((x) => x.creative_id === cr.id && engineAtWork(x))) {
-      void askEngine(j.id);
-      list.push({
-        id: `job:${j.id}`,
-        number: list.length + 1,
-        image: "",
-        at: j.updated_at,
-        by: j.requested_by,
-        state: "rendering",
+    const list: RenderVersion[] = pictures.map((c) => {
+      const p = c.origin === "engine" ? prompts.find((x) => x.attempt_id === c.attempt_id) : undefined;
+      return {
+        id: c.id,
+        number: 0,
+        image: files.get(c.file_id)?.url ?? "",
+        at: c.created_at,
+        by: c.made_by ?? "",
+        state: "done",
+        ...(c.details?.length
+          ? {
+              details: c.details.map((d) => ({
+                tokenId: detailId(c.id, d.n),
+                region: d.box,
+                read: d.kind === "part" ? d.reads || "not compared" : d.reads || "nothing legible",
+                ok: d.ok,
+                ...(d.kind === "part" ? { kind: "part" as const, ...(d.note ? { note: d.note } : {}) } : {}),
+              })),
+            }
+          : {}),
         variables,
-        specs: { ...specs, imageModel: "Engine" },
-        evaluation: { productTruth: "flag", brandRules: "flag", artefacts: "none", evaluated: false, notes: [] },
+        specs: p ? { ...specs, imageModel: modelName(p.image_model) } : specs,
+        evaluation: evaluationOf(c),
+        instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
         cost: 0,
-      });
+        ...(p ? { prompt: toEnginePrompt(p) } : {}),
+      };
+    });
+    for (const j of jobs.filter((x) => x.creative_id === cr.id && x.mode === "engine")) {
+      const last = prompts.filter((x) => x.job_id === j.id).at(-1);
+      const prompt = last ? toEnginePrompt(last) : undefined;
+      // A render that did not reach a picture is a version too, so nothing is lost; Render again starts its job over.
+      if (j.state === "failed")
+        list.push({
+          id: `job:${j.id}`,
+          number: 0,
+          image: "",
+          at: j.updated_at,
+          by: j.requested_by,
+          state: "failed",
+          variables,
+          specs: { ...specs, imageModel: last ? modelName(last.image_model) : "Engine" },
+          evaluation: { productTruth: "flag", brandRules: "flag", artefacts: "none", evaluated: false, notes: [] },
+          cost: 0,
+          failure: failureOf(j.error, prompt),
+          ...(prompt ? { prompt } : {}),
+        });
+      // The Engine at work on this creative: the next version, rendering. The Engine is asked again now and then, so a
+      // picture that was still being made when its run ended is collected.
+      else if (engineAtWork(j)) {
+        void askEngine(j.id);
+        list.push({
+          id: `job:${j.id}`,
+          number: 0,
+          image: "",
+          at: j.updated_at,
+          by: j.requested_by,
+          state: "rendering",
+          variables,
+          specs: { ...specs, imageModel: "Engine" },
+          evaluation: { productTruth: "flag", brandRules: "flag", artefacts: "none", evaluated: false, notes: [] },
+          cost: 0,
+        });
+      }
     }
+    // Numbered in the order they were made; the one rendering is the newest.
+    list.sort((a, b) => Number(a.state === "rendering") - Number(b.state === "rendering") || a.at.localeCompare(b.at));
+    list.forEach((v, i) => (v.number = i + 1));
     // The picture that goes to check: the one picked, else the newest not sent yet; once sent, the one in Check.
     const picked =
       (desk.picked && unsent.some((c) => c.id === desk.picked) ? desk.picked : undefined) ??

@@ -1,6 +1,7 @@
 // The Quality Gate: Fume's experts (or an agency's own people) check every creative before the customer sees it. The
 // per-creative checks of the first Studio, and Check: the QA items, each sent from the Studio or landed by an Engine
 // run, checked, sent back to the Engine with feedback, or opened in the Studio.
+import { withMeasures } from "./measures";
 import {
   FumeError,
   type Campaign,
@@ -31,6 +32,7 @@ type Calls =
   | "qaCheck"
   | "qaUncheck"
   | "qaFeedback"
+  | "qaSettleFinding"
   | "qaEdit"
   | "qaToStudio";
 
@@ -129,9 +131,26 @@ export function qaViews(m: Mock, workspaceId?: Id): QaView[] {
 export function fixLater(m: Mock, item: QaItem, delay: number, only?: QaItem["feedback"][number]) {
   setTimeout(() => {
     if (item.state !== "fixing") return;
-    (only ? [only] : item.feedback).forEach((f) => (f.state = "fixed"));
+    const fixed = only ? [only] : item.feedback;
+    fixed.forEach((f) => (f.state = "fixed"));
+    // The Engine's findings the note took up are fixed with it.
+    const taken = new Set(fixed.flatMap((f) => f.findingIds ?? []));
+    for (const f of item.findings ?? [])
+      if (taken.has(f.id) && f.status === "open") Object.assign(f, { status: "resolved", by: undefined, at: m.now() });
     item.state = "waiting";
-    item.evaluation = { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] };
+    // The fixed version is scored again (FLOWS §34.1): over the bar now, so Check still shows where it stands.
+    const was = item.evaluation.scores;
+    item.evaluation = withMeasures(
+      {
+        productTruth: "pass",
+        brandRules: "pass",
+        artefacts: "none",
+        notes: [],
+        ...(was ? { scores: { product: Math.max(was.product, 88), engine: Math.max(was.engine, 86) } } : {}),
+      },
+      item.design ? "design" : item.studio,
+      item.id.length,
+    );
     m.emit({ type: "qa.state", item: structuredClone(item) });
   }, delay);
 }
@@ -256,6 +275,9 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
       // A clear fault on the product stops the check until the expert accepts it (or a new version fixes it).
       if ((item.holds ?? []).some((h) => !accept?.includes(h.id)))
         throw new FumeError("conflict", "A critical finding is still open on this version.");
+      // As in the database: an open critical finding stops the check (mark_checked).
+      if (item.findings?.some((f) => f.severity === "critical" && f.status === "open"))
+        throw new FumeError("conflict", "A finding that stops the check is still open.");
       delete item.holds;
       Object.assign(item, { state: "checked", checkedBy: m.me().id, checkedAt: m.now() });
       const creative = creativeOf(m, item);
@@ -309,9 +331,11 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
       return wait(item);
     },
     // The pins go with the feedback as located notes.
-    async qaFeedback(itemId, text, pins) {
+    async qaFeedback(itemId, text, pins, findingIds) {
       m.mustStaff();
       const item = m.find(db.qaItems, itemId, "QA item");
+      const known = new Set((item.findings ?? []).map((f) => f.id));
+      const taken = (findingIds ?? []).filter((id) => known.has(id));
       const fb = {
         id: m.nextId("fb"),
         text,
@@ -319,17 +343,42 @@ export function qualityCalls(m: Mock): Pick<FumeApi, Calls> {
         at: m.now(),
         state: "sent" as "sent" | "fixed",
         ...(pins?.length ? { pins: structuredClone(pins) } : {}),
+        ...(taken.length ? { findingIds: taken } : {}),
       };
       item.feedback.push(fb);
       item.state = "fixing";
       fixLater(m, item, m.latency * 20, fb);
       return wait(item);
     },
+    // The one who checks sets one of the Engine's findings aside (resolve_finding, accepted), or takes that back.
+    async qaSettleFinding(itemId, findingId, status) {
+      m.mustStaff();
+      const item = m.find(db.qaItems, itemId, "QA item");
+      const f = (item.findings ?? []).find((x) => x.id === findingId);
+      if (!f) throw new FumeError("not_found", "No such finding.");
+      if (item.state === "checked") throw new FumeError("invalid", "Undo the check first.");
+      if (f.status === "resolved") throw new FumeError("invalid", "The Engine already fixed it.");
+      Object.assign(
+        f,
+        status === "accepted" ? { status, by: m.me().id, at: m.now() } : { status, by: undefined, at: undefined },
+      );
+      m.emit({ type: "qa.state", item: structuredClone(item) });
+      return wait(item);
+    },
     async qaEdit(itemId, layers) {
       m.mustStaff();
       const item = m.find(db.qaItems, itemId, "QA item");
       item.layers = layers;
-      if (item.documentId) m.find(db.documents, item.documentId, "creative document").layers = structuredClone(layers);
+      // The edit lands on the layers it carries; the creative's other layers stay (round 15: a Fume design's layers
+      // are kept beside the hand ones).
+      if (item.documentId) {
+        const d = m.find(db.documents, item.documentId, "creative document");
+        const edited = new Map(layers.map((l) => [l.id, l]));
+        d.layers = structuredClone([
+          ...d.layers.map((l) => edited.get(l.id) ?? l),
+          ...layers.filter((l) => !d.layers.some((x) => x.id === l.id)),
+        ]);
+      }
       return wait(item);
     },
     // While the Engine fixes it, the desk opens locked; only Take over takes it (and the fix stops).

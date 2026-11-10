@@ -414,6 +414,7 @@ async function readEverything(p: Person, ids: Universe) {
     await a.qaQueue(id);
     await a.lookPresets(id);
     await a.engineChat(id);
+    await a.engineThreads(id);
   }
   for (const id of ids.documents) await a.document(id);
   for (const id of ids.sessions) await a.studioSession(id);
@@ -982,6 +983,15 @@ scenario("quality gate", async (golden) => {
   await a.qaCheck("qa-5");
   await a.campaign("c-solv");
   await a.creative("cr-a-v9");
+  // The Engine's findings (FLOWS §29.6): an open critical one stops the check; one is set aside and taken back; the
+  // note takes the critical one up, and the Engine's fix resolves it.
+  await a.qaCheck("qa-7");
+  await a.qaSettleFinding("qa-7", "fi-2", "accepted");
+  await a.qaSettleFinding("qa-7", "fi-2", "open");
+  await a.qaSettleFinding("qa-7", "fi-nope", "accepted");
+  await a.qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1", "fi-nope"]);
+  await anna.advance(10_000);
+  await a.qaCheck("qa-7");
 });
 
 scenario("studio", async (golden) => {
@@ -1291,6 +1301,44 @@ scenario("brand books", async (golden) => {
   await a.writeBrandBook({ kind: "voice" });
   await book.advance(1_000);
   await a.brandBooks();
+  // Round 15 (PROPOSED 9 Nov 2026): the Engine proposes a component; Anna adds the Wheel to the draft, takes it back
+  // out, then sets it aside. An approved version takes no proposal, and a customer never answers one.
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "add" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "open" });
+  await a.answerBookProposal({ bookId: "bb-design-2", proposalId: "bp-design-wheel", answer: "not_now" });
+  await a.answerBookProposal({ bookId: "bb-voice-2", proposalId: "bp-voice-giving", answer: "add" });
+  book.signInAs("maja", "u-maja");
+  await a.answerBookProposal({ bookId: "bb-voice-1", proposalId: "bp-voice-giving", answer: "add" });
+});
+
+scenario("graphic design", async (golden) => {
+  // Anna asks Fume to lay the plan's words on V3 of Master 3 in LYSNE's design system (FLOWS §33). Each call answers
+  // with the version Fume is designing; on this still clock it is made before the next call, so asking again designs
+  // again, and each new try moves the words.
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designAsk("doc-autumn-m3", "rv-4");
+  await a.designAsk("doc-bf-1", "rv-bf-1");
+  await a.designVersion("doc-bf-1", "rv-bf-1");
+  anna.signInAs("sander", "u-sander");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  anna.signInAs("maja", "u-maja");
+  await a.designAsk("doc-autumn-m3", "rv-3");
+  anna.signInAs("anna", "u-anna");
+  const designing = await a.designVersion("doc-autumn-m3", "rv-3", "Keep the words high, clear of the bottle.");
+  const made = designing?.versions.at(-1);
+  await anna.advance(1_000);
+  await a.document("doc-autumn-m3");
+  await a.designVersion("doc-autumn-m3", "rv-3");
+  if (made) {
+    await a.designAsk("doc-autumn-m3", made.id);
+    await a.designVersion("doc-autumn-m3", made.id);
+  }
+  await a.document("doc-autumn-m3");
+  await a.documentToCheck("doc-autumn-m3");
+  await a.qaQueue("w-lysne");
 });
 
 test("the golden master calls every member of the mock", () => {
@@ -1298,4 +1346,53 @@ test("the golden master calls every member of the mock", () => {
   console.log(`golden master: ${members.length - missing.length} of ${members.length} FumeApi members called`);
   if (missing.length) console.log(`not called: ${missing.join(", ")}`);
   expect(members.length).toBeGreaterThan(0);
+});
+
+// Round 15 (PROPOSED 9 Nov 2026): the Engine panel's threads (Everything, a campaign's, a creative's) and "Write with
+// Engine" on a field: a suggestion she keeps or drops, and a question with the field as context.
+scenario("engine threads and writing a field", async (golden) => {
+  const anna = golden.open("anna", { userId: "u-anna" });
+  const a = anna.call;
+  const winter = { kind: "campaign", id: "c-winter" } as const;
+  const light = {
+    kind: "plan_line",
+    campaignId: "c-winter",
+    key: "light",
+    label: "Light",
+    value: "Low, warm side light from a window at dusk.",
+  } as const;
+  await a.engineThreads("w-lysne");
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne", { kind: "document", id: "doc-autumn-m3" });
+  await a.engineWrite(light);
+  await a.engineWrite({
+    kind: "plan_creative",
+    campaignId: "c-winter",
+    creativeId: "pc-w-a-m1",
+    part: "text",
+    label: "Master 1’s words",
+    value: "En rolig kveld.",
+  });
+  await a.engineWrite({
+    kind: "book_line",
+    workspaceId: "w-lysne",
+    path: "identity.who",
+    label: "Who we are",
+    value: "LYSNE makes body oils. Made in Norway.",
+  });
+  await a.engineSay("w-lysne", "Write it shorter", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Is it on brand?", { topic: winter, field: light });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "What waits for a check?", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineSay("w-lysne", "Packshots of the gift sets", { topic: winter });
+  await anna.advance(3_000);
+  await a.engineChat("w-lysne", winter);
+  await a.engineChat("w-lysne");
+  await a.engineThreads("w-lysne");
+  // A customer never talks to the Engine
+  const maja = golden.open("maja", {}).call;
+  await maja.engineThreads("w-lysne");
+  await maja.engineWrite(light);
 });

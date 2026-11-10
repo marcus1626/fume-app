@@ -13,6 +13,10 @@ export function useNames() {
   const who = (id: Id | undefined) =>
     id && id === me?.id ? "you" : id ? firstName(byId.get(id)?.name ?? "Someone") : "Someone";
   return {
+    /** The person, for an avatar; undefined when not known here. */
+    user: (id: Id | undefined) => (id ? byId.get(id) : undefined),
+    /** The signed-in person's id. */
+    me: me?.id,
     /** "Anna", or "Someone" when the person is not known here. */
     name: (id: Id | undefined) => (id ? firstName(byId.get(id)?.name ?? "Someone") : "Someone"),
     /** "you" for the signed-in person, otherwise the first name. */

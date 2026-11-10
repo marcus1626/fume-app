@@ -38,17 +38,19 @@ const ROW = 6;
 const NO_CAMPAIGN = "none";
 
 const modeIcon = (m: StudioMode): IconName =>
-  m.output === "model"
-    ? "user"
-    : m.output === "reference"
-      ? "image-plus"
-      : /packshot/i.test(m.name)
-        ? "package"
-        : /layout|design|type/i.test(m.name)
-          ? "type"
-          : /free/i.test(m.name)
-            ? "pencil"
-            : "image";
+  m.studio === "video"
+    ? "film"
+    : m.output === "model"
+      ? "user"
+      : m.output === "reference"
+        ? "image-plus"
+        : /packshot/i.test(m.name)
+          ? "package"
+          : /layout|design|type/i.test(m.name)
+            ? "type"
+            : /free/i.test(m.name)
+              ? "pencil"
+              : "image";
 
 export function StudioHomePage() {
   const { workspaceId = "" } = useParams();
@@ -161,6 +163,7 @@ export function StudioHomePage() {
             <SegmentedControl aria-label="Studio" value={studio} onValueChange={(v) => setStudio(v as StudioKind)}>
               <SegmentedOption value="render">Image</SegmentedOption>
               <SegmentedOption value="design">Design</SegmentedOption>
+              <SegmentedOption value="video">Video</SegmentedOption>
             </SegmentedControl>
             {campaigns.length > 0 && (
               <Select
@@ -188,7 +191,10 @@ export function StudioHomePage() {
             {(list) => {
               const live = list.filter((m) => m.studio === studio && m.available);
               return live.length ? (
-                <ul className="ui-studio-new-modes" aria-label={studio === "design" ? "Design modes" : "Image modes"}>
+                <ul
+                  className="ui-studio-new-modes"
+                  aria-label={studio === "design" ? "Design modes" : studio === "video" ? "Video modes" : "Image modes"}
+                >
                   {live.map((m) => (
                     <li key={m.id}>
                       <WithTooltip label={m.description.replace(/ Coming later\.?$/, "")}>

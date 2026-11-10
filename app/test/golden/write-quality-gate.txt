@@ -52,7 +52,31 @@ anna qaCheck("qa-1") → events
       "checkedBy": "u-anna",
       "creativeId": "cr-a-v7",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 92,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
+                {"label":"Glass","value":95},
+                {"label":"Size","value":92}
+              ],
+              "value": 89
+            },
+            {"id":"brand","label":"Brand","value":92},
+            {"id":"craft","label":"Craft","value":89}
+          ],
+          "product": 89
+        }
+      },
       "feedback": [],
       "format": "feed",
       "id": "qa-1",
@@ -72,7 +96,31 @@ anna qaCheck("qa-1") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v9",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 86,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":86},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:21:00.000Z",
@@ -102,7 +150,31 @@ anna qaCheck("qa-1")
     "checkedBy": "u-anna",
     "creativeId": "cr-a-v7",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 92,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":89},
+              {"label":"Cap","value":89},
+              {"label":"Glass","value":95},
+              {"label":"Size","value":92}
+            ],
+            "value": 89
+          },
+          {"id":"brand","label":"Brand","value":92},
+          {"id":"craft","label":"Craft","value":89}
+        ],
+        "product": 89
+      }
+    },
     "feedback": [],
     "format": "feed",
     "id": "qa-1",
@@ -164,7 +236,31 @@ anna qaUncheck("qa-1") → events
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v7",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 92,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
+                {"label":"Glass","value":95},
+                {"label":"Size","value":92}
+              ],
+              "value": 89
+            },
+            {"id":"brand","label":"Brand","value":92},
+            {"id":"craft","label":"Craft","value":89}
+          ],
+          "product": 89
+        }
+      },
       "feedback": [],
       "format": "feed",
       "id": "qa-1",
@@ -184,7 +280,31 @@ anna qaUncheck("qa-1")
     "campaignId": "c-autumn",
     "creativeId": "cr-a-v7",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 92,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":89},
+              {"label":"Cap","value":89},
+              {"label":"Glass","value":95},
+              {"label":"Size","value":92}
+            ],
+            "value": 89
+          },
+          {"id":"brand","label":"Brand","value":92},
+          {"id":"craft","label":"Craft","value":89}
+        ],
+        "product": 89
+      }
+    },
     "feedback": [],
     "format": "feed",
     "id": "qa-1",
@@ -250,7 +370,31 @@ anna qaCheck("qa-1") → events
       "checkedBy": "u-anna",
       "creativeId": "cr-a-v7",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 92,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":89},
+                {"label":"Cap","value":89},
+                {"label":"Glass","value":95},
+                {"label":"Size","value":92}
+              ],
+              "value": 89
+            },
+            {"id":"brand","label":"Brand","value":92},
+            {"id":"craft","label":"Craft","value":89}
+          ],
+          "product": 89
+        }
+      },
       "feedback": [],
       "format": "feed",
       "id": "qa-1",
@@ -273,7 +417,31 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
       "campaignId": "c-autumn",
       "creativeId": "cr-a-v8",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 91,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":91},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -302,7 +470,31 @@ anna qaFeedback("qa-2", "The cap reads gold, not burgundy", [{"n":1,"text":"Cap"
     "campaignId": "c-autumn",
     "creativeId": "cr-a-v8",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 91,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":88},
+              {"label":"Cap","value":96},
+              {"label":"Glass","value":93},
+              {"label":"Size","value":90}
+            ],
+            "value": 88
+          },
+          {"id":"brand","label":"Brand","value":91},
+          {"id":"craft","label":"Craft","value":95}
+        ],
+        "product": 88
+      }
+    },
     "feedback": [
       {
         "at": "2026-10-14T12:32:00.000Z",
@@ -370,7 +562,31 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":96},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"craft","label":"Craft","value":95}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -437,7 +653,31 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v8",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":96},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":95}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [
           {
             "at": "2026-10-14T12:32:00.000Z",
@@ -503,38 +743,467 @@ anna qaQueue()
       },
       "item": {
         "campaignId": "c-autumn",
+        "creativeId": "cr-a-v10",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "flag",
+          "evaluated": true,
+          "notes": [
+            "The cap reads glossy",
+            "Light from above, not from the side",
+            "A smeared edge where the bottle meets the ledge"
+          ],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 74,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":52},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 52,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 52,
+            "why": [
+              {"score":"product","text":"The cap reads glossy; it is matte"},
+              {"score":"engine","text":"Light from above, not from one side"}
+            ]
+          }
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "Burgundy matte cap, as in its photographs",
+            "finding": "The cap is glossy; LYSNE's cap is matte.",
+            "id": "fi-1",
+            "observed": "A glossy cap with a bright highlight on top",
+            "severity": "critical",
+            "spot": {"x":0.52,"y":0.06},
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Warm low light from one side, like a lamp in the evening",
+            "finding": "The light comes from above, not from one side like a lamp.",
+            "id": "fi-2",
+            "observed": "Even, soft light from above",
+            "severity": "minor",
+            "spot": {"x":0.24,"y":0.18},
+            "status": "open"
+          },
+          {
+            "dimension": "artefacts",
+            "finding": "A soft, smeared edge where the bottle meets the ledge.",
+            "id": "fi-3",
+            "severity": "minor",
+            "spot": {"x":0.5,"y":0.66},
+            "status": "open"
+          }
+        ],
+        "format": "feed",
+        "formats": [
+          {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+          {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+        ],
+        "id": "qa-7",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:27:00.000Z",
+        "risk": "normal",
+        "slot": "Master 3 · Variant 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 8",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v11",
+        "design": {
+          "at": "2026-10-14T12:28:00.000Z",
+          "book": {"state":"checked","version":1},
+          "checks": [
+            {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
+            {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
+            {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 3,
+              "node": "Headline",
+              "note": "9.4:1 against nine in ten of the pixels under the words (needs 3:1).",
+              "ok": true,
+              "value": 9.4
+            },
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 4.5,
+              "node": "Subline",
+              "note": "7.8:1 against nine in ten of the pixels under the words (needs 4.5:1).",
+              "ok": true,
+              "value": 7.8
+            },
+            {
+              "check": "font",
+              "hard": false,
+              "node": "h1",
+              "note": "Cormorant is not on file; set in Cormorant Garamond until the brand gives Fume its font.",
+              "ok": false
+            }
+          ],
+          "document": {"name":"feed-9-v2.fig"},
+          "findings": [
+            {
+              "by": "fume_review",
+              "severity": "minor",
+              "what": "The supporting line sits close to the headline; one more step of space would let it breathe."
+            }
+          ],
+          "fromNumber": 1,
+          "fromVersionId": "cv-a-v11-1",
+          "id": "dl-1",
+          "layout": {"align":"left","band":"top","colour":"text","ground":"photo"},
+          "llmUsd": 0.002,
+          "requestedBy": "u-anna",
+          "state": "made",
+          "tried": 6,
+          "verdict": "ready_for_check",
+          "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+        },
+        "drawn": {
+          "fonts": ["Cormorant Garamond","Inter"],
+          "layers": [
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Cormorant\", \"Cormorant Garamond\", Georgia, serif",
+              "lineHeight": 1.05,
+              "role": "headline",
+              "sizePx": 76,
+              "text": "Den langsomme timen før søvn.",
+              "trackingEm": -0.01,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 5.3
+            },
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Inter\", \"Inter\", system-ui, sans-serif",
+              "lineHeight": 1.3,
+              "role": "subline",
+              "sizePx": 30,
+              "text": "Night Body Oil · 100 ml",
+              "trackingEm": 0,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 18.9
+            }
+          ]
+        },
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {"id":"readability","label":"Readability","value":89},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":95},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 91
+          }
+        },
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-8",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:29:00.000Z",
+        "previous": {"image":"/demo/lysne/10-08-feed.jpg","version":1},
+        "risk": "normal",
+        "slot": "Master 2 · Variant 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 9",
+        "version": 2,
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-night-story",
+        "documentId": "doc-night-story",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "evaluated": true,
+          "notes": [],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":96},
+                  {"label":"Cap","value":93},
+                  {"label":"Glass","value":58},
+                  {"label":"Size","value":97}
+                ],
+                "value": 58,
+                "why": "Oil leaks from the glass at the base in shot 1"
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"first_second","label":"First second","value":86},
+              {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label"
+              }
+            ],
+            "product": 58,
+            "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
+          }
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "A closed bottle: no oil leaves it",
+            "finding": "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+            "id": "fi-v1",
+            "observed": "A thin run of oil down the base, from the first frame",
+            "seconds": {"from":0,"to":2.9},
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Words and the button come in on a beat, as in LYSNE’s motion",
+            "finding": "The button comes in a quarter second after the beat.",
+            "id": "fi-v2",
+            "seconds": {"from":4,"to":4.25},
+            "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "Once it is in, the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4.3,"to":6},
+            "severity": "major",
+            "status": "open"
+          }
+        ],
+        "format": "story",
+        "id": "qa-9",
+        "image": "/demo/lysne/video/drop.jpg",
+        "madeAt": "2026-10-14T12:26:00.000Z",
+        "risk": "normal",
+        "slot": "Film 1 · Story",
+        "state": "waiting",
+        "studio": "video",
+        "title": "Night ritual · Story 9:16",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 90,
+            "measures": [
+              {"id":"readability","label":"Readability","value":93},
+              {"id":"system","label":"Design system","value":95},
+              {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
+        "findings": [
+          {
+            "dimension": "design",
+            "expected": "Words clear of the product, in the calm space above or below it",
+            "finding": "The headline sits over the bottle’s label.",
+            "id": "fi-d1",
+            "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+            "severity": "major",
+            "spot": {"x":0.62,"y":0.74},
+            "status": "open"
+          }
+        ],
         "format": "story",
         "id": "qa-4",
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "For the hour before sleep.",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -544,11 +1213,33 @@ anna qaQueue()
             "style": "small",
             "text": "Night Body Oil · 100 ml",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.83
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "For the hour before sleep.",
+            "visible": true,
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -601,7 +1292,31 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-1",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":97},
+                  {"label":"Glass","value":94},
+                  {"label":"Size","value":91}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":94}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-5",
@@ -656,7 +1371,31 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-2",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "pass",
+          "notes": ["A soft edge on the left cup"],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 81,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":94},
+                  {"label":"Glass","value":91},
+                  {"label":"Size","value":90}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":81},
+              {"id":"craft","label":"Craft","value":90}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-6",
@@ -928,7 +1667,31 @@ anna qaQueue()
         "checkedBy": "u-anna",
         "creativeId": "cr-a-v7",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 92,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":95},
+                  {"label":"Size","value":92}
+                ],
+                "value": 89
+              },
+              {"id":"brand","label":"Brand","value":92},
+              {"id":"craft","label":"Craft","value":89}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-1",
@@ -954,35 +1717,51 @@ anna qaCheck("qa-4") → events
       "creativeId": "cr-doc-autumn-email",
       "documentId": "doc-autumn-email",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 90,
+          "measures": [
+            {"id":"readability","label":"Readability","value":93},
+            {"id":"system","label":"Design system","value":95},
+            {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+            {"id":"words","label":"Words","value":95}
+          ],
+          "product": 89
+        }
+      },
       "feedback": [],
+      "findings": [
+        {
+          "dimension": "design",
+          "expected": "Words clear of the product, in the calm space above or below it",
+          "finding": "The headline sits over the bottle’s label.",
+          "id": "fi-d1",
+          "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+          "severity": "major",
+          "spot": {"x":0.62,"y":0.74},
+          "status": "open"
+        }
+      ],
       "format": "story",
       "id": "qa-4",
       "image": "/demo/lysne/05-01-story.jpg",
       "layers": [
         {
+          "fit": "fill",
           "h": 1,
           "id": "ly-img",
-          "image": "/demo/lysne/05-01-feed.jpg",
+          "image": "/demo/lysne/05-01-story.jpg",
           "kind": "image",
           "locked": true,
-          "name": "Image v3",
+          "name": "Picture",
           "visible": true,
           "w": 1,
           "x": 0,
           "y": 0
-        },
-        {
-          "h": 0.1,
-          "id": "ly-head",
-          "kind": "text",
-          "name": "Headline",
-          "style": "headline",
-          "text": "For the hour before sleep.",
-          "visible": true,
-          "w": 0.84,
-          "x": 0.08,
-          "y": 0.72
         },
         {
           "h": 0.05,
@@ -992,11 +1771,33 @@ anna qaCheck("qa-4") → events
           "style": "small",
           "text": "Night Body Oil · 100 ml",
           "visible": true,
-          "w": 0.6,
-          "x": 0.08,
-          "y": 0.83
+          "w": 0.5,
+          "x": 0.3,
+          "y": 0.73
         },
-        {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+        {
+          "h": 0.1,
+          "id": "ly-head",
+          "kind": "text",
+          "name": "Headline",
+          "style": "headline",
+          "text": "For the hour before sleep.",
+          "visible": true,
+          "w": 0.62,
+          "x": 0.3,
+          "y": 0.62
+        },
+        {
+          "h": 0.05,
+          "id": "ly-logo",
+          "kind": "logo",
+          "name": "LYSNE logo",
+          "variant": "Wordmark, reversed",
+          "visible": true,
+          "w": 0.2,
+          "x": 0.08,
+          "y": 0.07
+        }
       ],
       "madeAt": "2026-10-14T12:17:00.000Z",
       "risk": "normal",
@@ -1016,35 +1817,51 @@ anna qaCheck("qa-4")
     "creativeId": "cr-doc-autumn-email",
     "documentId": "doc-autumn-email",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 90,
+        "measures": [
+          {"id":"readability","label":"Readability","value":93},
+          {"id":"system","label":"Design system","value":95},
+          {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+          {"id":"words","label":"Words","value":95}
+        ],
+        "product": 89
+      }
+    },
     "feedback": [],
+    "findings": [
+      {
+        "dimension": "design",
+        "expected": "Words clear of the product, in the calm space above or below it",
+        "finding": "The headline sits over the bottle’s label.",
+        "id": "fi-d1",
+        "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+        "severity": "major",
+        "spot": {"x":0.62,"y":0.74},
+        "status": "open"
+      }
+    ],
     "format": "story",
     "id": "qa-4",
     "image": "/demo/lysne/05-01-story.jpg",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "For the hour before sleep.",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -1054,11 +1871,33 @@ anna qaCheck("qa-4")
         "style": "small",
         "text": "Night Body Oil · 100 ml",
         "visible": true,
-        "w": 0.6,
-        "x": 0.08,
-        "y": 0.83
+        "w": 0.5,
+        "x": 0.3,
+        "y": 0.73
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "For the hour before sleep.",
+        "visible": true,
+        "w": 0.62,
+        "x": 0.3,
+        "y": 0.62
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "madeAt": "2026-10-14T12:17:00.000Z",
     "risk": "normal",
@@ -1068,7 +1907,7 @@ anna qaCheck("qa-4")
     "title": "Email header",
     "workspaceId": "w-lysne"
   }
-anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","kind":"image","locked":true,"name":"Image v3","visible":true,"w":1,"x":0,"y":...)
+anna qaEdit("qa-4", [{"fit":"fill","h":1,"id":"ly-img","image":"/demo/lysne/05-01-story.jpg","kind":"image","locked":true,"name":"Picture","visible":true,"w"...)
   {
     "campaignId": "c-autumn",
     "checkedAt": "2026-10-14T12:32:10.000Z",
@@ -1076,35 +1915,51 @@ anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","
     "creativeId": "cr-doc-autumn-email",
     "documentId": "doc-autumn-email",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 90,
+        "measures": [
+          {"id":"readability","label":"Readability","value":93},
+          {"id":"system","label":"Design system","value":95},
+          {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+          {"id":"words","label":"Words","value":95}
+        ],
+        "product": 89
+      }
+    },
     "feedback": [],
+    "findings": [
+      {
+        "dimension": "design",
+        "expected": "Words clear of the product, in the calm space above or below it",
+        "finding": "The headline sits over the bottle’s label.",
+        "id": "fi-d1",
+        "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+        "severity": "major",
+        "spot": {"x":0.62,"y":0.74},
+        "status": "open"
+      }
+    ],
     "format": "story",
     "id": "qa-4",
     "image": "/demo/lysne/05-01-story.jpg",
     "layers": [
       {
+        "fit": "fill",
         "h": 1,
         "id": "ly-img",
-        "image": "/demo/lysne/05-01-feed.jpg",
+        "image": "/demo/lysne/05-01-story.jpg",
         "kind": "image",
         "locked": true,
-        "name": "Image v3",
+        "name": "Picture",
         "visible": true,
         "w": 1,
         "x": 0,
         "y": 0
-      },
-      {
-        "h": 0.1,
-        "id": "ly-head",
-        "kind": "text",
-        "name": "Headline",
-        "style": "headline",
-        "text": "Autumn",
-        "visible": true,
-        "w": 0.84,
-        "x": 0.08,
-        "y": 0.72
       },
       {
         "h": 0.05,
@@ -1114,11 +1969,33 @@ anna qaEdit("qa-4", [{"h":1,"id":"ly-img","image":"/demo/lysne/05-01-feed.jpg","
         "style": "small",
         "text": "Autumn",
         "visible": true,
-        "w": 0.6,
-        "x": 0.08,
-        "y": 0.83
+        "w": 0.5,
+        "x": 0.3,
+        "y": 0.73
       },
-      {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+      {
+        "h": 0.1,
+        "id": "ly-head",
+        "kind": "text",
+        "name": "Headline",
+        "style": "headline",
+        "text": "Autumn",
+        "visible": true,
+        "w": 0.62,
+        "x": 0.3,
+        "y": 0.62
+      },
+      {
+        "h": 0.05,
+        "id": "ly-logo",
+        "kind": "logo",
+        "name": "LYSNE logo",
+        "variant": "Wordmark, reversed",
+        "visible": true,
+        "w": 0.2,
+        "x": 0.08,
+        "y": 0.07
+      }
     ],
     "madeAt": "2026-10-14T12:17:00.000Z",
     "risk": "normal",
@@ -1135,7 +2012,31 @@ anna qaToStudio("qa-2") → events
       "creativeId": "cr-a-v8",
       "documentId": "doc-mvkqu1qo-4",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 91,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":91},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -1203,7 +2104,31 @@ anna qaToStudio("qa-2")
           "at": "2026-10-14T12:25:00.000Z",
           "by": "u-anna",
           "cost": 0.12,
-          "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+          "evaluation": {
+            "artefacts": "none",
+            "brandRules": "pass",
+            "notes": [],
+            "productTruth": "pass",
+            "scores": {
+              "engine": 91,
+              "measures": [
+                {
+                  "id": "product",
+                  "label": "Product",
+                  "parts": [
+                    {"label":"Label","value":88},
+                    {"label":"Cap","value":96},
+                    {"label":"Glass","value":93},
+                    {"label":"Size","value":90}
+                  ],
+                  "value": 88
+                },
+                {"id":"brand","label":"Brand","value":91},
+                {"id":"craft","label":"Craft","value":95}
+              ],
+              "product": 88
+            }
+          },
           "id": "rv-mvkqu1qo-5",
           "image": "/demo/lysne/09-07-square.jpg",
           "number": 1,
@@ -1237,7 +2162,31 @@ anna qaToStudio("qa-2")
       "creativeId": "cr-a-v8",
       "documentId": "doc-mvkqu1qo-4",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 91,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":91},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
       "feedback": [
         {
           "at": "2026-10-14T12:32:00.000Z",
@@ -1425,7 +2374,31 @@ anna qaQueue()
         "campaignId": "c-autumn",
         "creativeId": "cr-a-v9",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":96},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"craft","label":"Craft","value":95}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [
           {
             "at": "2026-10-14T12:21:00.000Z",
@@ -1444,6 +2417,419 @@ anna qaQueue()
         "state": "waiting",
         "studio": "render",
         "title": "Feed 7",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v10",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "flag",
+          "evaluated": true,
+          "notes": [
+            "The cap reads glossy",
+            "Light from above, not from the side",
+            "A smeared edge where the bottle meets the ledge"
+          ],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 74,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":92},
+                  {"label":"Cap","value":52},
+                  {"label":"Glass","value":96},
+                  {"label":"Size","value":93}
+                ],
+                "value": 52,
+                "why": "The cap reads glossy; it is matte"
+              },
+              {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+              {"id":"craft","label":"Craft","value":88}
+            ],
+            "product": 52,
+            "why": [
+              {"score":"product","text":"The cap reads glossy; it is matte"},
+              {"score":"engine","text":"Light from above, not from one side"}
+            ]
+          }
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "Burgundy matte cap, as in its photographs",
+            "finding": "The cap is glossy; LYSNE's cap is matte.",
+            "id": "fi-1",
+            "observed": "A glossy cap with a bright highlight on top",
+            "severity": "critical",
+            "spot": {"x":0.52,"y":0.06},
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Warm low light from one side, like a lamp in the evening",
+            "finding": "The light comes from above, not from one side like a lamp.",
+            "id": "fi-2",
+            "observed": "Even, soft light from above",
+            "severity": "minor",
+            "spot": {"x":0.24,"y":0.18},
+            "status": "open"
+          },
+          {
+            "dimension": "artefacts",
+            "finding": "A soft, smeared edge where the bottle meets the ledge.",
+            "id": "fi-3",
+            "severity": "minor",
+            "spot": {"x":0.5,"y":0.66},
+            "status": "open"
+          }
+        ],
+        "format": "feed",
+        "formats": [
+          {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+          {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+        ],
+        "id": "qa-7",
+        "image": "/demo/lysne/06-10-feed.jpg",
+        "madeAt": "2026-10-14T12:27:00.000Z",
+        "risk": "normal",
+        "slot": "Master 3 · Variant 1",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 8",
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-a-v11",
+        "design": {
+          "at": "2026-10-14T12:28:00.000Z",
+          "book": {"state":"checked","version":1},
+          "checks": [
+            {"check":"fits","hard":true,"node":"Words","note":"Inside the safe area.","ok":true},
+            {"check":"lines","hard":true,"need":2,"node":"Headline","note":"2 lines (at most 2).","ok":true,"value":2},
+            {"check":"lines","hard":true,"need":3,"node":"Subline","note":"1 line (at most 3).","ok":true,"value":1},
+            {"check":"covers","hard":true,"node":"Words","note":"Clear of the product.","ok":true},
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 3,
+              "node": "Headline",
+              "note": "9.4:1 against nine in ten of the pixels under the words (needs 3:1).",
+              "ok": true,
+              "value": 9.4
+            },
+            {
+              "check": "contrast",
+              "hard": true,
+              "need": 4.5,
+              "node": "Subline",
+              "note": "7.8:1 against nine in ten of the pixels under the words (needs 4.5:1).",
+              "ok": true,
+              "value": 7.8
+            },
+            {
+              "check": "font",
+              "hard": false,
+              "node": "h1",
+              "note": "Cormorant is not on file; set in Cormorant Garamond until the brand gives Fume its font.",
+              "ok": false
+            }
+          ],
+          "document": {"name":"feed-9-v2.fig"},
+          "findings": [
+            {
+              "by": "fume_review",
+              "severity": "minor",
+              "what": "The supporting line sits close to the headline; one more step of space would let it breathe."
+            }
+          ],
+          "fromNumber": 1,
+          "fromVersionId": "cv-a-v11-1",
+          "id": "dl-1",
+          "layout": {"align":"left","band":"top","colour":"text","ground":"photo"},
+          "llmUsd": 0.002,
+          "requestedBy": "u-anna",
+          "state": "made",
+          "tried": 6,
+          "verdict": "ready_for_check",
+          "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+        },
+        "drawn": {
+          "fonts": ["Cormorant Garamond","Inter"],
+          "layers": [
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Cormorant\", \"Cormorant Garamond\", Georgia, serif",
+              "lineHeight": 1.05,
+              "role": "headline",
+              "sizePx": 76,
+              "text": "Den langsomme timen før søvn.",
+              "trackingEm": -0.01,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 5.3
+            },
+            {
+              "align": "left",
+              "colour": "#2B1D17",
+              "family": "\"Inter\", \"Inter\", system-ui, sans-serif",
+              "lineHeight": 1.3,
+              "role": "subline",
+              "sizePx": 30,
+              "text": "Night Body Oil · 100 ml",
+              "trackingEm": 0,
+              "w": 57,
+              "weight": 400,
+              "x": 6.7,
+              "y": 18.9
+            }
+          ]
+        },
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {"id":"readability","label":"Readability","value":89},
+              {"id":"system","label":"Design system","value":82},
+              {"id":"placement","label":"Placement","value":95},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 91
+          }
+        },
+        "feedback": [],
+        "format": "feed",
+        "id": "qa-8",
+        "image": "/demo/lysne/10-08-feed.jpg",
+        "madeAt": "2026-10-14T12:29:00.000Z",
+        "previous": {"image":"/demo/lysne/10-08-feed.jpg","version":1},
+        "risk": "normal",
+        "slot": "Master 2 · Variant 4",
+        "state": "waiting",
+        "studio": "render",
+        "title": "Feed 9",
+        "version": 2,
+        "workspaceId": "w-lysne"
+      },
+      "productName": "Night Body Oil",
+      "workspace": {"brandName":"LYSNE","id":"w-lysne","language":"Norwegian","market":"Norway","organisationId":"o-lysne"}
+    },
+    {
+      "against": [
+        {"against":"Amber glass, 100 ml, as in the packshot.","area":"product_truth","label":"Bottle"},
+        {"against":"Burgundy, matte. Never glossy, never black.","area":"product_truth","label":"Cap"},
+        {"against":"Front and centred, not cropped, not moved.","area":"product_truth","label":"Label"},
+        {"against":"Warm neutrals and amber light; no cold light.","area":"brand_rules","label":"Light"},
+        {"against":"No skin-result claims in the creative.","area":"claims","label":"Claims against the brief"},
+        {
+          "against": "Feed 1080 × 1350; nothing important in the outer 6 %.",
+          "area": "channel",
+          "label": "Format and safe area"
+        }
+      ],
+      "campaign": {
+        "approverId": "u-maja",
+        "boardId": "bd-autumn",
+        "brandDnaVersion": 3,
+        "channels": ["paid_social","email","product_page"],
+        "chosenDirectionId": "d-a1",
+        "collectionIds": ["cl-aw26"],
+        "counts": {"approved":2,"checked":7,"creatives":11,"delivered":0,"inCheck":2},
+        "cover": "/demo/lysne/05-06-feed.jpg",
+        "createdAt": "2026-10-02T12:32:00.000Z",
+        "createdBy": "u-maja",
+        "dueAt": "2026-10-17T12:32:00.000Z",
+        "formats": ["feed","story","square"],
+        "id": "c-autumn",
+        "language": "Norwegian",
+        "market": "Norway",
+        "name": "Autumn launch",
+        "productIds": ["pr-oil"],
+        "roundsIncluded": 2,
+        "roundsUsed": 1,
+        "stage": "variants",
+        "state": "in_review",
+        "updatedAt": "2026-10-14T12:32:00.000Z",
+        "waits": {"briefReady":false,"by":"2026-10-17T12:32:00.000Z","directions":0,"questions":0,"toSend":1},
+        "workspaceId": "w-lysne"
+      },
+      "item": {
+        "campaignId": "c-autumn",
+        "creativeId": "cr-night-story",
+        "documentId": "doc-night-story",
+        "dueAt": "2026-10-15T12:32:00.000Z",
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "evaluated": true,
+          "notes": [],
+          "productTruth": "flag",
+          "scores": {
+            "engine": 86,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":96},
+                  {"label":"Cap","value":93},
+                  {"label":"Glass","value":58},
+                  {"label":"Size","value":97}
+                ],
+                "value": 58,
+                "why": "Oil leaks from the glass at the base in shot 1"
+              },
+              {"id":"brand","label":"Brand","value":86},
+              {"id":"first_second","label":"First second","value":86},
+              {"id":"rhythm","label":"Rhythm","value":76,"why":"The button comes in a quarter second after the beat"},
+              {
+                "id": "text_on_screen",
+                "label": "Text on screen",
+                "value": 68,
+                "why": "The button sits over the name on the label"
+              }
+            ],
+            "product": 58,
+            "why": [{"score":"product","text":"Oil leaks from the glass at the base in shot 1"}]
+          }
+        },
+        "feedback": [],
+        "findings": [
+          {
+            "dimension": "product",
+            "expected": "A closed bottle: no oil leaves it",
+            "finding": "Shot 1: oil runs out of the bottle’s base while the cap is on.",
+            "id": "fi-v1",
+            "observed": "A thin run of oil down the base, from the first frame",
+            "seconds": {"from":0,"to":2.9},
+            "severity": "critical",
+            "status": "open"
+          },
+          {
+            "dimension": "brand_brief",
+            "expected": "Words and the button come in on a beat, as in LYSNE’s motion",
+            "finding": "The button comes in a quarter second after the beat.",
+            "id": "fi-v2",
+            "seconds": {"from":4,"to":4.25},
+            "severity": "minor",
+            "status": "open"
+          },
+          {
+            "dimension": "design",
+            "expected": "The button clear of the label, as LYSNE’s design system places it",
+            "finding": "Once it is in, the button sits over the name on the label.",
+            "id": "fi-v3",
+            "seconds": {"from":4.3,"to":6},
+            "severity": "major",
+            "status": "open"
+          }
+        ],
+        "format": "story",
+        "id": "qa-9",
+        "image": "/demo/lysne/video/drop.jpg",
+        "madeAt": "2026-10-14T12:26:00.000Z",
+        "risk": "normal",
+        "slot": "Film 1 · Story",
+        "state": "waiting",
+        "studio": "video",
+        "title": "Night ritual · Story 9:16",
         "workspaceId": "w-lysne"
       },
       "productName": "Night Body Oil",
@@ -1489,7 +2875,31 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-1",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":97},
+                  {"label":"Glass","value":94},
+                  {"label":"Size","value":91}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":94}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-5",
@@ -1544,7 +2954,31 @@ anna qaQueue()
         "campaignId": "c-solv",
         "creativeId": "cr-solv-2",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "pass",
+          "notes": ["A soft edge on the left cup"],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 81,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":94},
+                  {"label":"Glass","value":91},
+                  {"label":"Size","value":90}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":81},
+              {"id":"craft","label":"Craft","value":90}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-6",
@@ -1762,7 +3196,31 @@ anna qaQueue()
         "creativeId": "cr-a-v8",
         "documentId": "doc-mvkqu1qo-4",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 91,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":88},
+                  {"label":"Cap","value":96},
+                  {"label":"Glass","value":93},
+                  {"label":"Size","value":90}
+                ],
+                "value": 88
+              },
+              {"id":"brand","label":"Brand","value":91},
+              {"id":"craft","label":"Craft","value":95}
+            ],
+            "product": 88
+          }
+        },
         "feedback": [
           {
             "at": "2026-10-14T12:32:00.000Z",
@@ -1891,7 +3349,31 @@ anna qaQueue()
         "checkedBy": "u-anna",
         "creativeId": "cr-a-v7",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 92,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":89},
+                  {"label":"Cap","value":89},
+                  {"label":"Glass","value":95},
+                  {"label":"Size","value":92}
+                ],
+                "value": 89
+              },
+              {"id":"brand","label":"Brand","value":92},
+              {"id":"craft","label":"Craft","value":89}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-1",
@@ -1953,35 +3435,51 @@ anna qaQueue()
         "creativeId": "cr-doc-autumn-email",
         "documentId": "doc-autumn-email",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 90,
+            "measures": [
+              {"id":"readability","label":"Readability","value":93},
+              {"id":"system","label":"Design system","value":95},
+              {"id":"placement","label":"Placement","value":58,"why":"The headline sits over the bottle’s label"},
+              {"id":"words","label":"Words","value":95}
+            ],
+            "product": 89
+          }
+        },
         "feedback": [],
+        "findings": [
+          {
+            "dimension": "design",
+            "expected": "Words clear of the product, in the calm space above or below it",
+            "finding": "The headline sits over the bottle’s label.",
+            "id": "fi-d1",
+            "observed": "“For the hour before sleep.” covers “Night Body Oil”",
+            "severity": "major",
+            "spot": {"x":0.62,"y":0.74},
+            "status": "open"
+          }
+        ],
         "format": "story",
         "id": "qa-4",
         "image": "/demo/lysne/05-01-story.jpg",
         "layers": [
           {
+            "fit": "fill",
             "h": 1,
             "id": "ly-img",
-            "image": "/demo/lysne/05-01-feed.jpg",
+            "image": "/demo/lysne/05-01-story.jpg",
             "kind": "image",
             "locked": true,
-            "name": "Image v3",
+            "name": "Picture",
             "visible": true,
             "w": 1,
             "x": 0,
             "y": 0
-          },
-          {
-            "h": 0.1,
-            "id": "ly-head",
-            "kind": "text",
-            "name": "Headline",
-            "style": "headline",
-            "text": "Autumn",
-            "visible": true,
-            "w": 0.84,
-            "x": 0.08,
-            "y": 0.72
           },
           {
             "h": 0.05,
@@ -1991,11 +3489,33 @@ anna qaQueue()
             "style": "small",
             "text": "Autumn",
             "visible": true,
-            "w": 0.6,
-            "x": 0.08,
-            "y": 0.83
+            "w": 0.5,
+            "x": 0.3,
+            "y": 0.73
           },
-          {"h":0.05,"id":"ly-logo","kind":"logo","name":"LYSNE logo","visible":true,"w":0.2,"x":0.08,"y":0.07}
+          {
+            "h": 0.1,
+            "id": "ly-head",
+            "kind": "text",
+            "name": "Headline",
+            "style": "headline",
+            "text": "Autumn",
+            "visible": true,
+            "w": 0.62,
+            "x": 0.3,
+            "y": 0.62
+          },
+          {
+            "h": 0.05,
+            "id": "ly-logo",
+            "kind": "logo",
+            "name": "LYSNE logo",
+            "variant": "Wordmark, reversed",
+            "visible": true,
+            "w": 0.2,
+            "x": 0.08,
+            "y": 0.07
+          }
         ],
         "madeAt": "2026-10-14T12:17:00.000Z",
         "risk": "normal",
@@ -2051,7 +3571,31 @@ anna qaQueue("w-solv")
         "campaignId": "c-solv",
         "creativeId": "cr-solv-1",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "none",
+          "brandRules": "pass",
+          "notes": [],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 87,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":97},
+                  {"label":"Glass","value":94},
+                  {"label":"Size","value":91}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":87},
+              {"id":"craft","label":"Craft","value":94}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-5",
@@ -2106,7 +3650,31 @@ anna qaQueue("w-solv")
         "campaignId": "c-solv",
         "creativeId": "cr-solv-2",
         "dueAt": "2026-10-15T12:32:00.000Z",
-        "evaluation": {"artefacts":"minor","brandRules":"pass","notes":["A soft edge on the left cup"],"productTruth":"pass"},
+        "evaluation": {
+          "artefacts": "minor",
+          "brandRules": "pass",
+          "notes": ["A soft edge on the left cup"],
+          "productTruth": "pass",
+          "scores": {
+            "engine": 81,
+            "measures": [
+              {
+                "id": "product",
+                "label": "Product",
+                "parts": [
+                  {"label":"Label","value":90},
+                  {"label":"Cap","value":94},
+                  {"label":"Glass","value":91},
+                  {"label":"Size","value":90}
+                ],
+                "value": 90
+              },
+              {"id":"brand","label":"Brand","value":81},
+              {"id":"craft","label":"Craft","value":90}
+            ],
+            "product": 90
+          }
+        },
         "feedback": [],
         "format": "feed",
         "id": "qa-6",
@@ -2172,7 +3740,31 @@ anna qaCheck("qa-5") → events
       "checkedBy": "u-anna",
       "creativeId": "cr-solv-1",
       "dueAt": "2026-10-15T12:32:00.000Z",
-      "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 87,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":90},
+                {"label":"Cap","value":97},
+                {"label":"Glass","value":94},
+                {"label":"Size","value":91}
+              ],
+              "value": 90
+            },
+            {"id":"brand","label":"Brand","value":87},
+            {"id":"craft","label":"Craft","value":94}
+          ],
+          "product": 90
+        }
+      },
       "feedback": [],
       "format": "feed",
       "id": "qa-5",
@@ -2194,7 +3786,31 @@ anna qaCheck("qa-5")
     "checkedBy": "u-anna",
     "creativeId": "cr-solv-1",
     "dueAt": "2026-10-15T12:32:00.000Z",
-    "evaluation": {"artefacts":"none","brandRules":"pass","notes":[],"productTruth":"pass"},
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 87,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":90},
+              {"label":"Cap","value":97},
+              {"label":"Glass","value":94},
+              {"label":"Size","value":91}
+            ],
+            "value": 90
+          },
+          {"id":"brand","label":"Brand","value":87},
+          {"id":"craft","label":"Craft","value":94}
+        ],
+        "product": 90
+      }
+    },
     "feedback": [],
     "format": "feed",
     "id": "qa-5",
@@ -2402,4 +4018,701 @@ anna creative("cr-a-v9")
       ]
     },
     "siblings": ["cr-a-m1","cr-a-m2","cr-a-v1","cr-a-v2","cr-a-v3","cr-a-v4","cr-a-v5","cr-a-v6","cr-a-v7","cr-a-v8","cr-a-v9"]
+  }
+anna qaCheck("qa-7")
+  {"error":"conflict","message":"A finding that stops the check is still open."}
+anna qaSettleFinding("qa-7", "fi-2", "accepted") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v10",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {
+        "artefacts": "minor",
+        "brandRules": "flag",
+        "evaluated": true,
+        "notes": ["The cap reads glossy","Light from above, not from the side","A smeared edge where the bottle meets the ledge"],
+        "productTruth": "flag",
+        "scores": {
+          "engine": 74,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":92},
+                {"label":"Cap","value":52},
+                {"label":"Glass","value":96},
+                {"label":"Size","value":93}
+              ],
+              "value": 52,
+              "why": "The cap reads glossy; it is matte"
+            },
+            {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+            {"id":"craft","label":"Craft","value":88}
+          ],
+          "product": 52,
+          "why": [
+            {"score":"product","text":"The cap reads glossy; it is matte"},
+            {"score":"engine","text":"Light from above, not from one side"}
+          ]
+        }
+      },
+      "feedback": [],
+      "findings": [
+        {
+          "dimension": "product",
+          "expected": "Burgundy matte cap, as in its photographs",
+          "finding": "The cap is glossy; LYSNE's cap is matte.",
+          "id": "fi-1",
+          "observed": "A glossy cap with a bright highlight on top",
+          "severity": "critical",
+          "spot": {"x":0.52,"y":0.06},
+          "status": "open"
+        },
+        {
+          "at": "2026-10-14T12:32:10.000Z",
+          "by": "u-anna",
+          "dimension": "brand_brief",
+          "expected": "Warm low light from one side, like a lamp in the evening",
+          "finding": "The light comes from above, not from one side like a lamp.",
+          "id": "fi-2",
+          "observed": "Even, soft light from above",
+          "severity": "minor",
+          "spot": {"x":0.24,"y":0.18},
+          "status": "accepted"
+        },
+        {
+          "dimension": "artefacts",
+          "finding": "A soft, smeared edge where the bottle meets the ledge.",
+          "id": "fi-3",
+          "severity": "minor",
+          "spot": {"x":0.5,"y":0.66},
+          "status": "open"
+        }
+      ],
+      "format": "feed",
+      "formats": [
+        {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+        {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+      ],
+      "id": "qa-7",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:27:00.000Z",
+      "risk": "normal",
+      "slot": "Master 3 · Variant 1",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 8",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaSettleFinding("qa-7", "fi-2", "accepted")
+  {
+    "campaignId": "c-autumn",
+    "creativeId": "cr-a-v10",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {
+      "artefacts": "minor",
+      "brandRules": "flag",
+      "evaluated": true,
+      "notes": ["The cap reads glossy","Light from above, not from the side","A smeared edge where the bottle meets the ledge"],
+      "productTruth": "flag",
+      "scores": {
+        "engine": 74,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":92},
+              {"label":"Cap","value":52},
+              {"label":"Glass","value":96},
+              {"label":"Size","value":93}
+            ],
+            "value": 52,
+            "why": "The cap reads glossy; it is matte"
+          },
+          {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+          {"id":"craft","label":"Craft","value":88}
+        ],
+        "product": 52,
+        "why": [
+          {"score":"product","text":"The cap reads glossy; it is matte"},
+          {"score":"engine","text":"Light from above, not from one side"}
+        ]
+      }
+    },
+    "feedback": [],
+    "findings": [
+      {
+        "dimension": "product",
+        "expected": "Burgundy matte cap, as in its photographs",
+        "finding": "The cap is glossy; LYSNE's cap is matte.",
+        "id": "fi-1",
+        "observed": "A glossy cap with a bright highlight on top",
+        "severity": "critical",
+        "spot": {"x":0.52,"y":0.06},
+        "status": "open"
+      },
+      {
+        "at": "2026-10-14T12:32:10.000Z",
+        "by": "u-anna",
+        "dimension": "brand_brief",
+        "expected": "Warm low light from one side, like a lamp in the evening",
+        "finding": "The light comes from above, not from one side like a lamp.",
+        "id": "fi-2",
+        "observed": "Even, soft light from above",
+        "severity": "minor",
+        "spot": {"x":0.24,"y":0.18},
+        "status": "accepted"
+      },
+      {
+        "dimension": "artefacts",
+        "finding": "A soft, smeared edge where the bottle meets the ledge.",
+        "id": "fi-3",
+        "severity": "minor",
+        "spot": {"x":0.5,"y":0.66},
+        "status": "open"
+      }
+    ],
+    "format": "feed",
+    "formats": [
+      {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+      {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+    ],
+    "id": "qa-7",
+    "image": "/demo/lysne/06-10-feed.jpg",
+    "madeAt": "2026-10-14T12:27:00.000Z",
+    "risk": "normal",
+    "slot": "Master 3 · Variant 1",
+    "state": "waiting",
+    "studio": "render",
+    "title": "Feed 8",
+    "workspaceId": "w-lysne"
+  }
+anna qaSettleFinding("qa-7", "fi-2", "open") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v10",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {
+        "artefacts": "minor",
+        "brandRules": "flag",
+        "evaluated": true,
+        "notes": ["The cap reads glossy","Light from above, not from the side","A smeared edge where the bottle meets the ledge"],
+        "productTruth": "flag",
+        "scores": {
+          "engine": 74,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":92},
+                {"label":"Cap","value":52},
+                {"label":"Glass","value":96},
+                {"label":"Size","value":93}
+              ],
+              "value": 52,
+              "why": "The cap reads glossy; it is matte"
+            },
+            {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+            {"id":"craft","label":"Craft","value":88}
+          ],
+          "product": 52,
+          "why": [
+            {"score":"product","text":"The cap reads glossy; it is matte"},
+            {"score":"engine","text":"Light from above, not from one side"}
+          ]
+        }
+      },
+      "feedback": [],
+      "findings": [
+        {
+          "dimension": "product",
+          "expected": "Burgundy matte cap, as in its photographs",
+          "finding": "The cap is glossy; LYSNE's cap is matte.",
+          "id": "fi-1",
+          "observed": "A glossy cap with a bright highlight on top",
+          "severity": "critical",
+          "spot": {"x":0.52,"y":0.06},
+          "status": "open"
+        },
+        {
+          "dimension": "brand_brief",
+          "expected": "Warm low light from one side, like a lamp in the evening",
+          "finding": "The light comes from above, not from one side like a lamp.",
+          "id": "fi-2",
+          "observed": "Even, soft light from above",
+          "severity": "minor",
+          "spot": {"x":0.24,"y":0.18},
+          "status": "open"
+        },
+        {
+          "dimension": "artefacts",
+          "finding": "A soft, smeared edge where the bottle meets the ledge.",
+          "id": "fi-3",
+          "severity": "minor",
+          "spot": {"x":0.5,"y":0.66},
+          "status": "open"
+        }
+      ],
+      "format": "feed",
+      "formats": [
+        {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+        {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+      ],
+      "id": "qa-7",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:27:00.000Z",
+      "risk": "normal",
+      "slot": "Master 3 · Variant 1",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 8",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaSettleFinding("qa-7", "fi-2", "open")
+  {
+    "campaignId": "c-autumn",
+    "creativeId": "cr-a-v10",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {
+      "artefacts": "minor",
+      "brandRules": "flag",
+      "evaluated": true,
+      "notes": ["The cap reads glossy","Light from above, not from the side","A smeared edge where the bottle meets the ledge"],
+      "productTruth": "flag",
+      "scores": {
+        "engine": 74,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":92},
+              {"label":"Cap","value":52},
+              {"label":"Glass","value":96},
+              {"label":"Size","value":93}
+            ],
+            "value": 52,
+            "why": "The cap reads glossy; it is matte"
+          },
+          {"id":"brand","label":"Brand","value":74,"why":"Light from above, not from one side"},
+          {"id":"craft","label":"Craft","value":88}
+        ],
+        "product": 52,
+        "why": [
+          {"score":"product","text":"The cap reads glossy; it is matte"},
+          {"score":"engine","text":"Light from above, not from one side"}
+        ]
+      }
+    },
+    "feedback": [],
+    "findings": [
+      {
+        "dimension": "product",
+        "expected": "Burgundy matte cap, as in its photographs",
+        "finding": "The cap is glossy; LYSNE's cap is matte.",
+        "id": "fi-1",
+        "observed": "A glossy cap with a bright highlight on top",
+        "severity": "critical",
+        "spot": {"x":0.52,"y":0.06},
+        "status": "open"
+      },
+      {
+        "dimension": "brand_brief",
+        "expected": "Warm low light from one side, like a lamp in the evening",
+        "finding": "The light comes from above, not from one side like a lamp.",
+        "id": "fi-2",
+        "observed": "Even, soft light from above",
+        "severity": "minor",
+        "spot": {"x":0.24,"y":0.18},
+        "status": "open"
+      },
+      {
+        "dimension": "artefacts",
+        "finding": "A soft, smeared edge where the bottle meets the ledge.",
+        "id": "fi-3",
+        "severity": "minor",
+        "spot": {"x":0.5,"y":0.66},
+        "status": "open"
+      }
+    ],
+    "format": "feed",
+    "formats": [
+      {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+      {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+    ],
+    "id": "qa-7",
+    "image": "/demo/lysne/06-10-feed.jpg",
+    "madeAt": "2026-10-14T12:27:00.000Z",
+    "risk": "normal",
+    "slot": "Master 3 · Variant 1",
+    "state": "waiting",
+    "studio": "render",
+    "title": "Feed 8",
+    "workspaceId": "w-lysne"
+  }
+anna qaSettleFinding("qa-7", "fi-nope", "accepted")
+  {"error":"not_found","message":"No such finding."}
+anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1","fi-nope"]) → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "creativeId": "cr-a-v10",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 86,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":86},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
+      "feedback": [
+        {
+          "at": "2026-10-14T12:32:10.000Z",
+          "by": "u-anna",
+          "findingIds": ["fi-1"],
+          "id": "fb-mvkqu1qo-9",
+          "state": "fixed",
+          "text": "The cap is glossy; LYSNE's cap is matte."
+        }
+      ],
+      "findings": [
+        {
+          "at": "2026-10-14T12:32:10.000Z",
+          "dimension": "product",
+          "expected": "Burgundy matte cap, as in its photographs",
+          "finding": "The cap is glossy; LYSNE's cap is matte.",
+          "id": "fi-1",
+          "observed": "A glossy cap with a bright highlight on top",
+          "severity": "critical",
+          "spot": {"x":0.52,"y":0.06},
+          "status": "resolved"
+        },
+        {
+          "dimension": "brand_brief",
+          "expected": "Warm low light from one side, like a lamp in the evening",
+          "finding": "The light comes from above, not from one side like a lamp.",
+          "id": "fi-2",
+          "observed": "Even, soft light from above",
+          "severity": "minor",
+          "spot": {"x":0.24,"y":0.18},
+          "status": "open"
+        },
+        {
+          "dimension": "artefacts",
+          "finding": "A soft, smeared edge where the bottle meets the ledge.",
+          "id": "fi-3",
+          "severity": "minor",
+          "spot": {"x":0.5,"y":0.66},
+          "status": "open"
+        }
+      ],
+      "format": "feed",
+      "formats": [
+        {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+        {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+      ],
+      "id": "qa-7",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:27:00.000Z",
+      "risk": "normal",
+      "slot": "Master 3 · Variant 1",
+      "state": "waiting",
+      "studio": "render",
+      "title": "Feed 8",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaFeedback("qa-7", "The cap is glossy; LYSNE's cap is matte.", [], ["fi-1","fi-nope"])
+  {
+    "campaignId": "c-autumn",
+    "creativeId": "cr-a-v10",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 86,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":88},
+              {"label":"Cap","value":96},
+              {"label":"Glass","value":93},
+              {"label":"Size","value":90}
+            ],
+            "value": 88
+          },
+          {"id":"brand","label":"Brand","value":86},
+          {"id":"craft","label":"Craft","value":95}
+        ],
+        "product": 88
+      }
+    },
+    "feedback": [
+      {
+        "at": "2026-10-14T12:32:10.000Z",
+        "by": "u-anna",
+        "findingIds": ["fi-1"],
+        "id": "fb-mvkqu1qo-9",
+        "state": "fixed",
+        "text": "The cap is glossy; LYSNE's cap is matte."
+      }
+    ],
+    "findings": [
+      {
+        "at": "2026-10-14T12:32:10.000Z",
+        "dimension": "product",
+        "expected": "Burgundy matte cap, as in its photographs",
+        "finding": "The cap is glossy; LYSNE's cap is matte.",
+        "id": "fi-1",
+        "observed": "A glossy cap with a bright highlight on top",
+        "severity": "critical",
+        "spot": {"x":0.52,"y":0.06},
+        "status": "resolved"
+      },
+      {
+        "dimension": "brand_brief",
+        "expected": "Warm low light from one side, like a lamp in the evening",
+        "finding": "The light comes from above, not from one side like a lamp.",
+        "id": "fi-2",
+        "observed": "Even, soft light from above",
+        "severity": "minor",
+        "spot": {"x":0.24,"y":0.18},
+        "status": "open"
+      },
+      {
+        "dimension": "artefacts",
+        "finding": "A soft, smeared edge where the bottle meets the ledge.",
+        "id": "fi-3",
+        "severity": "minor",
+        "spot": {"x":0.5,"y":0.66},
+        "status": "open"
+      }
+    ],
+    "format": "feed",
+    "formats": [
+      {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+      {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+    ],
+    "id": "qa-7",
+    "image": "/demo/lysne/06-10-feed.jpg",
+    "madeAt": "2026-10-14T12:27:00.000Z",
+    "risk": "normal",
+    "slot": "Master 3 · Variant 1",
+    "state": "waiting",
+    "studio": "render",
+    "title": "Feed 8",
+    "workspaceId": "w-lysne"
+  }
+-- 10 s later
+anna qaCheck("qa-7") → events
+  {
+    "item": {
+      "campaignId": "c-autumn",
+      "checkedAt": "2026-10-14T12:32:20.000Z",
+      "checkedBy": "u-anna",
+      "creativeId": "cr-a-v10",
+      "dueAt": "2026-10-15T12:32:00.000Z",
+      "evaluation": {
+        "artefacts": "none",
+        "brandRules": "pass",
+        "notes": [],
+        "productTruth": "pass",
+        "scores": {
+          "engine": 86,
+          "measures": [
+            {
+              "id": "product",
+              "label": "Product",
+              "parts": [
+                {"label":"Label","value":88},
+                {"label":"Cap","value":96},
+                {"label":"Glass","value":93},
+                {"label":"Size","value":90}
+              ],
+              "value": 88
+            },
+            {"id":"brand","label":"Brand","value":86},
+            {"id":"craft","label":"Craft","value":95}
+          ],
+          "product": 88
+        }
+      },
+      "feedback": [
+        {
+          "at": "2026-10-14T12:32:10.000Z",
+          "by": "u-anna",
+          "findingIds": ["fi-1"],
+          "id": "fb-mvkqu1qo-9",
+          "state": "fixed",
+          "text": "The cap is glossy; LYSNE's cap is matte."
+        }
+      ],
+      "findings": [
+        {
+          "at": "2026-10-14T12:32:10.000Z",
+          "dimension": "product",
+          "expected": "Burgundy matte cap, as in its photographs",
+          "finding": "The cap is glossy; LYSNE's cap is matte.",
+          "id": "fi-1",
+          "observed": "A glossy cap with a bright highlight on top",
+          "severity": "critical",
+          "spot": {"x":0.52,"y":0.06},
+          "status": "resolved"
+        },
+        {
+          "dimension": "brand_brief",
+          "expected": "Warm low light from one side, like a lamp in the evening",
+          "finding": "The light comes from above, not from one side like a lamp.",
+          "id": "fi-2",
+          "observed": "Even, soft light from above",
+          "severity": "minor",
+          "spot": {"x":0.24,"y":0.18},
+          "status": "open"
+        },
+        {
+          "dimension": "artefacts",
+          "finding": "A soft, smeared edge where the bottle meets the ledge.",
+          "id": "fi-3",
+          "severity": "minor",
+          "spot": {"x":0.5,"y":0.66},
+          "status": "open"
+        }
+      ],
+      "format": "feed",
+      "formats": [
+        {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+        {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+      ],
+      "id": "qa-7",
+      "image": "/demo/lysne/06-10-feed.jpg",
+      "madeAt": "2026-10-14T12:27:00.000Z",
+      "risk": "normal",
+      "slot": "Master 3 · Variant 1",
+      "state": "checked",
+      "studio": "render",
+      "title": "Feed 8",
+      "workspaceId": "w-lysne"
+    },
+    "type": "qa.state"
+  }
+anna qaCheck("qa-7")
+  {
+    "campaignId": "c-autumn",
+    "checkedAt": "2026-10-14T12:32:20.000Z",
+    "checkedBy": "u-anna",
+    "creativeId": "cr-a-v10",
+    "dueAt": "2026-10-15T12:32:00.000Z",
+    "evaluation": {
+      "artefacts": "none",
+      "brandRules": "pass",
+      "notes": [],
+      "productTruth": "pass",
+      "scores": {
+        "engine": 86,
+        "measures": [
+          {
+            "id": "product",
+            "label": "Product",
+            "parts": [
+              {"label":"Label","value":88},
+              {"label":"Cap","value":96},
+              {"label":"Glass","value":93},
+              {"label":"Size","value":90}
+            ],
+            "value": 88
+          },
+          {"id":"brand","label":"Brand","value":86},
+          {"id":"craft","label":"Craft","value":95}
+        ],
+        "product": 88
+      }
+    },
+    "feedback": [
+      {
+        "at": "2026-10-14T12:32:10.000Z",
+        "by": "u-anna",
+        "findingIds": ["fi-1"],
+        "id": "fb-mvkqu1qo-9",
+        "state": "fixed",
+        "text": "The cap is glossy; LYSNE's cap is matte."
+      }
+    ],
+    "findings": [
+      {
+        "at": "2026-10-14T12:32:10.000Z",
+        "dimension": "product",
+        "expected": "Burgundy matte cap, as in its photographs",
+        "finding": "The cap is glossy; LYSNE's cap is matte.",
+        "id": "fi-1",
+        "observed": "A glossy cap with a bright highlight on top",
+        "severity": "critical",
+        "spot": {"x":0.52,"y":0.06},
+        "status": "resolved"
+      },
+      {
+        "dimension": "brand_brief",
+        "expected": "Warm low light from one side, like a lamp in the evening",
+        "finding": "The light comes from above, not from one side like a lamp.",
+        "id": "fi-2",
+        "observed": "Even, soft light from above",
+        "severity": "minor",
+        "spot": {"x":0.24,"y":0.18},
+        "status": "open"
+      },
+      {
+        "dimension": "artefacts",
+        "finding": "A soft, smeared edge where the bottle meets the ledge.",
+        "id": "fi-3",
+        "severity": "minor",
+        "spot": {"x":0.5,"y":0.66},
+        "status": "open"
+      }
+    ],
+    "format": "feed",
+    "formats": [
+      {"format":"square","image":"/demo/lysne/06-10-square.jpg","method":"crop","placementId":"pl-ig-square"},
+      {"format":"story","image":"/demo/lysne/06-10-story.jpg","method":"expand","placementId":"pl-ig-story"}
+    ],
+    "id": "qa-7",
+    "image": "/demo/lysne/06-10-feed.jpg",
+    "madeAt": "2026-10-14T12:27:00.000Z",
+    "risk": "normal",
+    "slot": "Master 3 · Variant 1",
+    "state": "checked",
+    "studio": "render",
+    "title": "Feed 8",
+    "workspaceId": "w-lysne"
   }

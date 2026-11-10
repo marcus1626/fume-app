@@ -3,17 +3,30 @@
 // 20261104233000_brand_books): a customer never reads a version being written, a failed one, or a draft.
 import {
   FumeError,
+  type BookEdit,
   type BookProgress,
   type BrandBook,
   type BrandBookKind,
   type BrandBooksView,
+  type CopyLineCheck,
+  type DesignBook,
   type FumeApi,
   type Id,
+  type VoiceBook,
 } from "../contract";
+import { applyEdit, BookEditError } from "../domain/bookEdits";
 import { canApprove } from "../domain/permissions";
 import type { Mock } from "./context";
 
-type Calls = "brandBooks" | "writeBrandBook" | "checkBrandBook" | "approveBrandBook" | "askBrandBookChange";
+type Calls =
+  | "brandBooks"
+  | "writeBrandBook"
+  | "checkBrandBook"
+  | "approveBrandBook"
+  | "askBrandBookChange"
+  | "editBrandBook"
+  | "checkCopyLine"
+  | "answerBookProposal";
 type Row = BrandBook & { workspaceId: Id };
 
 /** What a customer reads: a version an expert checked, the one in use, and the ones before it. */
@@ -22,7 +35,9 @@ const customerReads = (b: BrandBook) => b.state === "checked" || b.state === "ap
 export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
   const { db, wait } = m;
   const later = (fn: () => void, ticks = 12) => setTimeout(fn, m.latency * ticks);
-  const out = ({ workspaceId: _, ...b }: Row): BrandBook => b as BrandBook;
+  // A customer never reads what the Engine proposes (Round 15): it is Fume's people's to add or set aside.
+  const out = ({ workspaceId: _, proposals, ...b }: Row): BrandBook =>
+    (m.isStaff() && proposals ? { ...b, proposals } : b) as BrandBook;
   const mine = () => db.brandBooks.filter((b) => b.workspaceId === m.workspaceId);
   const readable = (b: Row) => b.workspaceId === m.workspaceId && (m.isStaff() || customerReads(b));
   const find = (bookId: Id) => {
@@ -58,11 +73,11 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
 
   /** A new version, written in the background: from the version before, with the ask. A brand Fume has not read yet
    *  has nothing to write from, so the mock's writing fails there (as the writer does after three tries). */
-  function write(kind: BrandBookKind, ask?: string): Row {
+  function write(kind: BrandBookKind, ask?: string, base?: Row, edits?: BookEdit[]): Row {
     const writing = mine().find((b) => b.kind === kind && b.state === "writing");
     if (writing) return writing;
     const before = mine().filter((b) => b.kind === kind);
-    const from = before.find((b) => b.body);
+    const from = base?.body ? base : before.find((b) => b.body);
     const row = {
       id: m.nextId("bb"),
       workspaceId: m.workspaceId,
@@ -77,6 +92,8 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
       if (row.state !== "writing") return;
       if (from?.body) {
         Object.assign(row, { state: "draft", writtenAt: m.now(), body: structuredClone(from.body) });
+        // The customer's own lines go in as she wrote them, marked hers.
+        if (edits?.length) Object.assign(row, edited(row, edits, row.askedBy ?? m.userId));
       } else {
         Object.assign(row, {
           state: "failed",
@@ -86,6 +103,19 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
       m.emit({ type: "book.state", book: out(row) });
     });
     return row;
+  }
+
+  /** A version's body and marks with the edits applied, on copies: nothing changes when one edit is refused. */
+  function edited(row: Pick<Row, "body" | "edits">, edits: BookEdit[], by: Id) {
+    const body = structuredClone(row.body);
+    const marks = structuredClone(row.edits ?? []);
+    try {
+      for (const e of edits) applyEdit(body, marks, e, by, m.now());
+    } catch (error) {
+      if (error instanceof BookEditError) throw new FumeError("invalid", error.message);
+      throw error;
+    }
+    return { body, edits: marks } as Pick<Row, "body" | "edits">;
   }
 
   return {
@@ -124,12 +154,164 @@ export function bookCalls(m: Mock): Pick<FumeApi, Calls> {
       m.emit({ type: "book.state", book: out(b) });
       return wait(out(b));
     },
-    async askBrandBookChange({ bookId, ask }) {
+    async askBrandBookChange({ bookId, ask, edits }) {
       const b = find(bookId);
       mustCustomerDecide("asks for a change");
       if (!ask?.trim()) throw new FumeError("invalid", "Say what should change.");
+      if (edits?.length) edited(b, edits, m.userId);
       if (b.state === "checked") b.state = "changes_asked";
-      return wait(out(write(b.kind, ask)));
+      return wait(out(write(b.kind, ask, edits?.length ? b : undefined, edits)));
+    },
+    async editBrandBook({ bookId, edits }) {
+      const b = find(bookId);
+      if (!m.isStaff())
+        throw new FumeError("forbidden", "Fume's people edit a book in place; the brand asks for a change.");
+      if (!edits?.length) throw new FumeError("invalid", "No edits.");
+      if (!b.body) throw new FumeError("conflict", "Nothing is written to edit yet.");
+      if (edits.some((e) => e.to !== null && e.to.length > 600))
+        throw new FumeError("invalid", "Say it in fewer words.");
+      const next = edited(b, edits, m.userId);
+      let row = b;
+      if (b.state !== "draft") {
+        const open = mine().find((x) => x.kind === b.kind && (x.state === "writing" || x.state === "draft"));
+        if (open)
+          throw new FumeError(
+            "conflict",
+            `Version ${open.version} is ${open.state === "writing" ? "being written" : "a draft"}: edit that one.`,
+          );
+        row = {
+          id: m.nextId("bb"),
+          workspaceId: m.workspaceId,
+          kind: b.kind,
+          version:
+            Math.max(
+              0,
+              ...mine()
+                .filter((x) => x.kind === b.kind)
+                .map((x) => x.version),
+            ) + 1,
+          state: "draft",
+          ask: `Edited from version ${b.version}`,
+          askedBy: m.userId,
+          createdAt: m.now(),
+          writtenAt: m.now(),
+          body: structuredClone(b.body),
+        } as Row;
+        db.brandBooks.unshift(row);
+      }
+      Object.assign(row, row === b ? next : edited(row, edits, m.userId));
+      m.emit({ type: "book.state", book: out(row) });
+      return wait(out(row));
+    },
+    async answerBookProposal({ bookId, proposalId, answer }) {
+      const b = find(bookId);
+      if (!m.isStaff())
+        throw new FumeError("forbidden", "Fume’s people answer the Engine’s proposals; the brand asks for a change.");
+      if (b.state !== "draft") throw new FumeError("conflict", "Only a draft takes the Engine's proposals.");
+      const p = b.proposals?.find((x) => x.id === proposalId);
+      if (!p) throw new FumeError("not_found", "No such proposal.");
+      const head = p.component ? "components" : "speak.traits";
+      const list =
+        (p.component
+          ? (b.body as DesignBook | undefined)?.components
+          : (b.body as VoiceBook | undefined)?.speak.traits) ?? [];
+      if (answer === "add") {
+        if (p.state !== "open") throw new FumeError("conflict", "It was answered already.");
+        const path = `${head}.${list.length}`;
+        const next = edited(b, [{ path, to: null, item: p.component ?? p.block }], m.userId);
+        const mark = next.edits?.find((x) => x.path === path);
+        if (mark) mark.proposal = p.id;
+        Object.assign(b, next);
+        Object.assign(p, { state: "added", answeredBy: m.userId, answeredAt: m.now() });
+      } else if (answer === "not_now") {
+        if (p.state !== "open") throw new FumeError("conflict", "It was answered already.");
+        Object.assign(p, { state: "set_aside", answeredBy: m.userId, answeredAt: m.now() });
+      } else {
+        // The undo of either: a block added from it comes out again, where it is now.
+        const mark =
+          p.state === "added"
+            ? b.edits?.find((x) => x.proposal === p.id && !x.path.includes(".", head.length + 1))
+            : undefined;
+        if (mark) Object.assign(b, edited(b, [{ path: mark.path, to: null }], m.userId));
+        p.state = "open";
+        delete p.answeredBy;
+        delete p.answeredAt;
+      }
+      m.emit({ type: "book.state", book: out(b) });
+      return wait(out(b));
+    },
+    async checkCopyLine({ text, channel }) {
+      const line = text?.trim() ?? "";
+      if (!line) throw new FumeError("invalid", "Write a line to check.");
+      if (line.length > 600) throw new FumeError("invalid", "One line at a time.");
+      const voices = mine().filter((b) => b.kind === "voice" && b.body);
+      const book = m.isStaff() ? voices[0] : (voices.find((b) => b.state === "approved") ?? voices.find(customerReads));
+      if (!book?.body) throw new FumeError("conflict", "There is no Tone of Voice to check against yet.");
+      return wait(readLine(line, channel, book.body as VoiceBook, book.version));
     },
   };
+}
+
+/** The words a voice avoids, with the Norwegian forms the mock knows of them. */
+const forms: Record<string, string[]> = {
+  luxury: ["luksus", "luksuriøs"],
+  transform: ["transformer"],
+  results: ["resultat"],
+  miracle: ["mirakel"],
+  hurry: ["skynd"],
+  "best ever": ["beste noensinne"],
+};
+const claimWords =
+  /\b(best|beste|most|mest|nr\.? ?1|#1|100 ?%|guaranteed|garantert|clinically|klinisk|proven|bevist|heals?|leger|anti-?age?ing)\b/i;
+
+/** The mock's reading of one line: the words the voice avoids, a claim of best or most, the voice's mechanics, and the
+ *  channel's length. Its version drops what it found. The live check is the copy check's model (FLOWS §31). */
+function readLine(text: string, channel: CopyLineCheck["channel"], book: VoiceBook, version: number): CopyLineCheck {
+  const findings: CopyLineCheck["findings"] = [];
+  const lower = text.toLowerCase();
+  const avoided: string[] = [];
+  for (const w of book.speak.avoid) {
+    const hit = [w, ...(forms[w] ?? [])].find((f) => lower.includes(f.toLowerCase()));
+    if (hit) {
+      avoided.push(hit);
+      findings.push({
+        kind: "avoided_word",
+        words: hit,
+        note: hit.toLowerCase() === w.toLowerCase() ? `The voice avoids “${w}”.` : `“${hit}”: the voice avoids “${w}”.`,
+      });
+    }
+  }
+  const claim = text.match(claimWords)?.[0];
+  if (claim)
+    findings.push({
+      kind: "unbacked_claim",
+      words: claim,
+      note: `A claim of best or most: no verified fact says “${claim}”.`,
+    });
+  const punctuation = book.mechanics?.punctuation.toLowerCase() ?? "";
+  if (text.includes("!") && punctuation.includes("no exclamation"))
+    findings.push({ kind: "off_voice", words: "!", note: "No exclamation marks." });
+  const shouting = text.split(/\s+/).filter((w) => w.length > 2 && w === w.toUpperCase() && /[A-ZÆØÅ]/.test(w));
+  if (shouting.some((w) => w !== "LYSNE"))
+    findings.push({ kind: "off_voice", words: shouting[0], note: "Sentence case, never capitals for weight." });
+  const words = text.split(/\s+/).filter(Boolean).length;
+  const rule = book.channels?.find((c) => c.channel === channel)?.length ?? "";
+  const max = Number(rule.match(/up to (\d+) words/i)?.[1] ?? 0) || undefined;
+  if (max && words > max)
+    findings.push({ kind: "too_long", note: `${words} words: the headline takes up to ${max} here.` });
+  // The mock's version: the brand's own line for the same thing (the on-brand side of the closest off-brand pair),
+  // else the channel's example, else the first headline. The live check writes one with the copy model.
+  let rewrite: string | undefined;
+  if (findings.length) {
+    const tokens = (x: string) => new Set(x.toLowerCase().match(/[\p{L}\d]+/gu) ?? []);
+    const mine = tokens(text);
+    const near = (book.pairs ?? [])
+      .map((x) => ({ x, n: [...tokens(x.bad)].filter((w) => mine.has(w)).length }))
+      .sort((a, b) => b.n - a.n)[0];
+    rewrite =
+      near && near.n >= 2
+        ? near.x.good
+        : (book.channels?.find((c) => c.channel === channel)?.example ?? book.headlines?.[0]?.example);
+  }
+  return { text, channel, length: max ? { words, max } : undefined, findings, rewrite, version };
 }

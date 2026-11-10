@@ -207,6 +207,7 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                         campaignId={campaign.id}
                         editable={edit}
                         voice={voice}
+                        where={`${campaign.name}’s plan`}
                         tag={<LineTag line={l} tag={tag} people={people} />}
                       />
                     ))}
@@ -224,6 +225,7 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                         campaignId={campaign.id}
                         editable={edit}
                         voice={voice}
+                        where={`${campaign.name}’s plan`}
                         tag={<LineTag line={l} tag={tag} people={people} />}
                         note={l.key === "products" ? productNote : copyNotes(lineRef(l), l)}
                         anchor={check ? wordsAnchor(lineRef(l)) : undefined}
@@ -263,6 +265,7 @@ export function PlanDocument({ plan, campaign, brief, people, mode, edit, choose
                   editable={edit}
                   people={people}
                   voice={voice}
+                  where={`${campaign.name}’s plan`}
                   note={copyNotes(creativeRef(direction.id, m), m)}
                   anchor={check ? wordsAnchor(creativeRef(direction.id, m)) : undefined}
                 />

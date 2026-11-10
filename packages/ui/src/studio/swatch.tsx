@@ -4,7 +4,13 @@
 // swatches (a radio group).
 //   <StudioSwatch label="Background" value="#F4EFE8" options={…} presets={[{ name: "LYSNE packshot white",
 //     hex: "#F4EFE8", brand: "LYSNE" }]} onChange={set} />
-import { useRef, type CSSProperties, type KeyboardEvent } from "react";
+// Round 16 (PROPOSED 9 Nov 2026): with `custom`, a last swatch opens a colour of her own (a picker and its hex).
+// Marcus: "No custom option?" The designer has the last word; the brand's colours still come first, and a colour of
+// her own is named as such ("Custom · #A13D2D").
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
+import { Button } from "../controls/button";
+import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "../controls/input-group";
+import { Popover, PopoverContent, PopoverTrigger } from "../overlays/popover";
 import { StudioRow } from "./row";
 import { studioId, type StudioControlProps, type StudioOption, type StudioPreset } from "./types";
 
@@ -13,11 +19,25 @@ export interface StudioSwatchProps extends StudioControlProps<string> {
   /** The brand's chosen colours of this kind; they lead the row. */
   presets?: StudioPreset[];
   help?: string;
+  /** A last swatch that opens a colour of her own. */
+  custom?: boolean;
 }
 
 const same = (a?: string, b?: string) => Boolean(a && b && a.toLowerCase() === b.toLowerCase());
 
-export function StudioSwatch({ value, onChange, label, id, disabled, options, presets = [], help }: StudioSwatchProps) {
+const HEX = /^#[0-9a-f]{6}$/i;
+
+export function StudioSwatch({
+  value,
+  onChange,
+  label,
+  id,
+  disabled,
+  options,
+  presets = [],
+  help,
+  custom,
+}: StudioSwatchProps) {
   const sid = studioId(label, id);
   const list = useRef<HTMLDivElement>(null);
   // One group per owner (a campaign, the brand), in the order given; a colour shows once, in its first group.
@@ -31,7 +51,13 @@ export function StudioSwatch({ value, onChange, label, id, disabled, options, pr
     g.options.push(o);
   }
   const rest = options.filter((o) => !brand.some((b) => same(b.hex, o.hex ?? o.value)));
-  const all = [...brand, ...rest];
+  const listed = [...brand, ...rest];
+  // Her own colour: shown as the chosen swatch after the brand's, named by its hex
+  const own =
+    custom && HEX.test(value) && !listed.some((o) => same(o.value, value) || same(o.hex, value))
+      ? { value, label: `Custom · ${value.toUpperCase()}`, hex: value }
+      : undefined;
+  const all = own ? [...listed, own] : listed;
   const chosen = all.find((o) => same(o.value, value) || same(o.hex, value));
 
   const keys = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -83,7 +109,84 @@ export function StudioSwatch({ value, onChange, label, id, disabled, options, pr
           </span>
         ))}
         {rest.length > 0 && <span className="ui-sc-swatch-group">{rest.map(swatch)}</span>}
+        {custom && (
+          <span className="ui-sc-swatch-group" data-custom="">
+            {own && swatch(own)}
+            <CustomColour value={own?.hex ?? chosen?.hex ?? "#000000"} disabled={disabled} onChange={onChange} />
+          </span>
+        )}
       </div>
     </StudioRow>
+  );
+}
+
+/** The last swatch: a colour of her own, from the picker or typed as a hex. */
+function CustomColour({
+  value,
+  disabled,
+  onChange,
+}: {
+  value: string;
+  disabled?: boolean;
+  onChange: (hex: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [hex, setHex] = useState(value.toUpperCase());
+  useEffect(() => {
+    if (open) setHex(value.toUpperCase());
+  }, [open, value]);
+  const ok = HEX.test(hex);
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          className="ui-sc-swatch ui-sc-swatch-add"
+          aria-label="A colour of your own"
+          title="A colour of your own"
+          disabled={disabled}
+        >
+          <svg className="ico" aria-hidden="true">
+            <use href="#fi-plus" />
+          </svg>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent align="end" className="ui-sc-custom">
+        <form
+          className="ui-sc-custom-row"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (!ok) return;
+            onChange(hex.toUpperCase());
+            setOpen(false);
+          }}
+        >
+          <input
+            type="color"
+            className="ui-sc-custom-pick"
+            aria-label="Pick a colour"
+            value={ok ? hex.toLowerCase() : "#000000"}
+            onChange={(e) => setHex(e.target.value.toUpperCase())}
+          />
+          <InputGroup size="sm" className="ui-sc-custom-hex" invalid={!ok}>
+            <InputGroupAddon>
+              <InputGroupText>Hex</InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
+              aria-label="The colour as a hex code"
+              value={hex}
+              spellCheck={false}
+              onChange={(e) => {
+                // One # in front, however it was typed or pasted ("D9B48F", "#D9B48F", "##D9B48F")
+                setHex(`#${e.target.value.trim().replace(/#/g, "").toUpperCase()}`);
+              }}
+            />
+          </InputGroup>
+          <Button type="submit" size="sm" variant="primary" disabled={!ok}>
+            Use it
+          </Button>
+        </form>
+      </PopoverContent>
+    </Popover>
   );
 }

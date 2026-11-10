@@ -1,6 +1,7 @@
 // StudioFolds: a desk panel's folding sections, like Photoshop's panels (FLOWS §9.1). The panel never scrolls: when
 // the open sections no longer fit its height, the one opened longest ago folds, until they fit (one stays open).
-// Opening a section makes it the newest. On a tall screen several stay open; on a short one, one at a time.
+// Opening a section makes it the newest, and so does using it (a press or focus inside it, its popovers too), so the
+// section she works in never folds away under her. On a tall screen several stay open; on a short one, one at a time.
 //   <StudioFolds label="Variables" sections={[{ id: "Light", title: "Light", meta: "4", children: … }]} />
 import { useCallback, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { cx } from "../cx";
@@ -36,6 +37,8 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
   const openNow = useRef(open);
   openNow.current = open;
 
+  // Only when there is a section left to fold: with one open, a panel shorter than it scrolls instead. Asking React for
+  // the same state on every layout looped on a short window (round 14: the Video desk at 700 px high).
   const fit = useCallback(() => {
     const el = root.current;
     if (!el || openNow.current.length < 2) return;
@@ -55,6 +58,8 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
   }, [newest, newestKey]);
 
   const toggle = (id: string) => setOpen((o) => (o.includes(id) ? o.filter((x) => x !== id) : [...o, id]));
+  const use = (id: string) =>
+    setOpen((o) => (o.includes(id) && o.at(-1) !== id ? [...o.filter((x) => x !== id), id] : o));
 
   return (
     <div ref={root} className={cx("ui-sc-folds", className)} role="group" aria-label={label}>
@@ -77,7 +82,12 @@ export function StudioFolds({ sections, label, initialOpen, newest, newestKey, c
               </button>
             </h3>
             {isOpen && (
-              <div id={bodyId} className="ui-sc-fold-body">
+              <div
+                id={bodyId}
+                className="ui-sc-fold-body"
+                onPointerDownCapture={() => use(s.id)}
+                onFocusCapture={() => use(s.id)}
+              >
                 {s.children}
               </div>
             )}

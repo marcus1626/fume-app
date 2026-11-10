@@ -14,6 +14,9 @@ export const fixer = byHand
       didntGet: "The fix wasn’t asked for",
       landsHere: "What Fume makes lands here first",
       found: "What Fume found",
+      author: "Fume",
+      fixWith: "Ask for a fix",
+      goes: "In the ask",
     }
   : {
       tell: "Tell the Engine",
@@ -26,4 +29,7 @@ export const fixer = byHand
       didntGet: "The Engine didn’t get it",
       landsHere: "What the Engine makes lands here first",
       found: "What the Engine found",
+      author: "Engine",
+      fixWith: "Fix with the Engine",
+      goes: "Goes to the Engine",
     };

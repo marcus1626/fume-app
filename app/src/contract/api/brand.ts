@@ -2,6 +2,7 @@
 // Only the customer decides on what the Engine proposes (FLOWS §2).
 
 import type {
+  BookEdit,
   BrandBook,
   BrandBookKind,
   BrandColour,
@@ -13,6 +14,7 @@ import type {
   BrandScan,
   BrandUpdate,
   ColourUse,
+  CopyLineCheck,
   IdentityKind,
   ImageGroup,
   OnboardingProgress,
@@ -26,6 +28,7 @@ import type {
   Understanding,
   UnderstoodLine,
   VoiceBook,
+  VoiceChannel,
   VoicePartId,
 } from "../entities/brand";
 import type { Id } from "../entities/common";
@@ -74,8 +77,18 @@ export interface BrandApi {
   checkBrandBook(bookId: Id): Promise<BrandBook>;
   /** Only the customer's owner or approver approves; the version before is superseded. */
   approveBrandBook(bookId: Id): Promise<BrandBook>;
-  /** The customer's change: Fume writes the next version with her words; the approved one stays in use meanwhile. */
-  askBrandBookChange(input: { bookId: Id; ask: string }): Promise<BrandBook>;
+  /** The customer's change: Fume writes the next version with her words, or with the lines she edited in place (it
+   *  keeps her lines as she wrote them); the approved one stays in use meanwhile. */
+  askBrandBookChange(input: { bookId: Id; ask: string; edits?: BookEdit[] }): Promise<BrandBook>;
+  /** Fume's people edit a book in place (FLOWS §34.3, PROPOSED): on a draft, the draft changes; on any other version, a
+   *  new draft is made from it with the edits. The expert checks it as any draft. */
+  editBrandBook(input: { bookId: Id; edits: BookEdit[] }): Promise<BrandBook>;
+  /** Hold one line of copy against the Tone of Voice in use (Fume's people read the newest written one). */
+  checkCopyLine(input: { text: string; channel?: VoiceChannel }): Promise<CopyLineCheck>;
+  /** Round 15 (PROPOSED 9 Nov 2026): Fume's people answer the Engine's proposal on a draft. "add" puts the block at the
+   *  end of its list, marked as added from the proposal; "not_now" sets it aside; "open" undoes either (an added block
+   *  comes out again). Only a draft takes an answer. */
+  answerBookProposal(input: { bookId: Id; proposalId: Id; answer: "add" | "not_now" | "open" }): Promise<BrandBook>;
 
   // Taste keeps learning (FLOWS §14)
   tasteTraining(): Promise<{ cards: TasteCard[]; state: TasteState }>;

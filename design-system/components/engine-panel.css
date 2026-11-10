@@ -1,0 +1,235 @@
+/* The Engine panel: one Engine for the whole app, in a panel on the right (app FLOWS-r15-engine.md). PROPOSED 9 Nov 2026,
+   round 15. Marcus, 9 Nov: "Ideally the right side should be a panel that can be opened and closed for the whole app,
+   tied to the main Engine chat. With a choice of a global session or a project session, so the thread continues the
+   next time we come back to it." And on plan fields: "Every field should have a button where you can ask the Engine to
+   write it."
+   Markup:
+     <aside class="ui-engine-panel" id="engine-panel" aria-label="Engine">
+       <header class="ui-engine-panel-head"><svg class="ui-engine-panel-mark"/>
+         <button class="ui-engine-thread"><span class="ui-engine-thread-name">Winter gifting</span><svg chevron/></button>
+         <span class="ui-engine-panel-actions"> full screen · close </span></header>
+       <div class="ui-engine-sees"><span class="ui-engine-sees-label">Sees</span><ul class="ui-engine-sees-list">
+         <li class="ui-badge ui-badge--secondary ui-engine-sees-chip"><svg/><span class="ui-engine-sees-words">The plan</span>
+           <button class="ui-engine-sees-x" aria-label="Leave out: The plan"><svg x/></button></li></ul></div>
+       <div class="ui-engine-panel-body"> the chat's scroller (chat.css, message.css), the Engine's widgets
+         (engine-chat.css); a person's line about a field: <p class="ui-engine-about"><svg/><span>About Camera, in the
+         plan</span></p>; the Engine's words for a field: <div class="ui-card ui-engine-widget ui-engine-suggestion"> … <p
+         class="ui-engine-suggestion-text"/> … </div>; a creative's change: <div class="ui-desk-engine-change
+         ui-engine-change"> (studio-desk.css's parts) </div> or, once decided, <p class="ui-engine-change-state"
+         data-state="kept|undone"><svg/> Kept, and rendered as a new version.</p> </div>
+       <div class="ui-engine-panel-foot"><nav class="ui-chat-chips"> starts </nav> composer (inline) </div></aside>
+     In the staff frame it follows the page sheet in .ui-sidebar-wrapper; beside the Studio's desk:
+     <div class="ui-engine-dock" data-open><div class="ui-desk">…</div><aside class="ui-engine-panel">…</aside></div>
+     A field the Engine can write: <span class="ui-engine-field"><span class="ui-edit"/> <span
+       class="ui-engine-field-tools"> Write with Engine · Ask about this (quiet icon buttons) </span> [suggestion]</span>;
+     on the plan, the tools sit before the pencil: <span class="ui-plandoc-actions"> tools · pencil </span>.
+     Its suggestion: <span class="ui-engine-suggest" role="status" [data-writing]><span class="ui-engine-suggest-head"><svg/>
+       The Engine suggests</span><span class="ui-engine-suggest-text">…</span><span class="ui-engine-suggest-why">…</span>
+       <span class="ui-engine-suggest-actions"> Keep it · Drop </span></span>
+   Decisions (PROPOSED):
+   - The panel is a Porcelain sheet on the layer behind, beside the page, as the page lies beside the sidebar: no stroke
+     between them, depth-sheet, the same 8 px of the layer around it. It is the Engine chat's own parts (scroller,
+     messages, composer, widgets), so the panel and the Engine page read as one conversation.
+   - The thread's name is the panel's title and a quiet switch (a menu of the brand's threads: Everything, this page's
+     project, the others latest first). What the Engine sees is one line of small chips under it, each one she can take
+     off: the context is visible, never hidden in the prompt.
+   - Under 1024 px the panel floats over the page's right edge, the same sheet a step lifted; it never squeezes a page.
+   - A field's two Engine buttons are quiet icons that show with the row's hover and keyboard focus (always on a touch
+     screen), like the plan's pencil. The Engine's words come under the field on the sunken step, never in it: she keeps
+     or drops them. The writing state is the design system's text shimmer, never Amber (nothing here is checked).
+   - Motion: the panel arrives slowly (motion-slow, a short fade and slide), and not at all with reduced motion.
+   Rule gate: few-strokes, air, space-from-tokens, radius-from-tokens, type-from-tokens, amber-is-a-point,
+   hover-needs-hover, touch-target, touch-feedback, focus-is-sharp, reduced-motion, no-gradient, no-glow,
+   tokens-only-color. */
+
+/* ── The panel ─────────────────────────────────────────────────────────── */
+.ui-engine-panel {
+  --ui-engine-panel-width: 360px; /* gate-allow:space-from-tokens the panel's width, a layout width (round 15) */
+  position: sticky; z-index: 1; top: var(--ui-sidebar-gap); flex: 0 0 var(--ui-engine-panel-width);
+  display: flex; flex-direction: column; gap: var(--ui-space-sm);
+  width: var(--ui-engine-panel-width); min-width: 0; height: calc(100vh - 2 * var(--ui-sidebar-gap)); height: calc(100dvh - 2 * var(--ui-sidebar-gap));
+  margin: var(--ui-sidebar-gap) var(--ui-sidebar-gap) var(--ui-sidebar-gap) 0; padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-md);
+  overflow: hidden; border-radius: var(--ui-radius-card); background: var(--ui-ground); box-shadow: var(--ui-depth-sheet);
+  color: var(--ui-text); font-family: var(--ui-type-family);
+  animation: ui-engine-panel-in var(--ui-motion-slow) var(--ui-motion-ease);
+}
+@keyframes ui-engine-panel-in { from { opacity: 0; translate: var(--ui-space-md) 0; } to { opacity: 1; translate: none; } }
+
+.ui-engine-panel-head { display: flex; align-items: center; gap: var(--ui-space-xs); min-width: 0; min-height: var(--ui-size-control-md); padding-inline-start: var(--ui-space-sm); }
+.ui-engine-panel-mark { flex-shrink: 0; width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text); }
+.ui-engine-panel-actions { display: flex; align-items: center; gap: 0; flex-shrink: 0; margin-inline-start: auto; }
+
+/* The thread: its name, a quiet switch to the brand's other threads */
+.ui-engine-thread {
+  position: relative; display: inline-flex; align-items: center; gap: var(--ui-space-xs); flex: 0 1 auto; min-width: 0; height: var(--ui-size-control-sm);
+  margin: 0; padding: 0 var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-action); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-medium); line-height: 1; white-space: nowrap;
+  cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; outline: none;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), transform var(--ui-motion-instant) var(--ui-motion-ease);
+}
+.ui-engine-thread::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-engine-thread > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-tertiary); }
+.ui-engine-thread-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (hover: hover) { .ui-engine-thread:hover { background: var(--ui-surface-sunken); } }
+.ui-engine-thread:active { background: var(--ui-surface-sunken-hover); transform: scale(var(--ui-motion-press-scale)); }
+.ui-engine-thread:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+.ui-chat-head .ui-engine-thread { margin-inline-end: auto; }
+.ui-engine-thread-row { display: grid; min-width: 0; }
+.ui-engine-thread-meta { font-size: var(--ui-type-label); line-height: 1.3; color: var(--ui-glass-fg-secondary); } /* in the glass menu */
+.ui-engine-threads .ui-menu-item { height: auto; min-height: var(--ui-size-control-lg); padding-block: var(--ui-space-xs); }
+
+/* What the Engine sees: one line of chips, each she can take off */
+.ui-engine-sees { display: flex; align-items: flex-start; gap: var(--ui-space-sm); min-width: 0; padding-inline: var(--ui-space-sm); }
+.ui-engine-sees-label { flex-shrink: 0; padding-block: var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-engine-sees-list { display: flex; flex-wrap: wrap; gap: var(--ui-space-xs); min-width: 0; margin: 0; padding: 0; list-style: none; }
+.ui-engine-sees-chip { max-width: 100%; padding-inline-end: var(--ui-space-xs); }
+.ui-engine-sees-chip:not(:has(.ui-engine-sees-x)) { padding-inline-end: var(--ui-space-md); }
+.ui-engine-sees-chip > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); color: var(--ui-text-secondary); }
+.ui-engine-sees-words { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-engine-sees-x {
+  position: relative; display: grid; place-items: center; flex-shrink: 0; width: var(--ui-space-lg); height: var(--ui-space-lg); margin: 0; padding: 0; border: 0;
+  border-radius: var(--ui-radius-action); background: transparent; color: inherit; opacity: .55; cursor: pointer; -webkit-tap-highlight-color: transparent;
+}
+.ui-engine-sees-x::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-engine-sees-x > svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+@media (hover: hover) { .ui-engine-sees-x:hover { opacity: 1; } }
+.ui-engine-sees-x:active { opacity: 1; background: var(--ui-badge-pressed); }
+.ui-engine-sees-x:focus-visible { opacity: 1; outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+
+/* The conversation and the composer */
+.ui-engine-panel-body { display: flex; flex: 1 1 auto; flex-direction: column; min-height: 0; }
+.ui-engine-panel-body > * { flex: 1 1 auto; min-height: 0; }
+.ui-engine-panel-foot { display: grid; gap: var(--ui-space-sm); padding-inline: var(--ui-space-xs); }
+.ui-engine-panel-foot > .ui-chat-chips { flex-wrap: wrap; overflow: visible; padding-inline: 0; }
+/* the Engine page shows a creative's thread in its chat column */
+.ui-chat > .ui-engine-panel-body { flex: 1 1 auto; }
+
+/* The Engine's button in a bar: pressed while the panel is open */
+.ui-engine-toggle[data-open] { --bg: var(--ui-surface-sunken); }
+
+/* Under 1024 px: the panel floats over the page's right edge; it never squeezes the page */
+@media (max-width: 1023.98px) {
+  .ui-engine-panel {
+    position: fixed; z-index: var(--ui-overlay-z-modal); top: var(--ui-sidebar-gap); right: var(--ui-sidebar-gap); bottom: var(--ui-sidebar-gap);
+    width: min(var(--ui-engine-panel-width), calc(100vw - 2 * var(--ui-sidebar-gap))); height: auto; margin: 0;
+  }
+}
+
+/* ── Beside the Studio's desk ─────────────────────────────────────────── */
+.ui-engine-dock { display: flex; min-width: 0; height: 100vh; height: 100dvh; overflow: hidden; background: var(--ui-ground-behind); }
+.ui-engine-dock > .ui-desk { flex: 1 1 0; min-width: 0; }
+/* with the panel open the desk is narrower: its panels take their under-1440 widths, and the bar's end keeps its own
+   width (the title gives way with an ellipsis) */
+.ui-engine-dock[data-open] > .ui-desk {
+  --desk-left: 248px; /* gate-allow:space-from-tokens the specs panel beside the Engine panel, studio-desk.css's under-1440 width */
+  --desk-right: 288px; /* gate-allow:space-from-tokens the variables panel beside the Engine panel, studio-desk.css's under-1440 width */
+}
+.ui-engine-dock[data-open] .ui-desk-bar { grid-template-columns: minmax(0, 1fr) auto auto; }
+.ui-engine-dock > .ui-engine-panel { position: relative; top: auto; height: auto; margin: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-sm) 0; }
+@media (max-width: 1023.98px) {
+  .ui-engine-dock > .ui-engine-panel { position: fixed; top: var(--ui-sidebar-gap); margin: 0; }
+}
+
+/* ── In the thread ────────────────────────────────────────────────────── */
+/* her line about a field: the field it is about, quiet above her words */
+.ui-engine-about { display: inline-flex; align-items: center; gap: var(--ui-space-xs); max-width: var(--ui-message-measure); min-width: 0; margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-engine-about > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+/* the Engine's words for a field, in its card */
+.ui-engine-suggestion-text { margin: 0; font-size: var(--ui-type-body); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+/* a creative's change: the desk's change card on the sunken step; once decided, one quiet line */
+.ui-message-content > .ui-engine-change { align-self: stretch; padding: var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-sm) var(--ui-space-md); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-engine-change .ui-desk-engine-actions { margin-inline-start: 0; }
+.ui-engine-change-lines { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); }
+.ui-engine-change-state { display: inline-flex; align-items: center; gap: var(--ui-space-xs); margin: 0; font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-engine-change-state > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+
+/* ── A field the Engine can write ─────────────────────────────────────── */
+.ui-engine-field-tools { display: inline-flex; align-items: center; gap: 0; flex-shrink: 0; vertical-align: middle; }
+.ui-engine-field > .ui-engine-field-tools { margin-block: calc(-1 * var(--ui-space-xs)); margin-inline-start: var(--ui-space-xs); }
+.ui-plandoc-master-meta > .ui-engine-field-tools { margin-block: calc(-1 * var(--ui-space-sm)); }
+@media (hover: hover) and (pointer: fine) {
+  .ui-engine-field-tools { opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+  .ui-engine-field:hover > .ui-engine-field-tools, .ui-engine-field:focus-within > .ui-engine-field-tools,
+  .ui-plandoc-line:hover .ui-engine-field-tools, .ui-plandoc-line:focus-within .ui-engine-field-tools,
+  .ui-plandoc-master:hover .ui-engine-field-tools, .ui-plandoc-master:focus-within .ui-engine-field-tools,
+  .ui-engine-field-tools:focus-within { opacity: 1; }
+}
+
+/* on the plan: the tools before the pencil, in the row's last column */
+.ui-plandoc-line:has(> .ui-plandoc-actions) { grid-template-columns: minmax(0, var(--ui-plandoc-label-col)) minmax(0, 1fr) auto; }
+.ui-plandoc-actions {
+  display: inline-flex; align-items: center; gap: 0; justify-self: end; align-self: start;
+  margin-block-start: calc((var(--ui-type-control) * 1.5 - var(--ui-size-control-sm)) / 2);
+}
+.ui-plandoc-actions > .ui-plandoc-change { margin: 0; }
+@container ui-plandoc (max-width: 639.98px) {
+  .ui-plandoc-line:has(> .ui-plandoc-actions) { grid-template-columns: minmax(0, 1fr) auto; }
+  .ui-plandoc-line > .ui-plandoc-actions { grid-column: 2; grid-row: 1; margin-block: calc((var(--ui-type-control) * 1.5 - var(--ui-size-control-sm)) / 2); }
+  .ui-plandoc-master > .ui-plandoc-actions { grid-column: 3; grid-row: 1; }
+}
+
+/* The Engine's words under the field: the sunken step, never in the field itself */
+.ui-engine-suggest {
+  display: grid; gap: var(--ui-space-xs); justify-items: start; min-width: 0; max-width: var(--ui-book-measure);
+  margin-block: var(--ui-space-sm) var(--ui-space-xs); padding: var(--ui-space-sm) var(--ui-space-md);
+  border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); font-weight: var(--ui-type-weight-regular); font-style: normal; line-height: 1.5;
+  letter-spacing: normal; text-transform: none; color: var(--ui-text); text-align: start;
+  animation: ui-engine-suggest-in var(--ui-motion-slow) var(--ui-motion-ease);
+}
+.ui-engine-suggest[data-writing] { display: flex; }
+@keyframes ui-engine-suggest-in { from { opacity: 0; } to { opacity: 1; } }
+.ui-engine-suggest-head { display: inline-flex; align-items: center; gap: var(--ui-space-xs); font-size: var(--ui-type-label); line-height: 1.4; color: var(--ui-text-secondary); }
+.ui-engine-suggest-head > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-engine-suggest-text { font-size: var(--ui-type-control); line-height: 1.5; color: var(--ui-text); text-wrap: pretty; }
+.ui-engine-suggest-why { font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-engine-suggest-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs); margin-block-start: var(--ui-space-xs); }
+/* in a book's line the suggestion breaks out under the words */
+.ui-engine-field > .ui-engine-suggest { margin-block-end: var(--ui-space-sm); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-engine-panel, .ui-engine-suggest { animation: none; }
+  .ui-engine-thread, .ui-engine-field-tools { transition: none; }
+  .ui-engine-thread:active { transform: none; }
+}
+
+/* ---------- round 16 (PROPOSED 9 Nov 2026) ----------
+   "Tell the Engine" while the panel is closed: in the Studio a field right under the board, where the Engine bar was (the
+   page's own thread's composer, the same draft); in the staff bar the Engine button carries the words.
+     <form class="ui-engine-prompt"><div class="ui-input-group ui-engine-prompt-field"> mark · input · ⌘J · send </div></form>
+   Earlier chats, from before this web session, at the top of the thread: one row each, opened to read.
+     <section class="ui-engine-earlier"><h3 class="ui-engine-earlier-title">Earlier</h3><ul class="ui-engine-earlier-list">
+       <li class="ui-engine-earlier-item" data-open><button class="ui-engine-earlier-row" aria-expanded><svg clock/>
+       <span class="ui-engine-earlier-words"><span class="ui-engine-earlier-about">The plan · Yesterday</span>
+       <span class="ui-engine-earlier-said">"Is the hook on brand?"</span></span><svg chevron/></button>
+       <div class="ui-engine-earlier-chat"> its messages </div></li></ul></section> */
+.ui-engine-prompt { flex: none; min-width: 0; margin: 0; }
+.ui-engine-prompt-field { width: 100%; }
+.ui-engine-prompt-mark { width: var(--ui-size-icon); height: var(--ui-size-icon); color: var(--ui-text-secondary); }
+.ui-engine-prompt-key { margin-inline-end: var(--ui-space-xs); }
+.ui-engine-toggle--labelled { flex-shrink: 0; }
+
+.ui-engine-earlier { display: grid; gap: var(--ui-space-xs); padding-block-end: var(--ui-space-md); }
+.ui-engine-earlier-title { margin: 0; padding-inline: var(--ui-space-sm); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); line-height: 1.4; color: var(--ui-text-tertiary); }
+.ui-engine-earlier-list { display: grid; gap: var(--ui-space-xs); margin: 0; padding: 0; list-style: none; }
+.ui-engine-earlier-item { min-width: 0; border-radius: var(--ui-radius-item); }
+.ui-engine-earlier-item[data-open] .ui-engine-earlier-row { color: var(--ui-text); }
+.ui-engine-earlier-row {
+  position: relative; display: flex; align-items: flex-start; gap: var(--ui-space-sm); width: 100%; min-width: 0; margin: 0;
+  padding: var(--ui-space-sm); border: 0; border-radius: var(--ui-radius-item); background: transparent; color: var(--ui-text);
+  font-family: var(--ui-type-family); font-size: var(--ui-type-control); text-align: start; cursor: pointer; outline: none;
+  -webkit-tap-highlight-color: transparent; transition: background-color var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-engine-earlier-row::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)) 0; }
+.ui-engine-earlier-row > svg { flex-shrink: 0; width: var(--ui-size-icon-sm); height: 1lh; color: var(--ui-text-tertiary); }
+@media (hover: hover) { .ui-engine-earlier-row:hover { background: var(--ui-item-bg-hover); } }
+.ui-engine-earlier-row:active { background: var(--ui-item-bg-pressed); }
+.ui-engine-earlier-row:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: calc(var(--ui-size-ring) * -1); }
+.ui-engine-earlier-words { display: grid; flex: 1 1 auto; min-width: 0; }
+.ui-engine-earlier-row { line-height: 1.4; }
+.ui-engine-earlier-about { font-weight: var(--ui-type-weight-medium); }
+.ui-engine-earlier-said { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ui-text-secondary); }
+.ui-engine-earlier-chevron { transition: transform var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-engine-earlier-row[aria-expanded="true"] .ui-engine-earlier-chevron { transform: rotate(180deg); }
+.ui-engine-earlier-chat { display: grid; gap: var(--ui-space-md); padding: var(--ui-space-xs) var(--ui-space-sm) var(--ui-space-md) calc(var(--ui-space-sm) * 2 + var(--ui-size-icon-sm)); }
+@media (prefers-reduced-motion: reduce) { .ui-engine-earlier-row, .ui-engine-earlier-chevron { transition: none; } }

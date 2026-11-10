@@ -26,6 +26,10 @@ export function useSlidingIndicator(
 ): SlidingIndicatorState {
   const [ready, setReady] = useState(false);
   const [placing, setPlacing] = useState(true);
+  // Counts the resizes, so each one runs the effect below again: a resize that lands in the same frame as the end of
+  // the last one would otherwise batch "false" and "true" into no change, leave the track placing for good, and skip
+  // every later re-place (round 15: the Check tabs' pill stayed where it was before the counts arrived).
+  const [resized, setResized] = useState(0);
 
   const place = () => {
     const list = listRef.current,
@@ -71,7 +75,7 @@ export function useSlidingIndicator(
     place();
     const f = requestAnimationFrame(() => setPlacing(false));
     return () => cancelAnimationFrame(f);
-  }, [placing, ready]);
+  }, [placing, ready, resized]);
 
   // Resizes (fonts arriving, a narrower window, a label that changes) re-place it without motion.
   useEffect(() => {
@@ -81,14 +85,19 @@ export function useSlidingIndicator(
     // the options' widths before the observer's first call. The options are watched as well as the track, so a sibling
     // growing inside a track of fixed width moves the pill too.
     const ro = new ResizeObserver(() => {
-      // Before the pill shows, place it at once (it is hidden, so nothing slides); after, place it without motion.
-      if (!listRef.current?.classList.contains("is-ready")) place();
+      // Place it at once, without motion: the track is marked placing before the pill moves, so nothing slides.
+      listRef.current?.classList.add("is-placing");
+      place();
       setPlacing(true);
+      setResized((n) => n + 1);
     });
     ro.observe(list);
-    Array.from(list.children).forEach((c) => ro.observe(c));
+    // Not the pill itself: its width changes while it slides, and a re-place then would stop the slide halfway.
+    Array.from(list.children)
+      .filter((c) => c !== indicatorRef.current)
+      .forEach((c) => ro.observe(c));
     return () => ro.disconnect();
-  }, [listRef]);
+  }, [listRef, indicatorRef]);
 
   return { ready, placing };
 }

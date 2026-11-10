@@ -1,0 +1,171 @@
+/* Books as documentation, edited in place (app FLOWS §34.3). PROPOSED 9 Nov 2026, round 14.
+   Marcus, 9 Nov: the Tone of Voice felt like "click to open edit", static and cold, and copy needs a much bigger part.
+   Markup:
+     <div class="ui-book-docs"><nav class="ui-plandoc-index ui-book-index"> groups of links </nav>
+       <div class="ui-book-main"> header, notes, the book, versions </div></div>
+     <header class="ui-book-group"><h2 class="ui-book-group-title">Copy</h2><p class="ui-book-group-line">…</p></header>
+     <span class="ui-edit" contenteditable="plaintext-only" role="textbox" aria-label="Who we are" [data-edited]>…</span>
+     <ul class="ui-voice-list ui-edit-list"><li class="ui-edit-item"><span class="ui-edit">…</span>
+       <button class="ui-edit-remove" aria-label="Take out …"><svg/></button></li> … <li class="ui-edit-add-row">[Add a line]</li></ul>
+     <form class="ui-copylab"> textarea, channel, Check the line </form><div class="ui-copylab-result" role="status"> … </div>
+   Decisions:
+   - The index sits on the left of the book on a desk, as brand.fumecreatives.com and shadcn's docs have it: groups with
+     small titles (Voice, Copy, This version), the part in view in Ink and medium. It is the plan's index (plan.css).
+   - A line is its own field: no box until the pointer is on it (a sunken wash that does not move the words), the white
+     surface and the focus ring while she writes. Nothing opens; nothing jumps.
+   - A changed line keeps a dotted underline in the tertiary colour: it says "someone wrote here" without a colour of
+     its own. Amber stays for a person's check; Rouge for what works against a rule.
+   - Copy is a group of its own with the biggest title on the page; a headline and a call to action read at body-large.
+   Rule gate: space-from-tokens, type-from-tokens, radius-from-tokens, few-strokes, hover-needs-hover, reduced-motion. */
+
+/* ── The book as documentation: its index on the left ─────────────────── */
+.ui-book-docs {
+  /* clear of the app's top bar, as the plan's parts are (plan.css --ui-plandoc-stick) */
+  --ui-book-stick: calc(var(--ui-size-control-md) + 2 * var(--ui-space-sm) + var(--ui-space-lg));
+  display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--ui-space-2xl); align-items: start; min-width: 0;
+}
+.ui-book-docs .ui-voice-part, .ui-book-docs .ui-book-group, .ui-book-docs .ui-brandbook-versions { scroll-margin-top: var(--ui-book-stick); }
+.ui-book-main { display: grid; gap: var(--ui-space-2xl); align-content: start; min-width: 0; grid-column: -2 / -1; }
+.ui-book-docs > .ui-book-index { display: none; } /* plan.css hides the plan's index the same way; this one is the book's */
+.ui-plandoc-index-group { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+@media (min-width: 1100px) {
+  .ui-book-docs { grid-template-columns: 11rem minmax(0, 760px); } /* gate-allow:space-from-tokens the index's column and the reading measure, layout widths */
+  .ui-book-docs > .ui-book-index { position: sticky; top: var(--ui-book-stick); display: grid; gap: var(--ui-space-xl); align-content: start; min-width: 0; padding-block-start: var(--ui-space-sm); }
+}
+
+/* the groups of a book: the biggest titles on the page */
+.ui-voice-book[data-book] { gap: var(--ui-space-2xl); }
+.ui-book-group { display: grid; gap: var(--ui-space-xs); min-width: 0; margin-block-start: var(--ui-space-xl); scroll-margin-top: var(--ui-space-2xl); }
+.ui-book-group:first-child { margin-block-start: 0; }
+.ui-book-group-title { margin: 0; font-size: var(--ui-type-title-large); font-weight: var(--ui-type-weight-medium); line-height: 1.15; letter-spacing: -.02em; color: var(--ui-text); }
+.ui-book-group-line { margin: 0; max-width: 36rem; font-size: var(--ui-type-body); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-voice-book[data-book] h3.ui-voice-part-title { font-size: var(--ui-type-title); }
+
+/* ── A line that is its own field ──────────────────────────────────────── */
+.ui-edit {
+  --ui-edit-wash: var(--ui-surface-sunken);
+  cursor: text; border-radius: var(--ui-radius-check); outline: none; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-color var(--ui-motion-fast) var(--ui-motion-ease), box-shadow var(--ui-motion-fast) var(--ui-motion-ease);
+}
+/* on a sunken card the wash goes one step toward Ink */
+.ui-voice-trait .ui-edit, .ui-brandbook-pair .ui-edit { --ui-edit-wash: var(--ui-surface-sunken-hover); }
+@media (hover: hover) {
+  .ui-edit:hover:not(:focus) { background: var(--ui-edit-wash); box-shadow: 0 0 0 var(--ui-space-xs) var(--ui-edit-wash); }
+}
+.ui-edit:focus { background: var(--ui-surface); box-shadow: 0 0 0 var(--ui-space-xs) var(--ui-surface), 0 0 0 calc(var(--ui-space-xs) + var(--ui-size-ring)) var(--ui-focus-ring); }
+/* a new line, still empty, says what it is for */
+.ui-edit:empty { display: inline-block; min-width: 12rem; }
+.ui-edit:empty::before { content: attr(aria-label); color: var(--ui-text-tertiary); }
+/* a line someone changed */
+[data-edited] { text-decoration-line: underline; text-decoration-style: dotted; text-decoration-color: var(--ui-text-tertiary); text-decoration-thickness: 1px; text-underline-offset: .3em; }
+.ui-badge[data-edited] { text-decoration: none; box-shadow: inset 0 0 0 1px var(--ui-text-tertiary); } /* gate-allow:few-strokes a changed word's mark, the chip's own edge */
+/* a line the brand says, between quotation marks */
+.ui-voice-q::before { content: "“"; }
+.ui-voice-q::after { content: "”"; }
+.ui-voice-q.ui-edit:empty::after { content: none; }
+
+/* lists: × beside a line on hover or focus; Add at the end */
+.ui-edit-list { padding-inline-start: var(--ui-space-lg); }
+.ui-edit-item { position: relative; padding-inline-end: var(--ui-size-control-sm); }
+.ui-edit-remove {
+  position: absolute; inset-block-start: 50%; inset-inline-end: 0; display: grid; place-items: center;
+  width: var(--ui-size-control-sm); height: var(--ui-size-control-sm); padding: 0; border: 0; border-radius: var(--ui-radius-action);
+  background: transparent; color: var(--ui-text-tertiary); cursor: pointer; opacity: 0; transform: translateY(-50%);
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-ease);
+}
+.ui-edit-remove::after, .ui-edit-word-x::after { content: ""; position: absolute; inset: min(0px, calc(50% - var(--ui-size-hit) / 2)); }
+.ui-edit-remove:active { color: var(--ui-text); background: var(--ui-surface-sunken-hover); }
+.ui-edit-remove svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-edit-item:focus-within .ui-edit-remove, .ui-edit-remove:focus-visible { opacity: 1; }
+.ui-edit-remove:focus-visible { outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: var(--ui-size-ring-offset); }
+@media (hover: hover) {
+  .ui-edit-item:hover .ui-edit-remove { opacity: 1; }
+  .ui-edit-remove:hover { color: var(--ui-text); background: var(--ui-surface-sunken); }
+}
+.ui-edit-add-row { list-style: none; margin-inline-start: calc(var(--ui-space-lg) * -1); }
+.ui-edit-add.ui-btn { margin-inline-start: calc(var(--ui-space-sm) * -1); color: var(--ui-text-secondary); }
+
+/* words as chips: × inside the chip */
+.ui-edit-words { align-items: center; }
+.ui-edit-word { gap: var(--ui-space-xs); }
+.ui-edit-word:has(.ui-edit-word-x) { padding-inline-end: var(--ui-space-xs); }
+.ui-edit-word-x { position: relative; display: grid; place-items: center; width: var(--ui-space-lg); height: var(--ui-space-lg); padding: 0; border: 0; border-radius: var(--ui-radius-action); background: transparent; color: inherit; opacity: .55; cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.ui-edit-word-x:active { opacity: 1; background: var(--ui-badge-pressed); }
+.ui-edit-word-x svg { width: var(--ui-size-icon-sm); height: var(--ui-size-icon-sm); }
+.ui-edit-word-x:focus-visible { opacity: 1; outline: var(--ui-size-ring) solid var(--ui-focus-ring); outline-offset: 0; }
+@media (hover: hover) { .ui-edit-word-x:hover { opacity: 1; } }
+.ui-badge.ui-edit { cursor: text; border-radius: var(--ui-radius-action); }
+/* Round 15 (Marcus, 9 Nov): a new word is written in a chip like the others, in the same row and size; the focus
+   ring follows the pill inside its edge instead of a box around it. */
+.ui-badge.ui-edit:empty { display: inline-flex; min-width: 7rem; }
+.ui-badge.ui-edit:focus { background: var(--ui-surface); box-shadow: inset 0 0 0 var(--ui-size-ring) var(--ui-focus-ring); }
+
+@media (prefers-reduced-motion: reduce) { .ui-edit, .ui-edit-remove { transition: none; } }
+
+/* ── Copy: headlines, calls to action ─────────────────────────────────── */
+.ui-copy-rows { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; }
+.ui-copy-row { display: grid; gap: var(--ui-space-xs); min-width: 0; }
+.ui-copy-headline { margin: 0; font-size: var(--ui-type-body-large); line-height: 1.35; color: var(--ui-text); text-wrap: pretty; }
+.ui-copy-pattern { font-family: var(--ui-type-family-data); /* gate-allow:mono-is-data a pattern is a template with slots, data to fill in */ font-size: var(--ui-type-label); line-height: 1.45; color: var(--ui-text-tertiary); }
+.ui-copy-ctas { display: grid; gap: var(--ui-space-md); margin: 0; padding: 0; list-style: none; grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr)); }
+.ui-copy-cta { display: grid; gap: var(--ui-space-sm); align-content: start; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); min-width: 0; }
+.ui-copy-cta-words { justify-self: start; font-size: var(--ui-type-body-large); font-weight: var(--ui-type-weight-medium); line-height: 1.3; color: var(--ui-text); }
+.ui-copy-cta-when { font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+.ui-copy-cta .ui-edit { --ui-edit-wash: var(--ui-surface-sunken-hover); }
+
+/* ── Try a line ──────────────────────────────────────────────────────── */
+.ui-copylab { display: grid; gap: var(--ui-space-sm); min-width: 0; padding: var(--ui-space-sm); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-copylab-input.ui-textarea, .ui-copylab .ui-textarea { font-size: var(--ui-type-body-large); line-height: 1.4; resize: none; }
+.ui-copylab-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-copylab-bar > .ui-native-select-wrap { flex: 0 1 14rem; min-width: 0; }
+.ui-copylab-result { display: grid; gap: var(--ui-space-md); min-width: 0; }
+.ui-copylab-verdict { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-sm); margin: 0; font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); color: var(--ui-text); }
+.ui-copylab-verdict > svg { width: var(--ui-size-icon); height: var(--ui-size-icon); flex: none; }
+.ui-copylab-verdict[data-found] > svg { color: var(--ui-danger); }
+.ui-copylab-length { margin-inline-start: auto; /* gate-allow:mono-is-data a count of words */ font-family: var(--ui-type-family-data); font-size: var(--ui-type-label); font-weight: var(--ui-type-weight-regular); font-variant-numeric: tabular-nums; color: var(--ui-text-secondary); }
+.ui-copylab-findings { display: grid; gap: var(--ui-space-xs); margin: 0; padding-inline-start: var(--ui-space-lg); font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text); }
+.ui-copylab-rewrite { display: grid; gap: var(--ui-space-xs); min-width: 0; padding: var(--ui-inset-float); border-radius: var(--ui-radius-card); background: var(--ui-surface-sunken); }
+.ui-copylab-rewrite-actions { display: flex; gap: var(--ui-space-sm); margin-inline-start: calc(var(--ui-space-sm) * -1); }
+.ui-copylab-against { margin: 0; font-size: var(--ui-type-label); color: var(--ui-text-tertiary); }
+.ui-book-main > .ui-brandbook-notes { margin-block-end: 0; }
+.ui-voice-say:has(.ui-edit) { gap: var(--ui-space-xs); }
+
+/* ── A book's blocks are the brand's own (Round 15, PROPOSED 9 Nov 2026) ── */
+/* Marcus, 9 Nov: "Can you add more blocks? Or only control the four?" and "Are the components hard-coded?"
+   Markup:
+     <li class="ui-voice-trait"><div class="ui-block-head"> name (.ui-edit)
+       <div class="ui-block-tools" role="group"> [↑] [↓] [trash] (ui-btn sm quiet, icon only) </div></div>
+       <span class="ui-proposal-tag ui-block-tag"><svg/> Anna added this</span> … </li>
+     <li class="ui-voice-trait ui-block-proposal" data-state="proposed"> <span class="ui-proposal-tag"><svg/> The Engine
+       proposes this · …</span> the block … <p class="ui-block-proposal-why"/> <div class="ui-proposal-actions"> Add it ·
+       Not now </div></li>
+     <div class="ui-block-add-row"> [Add a block] </div>
+   Decisions:
+   - A block's tools sit beside its name and come with the pointer or the keyboard, as × beside a line does; on touch
+     they stay. Nothing jumps: the tools take their place in the row whether they show or not.
+   - The Engine's proposal reads like a block of the book in quieter ink, its tag on top and Add it · Not now at its
+     foot (proposal.css): words and depth, never a stroke, never Amber. A component's proposal lies on the sunken
+     surface, since the components themselves sit on the page.
+   - A block that comes in pulls into focus, as a lens does (blur to sharp), slowly and without a bounce. */
+.ui-block-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--ui-space-sm); min-width: 0; }
+.ui-block-head > .ui-edit, .ui-block-head > .ui-voice-trait-name { min-width: 0; }
+.ui-block-tools { display: flex; flex: none; align-items: center; gap: 0; margin-block: calc(var(--ui-space-xs) * -1); opacity: 0; transition: opacity var(--ui-motion-fast) var(--ui-motion-ease); }
+.ui-block-tools .ui-btn { color: var(--ui-text-tertiary); }
+.ui-voice-trait:focus-within .ui-block-tools, .ui-ds-part .ui-block-tools, .ui-block-tools:focus-within { opacity: 1; }
+@media (hover: hover) { .ui-voice-trait:hover .ui-block-tools { opacity: 1; } }
+@media (hover: none) { .ui-block-tools { opacity: 1; } }
+.ui-block-tag { justify-self: start; }
+.ui-block-hint { color: var(--ui-text-tertiary); }
+.ui-block-add-row { display: flex; margin-block-start: calc(var(--ui-space-sm) * -1); }
+
+/* the Engine's proposal */
+.ui-block-proposal { display: grid; gap: var(--ui-space-sm); align-content: start; min-width: 0; }
+.ui-block-proposal .ui-proposal-tag { color: var(--ui-text-secondary); }
+.ui-voice-trait.ui-block-proposal .ui-voice-trait-name, .ui-voice-trait.ui-block-proposal .ui-voice-say:not([data-say="dont"]) { color: var(--ui-text-secondary); }
+.ui-block-proposal-why { flex: 1 1 18rem; margin: 0; max-inline-size: 40rem; font-size: var(--ui-type-control); line-height: 1.45; color: var(--ui-text-secondary); text-wrap: pretty; }
+
+/* a block that comes in pulls into focus */
+.ui-voice-trait[data-fresh], .ui-ds-part[data-fresh] { animation: ui-block-in var(--ui-motion-slow) var(--ui-motion-ease) both; }
+@keyframes ui-block-in { from { opacity: 0; filter: blur(var(--ui-motion-enter-blur)); } to { opacity: 1; filter: blur(0); } }
+@media (prefers-reduced-motion: reduce) { .ui-block-tools { transition: none; } .ui-voice-trait[data-fresh], .ui-ds-part[data-fresh] { animation: none; } }

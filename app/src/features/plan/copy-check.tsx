@@ -5,10 +5,11 @@
 //   backs in Rouge with its alert mark; off the voice and a word the voice avoids in the secondary colour. A claim a
 //   fact backs, or one the brand's own words make (a price, an offer, where it is from), is only counted.
 // - A line the expert changed after the check keeps its notes, muted, under "You changed this line after the check".
-// - In the aside, above the brief: "The words, checked", the counts, the rewrite Fume already made, the Tone of Voice
-//   it wrote in, and each finding as a link that glides to its line.
+// - In the aside, above the brief: "The words, checked" as the aside's clearest title, how many things to look at, each
+//   finding as a link that glides to its line, then folded: the Tone of Voice it wrote in and the rewrite Fume already
+//   made (round 14, FLOWS §34.2: fewer words in the aside).
 // A machine's reading never blocks on its own: Mark checked stays as it is; its foot only says what is still open.
-import { Icon } from "@fume/ui";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger, Icon } from "@fume/ui";
 import type { MouseEvent } from "react";
 import type {
   CampaignPlan,
@@ -119,12 +120,8 @@ export function CopyCheckSummary({ plan }: { plan: CampaignPlan }) {
   const unbacked = check.lines.reduce((n, l) => n + l.claims.filter((c) => c.verdict === "unbacked").length, 0);
   const off = check.findings.filter((f) => f.kind === "off_voice").length;
   const avoided = check.findings.filter((f) => f.kind === "avoided_word").length;
-  const counts = [
-    copy.count(check.lines.length, "line") + " read",
-    ...(unbacked ? [`${unbacked} ${unbacked === 1 ? "claim" : "claims"} nothing backs`] : []),
-    ...(off ? [`${off} off the voice`] : []),
-    ...(avoided ? [`${avoided} ${avoided === 1 ? "word" : "words"} the voice avoids`] : []),
-  ];
+  const toLook = unbacked + off + avoided;
+  const read = copy.count(check.lines.length, "line");
   const go = (e: MouseEvent<HTMLAnchorElement>, ref: string) => {
     if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (glideTo(wordsAnchor(ref), e.currentTarget)) e.preventDefault();
@@ -133,7 +130,7 @@ export function CopyCheckSummary({ plan }: { plan: CampaignPlan }) {
   const changed = changedRefs(plan);
   return (
     <section className="ui-plandoc-copy" aria-labelledby="plan-copy-title">
-      <h3 className="ui-plandoc-index-title" id="plan-copy-title">
+      <h3 className="ui-plandoc-copy-title" id="plan-copy-title">
         The words, checked
       </h3>
       {!check.read ? (
@@ -142,7 +139,9 @@ export function CopyCheckSummary({ plan }: { plan: CampaignPlan }) {
         </p>
       ) : (
         <>
-          <p className="ui-plandoc-copy-line">{counts.join(" · ")}</p>
+          <p className="ui-plandoc-copy-sub">
+            {toLook ? `${toLook} to look at, in ${read}` : `Nothing found in ${read}`}
+          </p>
           {found.length > 0 && (
             <ul className="ui-plandoc-copy-list">
               {found.map((f) => {
@@ -178,21 +177,28 @@ export function CopyCheckSummary({ plan }: { plan: CampaignPlan }) {
           )}
         </>
       )}
-      {check.rewritten && check.rewroteFor && check.rewroteFor.length > 0 && (
-        <p className="ui-plandoc-copy-sub">
-          Written again once, for a claim nothing backed:{" "}
-          {check.rewroteFor.map((r, i) => (
-            <span key={r.ref}>
-              {i > 0 ? ", " : ""}“{r.text}”
-            </span>
-          ))}
-          {/[.!?]$/.test(check.rewroteFor[check.rewroteFor.length - 1].text) ? "" : "."}
-        </p>
-      )}
-      {check.voiceBook && (
-        <p className="ui-plandoc-copy-sub">
-          Written in the Tone of Voice, version {check.voiceBook.version} ({stateWords[check.voiceBook.state]}).
-        </p>
+      {(check.voiceBook || (check.rewritten && check.rewroteFor && check.rewroteFor.length > 0)) && (
+        <Collapsible className="ui-plandoc-copy-more">
+          <CollapsibleTrigger>How Fume wrote them</CollapsibleTrigger>
+          <CollapsibleContent>
+            {check.voiceBook && (
+              <p className="ui-plandoc-copy-sub">
+                In the Tone of Voice, version {check.voiceBook.version} ({stateWords[check.voiceBook.state]}).
+              </p>
+            )}
+            {check.rewritten && check.rewroteFor && check.rewroteFor.length > 0 && (
+              <p className="ui-plandoc-copy-sub">
+                Written again once, for a claim nothing backed:{" "}
+                {check.rewroteFor.map((r, i) => (
+                  <span key={r.ref}>
+                    {i > 0 ? ", " : ""}“{r.text}”
+                  </span>
+                ))}
+                {/[.!?]$/.test(check.rewroteFor[check.rewroteFor.length - 1].text) ? "" : "."}
+              </p>
+            )}
+          </CollapsibleContent>
+        </Collapsible>
       )}
     </section>
   );
