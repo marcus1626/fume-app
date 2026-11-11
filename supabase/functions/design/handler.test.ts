@@ -1,6 +1,6 @@
 import { assertEquals } from "jsr:@std/assert@1";
 import { type Deps, designLayer, handleDesign, placed } from "./handler.ts";
-import { keepClearOf, layoutsOf, type Take, wordsOf } from "./layer.ts";
+import { keepClearOf, layoutsOf, roomOf, type Take, wordsOf } from "./layer.ts";
 
 const take: Take = {
   layer_id: "00000000-0000-0000-0000-0000000000aa",
@@ -145,6 +145,20 @@ Deno.test("where the Engine left room for the words comes before the model's eye
   const none = deps({ choose: () => Promise.reject(new Error("down")) });
   await designLayer(roomy, none.d);
   assertEquals((none.calls.lay[0] as { prefer: unknown }).prefer, { band: "bottom" }, "without the model's eye, the room still leads");
+});
+
+Deno.test("the room is read from the rule as the Engine writes it today", async () => {
+  const { roomRules } = await import("../_shared/engine/context.ts");
+  const layout = (band: "top" | "middle" | "bottom", align: "left" | "right") => ({ name: "L", band, align, wordsWidthPct: 40, ground: "photo" });
+  const rule = (band: "top" | "middle" | "bottom", align: "left" | "right") =>
+    roomRules({
+      products: [{ id: "p", name: "Shoe" }], creative: { id: "c1", title: "Master 1" },
+      plan: { planned_creatives: [{ creative_id: "c1", kind: "master", title: "Master 1", text: "WORDS", scene: "A shoe on a kerb.", layout: "L" }] },
+      room: { id: "db", version: 1, layouts: [layout(band, align)] },
+    } as never)[0].statement;
+  assertEquals(roomOf({ ...take, room: rule("bottom", "left") }), { band: "bottom" });
+  assertEquals(roomOf({ ...take, room: rule("top", "left") }), { band: "top" });
+  assertEquals(roomOf({ ...take, room: rule("middle", "right") }), { align: "right" });
 });
 
 Deno.test("a slow service is tried once more; a refusal is not", async () => {

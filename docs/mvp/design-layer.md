@@ -76,6 +76,15 @@ Marcus: "Designet var ikke veldig on brand." What changed:
   bare side is the first band (top, bottom) or alignment (left, right) the search tries, before the model's eye. The
   brand's own words colour is tried before the model's. The inset for studio pictures reads the edges in sRGB, so a
   dark scene is never taken for a backdrop.
+  The side is read from the rule's own words (`roomOf`). From 9 to 11 Nov 2026 the rule said "has no person, product
+  or object in it" while `roomOf` still looked for "is bare", so the room never led; both wordings are read now, and
+  a test feeds `roomRules`' real output to `roomOf` so the two cannot drift apart again.
+- **Two rules for the room** (11 Nov). The Engine writes `room-for-words` (where the product sits, nothing in the
+  room, the tone under the words) and `room-calm` (that part of the photograph is calm and low in detail). Only the
+  first has a picture made once more (`makeRoom`); a texture where the words go is a note for the expert and the
+  design layer's shade. As one rule, eight of eight first pictures of 11 Nov (Nike UK, Møllers) were made twice, for
+  gravel, a puddle or a shadow, the second time with a smaller product. A brand whose taste keeps the background
+  sharp (`keepsSharpBehind`) is never asked for a room "softly out of focus".
 - **A time budget** (5 Nov). The search stops trying once it has a layout and 22 s have gone (40 s with the inset
   passes), and on an inset picture it tries the top band first, so a layer comes back well inside Vercel's limit.
 - **The brand's own font files** (5 Nov). A TrueType or OpenType file the brand adds as a font source

@@ -511,6 +511,20 @@ Deno.test("a picture that left no room for the words is made once more, told wha
   assertEquals((await run(["off"], false)).ran, [], "nothing starts when the job may not be made again");
 });
 
+Deno.test("a texture where the words go is a note for the expert, not a reason to make the picture again", async () => {
+  const { checklist, roomTaken, toEvaluation } = await import("../_shared/engine/evaluate.ts");
+  const rule = (refId: string, requirement: string) => ({ kind: "brand_rule_hard" as const, refId, required: true, requirement });
+  const checks = checklist([rule("room-for-words", "The lower 40% has no person, product or object in it."), rule("room-calm", "The part kept for the words is calm and low in detail.")]);
+  const answers = (room: "holds" | "off", calm: "holds" | "off") => ({
+    answers: [{ n: 1, verdict: room, note: "The shoe stands in the lower part." }, { n: 2, verdict: calm, note: "The lower part is busy gravel." }],
+    artefacts: "none" as const, artefactNotes: [], printedText: false,
+  });
+  const gravel = toEvaluation(checks, answers("holds", "off"));
+  assertEquals(roomTaken(gravel), null, "gravel under the words does not have the picture made again");
+  assertEquals([gravel.brandRules, gravel.notes], ["flag", ["The lower part is busy gravel."]], "the expert still reads it");
+  assertEquals(roomTaken(toEvaluation(checks, answers("off", "holds"))), "The shoe stands in the lower part.");
+});
+
 Deno.test("the next prompt reads first what filled the room on the last picture", async () => {
   assertEquals(roomLesson(null), []);
   const [lesson] = roomLesson("The sled fills the left side");

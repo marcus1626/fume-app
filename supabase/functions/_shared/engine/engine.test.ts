@@ -402,11 +402,15 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals(wordsRoom(withWords("A shirt laid flat. Right side of the frame kept clear for the headline."))?.side, "right");
   const fromBrand = wordsRoom(withWords("A shirt laid flat on grey."));
   assertEquals([fromBrand?.side, fromBrand?.share], ["left", 0.39]);
-  const [rule] = roomRules(withWords("A shirt laid flat on grey."));
+  const [rule, calm] = roomRules(withWords("A shirt laid flat on grey."));
   assertEquals([rule.id, rule.binding, rule.dimension], ["room-for-words", "hard", "composition"]);
   assertEquals(/right 61% of the frame.s width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
-  assertEquals(/no reflections, puddles, lights/.test(rule.statement), true, "a scene's shiny surface is not room for words");
-  assertEquals(/never a flat panel, a blank slab, a split frame/.test(rule.statement), true, "the room is the scene's own background, not a slab");
+  // What is in the room and how calm it is are two rules: only the first has the picture made once more.
+  assertEquals([calm.id, calm.binding], ["room-calm", "hard"]);
+  assertEquals(/reflections|texture|out of focus/.test(rule.statement), false, "the rule a picture is made again for says nothing of texture");
+  assertEquals(/no reflections, puddles, lights/.test(calm.statement), true, "a scene's shiny surface is not room for words");
+  assertEquals(/never a flat panel, a blank slab, a split frame/.test(calm.statement), true, "the room is the scene's own background, not a slab");
+  assertEquals(/softly out of focus/.test(calm.statement), true, "a brand with no taste read may have a soft background");
   assertEquals(/button/.test(rule.statement), false, "no button corner when the brand sets none apart");
   assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
   // The layout the plan chose for the creative wins over the scene's words and the brand's first layout.
@@ -431,6 +435,18 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   const light = { ...anthem, layouts: [{ ...anthem.layouts[0], words: "light" }] };
   const [white] = roomRules({ ...withWords("A hoop in a driveway."), room: light });
   assertEquals(/set in white, so that part of the picture is mid to deep in tone.*never bright sky/.test(white.statement), true);
+  // A brand whose own pictures stay sharp behind the subject is never asked for a room out of focus.
+  const { keepsSharpBehind } = await import("./context.ts");
+  const line = (key: string, says: string, absence = false) => ({ key, group: "camera", lever: "prompt" as const, when: "always" as const, standing: "always" as const, confidence: 0.9, share: 1, says, absence, weight: 0.9 });
+  const taste = (lines: ReturnType<typeof line>[]) => ({ schema: 1, pictures: 30, campaigns: 5, tested: false, lines, targets: [], choices: [], never: [] });
+  const deep = { ...withWords("A hoop in a driveway."), room: light, tasteDirection: taste([line("camera.depth_of_field", "Camera, depth of field: deep")]) };
+  assertEquals(keepsSharpBehind(deep), true);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: taste([line("camera.background_blur", "Camera: no background blur", true)]) }), true);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: taste([line("camera.depth_of_field", "Camera, depth of field: shallow")]) }), false);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: null }), false);
+  const [sharpRoom, sharpCalm] = roomRules(deep);
+  assertEquals(/out of focus/.test(sharpRoom.statement + sharpCalm.statement), false);
+  assertEquals(/as sharp as the rest of the picture/.test(sharpCalm.statement), true);
 });
 
 Deno.test("the taste schema's habits become soft rules in the photograph's slots: what applies to this picture, what the Engine missed first", async () => {

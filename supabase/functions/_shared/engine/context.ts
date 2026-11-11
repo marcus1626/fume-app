@@ -2,7 +2,7 @@
 // snapshot, the approved plan, the product's verified facts and pictures, the Brand DNA's rules, the taste model and
 // the lessons people's verdicts taught). Built by code, never by a model: the product text is the verified facts
 // word for word, so the model can only describe the scene around the product, never the product itself.
-import { type Direction, type Planned, promptLines, type PromptLine } from "../taste/direction.ts";
+import { type Direction, directionFor, type Planned, promptLines, type PromptLine } from "../taste/direction.ts";
 import { type Candidate, cardOf, choose, needOf, says } from "./references.ts";
 import type { BrandContext, BrandRule, Concept, FormatSpec, Knowledge, ProductContext } from "./types.ts";
 
@@ -159,7 +159,20 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
   return { side, share, from: chosen || !fromScene ? `the brand's layout "${layout!.name}"` : "the plan's scene", ...(button ? { button } : {}), ...(tone ? { tone } : {}) };
 }
 
-/** The room for the words as a rule the prompt must carry: where the product sits and how much bare ground is left. */
+/** Whether the brand's own pictures of this kind stay sharp behind the subject (taste schema: deep focus, or no blur
+ *  behind). The room for the words is then never asked for as something out of focus. */
+export function keepsSharpBehind(task: EngineTask): boolean {
+  if (!task.tasteDirection?.lines?.length) return false;
+  return directionFor(task.tasteDirection, plannedShows(task)).lines.some((l) =>
+    (l.key === "camera.depth_of_field" && /: (deep|everything sharp)$/.test(l.says)) || (l.key === "camera.background_blur" && l.absence));
+}
+
+/** The room for the words as rules the prompt must carry: where the product sits and what is kept out of the room
+ *  (`room-for-words`), and how calm that part of the photograph is (`room-calm`). They are two rules because they fail
+ *  differently: a product, a person or the wrong tone where the words go breaks the layout, and the Engine makes the
+ *  picture once more (engine/handler.ts makeRoom); a texture there is the designer's to shade. As one rule, every
+ *  first picture of a brand whose taste keeps the background sharp was called off for its gravel or its puddle and
+ *  made twice, the second time with a smaller product (Nike UK and Møllers, 11 Nov 2026: eight of eight). */
 export function roomRules(task: EngineTask): BrandRule[] {
   const room = wordsRoom(task);
   if (!room) return [];
@@ -167,21 +180,27 @@ export function roomRules(task: EngineTask): BrandRule[] {
   const rest = 100 - pct;
   const across = room.side === "left" || room.side === "right";
   const other = { left: "right", right: "left", top: "bottom", bottom: "top" }[room.side];
-  // The room is the photograph's own open background, the way a photographer frames for a headline: the sky, a far
-  // field, a wall or trees out of focus. Asked for as bare ground of one tone, the model painted a blank slab beside
-  // the scene, a split frame no designer would set words on (Anthem v9, 9 Nov). A scene's shiny surface (wet asphalt,
-  // a lit street) is not room either: words read only on calm ground.
-  const calm = "It is the same continuous photograph, the scene's own open background carried on (the sky, a far field, a wall or trees softly out of focus), calm and low in detail: no reflections, puddles, lights, highlights, hard shadows or busy texture there. It is never a flat panel, a blank slab, a split frame or a border.";
+  // A brand that keeps its backgrounds sharp is not told to blur the room: the two would be written against each other.
+  const sharp = keepsSharpBehind(task);
+  const far = sharp ? "the sky, a far field, a plain wall or even ground, as sharp as the rest of the picture" : "the sky, a far field, a wall or trees softly out of focus";
+  // The room is the photograph's own open background, the way a photographer frames for a headline. Asked for as bare
+  // ground of one tone, the model painted a blank slab beside the scene, a split frame no designer would set words on
+  // (Anthem v9, 9 Nov). A scene's shiny surface (wet asphalt, a lit street) is not room either: words read only on
+  // calm ground.
+  const calm = `The part of the frame kept for the words is the same continuous photograph, the scene's own open background carried on (${far}), calm and low in detail: no reflections, puddles, lights, highlights, hard shadows or busy texture there. It is never a flat panel, a blank slab, a split frame or a border.`;
   const tone = room.tone === "dark"
-    ? " The words there are set in white, so that part of the picture is mid to deep in tone: the shaded side of the scene, a darker tree line, hedge or wall softly out of focus, never bright sky, a pale wall or sunlit concrete."
+    ? ` The words there are set in white, so that part of the picture is mid to deep in tone: the shaded side of the scene, a darker tree line, hedge or wall${sharp ? "" : " softly out of focus"}, never bright sky, a pale wall or sunlit concrete.`
     : room.tone === "light"
       ? " The words there are set in a dark colour, so that part of the picture is light in tone: open sky, a pale wall or light ground, never deep shade."
       : "";
   const button = room.button ? ` The bottom ${room.button} corner, the lowest eighth of the frame's height across ${room.button === room.side ? "that side" : `the ${room.button} half`}, holds only ground (grass, court, floor), with no person, feet, ball or base of the product in it, for the brand's button.` : "";
   const statement = across
-    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`
-    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`;
-  return [{ id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" }];
+    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`
+    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`;
+  return [
+    { id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" },
+    { id: "room-calm", dimension: "composition", lookKey: null, statement: calm, binding: "hard", epistemic: "known", scope: "core" },
+  ];
 }
 
 /** The parts of a Look Book (brand-book/look.ts) the prompt is written from. */

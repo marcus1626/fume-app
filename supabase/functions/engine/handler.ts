@@ -340,7 +340,8 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
 /** When every picture the Engine looked at left no room for the words, the words would cover the product: the Engine
  *  makes the picture once more, told what stood in the room. Once per job; the pictures already made stay for the
  *  expert. A failure here never undoes the picture. Anthem, 10 Nov: six of eight pictures had the product where the
- *  words go, though the prompt asked for the room. */
+ *  words go, though the prompt asked for the room. Only the rule `room-for-words` asks for it (something in the room,
+ *  or the wrong tone under the words); a texture in the room (`room-calm`) is a note for the expert. */
 async function makeRoom(c: { attemptId: string; jobId: string }, seen: { looked: number; roomTaken: string[] }, deps: Deps): Promise<boolean> {
   if (!deps.service.again || seen.looked === 0 || seen.roomTaken.length < seen.looked) return false;
   try {
@@ -360,7 +361,7 @@ export function roomLesson(again: string | null | undefined): Taken["lessons"] {
   return [{
     id: "room-again",
     polarity: "do",
-    statement: `Keep the room for the words bare, exactly as the room rule says: move the product and everything else out of it, and make the product smaller in the frame if that is what it takes. On the last picture: ${/[.!?]$/.test(what) ? what : `${what}.`}`,
+    statement: `Keep the room for the words bare, exactly as the room rule says: move the product and everything else out of it, and make the product smaller in the frame only if it stood in the room. On the last picture: ${/[.!?]$/.test(what) ? what : `${what}.`}`,
     reason: "Fume's own check found no room for the words on this creative's last picture.",
   }];
 }
