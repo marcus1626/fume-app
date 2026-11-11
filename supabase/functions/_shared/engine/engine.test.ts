@@ -464,6 +464,19 @@ Deno.test("a kind's own deep focus applies when the top-level taste lines are em
   assertEquals(calm.statement.includes("as sharp as the rest of the picture"), true);
 });
 
+Deno.test("the picture check holds the product's printed face to its photographs", async () => {
+  const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } = await import("./evaluate.ts");
+  const checks = checklist([], true);
+  assertEquals([checks.length, checks[0].area, checks[0].hard], [1, "product", true]);
+  assertEquals(/Added or changed words, logos, badges or panels on a face shown in its own photographs make this item off/.test(checks[0].requirement), true);
+  assertEquals(evaluatorPrompt(checks, true).includes(checks[0].requirement), true);
+  assertEquals(/do not infer a match from a familiar brand or plausible packaging/.test(EVALUATOR_SYSTEM), true);
+  assertEquals(EVALUATOR_SYSTEM.includes("checked elsewhere"), false);
+  // Møllers Trankapsler, 11 Nov (job a70e3578): a plausible pack with an invented label must not pass.
+  const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "off", note: "The pack has a label panel absent from its own photographs." }], artefacts: "none", artefactNotes: [], printedText: false });
+  assertEquals([e.productTruth, e.brandRules, e.printedText], ["flag", "pass", false]);
+});
+
 Deno.test("only the room-for-words checklist item carries the designer's judging note", async () => {
   const { checklist, ROOM_REF } = await import("./evaluate.ts");
   const requirement = "Keep the left 40% of the picture clear for words.";
