@@ -155,8 +155,7 @@ How the round measured (the same six shoes, product alone, read by the same read
 
 The second line is the fairer measure of the Engine: it does not count against a picture that it is on a street when
 the brief asked for a street. `tools/taste/open.ts` counts both. The rule above is live in the plan writer
-(`fume-plan`) since 11 Nov 2026; the Engine's part is in the code and waits for its deploy, and for a round that
-measures it.
+(`fume-plan`) and in the Engine (`engine`) since 11 Nov 2026; a round that measures it has not been made yet.
 
 The Look Book's rules are soft too (only skin is hard, `lookRules`). Nike UK's Look Book, read from ten paid ads,
 asks for a cool bleached grade; the profile, read from newsroom pictures, keeps no such habit. Which of the two says
