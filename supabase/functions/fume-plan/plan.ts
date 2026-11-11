@@ -25,6 +25,7 @@ const Creative = z.object({
   people: z.string().describe("'No people', 'Hands only', or who"),
   view: z.enum(["front", "three_quarter", "side", "back", "top", "bottom", "not_set"]).describe("From where the camera sees the picture's main subject (the person where there is one, else the product), as the scene describes it. The Engine sends the reference pictures of that side. not_set when the scene names no side"),
   crop: z.enum(["close", "half", "whole", "not_set"]).describe("How much of the main subject is in the frame: close (a detail, or a face), half (a person from the waist up), whole (all of it). not_set when the scene does not say"),
+  place: z.enum(["studio", "indoors", "outdoors", "not_set"]).describe("Where the picture is, as the scene describes it: studio (a plain ground, a backdrop or a built set), indoors (a real room), outdoors. not_set only when the scene names no place"),
   layout: z.string().nullable().describe("For a creative with words: the name of the brand's layout the words are set in, exactly as listed in brand_layouts; null when none is listed or there are no words"),
 });
 const Direction = z.object({
@@ -189,7 +190,7 @@ export function tastePart(d: Direction | null | undefined): string[] {
   if (!brief) return [];
   return [
     `<taste_schema pictures="${d.pictures}" campaigns="${d.campaigns}">\n${brief}\n</taste_schema>`,
-    "The taste schema is counted from the brand's own pictures, field by field: what they always do, and what most of them do, with the share. Plan scenes, people, places and looks that keep to these habits. A habit most pictures keep is a default, not a law: the brief may ask for something else, and then the brief wins. Where a line says what earlier Engine pictures did instead, Fume's own pictures departed from the brand there before: plan so the next ones do not. What a campaign chooses is this campaign's to choose. Never write a field's name into the plan; write what the picture shows.",
+    "The taste schema is counted from the brand's own pictures, field by field: what they always do, and what most of them do, with the share. The brief decides what the picture is of and where it is: its subject, its place, its weather and its time of day. Where the brief leaves one of those open, take it from these habits (a brand that shows its product alone in a studio gets a studio when the brief names no place). How the picture is made is the brand's in every place: what is sharp and how deep the focus is, the lens and the perspective, flash and how the light is shaped, the planes, the edges of the frame, the colour and the finish. Carry those habits into the place the brief asks for, and write each scene so that it shows them and says nothing against them: where the brand keeps everything sharp with no blur behind the subject, what is behind the subject in your scene is sharp and legible, never blurred, soft or out of focus; where its edges are clean, nothing is cut by the frame. A habit most pictures keep is a default, not a law. Where a line says what earlier Engine pictures did instead, Fume's own pictures departed from the brand there before: plan so the next ones do not. What a campaign chooses is this campaign's to choose. Never write a field's name into the plan; write what the picture shows.",
   ];
 }
 
@@ -486,6 +487,8 @@ export function toBody(a: PlanAnswer, layouts: BrandLayout[] = []): Record<strin
       // Where the camera stands to the subject and how close, for the Engine's choice of reference pictures.
       ...(c.view && c.view !== "not_set" ? { view: c.view } : {}),
       ...(c.crop && c.crop !== "not_set" ? { crop: c.crop } : {}),
+      // Where the picture is: the Engine leaves the habits of the brand's usual place out of a picture set elsewhere.
+      ...(c.place && c.place !== "not_set" ? { place: c.place } : {}),
       ...(c.text && layoutOf(c.layout) ? { layout: layoutOf(c.layout) } : {}),
     })),
     ...(d.recommended ? { recommended: true } : {}),

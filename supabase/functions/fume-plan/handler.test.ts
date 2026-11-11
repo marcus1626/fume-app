@@ -67,6 +67,7 @@ const plan: PlanAnswer = {
           people: "No people",
           view: "three_quarter",
           crop: "not_set",
+          place: "outdoors",
           layout: null,
         },
         {
@@ -82,6 +83,7 @@ const plan: PlanAnswer = {
           people: "No people",
           view: "not_set",
           crop: "close",
+          place: "not_set",
           layout: "Narrow stack",
         },
       ],
@@ -215,6 +217,8 @@ Deno.test("the prompt lists only verified claims as usable, and the body keeps t
   );
   // The side and the crop the Engine chooses reference pictures by: kept where the plan set them.
   assertEquals([m!.view, "crop" in m!, "view" in v!, v!.crop], ["three_quarter", false, false, "close"]);
+  // Where the picture is, for the habits of the brand's usual place: kept where the plan set it.
+  assertEquals([m!.place, "place" in v!], ["outdoors", false]);
 });
 
 Deno.test("the plan writer reads the brand brain, and what is only proposed is marked", async () => {
@@ -558,7 +562,8 @@ Deno.test("the plan writer reads the brand's taste schema: its habits, what a ca
   assertEquals(block!.includes("- People, count: one (always; earlier Engine pictures: none 100%)"), true);
   assertEquals(block!.includes("- Mood, temperature: winter: cold; summer: warm"), true);
   assertEquals(block!.includes("grain"), false, "the finish step's fields are not the plan's");
-  assertEquals(/the brief wins/.test(how!), true);
+  // The brief decides what and where; how the picture is made stays the brand's, and the scene never says otherwise.
+  assertEquals(/The brief decides what the picture is of and where it is/.test(how!) && /How the picture is made is the brand's in every place/.test(how!) && /never blurred, soft or out of focus/.test(how!), true);
   assertEquals(tastePart(null), []);
   assertEquals(tastePart(direction(buildProfile(cards.slice(0, 3)))), [], "too few pictures give no direction");
 });

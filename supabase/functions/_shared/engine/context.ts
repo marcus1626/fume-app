@@ -28,6 +28,8 @@ export type PlannedCreative = {
   /** From where the camera sees the main subject and how much of it, where the plan says (references.ts). */
   view?: string;
   crop?: string;
+  /** Where the plan sets the picture: studio, indoors or outdoors (fume-plan, 11 Nov). */
+  place?: string;
   /** The brand's models this picture is of, where the plan names them. */
   castIds?: string[];
 };
@@ -85,9 +87,23 @@ export function schemaLines(task: EngineTask): PromptLine[] {
 /** What the plan says the picture will show, as the taste schema asks it: it decides which habits apply, and which
  *  kind of the brand's pictures this one is held to (the product alone, or a picture with people). */
 export function plannedShows(task: EngineTask): Planned {
-  const people = plannedCreative(task)?.people?.trim() ?? "";
+  const planned = plannedCreative(task);
+  const people = planned?.people?.trim() ?? "";
   const shown = Boolean(people) && !/^no people/i.test(people);
-  return { people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0 };
+  const place = plannedPlace(planned);
+  return {
+    people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0,
+    ...(place ? { place: place === "studio" ? "studio" as const : "world" as const, outdoors: place === "outdoors" } : {}),
+  };
+}
+const STUDIO_SCENE = /\b(studio|seamless|cyclorama|infinity cove|paper sweep)\b/i;
+const OUTDOOR_SCENE = /\b(street|pavement|kerb|road|alley|park|pitch|field|beach|forest|mountain|rooftop|outdoors?|outside|sky|rain|puddle|terrace|car park|court|track|platform|estate|bridge|canal)\b/i;
+/** Where the plan sets the picture: what the plan writer said (place), else what its scene names. A plan from before
+ *  the plan said it, whose scene names neither, gives nothing, and then every habit applies as before. */
+export function plannedPlace(planned: PlannedCreative | undefined): "studio" | "indoors" | "outdoors" | null {
+  if (planned?.place === "studio" || planned?.place === "indoors" || planned?.place === "outdoors") return planned.place;
+  const scene = planned?.scene ?? "";
+  return STUDIO_SCENE.test(scene) ? "studio" : OUTDOOR_SCENE.test(scene) ? "outdoors" : null;
 }
 
 export type RoomLayout = {

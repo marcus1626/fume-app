@@ -137,13 +137,37 @@ export function direction(profile: Profile, engine: Profile | null = null): Dire
   return { schema: TASTE_SCHEMA_VERSION, pictures: profile.pictures, campaigns: profile.campaigns, tested: Boolean(engine), lines: said, targets, choices, never };
 }
 
-/** What the picture to be made will show, as far as the plan says; what the plan does not say is taken as not there. */
-export type Planned = Partial<Shows>;
+/** Where a picture is: on a plain ground or a set, or out in a real place. */
+export type Place = "studio" | "world";
+/** What the picture to be made will show, as far as the plan says; what the plan does not say is taken as not there.
+ *  `place` is where the plan sets it, when the plan says. */
+export type Planned = Partial<Shows> & { place?: Place };
 const shown = (p: Planned): Shows => ({ people: false, face: false, severalPeople: false, product: true, words: false, logo: false, outdoors: false, ...p });
 
 /** The direction for one picture: its own kind's where the brand has pictures enough of that kind, else the brand's whole. */
 export function directionFor(d: Direction, planned: Planned = {}): Direction {
   return d.kinds?.[kindOf(shown(planned)) ?? ("" as Kind)] ?? d;
+}
+
+// The brief decides what a picture is of and where it is; the brand's taste decides how it is made. A habit that
+// describes the place itself (a pristine, dry, plain studio ground with no trace of use) says nothing true about a wet
+// street the brief asked for: in the first round with taste (Nike UK, 10 Nov 2026) seven of a prompt's twelve lines
+// were studio habits written into street scenes, and the habits of craft that hold anywhere (deep focus, no blur
+// behind, clean edges) were crowded out or contradicted.
+const PLACE_KEYS = new Set(["kind.capture", "light.sky", "colour.sky_colour", "colour.background_colour"]);
+/** A field that describes where the picture is, not how it is made. */
+export const ofThePlace = (key: string): boolean => key.startsWith("setting.") || PLACE_KEYS.has(key);
+const STUDIO = /\b(plain studio|built set|empty void)\b/;
+/** Where the brand's pictures of this kind are, when they keep to one kind of place. */
+export function habitualPlace(d: Direction): Place | null {
+  const type = d.lines.find((l) => l.key === "setting.type");
+  return type ? (STUDIO.test(type.says) ? "studio" : "world") : null;
+}
+/** The plan sets this picture somewhere else than the brand's pictures of its kind usually are: the habits of that
+ *  place do not apply to it, the habits of craft still do. */
+export function awayFromHabit(d: Direction, planned: Planned = {}): boolean {
+  const usual = habitualPlace(directionFor(d, planned));
+  return Boolean(planned.place && usual && planned.place !== usual);
 }
 
 /** The dimension of a brand rule (engine/context.ts) a group's lines belong to: it decides the slot of the prompt. */
@@ -156,14 +180,17 @@ export type PromptLine = { id: string; dimension: string; statement: string; key
 /**
  * The lines one picture prompt takes: only what the photograph itself carries (not the plan's choices, the design
  * layer or the finish step), only what applies to what the picture will show, the weightiest first, with few absences.
+ * Where the plan sets the picture away from the brand's usual place, the habits of that place are left out.
  */
 export function promptLines(d: Direction, planned: Planned = {}, most = 16, mostAbsences = 3): PromptLine[] {
   const s = shown(planned);
+  const away = awayFromHabit(d, planned);
   const out: PromptLine[] = [];
   let absences = 0;
   for (const l of directionFor(d, planned).lines) {
     if (out.length >= most) break;
     if (l.lever !== "prompt" && l.lever !== "reference") continue;
+    if (away && ofThePlace(l.key)) continue;
     const f = FIELD.get(l.key);
     if (!f || !applies(f, s) || !DIMENSION[l.group]) continue;
     if (l.absence && ++absences > mostAbsences) continue;

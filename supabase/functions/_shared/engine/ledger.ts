@@ -3,7 +3,7 @@
 // package, so a person (and the prompt graph) can see that the brand and the product were in the prompt, not take it
 // on trust.
 import { brainImagery, brainLessons, brainNotes, brainPalette, type EngineTask, NO_BRAIN, plannedCreative, plannedShows, referenceCandidates, SCHEMA_LINES, schemaLines } from "./context.ts";
-import { directionFor } from "../taste/direction.ts";
+import { awayFromHabit, directionFor, ofThePlace } from "../taste/direction.ts";
 import { needOf, whyNot } from "./references.ts";
 import type { CoverageDecision } from "./coverage.ts";
 import type { CompilePackage, ManifestItem } from "./types.ts";
@@ -90,10 +90,12 @@ export function buildLedger(task: EngineTask, pkg: CompilePackage, decisions: Co
 
   // The taste schema: every habit the photograph could carry, and whether this prompt took it.
   const taken = new Set(schemaLines(task).map((l) => l.id));
+  const away = task.tasteDirection ? awayFromHabit(task.tasteDirection, plannedShows(task)) : false;
   for (const l of task.tasteDirection ? directionFor(task.tasteDirection, plannedShows(task)).lines : []) {
     if (l.lever !== "prompt" && l.lever !== "reference") continue;
     const ref = `schema-${l.key}`;
     if (taken.has(ref)) inManifest(ref, "taste", l.says, edit ? "A change to a picture keeps its look." : "Not in the prompt.");
+    else if (away && ofThePlace(l.key)) out.push({ ref, source: "taste", what: l.says, used: false, why: "The plan sets this picture somewhere else than the brand's usual place, so the habits of that place are left out." });
     else out.push({ ref, source: "taste", what: l.says, used: false, why: `Only the ${SCHEMA_LINES.most} weightiest habits that apply to this picture are used.` });
   }
 

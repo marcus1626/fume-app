@@ -29,6 +29,7 @@ import {
   type Verifier,
 } from "./index.ts";
 import { cardFromAnswers, CROPS, needOf, OFS, REF_QUESTIONS, VIEWS } from "./references.ts";
+import { plannedPlace } from "./context.ts";
 
 const task: EngineTask = {
   brand: { name: "Nordlys Kaffe (test)" },
@@ -463,6 +464,23 @@ Deno.test("the taste schema's habits become soft rules in the photograph's slots
   assertMatch(ledger.find((e) => e.ref === "schema-light.catchlights")!.why!, /weightiest habits that apply/);
   // Whether a picture keeps the habits is judged by reading it against the schema, not by the picture check.
   assert(!checklist(compilePackage.manifest).some((c) => /depth of field/.test(c.requirement)));
+
+  // The brief decides the place. A brand of the studio whose plan sets this picture on a street: the studio's habits
+  // are left out and the ledger says why; the craft (deep focus) stays. A plan in the studio keeps them all.
+  const studio = Array.from({ length: 12 }, (_, i) => card(`s${i}`, { "setting.type": "plain_studio", "setting.tidiness": "pristine", "camera.depth_of_field": "deep" }));
+  const at = (place: string | undefined, scene: string): EngineTask => ({
+    ...task, tasteDirection: direction(buildProfile(studio)),
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, people: "No people", scene, ...(place ? { place } : {}) }] },
+  });
+  const idsAt = (x: EngineTask) => buildBrand(x, "a").rules.filter((r) => r.id.startsWith("schema-")).map((r) => r.id);
+  assert(idsAt(at("studio", "The bottle on a grey ground.")).includes("schema-setting.tidiness"));
+  const street = at("outdoors", "The bottle on a kerb.");
+  assertEquals([idsAt(street).includes("schema-setting.tidiness"), idsAt(street).includes("schema-camera.depth_of_field")], [false, true]);
+  const streetLedger = buildLedger(street, buildCompilePackage({ ...inputOf(street), grammar: GRAMMARS.find((g) => g.imageType === "campaign_still" && g.version === 2)!, dialect: DIALECTS[0] }).compilePackage);
+  assertMatch(streetLedger.find((e) => e.ref === "schema-setting.tidiness")!.why!, /somewhere else than the brand's usual place/);
+  // A plan written before the plan said the place: the scene's own words say it; a scene that names none changes nothing.
+  assertEquals([plannedPlace({ id: "a", name: "a", format: "feed", scene: "On a seamless grey studio ground." }), plannedPlace({ id: "a", name: "a", format: "feed", scene: "On a wet pavement at night." }), plannedPlace({ id: "a", name: "a", format: "feed", scene: "The bottle, close." })], ["studio", "outdoors", null]);
+  assert(!idsAt(at(undefined, "The bottle on a wet pavement at night.")).includes("schema-setting.tidiness"));
 });
 
 Deno.test("the Engine sends the reference pictures the planned picture needs: the right side, with or without people", () => {

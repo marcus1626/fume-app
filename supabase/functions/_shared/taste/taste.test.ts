@@ -1,7 +1,7 @@
 // The taste schema, its profile and its questions, without pictures or a model: deno test supabase/functions/_shared/taste/
 import { assert, assertEquals } from "jsr:@std/assert@1";
 import { z } from "npm:zod@4.6.7";
-import { direction, finishTargets, planBrief, promptLines } from "./direction.ts";
+import { awayFromHabit, direction, finishTargets, habitualPlace, ofThePlace, planBrief, promptLines } from "./direction.ts";
 import { buildProfile, type Card, compare, fit, lowerBound, proofOf, tasteScore } from "./profile.ts";
 import { answersOf, CANNOT_TELL, laterPasses, parseAnswer, passFields, passPromptWithShape, passShape, showsOf } from "./read.ts";
 import { FIELD, FIELDS, GROUPS, measuredFields, PASSES, readFields, type Shows } from "./schema.ts";
@@ -301,4 +301,29 @@ Deno.test("a brand's kinds of picture are counted apart: a picture is held again
   assertEquals(brief.split("height: low").length - 1, 1);
   // A small brand has no kinds: nothing changes for it.
   assertEquals(build(brand.slice(0, 8)).direction.kinds, undefined);
+});
+
+Deno.test("the brief decides the place: a picture the plan sets away from the brand's usual place leaves that place's habits out, and keeps the craft", () => {
+  // The brand shows its product in a plain studio: pristine, dry, sharp front to back, lit with flash off the camera.
+  const brand: Card[] = Array.from({ length: 12 }, (_, i) => card(`b${i}`, {
+    "setting.type": "plain_studio", "setting.tidiness": "pristine", "setting.surface_state": "dry", "kind.capture": "studio_packshot",
+    "camera.depth_of_field": "deep", "camera.flash": "off_camera", "composition.edges_of_frame": "clean",
+  }, {}, `k${i % 4}`));
+  const d = direction(buildProfile(brand));
+  assertEquals(habitualPlace(d), "studio");
+  assert(ofThePlace("setting.tidiness") && ofThePlace("kind.capture") && !ofThePlace("camera.depth_of_field"));
+  const keys = (planned: Parameters<typeof promptLines>[1]) => promptLines(d, planned).map((l) => l.key);
+  // The plan names no place, or the studio: every habit applies.
+  for (const planned of [{}, { place: "studio" as const }]) {
+    assertEquals(awayFromHabit(d, planned), false);
+    assert(["setting.tidiness", "setting.surface_state", "kind.capture", "camera.depth_of_field"].every((k) => keys(planned).includes(k)));
+  }
+  // The brief asked for a wet street: the studio's habits say nothing true of it, the craft still holds.
+  const street = keys({ place: "world", outdoors: true });
+  assertEquals(awayFromHabit(d, { place: "world" }), true);
+  assertEquals(street.filter(ofThePlace), []);
+  assert(["camera.depth_of_field", "camera.flash", "composition.edges_of_frame"].every((k) => street.includes(k)));
+  // A brand with no one kind of place has no habit of place to be away from.
+  const mixed = direction(buildProfile(brand.map((c, i) => ({ ...c, read: { ...c.read, "setting.type": ["plain_studio", "city_street", "home", "wild_nature"][i % 4]! } }))));
+  assertEquals([habitualPlace(mixed), awayFromHabit(mixed, { place: "world" })], [null, false]);
 });
