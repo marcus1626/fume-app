@@ -155,7 +155,20 @@ How the round measured (the same six shoes, product alone, read by the same read
 
 The second line is the fairer measure of the Engine: it does not count against a picture that it is on a street when
 the brief asked for a street. `tools/taste/open.ts` counts both. The rule above is live in the plan writer
-(`fume-plan`) and in the Engine (`engine`) since 11 Nov 2026; a round that measures it has not been made yet.
+(`fume-plan`) and in the Engine (`engine`) since 11 Nov 2026.
+
+A small round measured the rule on 11 Nov 2026: four of the briefs made again (P-6000 in the studio, and the three
+street pictures: Air Max 90, Air Max 95 GTX, Air Max Plus), one picture each, the same reader.
+
+| The three street pictures (mean) | 9 Nov, no taste | 10 Nov, taste | 11 Nov, with the rule |
+|---|---|---|---|
+| Every field Nike keeps to | 0.75 | 0.75 | 0.80 |
+| Only what the brief left open | 0.83 | 0.85 | 0.87 |
+
+P-6000, stopped in the prompt check on 10 Nov, came through: 0.95 on 9 Nov, 0.93 now (the plan gave it a charcoal
+ground for white words where the 9 Nov picture stood on white). Three pictures is a small count; read the direction,
+not the decimals. What still departs: the place itself (a life around the shoe where Nike's is a plain studio), three
+planes where Nike keeps two, and a gritty local contrast.
 
 The Look Book's rules are soft too (only skin is hard, `lookRules`). Nike UK's Look Book, read from ten paid ads,
 asks for a cool bleached grade; the profile, read from newsroom pictures, keeps no such habit. Which of the two says
