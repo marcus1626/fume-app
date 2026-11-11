@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-10T17:50:00Z",
+  "updated": "2026-11-11T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
@@ -224,6 +224,19 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-11-11",
+      "title": "The brand's taste, used in the real app",
+      "items": [
+        "Taste is now on in the real app. The brief decides what is in the picture and where; the brand's taste decides how it looks.",
+        "Nike UK: four pictures were made again with taste. The three street pictures now match Nike's own pictures 75–80 %.",
+        "Møllers got a taste profile from 31 of its own pictures (59 of 100, still thin). Its four briefs from 9 November were made again with taste, and all four passed. The product check caught one wrong label.",
+        "Found why every picture was made twice: the picture check was too strict about the space kept for words. The fix is live, and pictures are now made once (15 cents each instead of 30).",
+        "The check is still too strict in some cases. That is being fixed now, with Codex doing the work on Marcus's Mac and Claude checking it.",
+        "The image account ran empty overnight and was topped up.",
+        "Design thread: the Library still waits for Marcus's yes."
+      ]
+    },
     {
       "date": "2026-11-10",
       "title": "Teaching the Engine each brand's taste",
