@@ -121,6 +121,47 @@ Who reads it:
 - Where the brand has kinds, the prompt takes its lines from the kind the picture will be, and the plan writer is
   told the whole first and then, under a heading for each kind, what the brand does only in that kind.
 
+### The brief decides the place, the taste decides the craft
+
+The first round with taste on (Nike UK (test), 10 Nov 2026, eight creatives) showed what happens when a habit is
+taken for a rule. The briefs asked for street scenes; Nike's product alone is a studio picture. Seven of a prompt's
+twelve lines were studio habits (a pristine, dry, plain ground with no trace of use) written into wet streets, and the
+habits of craft that hold anywhere (deep focus, no blur behind the subject, clean edges) were crowded out or
+contradicted. The rule since then:
+
+- **The brief decides what the picture is of and where it is. The brand's taste decides how it is made.**
+- The plan says where each picture is set: `place` on a planned creative (`studio`, `indoors`, `outdoors`,
+  `not_set`). A plan from before that says it in its scene's words or not at all (`plannedPlace` in `context.ts`),
+  and then every habit applies as before.
+- A field is **of the place** (`ofThePlace`) when it describes where the picture is: everything under `setting.`,
+  and `kind.capture`, `light.sky`, `colour.sky_colour`, `colour.background_colour`. Every other field is craft.
+- `habitualPlace(direction)` is where the brand's pictures of a kind usually are, from its `setting.type` line:
+  studio, or out in the world, or nothing when the brand keeps to no one kind of place. Nike UK's product alone:
+  studio. Its pictures with people: none.
+- A picture the plan sets away from that place (`awayFromHabit`) leaves the fields of the place out of its prompt
+  (`promptLines`), so the twelve lines are all craft. The ledger says why each was left out: "The plan sets this
+  picture somewhere else than the brand's usual place, so the habits of that place are left out."
+- The composer is told the same (rule 14): a habit of craft holds in whatever place the concept sets, and nothing in
+  the prompt is written against it. Where the habit is deep focus, nothing is described as blurred.
+- The plan writer is told it too (`tastePart`), and says the tone the words need of the picture under them
+  (`layoutPart`).
+
+How the round measured (the same six shoes, product alone, read by the same reader; the mean of the six):
+
+| | Before taste | With taste | Nike's own | Floor |
+|---|---|---|---|---|
+| Every field Nike keeps to | 0.79 | 0.82 | 0.91 | 0.61 |
+| Only what the brief left open (29 fields of the place left out) | 0.85 | 0.89 | 0.92 | 0.60 |
+
+The second line is the fairer measure of the Engine: it does not count against a picture that it is on a street when
+the brief asked for a street. `tools/taste/open.ts` counts both. The rule above is live in the plan writer
+(`fume-plan`) since 11 Nov 2026; the Engine's part is in the code and waits for its deploy, and for a round that
+measures it.
+
+The Look Book's rules are soft too (only skin is hard, `lookRules`). Nike UK's Look Book, read from ten paid ads,
+asks for a cool bleached grade; the profile, read from newsroom pictures, keeps no such habit. Which of the two says
+what the brand's grade is, is the brand owner's call, and is not settled.
+
 ## Reading with a vision model
 
 - The answer shape is built from the registry, so a field added there is asked without another line of code.
@@ -247,6 +288,7 @@ FUME_ACCESS_TOKEN=… deno run -A tools/taste/read.ts <manifest.json> <reads.jso
 deno run -A tools/taste/merge.ts <cards.json> <reads.json> <out cards.json> both halves on one card
 deno run -A tools/taste/report.ts <cards.json> <brand set> [other set]      profile, score, gap
 deno run -A tools/taste/bake.ts <cards.json> <dir with read-<reader>-<a|b>.json>
+deno run -A tools/taste/open.ts <cards.json>[,<more>] <brand set>[,<more>] <engine set>[,<more>]   fit, and fit on what the brief left open
 FUME_ACCESS_TOKEN=… deno run -A tools/taste/keep.ts <cards.json> --workspace <id> --brand <set> [--engine <set>]
 FUME_ACCESS_TOKEN=… deno run -A tools/taste/refcards.ts --workspace <id> [--reader <reader>]   reference cards
 ```
@@ -270,10 +312,9 @@ without the tables: until the migration is applied a reading comes back unkept a
 
 ## Not built yet
 
-1. Applying the two migrations (`taste_schema`, `reference_cards`) and deploying `taste-read`, `engine` and `fume-plan`
-   with them (needs Marcus's go), then reading the reference cards of the brands in use.
-   `taste-read` is deployed with the reader `jev` since 10 Nov 2026 (the test above); its reference-card reading
-   waits for the `reference_cards` migration.
+1. Applying the `reference_cards` migration (needs Marcus's go), then reading the reference cards of the brands in
+   use. Taste itself is on since 10 Nov 2026: the `taste_schema` migration is applied, `taste-read`, `engine` and
+   `fume-plan` are deployed with it, and Nike UK (test) has 203 cards and a profile.
 2. Reading a brand's pictures by itself when the customer adds them (today a tool sends them), and the Engine's own
    pictures after each round, so the direction learns without anyone running a tool.
 3. The finish step: grain, black point, tint and sharpness put on the pixels by code after the picture is made,
