@@ -486,7 +486,7 @@ Deno.test("a picture that left no room for the words is made once more, told wha
       const verdict = verdicts[picture++];
       return {
         looked: {
-          answers: input.checks.map((c) => ({ n: c.n, verdict: c.requirement === room.requirement ? verdict : "holds", note: c.requirement === room.requirement ? "The sled fills the left side." : "" })),
+          answers: input.checks.map((c) => ({ n: c.n, verdict: c.ref === room.refId ? verdict : "holds", note: c.ref === room.refId ? "The sled fills the left side." : "" })),
           artefacts: "none", artefactNotes: [], printedText: false,
         },
         call,

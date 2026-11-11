@@ -46,7 +46,10 @@ export function checklist(manifest: Pick<ManifestItem, "kind" | "requirement" | 
     const area = m.kind === "product_invariant" || m.kind === "product_colour" ? "product"
       : m.kind === "brand_rule_hard" || m.kind === "brand_rule_soft" || m.kind === "lesson_enforced" ? "brand"
       : m.kind === "concept" ? "scene" : null;
-    if (area) out.push({ n: out.length + 1, area, requirement: m.requirement, hard: m.required || area === "product", ...(m.refId && KEPT_REFS.has(m.refId) ? { ref: m.refId } : {}) });
+    const requirement = m.refId === ROOM_REF
+      ? `${m.requirement} Judge this by eye, as a designer setting the words would: it holds when the words could be set there without covering the product or a person. A product edge reaching a little into that part, or a calm texture there, still holds. It is off only when the product, a person or an object sits clearly inside it, when it is a flat panel, blank slab or split frame, or when its tone is wrong for the words.`
+      : m.requirement;
+    if (area) out.push({ n: out.length + 1, area, requirement, hard: m.required || area === "product", ...(m.refId && KEPT_REFS.has(m.refId) ? { ref: m.refId } : {}) });
   }
   return out;
 }

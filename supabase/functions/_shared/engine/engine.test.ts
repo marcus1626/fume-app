@@ -449,6 +449,22 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals(/as sharp as the rest of the picture/.test(sharpCalm.statement), true);
 });
 
+Deno.test("only the room-for-words checklist item carries the designer's judging note", async () => {
+  const { checklist, ROOM_REF } = await import("./evaluate.ts");
+  const requirement = "Keep the left 40% of the picture clear for words.";
+  const manifest = [
+    { kind: "brand_rule_hard" as const, requirement, required: true, refId: ROOM_REF },
+    { kind: "brand_rule_hard" as const, requirement, required: true, refId: "room-calm" },
+    { kind: "product_invariant" as const, requirement: "The bag is deep blue.", required: true, refId: "bag" },
+    { kind: "concept" as const, requirement: "A kitchen bench at dawn.", required: false, refId: "concept" },
+  ];
+  const checks = checklist(manifest);
+  assertEquals(checks[0].requirement, `${requirement} Judge this by eye, as a designer setting the words would: it holds when the words could be set there without covering the product or a person. A product edge reaching a little into that part, or a calm texture there, still holds. It is off only when the product, a person or an object sits clearly inside it, when it is a flat panel, blank slab or split frame, or when its tone is wrong for the words.`);
+  assertEquals(checks[0].ref, ROOM_REF);
+  assertEquals(checks.slice(1).map((c) => c.requirement), manifest.slice(1).map((m) => m.requirement));
+  assertEquals(manifest[0].requirement, requirement);
+});
+
 Deno.test("the taste schema's habits become soft rules in the photograph's slots: what applies to this picture, what the Engine missed first", async () => {
   const { buildProfile } = await import("../taste/profile.ts");
   const { direction } = await import("../taste/direction.ts");
