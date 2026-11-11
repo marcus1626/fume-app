@@ -147,6 +147,19 @@ Deno.test("where the Engine left room for the words comes before the model's eye
   assertEquals((none.calls.lay[0] as { prefer: unknown }).prefer, { band: "bottom" }, "without the model's eye, the room still leads");
 });
 
+Deno.test("a designer's ask and a kept layout take precedence over the Engine's room", async () => {
+  const roomy = { ...take, room: "the bottom 40% of the height, edge to edge, has no person, product or object in it" };
+  const asked = deps();
+  await designLayer({ ...roomy, ask: "Put the words at the top" }, asked.d);
+  assertEquals((asked.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "top", "the band choose answered wins");
+  const kept = deps({ before: () => Promise.resolve({ keepClear: [], people: [], band: "middle", align: "left", colour: "on_photo", layout: "", why: "before" }) });
+  await designLayer(roomy, kept.d);
+  assertEquals((kept.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "middle", "the earlier layout keeps its band");
+  const fresh = deps();
+  await designLayer(roomy, fresh.d);
+  assertEquals((fresh.calls.lay[0] as { prefer: { band?: string } }).prefer.band, "bottom", "without an ask or a kept layout, the room leads");
+});
+
 Deno.test("the room is read from the rule as the Engine writes it today", async () => {
   const { roomRules } = await import("../_shared/engine/context.ts");
   const layout = (band: "top" | "middle" | "bottom", align: "left" | "right") => ({ name: "L", band, align, wordsWidthPct: 40, ground: "photo" });

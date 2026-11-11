@@ -111,7 +111,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     if (planned && choice) {
       choice = { ...choice, layout: planned.name, band: plannedBand ?? choice.band, align: plannedAlign ?? choice.align };
     }
-    const first = await attempt(t, d, words, format, choice, planned ? { name: planned.name, band: plannedBand, align: plannedAlign } : null, null, spent);
+    const first = await attempt(t, d, words, format, choice, planned ? { name: planned.name, band: plannedBand, align: plannedAlign } : null, null, spent, kept);
     if ("failed" in first) return await fail(first.failed);
     let won = first;
     let second: Record<string, unknown> | null = null;
@@ -215,7 +215,7 @@ export function rank(a: Laid): number {
 /** One layout by the service, stored where `alt` says (else where design_take said), and Fume's own review of it. */
 async function attempt(
   t: Take, d: Deps, words: Words, format: ReturnType<typeof formatOf>, choice: LayoutChoice | null,
-  planned: { name: string; band?: string; align?: string } | null, alt: { png: string; fig: string } | null, spent: Spent,
+  planned: { name: string; band?: string; align?: string } | null, alt: { png: string; fig: string } | null, spent: Spent, kept = false,
 ): Promise<Laid | { failed: string }> {
   const links = await d.service.links(t, alt ?? undefined);
   const request = {
@@ -223,7 +223,8 @@ async function attempt(
     format,
     book: t.book.body,
     words,
-    // Where the Engine left room for the words comes first; the model's eye places the rest.
+    // Where the Engine left room for the words comes first; the model's eye places the rest. Not on a second try, a
+    // layout kept from an earlier design, or a designer's own ask: those choose their own place.
     prefer: {
       ...(choice
         ? {
@@ -235,7 +236,7 @@ async function attempt(
         : planned
         ? { ...(planned.band ? { band: planned.band } : {}), ...(planned.align ? { align: planned.align } : {}), signature: planned.name }
         : {}),
-      ...(alt ? {} : roomOf(t)),
+      ...(alt || kept || t.ask ? {} : roomOf(t)),
     },
     keepClear: choice ? keepClearOf(choice, format) : [],
     ...(links.logo ? { logo: links.logo } : {}),

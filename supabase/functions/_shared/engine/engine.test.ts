@@ -449,6 +449,21 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals(/as sharp as the rest of the picture/.test(sharpCalm.statement), true);
 });
 
+Deno.test("a kind's own deep focus applies when the top-level taste lines are empty", async () => {
+  const { keepsSharpBehind, roomRules, schemaLines } = await import("./context.ts");
+  const line = { key: "camera.depth_of_field", group: "camera", lever: "prompt" as const, when: "always" as const, standing: "always" as const, confidence: 0.9, share: 1, says: "Camera, depth of field: deep", absence: false, weight: 0.9 };
+  const direction = { schema: 1, pictures: 30, campaigns: 5, tested: false, lines: [], targets: [], choices: [], never: [] };
+  const alone = {
+    ...task,
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0], people: "No people", text: "WORDS", scene: "A bag on a bench. Bottom kept clear for words." }] },
+    tasteDirection: { ...direction, kinds: { product_alone: { ...direction, lines: [line] } } },
+  };
+  assertEquals(keepsSharpBehind(alone), true);
+  assertEquals(schemaLines(alone).map((l) => l.key), [line.key]);
+  const calm = roomRules(alone).find((r) => r.id === "room-calm")!;
+  assertEquals(calm.statement.includes("as sharp as the rest of the picture"), true);
+});
+
 Deno.test("only the room-for-words checklist item carries the designer's judging note", async () => {
   const { checklist, ROOM_REF } = await import("./evaluate.ts");
   const requirement = "Keep the left 40% of the picture clear for words.";

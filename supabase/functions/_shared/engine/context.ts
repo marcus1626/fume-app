@@ -81,7 +81,7 @@ export type EngineTask = {
 export const SCHEMA_LINES = { most: 12, absences: 2 };
 /** The taste schema's lines for this picture: what applies to what the plan says it shows, the weightiest first. */
 export function schemaLines(task: EngineTask): PromptLine[] {
-  if (!task.tasteDirection?.lines?.length) return [];
+  if (!task.tasteDirection) return [];
   return promptLines(task.tasteDirection, plannedShows(task), SCHEMA_LINES.most, SCHEMA_LINES.absences);
 }
 /** What the plan says the picture will show, as the taste schema asks it: it decides which habits apply, and which
@@ -162,7 +162,7 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
 /** Whether the brand's own pictures of this kind stay sharp behind the subject (taste schema: deep focus, or no blur
  *  behind). The room for the words is then never asked for as something out of focus. */
 export function keepsSharpBehind(task: EngineTask): boolean {
-  if (!task.tasteDirection?.lines?.length) return false;
+  if (!task.tasteDirection) return false;
   return directionFor(task.tasteDirection, plannedShows(task)).lines.some((l) =>
     (l.key === "camera.depth_of_field" && /: (deep|everything sharp)$/.test(l.says)) || (l.key === "camera.background_blur" && l.absence));
 }
