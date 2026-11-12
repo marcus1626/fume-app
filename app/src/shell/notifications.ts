@@ -12,7 +12,7 @@ import type { Campaign, Notification, NotificationKind, User } from "../contract
 import * as copy from "../copy";
 import { dayGroup, when } from "../lib/time";
 import { sign } from "./people";
-import { useWaitingOnYou, type WaitingKind } from "./waiting";
+import { useWaitingOnYou, type WaitingKind, type WaitingRow } from "./waiting";
 
 export function toNotificationData(list: Notification[] | undefined, people: User[] | undefined): NotificationData[] {
   const byId = new Map((people ?? []).map((u) => [u.id, u]));
@@ -70,17 +70,32 @@ export function isOnHome(kind: string, home: ReadonlySet<string>, href?: string,
  * read. `unread` is the bell's number (0 until Home's rows have loaded, so it never shows a count that then drops).
  */
 export function useNotificationItems() {
-  const notifications = useNotifications();
-  const people = usePeople();
   const waiting = useWaitingOnYou();
   const campaigns = useCampaigns();
-  const homeKey = homeKeys(waiting.items).join(",");
+  return useNotificationRows({ ...waiting, campaigns: campaigns.data });
+}
+
+/**
+ * Fume's own people and an agency's: the person's notifications as they are. Home's rows are the customer's to-do list,
+ * which a staff frame never shows, so it does not load them (they were a dozen calls on every staff page).
+ */
+export function useStaffNotificationItems() {
+  return useNotificationRows(undefined);
+}
+
+function useNotificationRows(
+  waiting: { items: WaitingRow[]; loading: boolean; campaigns: Campaign[] | undefined } | undefined,
+) {
+  const notifications = useNotifications();
+  const people = usePeople();
+  const campaigns = waiting?.campaigns;
+  const homeKey = homeKeys(waiting?.items ?? []).join(",");
   const items = useMemo(() => {
     const home = new Set(homeKey ? homeKey.split(",") : []);
     return toNotificationData(notifications.data, people.data).map((n) =>
-      n.unread && isOnHome(n.kind, home, n.href, campaigns.data) ? { ...n, unread: false } : n,
+      n.unread && isOnHome(n.kind, home, n.href, campaigns) ? { ...n, unread: false } : n,
     );
-  }, [notifications.data, people.data, homeKey, campaigns.data]);
-  const unread = waiting.loading ? 0 : items.filter((n) => n.unread).length;
+  }, [notifications.data, people.data, homeKey, campaigns]);
+  const unread = waiting?.loading ? 0 : items.filter((n) => n.unread).length;
   return { query: notifications, items, unread };
 }

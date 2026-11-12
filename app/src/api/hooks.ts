@@ -199,8 +199,11 @@ export const useDecideOverride = () =>
 export const useProductProposals = (productId: Id | undefined) =>
   useQ(["product", productId, "proposals"], (a) => a.productProposals(productId!), Boolean(productId));
 // QA
-export const useQaQueue = (workspaceId?: Id) =>
-  useQ(["studio", "qa", workspaceId ?? "all"], (a) => a.qaQueue(workspaceId));
+/** `light` for a count or a list beside the page (the menu's number, search): far fewer reads than Check's own. */
+export const useQaQueue = (workspaceId?: Id, light = false) =>
+  useQ(["studio", "qa", workspaceId ?? "all", ...(light ? ["light"] : [])], (a) =>
+    a.qaQueue(workspaceId, light ? { light } : undefined),
+  );
 export const useQaCheck = () => useM((a, r: { itemId: Id; accept?: Id[] }) => a.qaCheck(r.itemId, r.accept));
 export const useQaFeedback = () =>
   useM((a, v: { itemId: Id; text: string; pins?: QaPin[]; findingIds?: Id[] }) =>
@@ -492,7 +495,8 @@ export const usePlans = (ids: Id[]) =>
 // client link.
 export const useAgencyHome = (enabled = true) => useQ(["agency", "home"], (a) => a.agencyHome(), enabled);
 export const useAgencyClients = (enabled = true) => useQ(["agency", "clients"], (a) => a.agencyClients(), enabled);
-export const useAgencyCampaigns = () => useQ(["agency", "campaigns"], (a) => a.agencyCampaigns());
+export const useAgencyCampaigns = (enabled = true) =>
+  useQ(["agency", "campaigns"], (a) => a.agencyCampaigns(), enabled);
 export const useAgencyTeam = () => useQ(["agency", "team"], (a) => a.agencyTeam());
 export const useLicence = () => useQ(["agency", "licence"], (a) => a.licence());
 export const useAddClient = () => useM((a, v: Parameters<FumeApi["addClient"]>[0]) => a.addClient(v));

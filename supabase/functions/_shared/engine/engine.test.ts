@@ -8,6 +8,7 @@ import {
   buildLedger,
   buildProduct,
   beta,
+  CAST_ROLE,
   CAMPAIGN_STILL_V1,
   chooseVariants,
   classifyFindings,
@@ -27,6 +28,8 @@ import {
   type SlotText,
   type Verifier,
 } from "./index.ts";
+import { cardFromAnswers, CROPS, needOf, OFS, REF_QUESTIONS, VIEWS } from "./references.ts";
+import { plannedPlace } from "./context.ts";
 
 const task: EngineTask = {
   brand: { name: "Nordlys Kaffe (test)" },
@@ -399,11 +402,15 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   assertEquals(wordsRoom(withWords("A shirt laid flat. Right side of the frame kept clear for the headline."))?.side, "right");
   const fromBrand = wordsRoom(withWords("A shirt laid flat on grey."));
   assertEquals([fromBrand?.side, fromBrand?.share], ["left", 0.39]);
-  const [rule] = roomRules(withWords("A shirt laid flat on grey."));
+  const [rule, calm] = roomRules(withWords("A shirt laid flat on grey."));
   assertEquals([rule.id, rule.binding, rule.dimension], ["room-for-words", "hard", "composition"]);
   assertEquals(/right 61% of the frame.s width/.test(rule.statement) && /never fills the frame/.test(rule.statement), true);
-  assertEquals(/no reflections, puddles, lights/.test(rule.statement), true, "a scene's shiny surface is not room for words");
-  assertEquals(/never a flat panel, a blank slab, a split frame/.test(rule.statement), true, "the room is the scene's own background, not a slab");
+  // What is in the room and how calm it is are two rules: only the first has the picture made once more.
+  assertEquals([calm.id, calm.binding], ["room-calm", "hard"]);
+  assertEquals(/reflections|texture|out of focus/.test(rule.statement), false, "the rule a picture is made again for says nothing of texture");
+  assertEquals(/no reflections, puddles, lights/.test(calm.statement), true, "a scene's shiny surface is not room for words");
+  assertEquals(/never a flat panel, a blank slab, a split frame/.test(calm.statement), true, "the room is the scene's own background, not a slab");
+  assertEquals(/softly out of focus/.test(calm.statement), true, "a brand with no taste read may have a soft background");
   assertEquals(/button/.test(rule.statement), false, "no button corner when the brand sets none apart");
   assertEquals(wordsRoom({ ...withWords("x"), master: { url: "u", title: "V1", picked: true } }), null, "a correction keeps its frame");
   // The layout the plan chose for the creative wins over the scene's words and the brand's first layout.
@@ -428,4 +435,187 @@ Deno.test("a picture that carries words is made with room for them, where the pl
   const light = { ...anthem, layouts: [{ ...anthem.layouts[0], words: "light" }] };
   const [white] = roomRules({ ...withWords("A hoop in a driveway."), room: light });
   assertEquals(/set in white, so that part of the picture is mid to deep in tone.*never bright sky/.test(white.statement), true);
+  // A brand whose own pictures stay sharp behind the subject is never asked for a room out of focus.
+  const { keepsSharpBehind } = await import("./context.ts");
+  const line = (key: string, says: string, absence = false) => ({ key, group: "camera", lever: "prompt" as const, when: "always" as const, standing: "always" as const, confidence: 0.9, share: 1, says, absence, weight: 0.9 });
+  const taste = (lines: ReturnType<typeof line>[]) => ({ schema: 1, pictures: 30, campaigns: 5, tested: false, lines, targets: [], choices: [], never: [] });
+  const deep = { ...withWords("A hoop in a driveway."), room: light, tasteDirection: taste([line("camera.depth_of_field", "Camera, depth of field: deep")]) };
+  assertEquals(keepsSharpBehind(deep), true);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: taste([line("camera.background_blur", "Camera: no background blur", true)]) }), true);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: taste([line("camera.depth_of_field", "Camera, depth of field: shallow")]) }), false);
+  assertEquals(keepsSharpBehind({ ...deep, tasteDirection: null }), false);
+  const [sharpRoom, sharpCalm] = roomRules(deep);
+  assertEquals(/out of focus/.test(sharpRoom.statement + sharpCalm.statement), false);
+  assertEquals(/as sharp as the rest of the picture/.test(sharpCalm.statement), true);
+});
+
+Deno.test("a kind's own deep focus applies when the top-level taste lines are empty", async () => {
+  const { keepsSharpBehind, roomRules, schemaLines } = await import("./context.ts");
+  const line = { key: "camera.depth_of_field", group: "camera", lever: "prompt" as const, when: "always" as const, standing: "always" as const, confidence: 0.9, share: 1, says: "Camera, depth of field: deep", absence: false, weight: 0.9 };
+  const direction = { schema: 1, pictures: 30, campaigns: 5, tested: false, lines: [], targets: [], choices: [], never: [] };
+  const alone = {
+    ...task,
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0], people: "No people", text: "WORDS", scene: "A bag on a bench. Bottom kept clear for words." }] },
+    tasteDirection: { ...direction, kinds: { product_alone: { ...direction, lines: [line] } } },
+  };
+  assertEquals(keepsSharpBehind(alone), true);
+  assertEquals(schemaLines(alone).map((l) => l.key), [line.key]);
+  const calm = roomRules(alone).find((r) => r.id === "room-calm")!;
+  assertEquals(calm.statement.includes("as sharp as the rest of the picture"), true);
+});
+
+Deno.test("the picture check holds the product's printed face to its photographs", async () => {
+  const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } = await import("./evaluate.ts");
+  const checks = checklist([], true);
+  assertEquals([checks.length, checks[0].area, checks[0].hard], [1, "product", true]);
+  assertEquals(/Added or changed words, logos, badges or panels on a face shown in its own photographs make this item off/.test(checks[0].requirement), true);
+  assertEquals(evaluatorPrompt(checks, true).includes(checks[0].requirement), true);
+  assertEquals(/do not infer a match from a familiar brand or plausible packaging/.test(EVALUATOR_SYSTEM), true);
+  assertEquals(EVALUATOR_SYSTEM.includes("checked elsewhere"), false);
+  // Møllers Trankapsler, 11 Nov (job a70e3578): a plausible pack with an invented label must not pass.
+  const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "off", note: "The pack has a label panel absent from its own photographs." }], artefacts: "none", artefactNotes: [], printedText: false });
+  assertEquals([e.productTruth, e.brandRules, e.printedText], ["flag", "pass", false]);
+});
+
+Deno.test("only the room-for-words checklist item carries the designer's judging note", async () => {
+  const { checklist, ROOM_REF } = await import("./evaluate.ts");
+  const requirement = "Keep the left 40% of the picture clear for words.";
+  const manifest = [
+    { kind: "brand_rule_hard" as const, requirement, required: true, refId: ROOM_REF },
+    { kind: "brand_rule_hard" as const, requirement, required: true, refId: "room-calm" },
+    { kind: "product_invariant" as const, requirement: "The bag is deep blue.", required: true, refId: "bag" },
+    { kind: "concept" as const, requirement: "A kitchen bench at dawn.", required: false, refId: "concept" },
+  ];
+  const checks = checklist(manifest);
+  assertEquals(checks[0].requirement, `${requirement} Judge this by eye, as a designer setting the words would: it holds when the words could be set there without covering the product or a person. A product edge reaching a little into that part, or a calm texture there, still holds. It is off only when the product, a person or an object sits clearly inside it, when it is a flat panel, blank slab or split frame, or when its tone is wrong for the words.`);
+  assertEquals(checks[0].ref, ROOM_REF);
+  assertEquals(checks.slice(1).map((c) => c.requirement), manifest.slice(1).map((m) => m.requirement));
+  assertEquals(manifest[0].requirement, requirement);
+});
+
+Deno.test("the taste schema's habits become soft rules in the photograph's slots: what applies to this picture, what the Engine missed first", async () => {
+  const { buildProfile } = await import("../taste/profile.ts");
+  const { direction } = await import("../taste/direction.ts");
+  const { checklist } = await import("./evaluate.ts");
+  const card = (id: string, read: Record<string, string>) => ({ id, read, measured: {} });
+  const brandCards = Array.from({ length: 12 }, (_, i) => card(`b${i}`, {
+    "camera.depth_of_field": "deep", "colour.temperature": "warm", "light.lamps_in_frame": "none", "people.framing": "full_body",
+    "light.catchlights": "not_visible", "design.button": "none", "kind.use": "brand_campaign",
+  }));
+  const engineCards = Array.from({ length: 6 }, (_, i) => card(`e${i}`, { "camera.depth_of_field": "shallow", "colour.temperature": "warm", "light.lamps_in_frame": "none" }));
+  const t: EngineTask = { ...task, tasteDirection: direction(buildProfile(brandCards), buildProfile(engineCards)) };
+  const schema = buildBrand(t, "a").rules.filter((r) => r.id.startsWith("schema-"));
+  assertEquals(schema[0], {
+    id: "schema-camera.depth_of_field", dimension: "camera", lookKey: null, binding: "soft", epistemic: "inferred", scope: "core",
+    statement: "Camera, depth of field: deep. Earlier Engine pictures had shallow 100%.",
+  });
+  // Hands only: people are in the frame, a face is not. The plan's and the design layer's fields are not the prompt's.
+  const ids = schema.map((r) => r.id);
+  assert(ids.includes("schema-people.framing") && !ids.includes("schema-light.catchlights") && !ids.includes("schema-design.button") && !ids.includes("schema-kind.use"));
+  assertEquals(schema.find((r) => r.id === "schema-people.framing")!.dimension, "people");
+  assert(!buildBrand({ ...t, plan: { ...t.plan, planned_creatives: [{ ...t.plan.planned_creatives![0]!, people: "No people" }] } }, "a").rules.some((r) => r.id === "schema-people.framing"));
+  assertEquals(buildBrand(task, "a").rules.filter((r) => r.id.startsWith("schema-")), []);
+
+  const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: GRAMMARS.find((g) => g.imageType === "campaign_still" && g.version === 2)!, dialect: DIALECTS[0] });
+  const item = compilePackage.manifest.find((m) => m.id === "brand-schema-camera.depth_of_field")!;
+  assertEquals([item.kind, item.required, item.suggestedSlot], ["brand_rule_soft", false, "camera"]);
+  const ledger = buildLedger(t, compilePackage);
+  assertEquals(ledger.find((e) => e.ref === "schema-camera.depth_of_field")!.used, true);
+  assertMatch(ledger.find((e) => e.ref === "schema-light.catchlights")!.why!, /weightiest habits that apply/);
+  // Whether a picture keeps the habits is judged by reading it against the schema, not by the picture check.
+  assert(!checklist(compilePackage.manifest).some((c) => /depth of field/.test(c.requirement)));
+
+  // The brief decides the place. A brand of the studio whose plan sets this picture on a street: the studio's habits
+  // are left out and the ledger says why; the craft (deep focus) stays. A plan in the studio keeps them all.
+  const studio = Array.from({ length: 12 }, (_, i) => card(`s${i}`, { "setting.type": "plain_studio", "setting.tidiness": "pristine", "camera.depth_of_field": "deep" }));
+  const at = (place: string | undefined, scene: string): EngineTask => ({
+    ...task, tasteDirection: direction(buildProfile(studio)),
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, people: "No people", scene, ...(place ? { place } : {}) }] },
+  });
+  const idsAt = (x: EngineTask) => buildBrand(x, "a").rules.filter((r) => r.id.startsWith("schema-")).map((r) => r.id);
+  assert(idsAt(at("studio", "The bottle on a grey ground.")).includes("schema-setting.tidiness"));
+  const street = at("outdoors", "The bottle on a kerb.");
+  assertEquals([idsAt(street).includes("schema-setting.tidiness"), idsAt(street).includes("schema-camera.depth_of_field")], [false, true]);
+  const streetLedger = buildLedger(street, buildCompilePackage({ ...inputOf(street), grammar: GRAMMARS.find((g) => g.imageType === "campaign_still" && g.version === 2)!, dialect: DIALECTS[0] }).compilePackage);
+  assertMatch(streetLedger.find((e) => e.ref === "schema-setting.tidiness")!.why!, /somewhere else than the brand's usual place/);
+  // A plan written before the plan said the place: the scene's own words say it; a scene that names none changes nothing.
+  assertEquals([plannedPlace({ id: "a", name: "a", format: "feed", scene: "On a seamless grey studio ground." }), plannedPlace({ id: "a", name: "a", format: "feed", scene: "On a wet pavement at night." }), plannedPlace({ id: "a", name: "a", format: "feed", scene: "The bottle, close." })], ["studio", "outdoors", null]);
+  assert(!idsAt(at(undefined, "The bottle on a wet pavement at night.")).includes("schema-setting.tidiness"));
+});
+
+Deno.test("the Engine sends the reference pictures the planned picture needs: the right side, with or without people", () => {
+  const scene = (s: string, people = "No people", extra: Partial<EngineTask> = {}): EngineTask => ({
+    ...task, ...extra,
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, scene: s, people, ...(extra.cast ? { castIds: ["m1"] } : {}) }] },
+  });
+  assertEquals(needOf({ name: "x", scene: "She walks away from the camera, seen from behind", people: "One woman, full body" }), { view: "back", crop: "whole", people: true });
+  assertEquals(needOf({ name: "x", scene: "A cup on a bench" }), { view: null, crop: null, people: false });
+  // The plan's own fields win over its words; a value it does not list is not a side.
+  assertEquals(needOf({ scene: "A woman seen from behind", people: "One woman", view: "side", crop: "half" }), { view: "side", crop: "half", people: true });
+  assertEquals(needOf({ scene: "A woman seen from behind", people: "One woman", view: "sideways" }).view, "back");
+  // The plan writer's own phrases.
+  const view = (scene: string) => needOf({ scene, people: "Cast models, faces small or turned away" }).view;
+  assertEquals([view("A teen, back mostly to camera, stands under the hoop"), view("A volunteer walks away toward the pitch"), view("One shoe in three-quarter profile on wet paving"),
+    view("A player seen in profile and small, eyes on the rim"), view("Photograph from the sideline at kneeling height, faces turned away")], ["back", "back", "three_quarter", "side", null]);
+
+  // A plan that names no side leaves every picture in (the test at the top: front, then back).
+  // From the front: the back would put the wrong side in the frame, so it is left out, and the ledger says why.
+  const front = scene("The bag seen from the front on a bench");
+  assertEquals(buildProduct(front, 3).references.map((r) => r.url), ["https://x/front.png"]);
+  const { compilePackage } = buildCompilePackage({ ...inputOf(front), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+  assertEquals(buildLedger(front, compilePackage).find((e) => e.ref === "x/back.png"), {
+    ref: "x/back.png", source: "picture", what: "Morning Roast, back", used: false, why: "It is seen from the back, and this picture is from the front.",
+  });
+  // From behind: the back first, and the front still, for it is the truth about the product.
+  assertEquals(buildProduct(scene("The bag from behind, its back to camera"), 3).references.map((r) => r.url), ["https://x/back.png", "https://x/front.png"]);
+
+  // Pictures a classifier has looked at: a web import's "site-3" says nothing, its card does.
+  const read: EngineTask["products"] = [{ ...task.products[0]!, pictures: [
+    { slot: "front", url: "https://x/front.png" },
+    { slot: "site-2", url: "https://x/worn.png", card: { of: "product_on_person", view: "front", crop: "whole" } },
+    { slot: "site-3", url: "https://x/unknown.png" },
+    { slot: "site-4", url: "https://x/chart.png", card: { of: "other", view: null, crop: null } },
+  ] }];
+  // No people in the picture: a product on a person would bring the person, and a size chart is not the product.
+  const still = buildProduct(scene("The bag on a bench", "No people", { products: read }), 3);
+  assertEquals(still.references.map((r) => r.url), ["https://x/front.png", "https://x/unknown.png"]);
+  // People in the picture: how it is worn is shown, and the model is told what it is looking at.
+  const worn = buildProduct(scene("A woman holds the bag, facing the camera", "One woman, waist up", { products: read }), 3);
+  assertEquals(worn.references.map((r) => r.role), ["Morning Roast, front", "Morning Roast, worn by a person, the whole figure, seen from the front", "Morning Roast, site-3"]);
+  assertMatch(worn.lockedReferenceText, /The second picture is the product itself \(Morning Roast, worn by a person[^)]*\) and the only truth about its shape, colours and label; the person in it and its background are not used\./);
+  // Two products share the places: each one's best picture before either one's second.
+  const two = buildProduct({ ...front, products: [...read, { id: "p2", name: "Evening Roast", facts: [], pictures: [{ slot: "front", url: "https://x/evening.png" }] }],
+    plan: { ...front.plan, planned_creatives: [{ ...front.plan.planned_creatives![0]!, productIds: ["p1", "p2"] }] } }, 2);
+  assertEquals(two.references.map((r) => r.url), ["https://x/front.png", "https://x/evening.png"]);
+});
+
+Deno.test("a model the plan casts is sent from the side the picture needs, and never without being cast", () => {
+  const cast = [{ id: "m1", name: "Ane", pictures: [
+    { slot: "front", url: "https://x/ane-front.png", card: { of: "person", view: "front", crop: "half" } },
+    { slot: "back", url: "https://x/ane-back.png", card: { of: "person", view: "back", crop: "whole" } },
+    { slot: "profile", url: "https://x/ane-side.png" },
+  ] }];
+  const planned = (s: string, people: string, castIds?: string[]): EngineTask => ({
+    ...task, cast, plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0]!, scene: s, people, ...(castIds ? { castIds } : {}) }] },
+  });
+  // From the front: her front first among her own pictures, never her back; the product keeps its place.
+  const p = buildProduct(planned("A woman drinks coffee by the window, facing the camera", "One woman, waist up", ["m1"]), 4);
+  assertEquals(p.references.map((r) => r.url), ["https://x/front.png", "https://x/ane-front.png", "https://x/ane-side.png"]);
+  assertMatch(p.lockedReferenceText, /The second picture is the model Ane, seen from the front, an AI person: keep this same person's face, hair, skin and build; their clothes, their pose and the place are not used\./);
+  // From behind: only her back.
+  const behind = buildProduct(planned("A woman walks to the window, seen from behind", "One woman, full body", ["m1"]), 3);
+  assertEquals(behind.references.filter((r) => r.role.startsWith(CAST_ROLE)).map((r) => r.url), ["https://x/ane-back.png"]);
+  // Not cast, or no people: nobody is put in the picture.
+  assert(!buildProduct(planned("A woman drinks coffee", "One woman"), 4).references.some((r) => r.role.startsWith(CAST_ROLE)));
+  assert(!buildProduct(planned("A cup on a bench", "No people", ["m1"]), 4).references.some((r) => r.role.startsWith(CAST_ROLE)));
+});
+
+Deno.test("a classifier's answers about a reference picture become its card", () => {
+  assertEquals(cardFromAnswers({ of: "product_on_person", view: "three_quarter", crop: "half" }), { of: "product_on_person", view: "three_quarter", crop: "half" });
+  assertEquals(cardFromAnswers({ of: "product", view: "cannot_tell", crop: "whole" }), { of: "product", view: null, crop: "whole" });
+  assertEquals(cardFromAnswers({ of: "a cat" }), null);
+  // The lists a classifier is asked are the lists a card keeps.
+  assertEquals(Object.keys(REF_QUESTIONS.of.options), [...OFS]);
+  assertEquals(Object.keys(REF_QUESTIONS.view.options), [...VIEWS, "cannot_tell"]);
+  assertEquals(Object.keys(REF_QUESTIONS.crop.options), [...CROPS]);
 });

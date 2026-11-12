@@ -126,10 +126,12 @@ export function plannedLayout(t: Take): BrandLayout | null {
 
 /**
  * Where the Engine left room for the words, as a place to try first: a band for the top or bottom, a side for the left
- * or right. The picture was made for it, so it comes before the model's eye.
+ * or right. The picture was made for it, so it comes before the model's eye. The rule's own words are read (engine
+ * context.ts roomRules): "the bottom 40% of the height, edge to edge, has no person, product or object in it", and
+ * the older "… is bare". From 9 to 11 Nov 2026 only the older wording was read, so the room never led.
  */
 export function roomOf(t: Take): { band?: "top" | "bottom"; align?: "left" | "right" } {
-  const side = /\bthe (left|right|top|bottom) \d+% of the (?:width|height)\b[^.;]*?\bis bare\b/i.exec(t.room ?? "")?.[1]?.toLowerCase();
+  const side = /\bthe (left|right|top|bottom) \d+% of the (?:width|height)\b[^.;]*?\b(?:is bare|has no person)\b/i.exec(t.room ?? "")?.[1]?.toLowerCase();
   if (side === "top" || side === "bottom") return { band: side };
   if (side === "left" || side === "right") return { align: side };
   return {};

@@ -98,7 +98,7 @@ const methodOf = (note: string | null | undefined): QaFormat["method"] =>
         : "native";
 
 /** Creatives in Check as QA views: the newest version of each creative in a workspace, or the versions named. */
-async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }): Promise<Read[]> {
+async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }, light = false): Promise<Read[]> {
   let q = supabase().from("creative_versions").select(VERSION);
   if (filter.versionIds) q = q.in("id", filter.versionIds);
   else q = q.in("state", [...IN_CHECK]);
@@ -117,6 +117,16 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
   const shown = filter.versionIds ? found : found.filter((v) => newest(v.creative_id)?.id === v.id);
   if (shown.length === 0) return [];
   const shownIds = shown.map((v) => v.id);
+  // What does not wait on the checks is asked for at once, beside them: a page waited on each in turn before.
+  const campaignIds = [...new Set(creatives.map((c) => c.campaign_id))];
+  const campaignsRead = readCampaigns({ ids: campaignIds });
+  const workspacesRead = live.workspaces();
+  const productsRead = campaignsRead.then((campaigns) => {
+    const productIds = [...new Set(campaigns.flatMap((c) => (c.productIds.length === 1 ? c.productIds : [])))];
+    return productIds.length
+      ? rows<{ id: string; name: string }>(supabase().from("products").select("id, name").in("id", productIds))
+      : [];
+  });
   const previous = (v: VersionRow) => all.find((x) => x.creative_id === v.creative_id && x.number === v.number - 1);
   const candidateIds = shown.flatMap((v) => (v.candidate_id ? [v.candidate_id] : []));
   const [checks, candidates, changes, files, fileChecks, holds] = await Promise.all([
@@ -174,13 +184,14 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
   const designed = new Set(
     candidates.filter((c) => c.origin === "engine" && /graphic design/i.test(c.note ?? "")).map((c) => c.id),
   );
-  const designDocs = designed.size
-    ? await readDocuments(live, {
-        creativeIds: [
-          ...new Set(shown.filter((v) => v.candidate_id && designed.has(v.candidate_id)).map((v) => v.creative_id)),
-        ],
-      }).catch(() => [])
-    : [];
+  const designDocsRead =
+    designed.size && !light
+      ? readDocuments(live, {
+          creativeIds: [
+            ...new Set(shown.filter((v) => v.candidate_id && designed.has(v.candidate_id)).map((v) => v.creative_id)),
+          ],
+        }).catch(() => [])
+      : Promise.resolve([]);
   const designedVersion = (v: VersionRow) =>
     v.candidate_id ? designDocs.flatMap((d) => d.doc.versions).find((x) => x.id === v.candidate_id) : undefined;
   const designOf = (v: VersionRow) => designedVersion(v)?.design;
@@ -196,7 +207,8 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
     const scores = designed.evaluation.scores;
     return scores ? { ...base, scores } : base;
   };
-  const snapshotIds = [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
+  // What changed since the version was made is read for Check itself, not for a count.
+  const snapshotIds = light ? [] : [...new Set(checks.flatMap((c) => (c.snapshot_id ? [c.snapshot_id] : [])))];
   const snapshots = snapshotIds.length
     ? await rows<{
         id: string;
@@ -205,11 +217,10 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
       }>(supabase().from("context_snapshots").select("id, brand_dna_version_id, facts").in("id", snapshotIds))
     : [];
   const dnaIds = [...new Set(snapshots.flatMap((s) => (s.brand_dna_version_id ? [s.brand_dna_version_id] : [])))];
-  const campaignIds = [...new Set(creatives.map((c) => c.campaign_id))];
   // What changed since a version was made (plan Thursday: a new fact or rule is linked to the work it affects): a fact
   // in its snapshot that was corrected since, and a newer approved Brand DNA of its brand.
   const snapFactIds = [...new Set(snapshots.flatMap((s) => s.facts.flatMap((f) => (f.id ? [f.id] : []))))];
-  const [corrected, approvedDna] = await Promise.all([
+  const [corrected, approvedDna, rules] = await Promise.all([
     snapFactIds.length
       ? rows<{ id: string; superseded_by: string }>(
           supabase()
@@ -226,6 +237,14 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         .eq("state", "approved")
         .in("workspace_id", [...new Set(shown.map((v) => v.workspace_id))]),
     ),
+    dnaIds.length
+      ? rows<{ brand_dna_version_id: string; area: string; statement: string }>(
+          supabase()
+            .from("brand_rules")
+            .select("brand_dna_version_id, area, statement")
+            .in("brand_dna_version_id", dnaIds),
+        )
+      : Promise.resolve([]),
   ]);
   const successors = corrected.length
     ? await rows<{ id: string; label: string; statement: string }>(
@@ -259,22 +278,12 @@ async function readQa(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] 
         : [];
     return [...facts, ...dna];
   };
-  const [rules, campaigns, workspaces] = await Promise.all([
-    dnaIds.length
-      ? rows<{ brand_dna_version_id: string; area: string; statement: string }>(
-          supabase()
-            .from("brand_rules")
-            .select("brand_dna_version_id, area, statement")
-            .in("brand_dna_version_id", dnaIds),
-        )
-      : Promise.resolve([]),
-    readCampaigns({ ids: campaignIds }),
-    live.workspaces(),
+  const [campaigns, workspaces, products, designDocs] = await Promise.all([
+    campaignsRead,
+    workspacesRead,
+    productsRead,
+    designDocsRead,
   ]);
-  const productIds = [...new Set(campaigns.flatMap((c) => (c.productIds.length === 1 ? c.productIds : [])))];
-  const products = productIds.length
-    ? await rows<{ id: string; name: string }>(supabase().from("products").select("id, name").in("id", productIds))
-    : [];
 
   return shown
     .flatMap((v): Read[] => {
@@ -409,8 +418,8 @@ async function newestOf(creativeIds: Id[]): Promise<Id[]> {
  * leads with its own picture. The ad waits while any format waits. Each format keeps its version, so a check and a
  * correction still name the exact picture.
  */
-async function readAds(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }): Promise<QaView[]> {
-  const read = await readQa(live, filter);
+async function readAds(live: Live, filter: { workspaceId?: Id; versionIds?: Id[] }, light = false): Promise<QaView[]> {
+  const read = await readQa(live, filter, light);
   const formats = read.filter((r) => r.masterId);
   const leads = read.filter((r) => !r.masterId);
   // A master named by its version brings its formats in Check; a format named brings its master.
@@ -430,12 +439,12 @@ async function readAds(live: Live, filter: { workspaceId?: Id; versionIds?: Id[]
       ).map((c) => c.id),
     );
     const missing = more.filter((id) => !formats.some((f) => f.item.id === id));
-    if (missing.length) formats.push(...(await readQa(live, { versionIds: missing })).filter((r) => r.masterId));
+    if (missing.length) formats.push(...(await readQa(live, { versionIds: missing }, light)).filter((r) => r.masterId));
   }
   const masterIds = [...new Set(formats.map((f) => f.masterId!))].filter(
     (id) => !leads.some((l) => l.item.creativeId === id),
   );
-  if (masterIds.length) leads.push(...(await readQa(live, { versionIds: await newestOf(masterIds) })));
+  if (masterIds.length) leads.push(...(await readQa(live, { versionIds: await newestOf(masterIds) }, light)));
   const gathered = new Set<Id>();
   const ads = leads.map((lead): QaView => {
     const mine = formats
@@ -504,9 +513,9 @@ async function versionStates(ids: Id[]): Promise<Map<Id, string>> {
 
 export function qualityCalls(live: Live): Pick<FumeApi, Calls> {
   return {
-    async qaQueue(workspaceId) {
+    async qaQueue(workspaceId, options) {
       if (!(await live.me()).staffRole) throw new FumeError("forbidden", "Check is for Fume's people.");
-      return readAds(live, { workspaceId });
+      return readAds(live, { workspaceId }, options?.light);
     },
     // Signed by the one who checks, against what the version's job used (its Product Truth and the brand's rules).
     // A fault on the product the expert accepts is signed with their name first (resolve_finding); one not accepted

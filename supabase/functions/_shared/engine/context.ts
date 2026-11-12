@@ -2,10 +2,15 @@
 // snapshot, the approved plan, the product's verified facts and pictures, the Brand DNA's rules, the taste model and
 // the lessons people's verdicts taught). Built by code, never by a model: the product text is the verified facts
 // word for word, so the model can only describe the scene around the product, never the product itself.
+import { type Direction, directionFor, type Planned, promptLines, type PromptLine } from "../taste/direction.ts";
+import { type Candidate, cardOf, choose, needOf, says } from "./references.ts";
 import type { BrandContext, BrandRule, Concept, FormatSpec, Knowledge, ProductContext } from "./types.ts";
 
 export type Fact = { id: string; product_id?: string; area: string; label: string; statement: string; status: string };
-export type Picture = { slot: string | null; url: string; name?: string };
+/** `card` is what a classifier read of the picture (references.ts RefCard), where one has looked at it. */
+export type Picture = { slot: string | null; url: string; name?: string; card?: unknown };
+/** One of the brand's models: an AI person, never a real one, with the pictures that say who they are. */
+export type CastMember = { id: string; name: string; pictures: Picture[] };
 export type TaskProduct = { id: string; name: string; variant?: string | null; facts: Fact[]; pictures: Picture[] };
 export type PlanLine = { label: string; value: string };
 export type PlannedCreative = {
@@ -20,6 +25,13 @@ export type PlannedCreative = {
   people?: string;
   /** The brand's layout the plan sets this creative's words in (fume-plan, 9 Nov). */
   layout?: string;
+  /** From where the camera sees the main subject and how much of it, where the plan says (references.ts). */
+  view?: string;
+  crop?: string;
+  /** Where the plan sets the picture: studio, indoors or outdoors (fume-plan, 11 Nov). */
+  place?: string;
+  /** The brand's models this picture is of, where the plan names them. */
+  castIds?: string[];
 };
 export type PlanBody = {
   chosen_direction_id?: string;
@@ -59,7 +71,40 @@ export type EngineTask = {
   look?: { id: string; version: number; state: string; body: LookBody } | null;
   /** How the brand sets words on its pictures, from its design system in use (public.engine_words_room). */
   room?: { id: string; version: number; layouts: RoomLayout[] } | null;
+  /** What the brand's pictures keep to, read against the taste schema (public.engine_taste, taste/direction.ts). */
+  tasteDirection?: Direction | null;
+  /** The brand's models, for the pictures the plan casts them in. Nobody is put in a picture the plan did not name. */
+  cast?: CastMember[];
 };
+
+/** How many of the taste schema's lines one prompt takes, and how many of them may be absences. */
+export const SCHEMA_LINES = { most: 12, absences: 2 };
+/** The taste schema's lines for this picture: what applies to what the plan says it shows, the weightiest first. */
+export function schemaLines(task: EngineTask): PromptLine[] {
+  if (!task.tasteDirection) return [];
+  return promptLines(task.tasteDirection, plannedShows(task), SCHEMA_LINES.most, SCHEMA_LINES.absences);
+}
+/** What the plan says the picture will show, as the taste schema asks it: it decides which habits apply, and which
+ *  kind of the brand's pictures this one is held to (the product alone, or a picture with people). */
+export function plannedShows(task: EngineTask): Planned {
+  const planned = plannedCreative(task);
+  const people = planned?.people?.trim() ?? "";
+  const shown = Boolean(people) && !/^no people/i.test(people);
+  const place = plannedPlace(planned);
+  return {
+    people: shown, face: shown && !/^hands? only/i.test(people), product: task.products.length > 0,
+    ...(place ? { place: place === "studio" ? "studio" as const : "world" as const, outdoors: place === "outdoors" } : {}),
+  };
+}
+const STUDIO_SCENE = /\b(studio|seamless|cyclorama|infinity cove|paper sweep)\b/i;
+const OUTDOOR_SCENE = /\b(street|pavement|kerb|road|alley|park|pitch|field|beach|forest|mountain|rooftop|outdoors?|outside|sky|rain|puddle|terrace|car park|court|track|platform|estate|bridge|canal)\b/i;
+/** Where the plan sets the picture: what the plan writer said (place), else what its scene names. A plan from before
+ *  the plan said it, whose scene names neither, gives nothing, and then every habit applies as before. */
+export function plannedPlace(planned: PlannedCreative | undefined): "studio" | "indoors" | "outdoors" | null {
+  if (planned?.place === "studio" || planned?.place === "indoors" || planned?.place === "outdoors") return planned.place;
+  const scene = planned?.scene ?? "";
+  return STUDIO_SCENE.test(scene) ? "studio" : OUTDOOR_SCENE.test(scene) ? "outdoors" : null;
+}
 
 export type RoomLayout = {
   name: string;
@@ -114,7 +159,20 @@ export function wordsRoom(task: EngineTask): { side: Side; share: number; from: 
   return { side, share, from: chosen || !fromScene ? `the brand's layout "${layout!.name}"` : "the plan's scene", ...(button ? { button } : {}), ...(tone ? { tone } : {}) };
 }
 
-/** The room for the words as a rule the prompt must carry: where the product sits and how much bare ground is left. */
+/** Whether the brand's own pictures of this kind stay sharp behind the subject (taste schema: deep focus, or no blur
+ *  behind). The room for the words is then never asked for as something out of focus. */
+export function keepsSharpBehind(task: EngineTask): boolean {
+  if (!task.tasteDirection) return false;
+  return directionFor(task.tasteDirection, plannedShows(task)).lines.some((l) =>
+    (l.key === "camera.depth_of_field" && /: (deep|everything sharp)$/.test(l.says)) || (l.key === "camera.background_blur" && l.absence));
+}
+
+/** The room for the words as rules the prompt must carry: where the product sits and what is kept out of the room
+ *  (`room-for-words`), and how calm that part of the photograph is (`room-calm`). They are two rules because they fail
+ *  differently: a product, a person or the wrong tone where the words go breaks the layout, and the Engine makes the
+ *  picture once more (engine/handler.ts makeRoom); a texture there is the designer's to shade. As one rule, every
+ *  first picture of a brand whose taste keeps the background sharp was called off for its gravel or its puddle and
+ *  made twice, the second time with a smaller product (Nike UK and Møllers, 11 Nov 2026: eight of eight). */
 export function roomRules(task: EngineTask): BrandRule[] {
   const room = wordsRoom(task);
   if (!room) return [];
@@ -122,21 +180,27 @@ export function roomRules(task: EngineTask): BrandRule[] {
   const rest = 100 - pct;
   const across = room.side === "left" || room.side === "right";
   const other = { left: "right", right: "left", top: "bottom", bottom: "top" }[room.side];
-  // The room is the photograph's own open background, the way a photographer frames for a headline: the sky, a far
-  // field, a wall or trees out of focus. Asked for as bare ground of one tone, the model painted a blank slab beside
-  // the scene, a split frame no designer would set words on (Anthem v9, 9 Nov). A scene's shiny surface (wet asphalt,
-  // a lit street) is not room either: words read only on calm ground.
-  const calm = "It is the same continuous photograph, the scene's own open background carried on (the sky, a far field, a wall or trees softly out of focus), calm and low in detail: no reflections, puddles, lights, highlights, hard shadows or busy texture there. It is never a flat panel, a blank slab, a split frame or a border.";
+  // A brand that keeps its backgrounds sharp is not told to blur the room: the two would be written against each other.
+  const sharp = keepsSharpBehind(task);
+  const far = sharp ? "the sky, a far field, a plain wall or even ground, as sharp as the rest of the picture" : "the sky, a far field, a wall or trees softly out of focus";
+  // The room is the photograph's own open background, the way a photographer frames for a headline. Asked for as bare
+  // ground of one tone, the model painted a blank slab beside the scene, a split frame no designer would set words on
+  // (Anthem v9, 9 Nov). A scene's shiny surface (wet asphalt, a lit street) is not room either: words read only on
+  // calm ground.
+  const calm = `The part of the frame kept for the words is the same continuous photograph, the scene's own open background carried on (${far}), calm and low in detail: no reflections, puddles, lights, highlights, hard shadows or busy texture there. It is never a flat panel, a blank slab, a split frame or a border.`;
   const tone = room.tone === "dark"
-    ? " The words there are set in white, so that part of the picture is mid to deep in tone: the shaded side of the scene, a darker tree line, hedge or wall softly out of focus, never bright sky, a pale wall or sunlit concrete."
+    ? ` The words there are set in white, so that part of the picture is mid to deep in tone: the shaded side of the scene, a darker tree line, hedge or wall${sharp ? "" : " softly out of focus"}, never bright sky, a pale wall or sunlit concrete.`
     : room.tone === "light"
       ? " The words there are set in a dark colour, so that part of the picture is light in tone: open sky, a pale wall or light ground, never deep shade."
       : "";
   const button = room.button ? ` The bottom ${room.button} corner, the lowest eighth of the frame's height across ${room.button === room.side ? "that side" : `the ${room.button} half`}, holds only ground (grass, court, floor), with no person, feet, ball or base of the product in it, for the brand's button.` : "";
   const statement = across
-    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`
-    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later. ${calm}${tone}${button} The product never fills the frame.`;
-  return [{ id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" }];
+    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`
+    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`;
+  return [
+    { id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" },
+    { id: "room-calm", dimension: "composition", lookKey: null, statement: calm, binding: "hard", epistemic: "known", scope: "core" },
+  ];
 }
 
 /** The parts of a Look Book (brand-book/look.ts) the prompt is written from. */
@@ -207,6 +271,8 @@ export function lookRules(task: EngineTask): BrandRule[] {
 }
 
 export const COMPOSITION_ROLE = "the moodboard's picture for composition, light and mood";
+/** How a reference picture of one of the brand's models is named; the picture check does not take it for the product. */
+export const CAST_ROLE = "the model ";
 
 export const FORMATS: Record<string, FormatSpec> = {
   feed: { aspectRatio: "4:5", resolution: null },
@@ -243,6 +309,30 @@ export function plannedCreative(task: EngineTask): PlannedCreative | undefined {
   return (task.plan.planned_creatives ?? []).find((c) => c.id === task.creative.slot);
 }
 
+/** Every picture the Engine could send for this creative, with its card: the shown products' own, front first, and
+ *  those of the models the plan casts in it. references.ts chooses among them. */
+export function referenceCandidates(task: EngineTask): Candidate[] {
+  const planned = plannedCreative(task);
+  const out: Candidate[] = [];
+  const named = (pic: Picture) => {
+    const card = cardOf(pic);
+    const said = card && pic.card ? says(card) : "";
+    return { card, tail: said ? `, ${said}` : pic.slot ? `, ${pic.slot}` : "" };
+  };
+  for (const p of shown(task, planned))
+    for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot))) {
+      const { card, tail } = named(pic);
+      out.push({ url: pic.url, role: `${p.name}${tail}`, subject: "product", owner: p.id, card, order: out.length });
+    }
+  const cast = needOf(planned).people ? (task.cast ?? []).filter((m) => planned?.castIds?.includes(m.id)) : [];
+  for (const m of cast)
+    for (const pic of m.pictures) {
+      const { card, tail } = named(pic);
+      out.push({ url: pic.url, role: `${CAST_ROLE}${m.name}${tail}`, subject: "person", owner: m.id, card, order: out.length });
+    }
+  return out;
+}
+
 export function buildProduct(task: EngineTask, maxReferences: number): ProductContext {
   const planned = plannedCreative(task);
   const products = shown(task, planned);
@@ -268,21 +358,22 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
     )
   );
 
-  // The pictures: the version this is made from first, then each product's pictures front first.
-  const pictures: { url: string; role: string }[] = [];
+  // The pictures: the version this is made from first, then the product's and the models' own pictures that serve
+  // this picture (references.ts: the side it is seen from, how close, with or without people), the best of each first.
+  const references: { url: string; role: string }[] = [];
   if (task.master)
-    pictures.push({
+    references.push({
       url: task.master.url,
       role: task.master.picked ? `the picture of ${task.master.title} that this changes` : `the approved ${task.master.title}, whose picture this keeps`,
     });
-  for (const p of products)
-    for (const pic of [...p.pictures].sort((a, b) => slotRank(a.slot) - slotRank(b.slot)))
-      pictures.push({ url: pic.url, role: `${p.name}${pic.slot ? `, ${pic.slot}` : ""}` });
+  const candidates = referenceCandidates(task);
   // A composition reference takes the last place, after at least one of the product's own pictures.
   const composition = !task.master && task.composition ? task.composition : null;
-  const room = composition && pictures.length > 0 ? maxReferences - 1 : maxReferences;
-  const references = pictures.slice(0, room);
+  const room = (composition && candidates.length > 0 ? maxReferences - 1 : maxReferences) - references.length;
+  const chosen = choose(candidates, needOf(planned), room);
+  for (const c of chosen) references.push({ url: c.url, role: c.role });
   if (composition && references.length < maxReferences) references.push({ url: composition.url, role: COMPOSITION_ROLE });
+  const onPerson = new Set(chosen.filter((c) => c.card?.of === "product_on_person").map((c) => c.url));
 
   const lockedReferenceText = references.length
     ? references.map((r, i) => {
@@ -293,6 +384,10 @@ export function buildProduct(task: EngineTask, maxReferences: number): ProductCo
           : `The ${n} picture is ${r.role}: keep its scene, light and product exactly; change only what is asked.`;
       if (r.role === COMPOSITION_ROLE)
         return `The ${n} picture is ${r.role} only: take its framing, camera angle, light and mood, never its objects, products, people, words or brand.`;
+      if (r.role.startsWith(CAST_ROLE))
+        return `The ${n} picture is ${r.role}, an AI person: keep this same person's face, hair, skin and build; their clothes, their pose and the place are not used.`;
+      if (onPerson.has(r.url))
+        return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; the person in it and its background are not used.`;
       return `The ${n} picture is the product itself (${r.role}) and the only truth about its shape, colours and label; its background is not used.`;
     }).join(" ")
     : "There is no picture of the product; follow the description of it exactly.";
@@ -373,6 +468,11 @@ export function buildBrand(task: EngineTask, lookKey: string | null): BrandConte
     if (t.avoid_words && t.avoid_confidence >= confident)
       rules.push({ id: `taste-${t.key}-avoid`, dimension: "taste", lookKey: null, statement: sentence(`Avoid ${t.avoid_words}`), binding: "soft", epistemic: "inferred", scope: "core" });
   }
+
+  // The taste schema: the brand's habits counted from its own pictures, field by field, and first of all the ones
+  // the Engine's earlier pictures missed. Soft: the plan may ask for something else, and then the plan wins.
+  for (const l of schemaLines(task))
+    rules.push({ id: l.id, dimension: l.dimension, lookKey: null, statement: l.statement, binding: "soft", epistemic: "inferred", scope: "core" });
 
   rules.push(...brainRules(task.brain ?? NO_BRAIN));
   rules.push(...lookRules(task));

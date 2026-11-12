@@ -1,6 +1,7 @@
 // What Fume asks the model for, and how the answer becomes a plan body (docs/mvp/library.md B06–B08, T03 and T04).
 // The model proposes; public.fume_finish_plan checks the body against the campaign's products and verified claims.
 import { z } from "npm:zod@4.6.7";
+import { type Direction, planBrief } from "../_shared/taste/direction.ts";
 
 // Where a reason comes from. A plain string: the model once named a source of its own (9 Nov) and the whole plan
 // failed to parse; toBody keeps the four and reads anything else as Fume's own.
@@ -22,6 +23,9 @@ const Creative = z.object({
   text: z.string().nullable().describe("The words on the creative, or null for none"),
   claimRefs: z.array(z.string()).describe("Ids of the verified claim facts the words rely on; empty when none"),
   people: z.string().describe("'No people', 'Hands only', or who"),
+  view: z.enum(["front", "three_quarter", "side", "back", "top", "bottom", "not_set"]).describe("From where the camera sees the picture's main subject (the person where there is one, else the product), as the scene describes it. The Engine sends the reference pictures of that side. not_set when the scene names no side"),
+  crop: z.enum(["close", "half", "whole", "not_set"]).describe("How much of the main subject is in the frame: close (a detail, or a face), half (a person from the waist up), whole (all of it). not_set when the scene does not say"),
+  place: z.enum(["studio", "indoors", "outdoors", "not_set"]).describe("Where the picture is, as the scene describes it: studio (a plain ground, a backdrop or a built set), indoors (a real room), outdoors. not_set only when the scene names no place"),
   layout: z.string().nullable().describe("For a creative with words: the name of the brand's layout the words are set in, exactly as listed in brand_layouts; null when none is listed or there are no words"),
 });
 const Direction = z.object({
@@ -79,6 +83,8 @@ export interface PlanTask {
   layouts?: BrandLayout[];
   /** The brand's Look Book in use: how its photographs are made, so every planned picture is one of its own. */
   look?: LookForPlan | null;
+  /** What the brand's pictures keep to, counted against the taste schema (public.taste_direction_of_campaign). */
+  taste?: Direction | null;
 }
 
 /** The parts of a Look Book the plan writer reads (brand_books kind look, body). */
@@ -92,7 +98,7 @@ export type LookForPlan = {
 };
 
 /** One of the brand's layouts for words on its pictures, as the plan writer is shown it. */
-export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string };
+export type BrandLayout = { name: string; band: string; align: string; wordsWidthPct: number; ground: string; why?: string; cta?: string; words?: "light" | "dark" };
 
 export interface VoiceInUse {
   id: string;
@@ -176,6 +182,18 @@ export function brainPart(brain: Brain | null | undefined): string[] {
   return parts;
 }
 
+/** The brand's taste as counted from its own pictures against the taste schema (_shared/taste/direction.ts); empty
+ * until the brand has a profile. */
+export function tastePart(d: Direction | null | undefined): string[] {
+  if (!d?.lines?.length) return [];
+  const brief = planBrief(d);
+  if (!brief) return [];
+  return [
+    `<taste_schema pictures="${d.pictures}" campaigns="${d.campaigns}">\n${brief}\n</taste_schema>`,
+    "The taste schema is counted from the brand's own pictures, field by field: what they always do, and what most of them do, with the share. The brief decides what the picture is of and where it is: its subject, its place, its weather and its time of day. Where the brief leaves one of those open, take it from these habits (a brand that shows its product alone in a studio gets a studio when the brief names no place). How the picture is made is the brand's in every place: what is sharp and how deep the focus is, the lens and the perspective, flash and how the light is shaped, the planes, the edges of the frame, the colour and the finish. Carry those habits into the place the brief asks for, and write each scene so that it shows them and says nothing against them: where the brand keeps everything sharp with no blur behind the subject, what is behind the subject in your scene is sharp and legible, never blurred, soft or out of focus; where its edges are clean, nothing is cut by the frame. A habit most pictures keep is a default, not a law. Where a line says what earlier Engine pictures did instead, Fume's own pictures departed from the brand there before: plan so the next ones do not. What a campaign chooses is this campaign's to choose. Never write a field's name into the plan; write what the picture shows.",
+  ];
+}
+
 /** The brand's own layout for words on its pictures, from its approved design book: its name and how wide the column
  * of words is, as a share of the picture's width. */
 export type WordsColumn = { name: string; pct: number };
@@ -229,6 +247,8 @@ export function layoutsOf(layouts: unknown): BrandLayout[] {
         ground: String(x.ground ?? ""),
         ...(typeof x.why === "string" ? { why: x.why.slice(0, 200) } : {}),
         ...(typeof x.ctaWords === "string" && x.ctaWords.trim() ? { cta: x.ctaWords.trim().slice(0, 40) } : {}),
+        // The tone of the brand's words there: white words need a darker place, dark words a light one.
+        ...(x.words === "light" || x.words === "dark" ? { words: x.words } : {}),
       };
     });
 }
@@ -243,6 +263,11 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   return [
     `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
     "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product, every person and the ball stay clear of that place (people go beside the product, never in the words' room), and the ground there is calm, so the words can be set there later.",
+    // The Engine holds the picture to the tone the words need (engine/context.ts roomRules). A plan that put white
+    // words on a seamless light grey studio ground could not be written as a prompt at all (Nike UK, P-6000, 10 Nov).
+    ...(layouts.some((l) => l.words)
+      ? ["Where a layout lists words as light, the brand sets its words there in white: in the scene you write, the place where they sit is mid to deep in tone (the shaded side of the scene, a darker wall, a mid-grey or dark studio ground that falls off darker there), never bright sky, a pale wall or a light studio floor. Where it lists words as dark, that place is light in tone. Say the tone of that place in the scene."]
+      : []),
     ...(layouts.some((l) => l.cta)
       ? ["Where a layout lists cta, those are the words the brand itself sets on its button, as its own creatives show them. A creative set in that layout carries them as its call to action, word for word in the brand's case, unless the brief asks for another action; the tone of voice's other calls to action are for its pages, not its creatives. An ad asks for an action: set every creative with words in a layout that carries the brand's button, and keep the layouts without one for a picture the brief wants without a call to action. The call to action is always words to act on, never a note such as \"none\"."]
       : []),
@@ -404,6 +429,7 @@ export function prompt(task: PlanTask): string {
     }.`,
     `<rules>\n${task.rules.map((r) => `- ${r.kind === "never" ? "Never" : "Must"}: ${r.text} (${r.source})`).join("\n") || "none"}\n</rules>`,
     ...brainPart(task.brain),
+    ...tastePart(task.taste),
     ...voicePart(task.voice),
     ...recentPart(task.recent),
     ...lookPart(task.look),
@@ -458,6 +484,11 @@ export function toBody(a: PlanAnswer, layouts: BrandLayout[] = []): Record<strin
       ...(c.text ? { text: c.text } : {}),
       claimRefs: c.claimRefs,
       people: c.people,
+      // Where the camera stands to the subject and how close, for the Engine's choice of reference pictures.
+      ...(c.view && c.view !== "not_set" ? { view: c.view } : {}),
+      ...(c.crop && c.crop !== "not_set" ? { crop: c.crop } : {}),
+      // Where the picture is: the Engine leaves the habits of the brand's usual place out of a picture set elsewhere.
+      ...(c.place && c.place !== "not_set" ? { place: c.place } : {}),
       ...(c.text && layoutOf(c.layout) ? { layout: layoutOf(c.layout) } : {}),
     })),
     ...(d.recommended ? { recommended: true } : {}),

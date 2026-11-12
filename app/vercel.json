@@ -1,6 +1,19 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "images": {
+    "sizes": [2048],
+    "qualities": [80],
+    "formats": ["image/webp"],
+    "minimumCacheTTL": 21600,
+    "remotePatterns": [
+      {
+        "protocol": "https",
+        "hostname": "vkusmctftfzsrxbcxtdz.supabase.co",
+        "pathname": "^/storage/v1/object/sign/workspace-files/.*$"
+      }
+    ]
+  },
   "rewrites": [
     {
       "source": "/((?!api/|demo/|assets/|favicon).*)",

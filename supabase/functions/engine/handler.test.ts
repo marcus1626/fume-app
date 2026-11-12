@@ -136,6 +136,16 @@ Deno.test("a picture still being made is left for the next call, which collects 
   assertEquals(g.log.at(-1), "finish att-1 15");
 });
 
+Deno.test("a picture another run of the Engine kept at the same moment is left to that run, and the attempt does not fail", async () => {
+  const f = fake({
+    takes: [{ collect: { job_id: JOB, attempt_id: "att-1", workspace_id: "ws1", provider: "fake", model: "nano-banana-pro", provider_job_id: "req-1", started_at: "" } }],
+    provider: fakeProvider(["done"]),
+  });
+  f.deps.service.store = async (p) => (f.log.push(`store ${p}`), { error: { message: "The resource already exists" } });
+  assertEquals(await runJob(JOB, f.deps), "waiting");
+  assertEquals(f.log, [`store ws1/engine/${JOB}/att-1-1.png`]);
+});
+
 Deno.test("a prompt that does not pass is recorded and nothing is rendered", async () => {
   const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
   f.deps.models.decide = async ({ questions }) => ({ probabilities: Object.fromEntries(Object.keys(questions).map((k) => [k, 0.1])), call });
@@ -476,7 +486,7 @@ Deno.test("a picture that left no room for the words is made once more, told wha
       const verdict = verdicts[picture++];
       return {
         looked: {
-          answers: input.checks.map((c) => ({ n: c.n, verdict: c.requirement === room.requirement ? verdict : "holds", note: c.requirement === room.requirement ? "The sled fills the left side." : "" })),
+          answers: input.checks.map((c) => ({ n: c.n, verdict: c.ref === room.refId ? verdict : "holds", note: c.ref === room.refId ? "The sled fills the left side." : "" })),
           artefacts: "none", artefactNotes: [], printedText: false,
         },
         call,
@@ -499,6 +509,20 @@ Deno.test("a picture that left no room for the words is made once more, told wha
   assertEquals((await run(["off", "holds"])).asked, [], "one picture with room is enough for the expert");
   assertEquals((await run(["unclear"])).asked, [], "a room the check cannot tell is left to the expert");
   assertEquals((await run(["off"], false)).ran, [], "nothing starts when the job may not be made again");
+});
+
+Deno.test("a texture where the words go is a note for the expert, not a reason to make the picture again", async () => {
+  const { checklist, roomTaken, toEvaluation } = await import("../_shared/engine/evaluate.ts");
+  const rule = (refId: string, requirement: string) => ({ kind: "brand_rule_hard" as const, refId, required: true, requirement });
+  const checks = checklist([rule("room-for-words", "The lower 40% has no person, product or object in it."), rule("room-calm", "The part kept for the words is calm and low in detail.")]);
+  const answers = (room: "holds" | "off", calm: "holds" | "off") => ({
+    answers: [{ n: 1, verdict: room, note: "The shoe stands in the lower part." }, { n: 2, verdict: calm, note: "The lower part is busy gravel." }],
+    artefacts: "none" as const, artefactNotes: [], printedText: false,
+  });
+  const gravel = toEvaluation(checks, answers("holds", "off"));
+  assertEquals(roomTaken(gravel), null, "gravel under the words does not have the picture made again");
+  assertEquals([gravel.brandRules, gravel.notes], ["flag", ["The lower part is busy gravel."]], "the expert still reads it");
+  assertEquals(roomTaken(toEvaluation(checks, answers("off", "holds"))), "The shoe stands in the lower part.");
 });
 
 Deno.test("the next prompt reads first what filled the room on the last picture", async () => {

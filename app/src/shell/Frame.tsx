@@ -39,7 +39,6 @@ import { NotificationsPopover } from "../features/notifications/NotificationsPop
 import { campaignSubject, creativeLabels, customerName } from "../features/review/names";
 import { ProductCheckHost } from "../features/check/ProductCheckHost";
 import type { NavItem } from "./AgencySidebar";
-import { useNotificationItems } from "./notifications";
 import { BarBack, PageBarProvider, PageScopeProvider, type PageBar } from "./Page";
 import { under } from "./scope";
 
@@ -91,8 +90,8 @@ export function ShellFrame({
   palette: Omit<PaletteProps, "open" | "onOpenChange" | "onBookMeeting">;
   /** Keep the drawer's button on a phone: the places do not all fit the tab bar (the agency's and the studio's). */
   drawer?: boolean;
-  /** The bell's rows and number, when the frame says more than the person's notifications (the studio's). */
-  bell?: { items: NotificationData[]; unread: number };
+  /** The bell's rows and number: the person's notifications, and in a staff frame what waits on them. */
+  bell: { items: NotificationData[]; unread: number };
   /** The brand or client the scope is in, for the browser tab's title ("Autumn launch · LYSNE · Fume"). */
   scopeName?: string;
   /** Before search at the bar's end: the Engine's button in a staff frame. */
@@ -100,8 +99,6 @@ export function ShellFrame({
   /** Beside the page, on the layer behind: the Engine panel in a staff frame. */
   aside?: ReactNode;
 }) {
-  const notified = useNotificationItems();
-  const shownBell = bell ?? notified;
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const phone = useNarrowScreen("(max-width: 639.98px)");
@@ -149,9 +146,9 @@ export function ShellFrame({
             />
             {phone ? (
               // On a phone the inbox is a page, in reach of the thumb, not a small glass card at the top
-              <NotificationBell unread={shownBell.unread} onClick={() => navigate("/notifications")} />
+              <NotificationBell unread={bell.unread} onClick={() => navigate("/notifications")} />
             ) : (
-              <NotificationsPopover items={shownBell.items} unread={shownBell.unread} />
+              <NotificationsPopover items={bell.items} unread={bell.unread} />
             )}
             {phone && account(frame)}
           </div>
@@ -328,7 +325,28 @@ export interface PaletteProps {
 }
 
 /** ⌘K: the places and what is inside them, every campaign, and the few things a person starts from anywhere. */
-function Palette({
+/**
+ * ⌘K. Its search reads every campaign, product, delivery and chat, so it loads them once it is first opened, not on
+ * every page (they were a dozen calls on each).
+ */
+function Palette(props: PaletteProps) {
+  const [opened, setOpened] = useState(false);
+  useEffect(() => {
+    if (props.open) setOpened(true);
+  }, [props.open]);
+  if (!opened && !props.open)
+    return (
+      <CommandPalette
+        items={[]}
+        open={false}
+        onOpenChange={props.onOpenChange}
+        placeholder="Search creatives, campaigns and actions"
+      />
+    );
+  return <PaletteOpen {...props} />;
+}
+
+function PaletteOpen({
   open,
   onOpenChange,
   nav,

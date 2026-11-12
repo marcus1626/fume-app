@@ -12,6 +12,7 @@ import type {
   VersionState,
 } from "../../contract";
 import { countCreatives } from "../../domain/creatives";
+import { signedLinks } from "./signed";
 import { command, rows, supabase } from "./supabase";
 
 // ─── Rows ────────────────────────────────────────────────────────────────────
@@ -173,18 +174,16 @@ const CREATIVE_WITH_PARTS =
   `${CREATIVE}, creative_versions(${VERSION}, expert_checks(${CHECK}), ` +
   `approvals(id, version_id, decided_by, created_at, revoked_at, recorded_by, recorded_note), files(${FILE}))`;
 
-/** Signed addresses for files already read, by file id (one round to storage). */
+/** Signed addresses for files already read, by file id (one round to storage, none for links still good). */
 async function signFiles(files: FileRow[]): Promise<Map<Id, { url: string; file: FileRow }>> {
   const out = new Map<Id, { url: string; file: FileRow }>();
   if (files.length === 0) return out;
-  const { data } = await supabase()
-    .storage.from(BUCKET)
-    .createSignedUrls(
-      files.map((f) => f.path),
-      60 * 60,
-    );
+  const links = await signedLinks(
+    BUCKET,
+    files.map((f) => f.path),
+  );
   for (const f of files) {
-    const signed = data?.find((d) => d.path === f.path)?.signedUrl;
+    const signed = links.get(f.path);
     if (signed) out.set(f.id, { url: signed, file: f });
   }
   return out;

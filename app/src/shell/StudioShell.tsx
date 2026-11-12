@@ -26,7 +26,7 @@ import { useEngineFrame } from "../features/engine/EnginePanel";
 import { agencyBell, AgencyPersonMenu } from "./AgencySidebar";
 import { SummaryClientNotice } from "./agencyNotice";
 import { ShellFrame, paletteParts, type PaletteParts } from "./Frame";
-import { useNotificationItems } from "./notifications";
+import { useStaffNotificationItems } from "./notifications";
 import { Loading } from "./Page";
 import {
   addressBrand,
@@ -122,7 +122,7 @@ function StaffFrame({ frame }: { frame: StaffFrameKind }) {
   const name = scope.entry?.workspace.brandName;
   const notice = scope.entry?.summary && !ownPages.some((p) => under(pathname, p));
   const content = target ? (
-    <Loading label="Opening Fume" />
+    <Loading spinner label="Opening Fume" />
   ) : behind ? (
     <Loading label={`Opening ${name ?? "the brand"}`} />
   ) : notice && scope.entry ? (
@@ -215,7 +215,7 @@ function useStaffNeeds(frame: StaffFrameKind): AgencyNeed[] {
 /** The bell: the person's notifications, and what waits on them (shown as read: Check and the overview count it
  *  already, so the number stays the notifications'). */
 function useStaffBell(frame: StaffFrameKind, needs: AgencyNeed[]): { items: NotificationData[]; unread: number } {
-  const own = useNotificationItems();
+  const own = useStaffNotificationItems();
   return useMemo(() => {
     const waiting: NotificationData[] = needs.map((n) => ({
       id: `need-${n.id}`,
@@ -273,7 +273,7 @@ const brandPlaces = (frame: StaffFrameKind): { rest: string; label: string; icon
  *  across brands, each opening where it is worked on. */
 function useStaffPaletteItems(scope: StaffScope, needs: AgencyNeed[]): CommandPaletteItem[] {
   const navigate = useNavigate();
-  const qa = useQaQueue();
+  const qa = useQaQueue(undefined, true);
   const campaigns = useStudioCampaigns();
   const { frame, entries, limited, noun } = scope;
   const here = scope.entry?.workspace.id;

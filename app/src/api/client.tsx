@@ -146,7 +146,7 @@ function SignedIn({ children }: { children: ReactNode }) {
   }, []);
   const queryClient = useMemo(
     () =>
-      new QueryClient({ defaultOptions: { queries: { staleTime: 15_000, retry: 1, refetchOnWindowFocus: false } } }),
+      new QueryClient({ defaultOptions: { queries: { staleTime: 60_000, retry: 1, refetchOnWindowFocus: false } } }),
     [],
   );
   if (!api) return null;

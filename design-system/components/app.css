@@ -160,8 +160,11 @@ main h1[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }
 .ui-app-row--end { justify-content: flex-end; }
 .ui-app-row--between { justify-content: space-between; }
 
-/* The page while it loads: one display spinner in the middle, nothing else. */
+/* A small place while it loads: one display spinner in the middle. */
 .ui-app-loading { display: grid; place-items: center; min-height: 240px; color: var(--ui-text-tertiary); } /* gate-allow:space-from-tokens the loading area's height */
+/* A page while it loads: its shape, breathing (Skeleton), from the top, where the page will be. */
+.ui-app-loading--page { place-items: stretch; align-content: start; gap: var(--ui-space-md); padding-block: var(--ui-space-lg); }
+.ui-app-loading--page > .ui-app-grid { margin-top: var(--ui-space-md); }
 
 @media (prefers-reduced-motion: reduce) {
   .ui-app-bar-back, .ui-app-bar-back > * { transition: none !important; translate: none !important; }

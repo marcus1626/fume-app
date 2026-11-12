@@ -37,14 +37,19 @@ export function checklist(manifest: Pick<ManifestItem, "kind" | "requirement" | 
   const out: Check[] = [];
   // With the product's own photographs, the first thing to hold is that the product in the picture is that product.
   if (withProductPhoto)
-    out.push({ n: 1, area: "product", hard: true, requirement: "The product in the picture is the product in the photographs: the same shape, proportions, colours, label and materials, and it can be recognised. It may be seen from another side or opened, as the scene asks." });
+    out.push({ n: 1, area: "product", hard: true, requirement: "The product in the picture is the product in the photographs: the same shape, proportions, colours, label and materials, and it can be recognised. It may be seen from another side or opened, as the scene asks. Added or changed words, logos, badges or panels on a face shown in its own photographs make this item off. The legibility of small print is read separately, against the photographs." });
   for (const m of manifest) {
-    // The taste model's words are measured on the picture by code (taste_model), not judged by eye.
-    if (m.refId?.startsWith("taste-")) continue;
+    // The taste model's words are measured on the picture by code (taste_model), not judged by eye. The taste
+    // schema's habits are judged by reading the picture against the schema (taste/profile.ts fit), not here: a habit
+    // the plan chose to leave would otherwise be called off.
+    if (m.refId?.startsWith("taste-") || m.refId?.startsWith("schema-")) continue;
     const area = m.kind === "product_invariant" || m.kind === "product_colour" ? "product"
       : m.kind === "brand_rule_hard" || m.kind === "brand_rule_soft" || m.kind === "lesson_enforced" ? "brand"
       : m.kind === "concept" ? "scene" : null;
-    if (area) out.push({ n: out.length + 1, area, requirement: m.requirement, hard: m.required || area === "product", ...(m.refId && KEPT_REFS.has(m.refId) ? { ref: m.refId } : {}) });
+    const requirement = m.refId === ROOM_REF
+      ? `${m.requirement} Judge this by eye, as a designer setting the words would: it holds when the words could be set there without covering the product or a person. A product edge reaching a little into that part, or a calm texture there, still holds. It is off only when the product, a person or an object sits clearly inside it, when it is a flat panel, blank slab or split frame, or when its tone is wrong for the words.`
+      : m.requirement;
+    if (area) out.push({ n: out.length + 1, area, requirement, hard: m.required || area === "product", ...(m.refId && KEPT_REFS.has(m.refId) ? { ref: m.refId } : {}) });
   }
   return out;
 }
@@ -53,9 +58,9 @@ export const EVALUATOR_SYSTEM = `You check a generated campaign picture for Fume
 You are given the picture, sometimes the product's own photographs first, and a numbered checklist.
 Rules:
 1. For each item answer "holds" when the picture clearly shows it, "off" when the picture contradicts it, and "unclear" when it cannot be told from the picture (for example the label is hidden or too small). Never guess "holds".
-2. Product items are strict: the product's shape, proportions, colours, label and materials must match the facts and the product photographs. A side the photographs do not show is judged by what they do show. A product that is hidden, cropped away or not recognisable makes its items "unclear".
+2. Product items are strict: the product's shape, proportions, colours, label and materials must match the facts and the product photographs. Added or changed words, logos, badges or panels on a face shown in its own photographs make the product item "off"; do not infer a match from a familiar brand or plausible packaging. A side the photographs do not show is judged by what they do show. A product that is hidden, cropped away or not recognisable makes its items "unclear".
 3. Note artefacts: warped or melted objects, impossible physics or shadows, extra or broken fingers, garbled letters on the product or in the scene. "minor" when a retoucher fixes it quickly, "major" when the picture cannot be used.
-4. Say whether the picture has printed words or letters outside the product: on signs, packaging that is not the product, screens, walls or loose paper. Words on the product itself never count: its woven or printed labels (a collar label, a care tag, a hang tag, a waistband), its logo or wordmark, the print on its own pack, its pages when the product is a book or journal. Nor does handwriting the scene asks for. When the only letters in the picture are on the product, the answer is no; whether they read right is checked elsewhere.
+4. Say whether the picture has printed words or letters outside the product: on signs, packaging that is not the product, screens, walls or loose paper. Words on the product itself never count: its woven or printed labels (a collar label, a care tag, a hang tag, a waistband), its logo or wordmark, the print on its own pack, its pages when the product is a book or journal. Nor does handwriting the scene asks for. When the only letters in the picture are on the product, the answer is no; whether the product's own print matches its photographs is judged in the product item under rule 2.
 5. The picture's shape and size are checked by code. Judge composition only inside the frame you see, never its aspect ratio or orientation.
 6. Note the marks of a generated picture as artefacts too, the way a photo editor would: plastic or waxy skin, surfaces too smooth or too clean to be real, perfect symmetry, light with no source in the scene, glow or bloom everywhere, everything in focus at once, oversaturated colour, stock-photo staging, a flat panel, blank slab or split frame beside the scene that is not part of it (always major). "minor" when the picture still reads as photographed, "major" when it reads as generated.
 7. Keep each note to one short sentence a designer can act on. Never name equipment.

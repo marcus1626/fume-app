@@ -13,6 +13,7 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
+  Skeleton,
   Spinner,
   WithTooltip,
   type IconName,
@@ -408,11 +409,26 @@ export function Section({ title, meta, action, text, titleId, className, childre
   );
 }
 
-/** While a page's data is on its way: one spinner, nothing else. */
-export function Loading({ label = "Loading" }: { label?: string }) {
+/**
+ * While a page's data is on its way: the shape of a page (a title, a line, a grid of creatives) breathing slowly, so
+ * the page does not jump when it comes. `spinner` for a small place inside a page, where a page's shape would not fit.
+ */
+export function Loading({ label = "Loading", spinner = false }: { label?: string; spinner?: boolean }) {
+  if (spinner)
+    return (
+      <div className="ui-app-loading">
+        <Spinner size="xl" label={label} />
+      </div>
+    );
   return (
-    <div className="ui-app-loading">
-      <Spinner size="xl" label={label} />
+    <div className="ui-app-loading ui-app-loading--page" role="status" aria-busy="true" aria-label={label}>
+      <Skeleton shape="title" width="32%" />
+      <Skeleton shape="text" width="56%" />
+      <div className="ui-app-grid">
+        {Array.from({ length: 8 }, (_, i) => (
+          <Skeleton key={i} shape="creative" index={i} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -10,6 +10,7 @@ import {
   buildKnowledge,
   buildLedger,
   chooseVariants,
+  CAST_ROLE,
   COMPOSITION_ROLE,
   buildProduct,
   checklist,
@@ -36,7 +37,7 @@ import type { ImageProvider } from "./provider.ts";
 type Failure = { message: string } | null;
 type Stored = { path: string; bucket?: string };
 /** A product picture: a file in the workspace's folder, or an address on the brand's own website. */
-type Picture = { slot: string | null; name?: string } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
+type Picture = { slot: string | null; name?: string; card?: unknown } & ({ path: string; bucket?: string; url?: undefined } | { url: string; path?: undefined });
 
 /** What public.engine_take hands over, before the pictures' addresses are signed. */
 export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
@@ -137,6 +138,8 @@ async function signTask(t: Taken, deps: Deps): Promise<EngineTask> {
         slot: pic.slot,
         name: pic.name,
         url: pic.url ?? (await deps.service.sign({ path: pic.path!, bucket: pic.bucket })),
+        // What a classifier read of the picture (references.ts), so the right ones are sent.
+        ...(pic.card ? { card: pic.card } : {}),
       }))),
     }))),
     master: t.master
@@ -216,6 +219,10 @@ async function collect(
         const ext = EXT[contentType] ?? "png";
         const path = `${c.workspaceId}/engine/${c.jobId}/${c.attemptId}-${i + 1}.${ext}`;
         const { error } = await deps.service.store(path, bytes, contentType);
+        // The path is this attempt's own, so a picture already there was kept by another run of the Engine that
+        // collects the same attempt at this moment (the Studio asks again while a Render waits). That run finishes it;
+        // failing the attempt here threw away a picture that was made and paid for (Nike UK, 10 Nov).
+        if (error && /already exists|duplicate/i.test(error.message)) return "waiting";
         if (error) {
           await deps.service.fail(c.attemptId, `The picture could not be kept: ${error.message}`, r.response, 0, false);
           return "failed";
@@ -302,7 +309,7 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
     // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
     // picture of …").
     const productUrls = (data.references ?? [])
-      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && r.role !== COMPOSITION_ROLE)
+      .filter((r) => !r.role.startsWith("the approved ") && !r.role.startsWith("the picture of ") && !r.role.startsWith(CAST_ROLE) && r.role !== COMPOSITION_ROLE)
       .map((r) => r.url)
       .slice(0, 3);
     const productPhotos = (await Promise.all(productUrls.map((u) => shown(u, deps)))).filter((p): p is Shown => p !== null);
@@ -333,7 +340,8 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
 /** When every picture the Engine looked at left no room for the words, the words would cover the product: the Engine
  *  makes the picture once more, told what stood in the room. Once per job; the pictures already made stay for the
  *  expert. A failure here never undoes the picture. Anthem, 10 Nov: six of eight pictures had the product where the
- *  words go, though the prompt asked for the room. */
+ *  words go, though the prompt asked for the room. Only the rule `room-for-words` asks for it (something in the room,
+ *  or the wrong tone under the words); a texture in the room (`room-calm`) is a note for the expert. */
 async function makeRoom(c: { attemptId: string; jobId: string }, seen: { looked: number; roomTaken: string[] }, deps: Deps): Promise<boolean> {
   if (!deps.service.again || seen.looked === 0 || seen.roomTaken.length < seen.looked) return false;
   try {
@@ -353,7 +361,7 @@ export function roomLesson(again: string | null | undefined): Taken["lessons"] {
   return [{
     id: "room-again",
     polarity: "do",
-    statement: `Keep the room for the words bare, exactly as the room rule says: move the product and everything else out of it, and make the product smaller in the frame if that is what it takes. On the last picture: ${/[.!?]$/.test(what) ? what : `${what}.`}`,
+    statement: `Keep the room for the words bare, exactly as the room rule says: move the product and everything else out of it, and make the product smaller in the frame only if it stood in the room. On the last picture: ${/[.!?]$/.test(what) ? what : `${what}.`}`,
     reason: "Fume's own check found no room for the words on this creative's last picture.",
   }];
 }

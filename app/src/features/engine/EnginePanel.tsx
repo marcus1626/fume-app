@@ -188,7 +188,8 @@ export function useEngineFrame(): { barEnd: ReactNode; aside: ReactNode } {
   );
   useEngineSight(sight);
   if (!sees) return { barEnd: null, aside: null };
-  return { barEnd: <EngineToggle labelled />, aside: <EnginePanel /> };
+  // The bar keeps the Engine as an icon (Marcus, 10 Nov): "Tell the Engine" in words lives on the page itself.
+  return { barEnd: <EngineToggle />, aside: <EnginePanel /> };
 }
 
 /** The Studio's desk with the panel beside it: the desk is a full-screen page of its own, outside the frame. */

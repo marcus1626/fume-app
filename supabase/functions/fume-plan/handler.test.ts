@@ -65,6 +65,9 @@ const plan: PlanAnswer = {
           text: null,
           claimRefs: [],
           people: "No people",
+          view: "three_quarter",
+          crop: "not_set",
+          place: "outdoors",
           layout: null,
         },
         {
@@ -78,6 +81,9 @@ const plan: PlanAnswer = {
           text: "For the hour before sleep.",
           claimRefs: ["f1"],
           people: "No people",
+          view: "not_set",
+          crop: "close",
+          place: "not_set",
           layout: "Narrow stack",
         },
       ],
@@ -209,6 +215,10 @@ Deno.test("the prompt lists only verified claims as usable, and the body keeps t
     ["of" in m!, v!.of, v!.text, (body.content as { key: string }[])[0]!.key],
     [false, "pc1", "For the hour before sleep.", "call_to_action"],
   );
+  // The side and the crop the Engine chooses reference pictures by: kept where the plan set them.
+  assertEquals([m!.view, "crop" in m!, "view" in v!, v!.crop], ["three_quarter", false, false, "close"]);
+  // Where the picture is, for the habits of the brand's usual place: kept where the plan set it.
+  assertEquals([m!.place, "place" in v!], ["outdoors", false]);
 });
 
 Deno.test("the plan writer reads the brand brain, and what is only proposed is marked", async () => {
@@ -452,6 +462,17 @@ Deno.test("a layout's own call to action, as the brand's creatives set it, is th
   assertEquals(prompt({ ...task, layouts: layoutsOf([{ name: "Tile", band: "middle", align: "left", wordsWidthPct: 40, ground: "photo" }]) }).includes("its button"), false);
 });
 
+Deno.test("the plan writer is told the tone the place for the words needs, from the colour of the brand's words", () => {
+  const layouts = layoutsOf([{ name: "Hero", band: "bottom", align: "center", wordsWidthPct: 38, ground: "photo", hasWords: true, words: "light" }]);
+  assertEquals(layouts[0].words, "light");
+  const p = prompt({ ...task, layouts });
+  assertEquals(p.includes("\"words\":\"light\"") && p.includes("mid to deep in tone") && p.includes("never bright sky, a pale wall or a light studio floor"), true);
+  // A tone the Engine does not hold a picture to (the brand's colour) is not passed on.
+  const other = layoutsOf([{ name: "Slogan", band: "middle", align: "center", wordsWidthPct: 90, ground: "flat", words: "brand_colour" }]);
+  assertEquals("words" in other[0], false);
+  assertEquals(prompt({ ...task, layouts: other }).includes("mid to deep in tone"), false);
+});
+
 Deno.test("the brand's other recent pictures are shown so a new plan is not one more of the same shot", () => {
   assertEquals(scenesPart(undefined), []);
   const part = scenesPart(["Sideline long-lens photograph in bright sun.", "Sideline long-lens photograph in bright sun.", ""]).join("\n");
@@ -525,4 +546,24 @@ Deno.test("an ad set in a layout without the brand's button, where it has one, i
   assertEquals(noButton(inLayout("Category tile"), layoutsOf([{ name: "Category tile", band: "bottom", align: "left", wordsWidthPct: 50, ground: "photo" }])), [],
     "a brand with no button on its pictures is never asked for one");
   assertEquals(prompt({ ...task, layouts }).includes("set every creative with words in a layout that carries the brand's button"), true);
+});
+
+Deno.test("the plan writer reads the brand's taste schema: its habits, what a campaign chooses, and where the Engine missed", async () => {
+  const { tastePart } = await import("./plan.ts");
+  const { buildProfile } = await import("../_shared/taste/profile.ts");
+  const { direction } = await import("../_shared/taste/direction.ts");
+  const cards = Array.from({ length: 12 }, (_, i) => ({
+    id: `b${i}`, measured: {}, campaign: i < 6 ? "winter" : "summer",
+    read: { "people.count": "one", "camera.depth_of_field": "deep", "mood.temperature": i < 6 ? "cold" : "warm", "finish.grain_feel": "fine" },
+  }));
+  const engine = Array.from({ length: 6 }, (_, i) => ({ id: `e${i}`, measured: {}, read: { "people.count": "none", "camera.depth_of_field": "deep" } }));
+  const [block, how] = tastePart(direction(buildProfile(cards), buildProfile(engine)));
+  assertEquals(block!.startsWith('<taste_schema pictures="12" campaigns="2">'), true);
+  assertEquals(block!.includes("- People, count: one (always; earlier Engine pictures: none 100%)"), true);
+  assertEquals(block!.includes("- Mood, temperature: winter: cold; summer: warm"), true);
+  assertEquals(block!.includes("grain"), false, "the finish step's fields are not the plan's");
+  // The brief decides what and where; how the picture is made stays the brand's, and the scene never says otherwise.
+  assertEquals(/The brief decides what the picture is of and where it is/.test(how!) && /How the picture is made is the brand's in every place/.test(how!) && /never blurred, soft or out of focus/.test(how!), true);
+  assertEquals(tastePart(null), []);
+  assertEquals(tastePart(direction(buildProfile(cards.slice(0, 3)))), [], "too few pictures give no direction");
 });

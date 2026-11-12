@@ -98,7 +98,7 @@ const screens: [name: string, path: string, then?: (page: Page) => Promise<void>
     "a plan, with the Engine open",
     "/studio/b/w-lysne/campaigns/c-winter/plan?as=anna",
     async (page) => {
-      await page.getByRole("button", { name: "Tell the Engine" }).click();
+      await page.getByRole("button", { name: "Open the Engine" }).click();
       await expect(page.getByRole("complementary", { name: "Engine" })).toBeVisible();
     },
   ],

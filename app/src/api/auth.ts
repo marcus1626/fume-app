@@ -3,6 +3,7 @@
 // demo person instead.
 import { useEffect, useState } from "react";
 import { FumeError } from "../contract";
+import { forgetSignedLinks } from "./live/signed";
 import { isLive, supabase } from "./live/supabase";
 
 export type AuthState = "checking" | "signed_out" | "signed_in";
@@ -147,4 +148,5 @@ export async function signOut(): Promise<void> {
     /* no storage: the sign-in screen just does not say it */
   }
   await supabase().auth.signOut();
+  await forgetSignedLinks();
 }

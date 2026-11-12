@@ -266,7 +266,7 @@ export function agencyCalls(live: Live): Pick<FumeApi, Calls> {
     const [workspaces, campaignRows, qa, people, memberships, seats, made, org] = await Promise.all([
       live.workspaces(),
       studio.studioCampaigns(),
-      quality.qaQueue(),
+      quality.qaQueue(undefined, { light: true }),
       live.people(),
       rows<{ user_id: string; workspace_id: string; role: CustomerRole }>(
         supabase().from("memberships").select("user_id, workspace_id, role"),
