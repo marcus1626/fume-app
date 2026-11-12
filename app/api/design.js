@@ -1,9 +1,9 @@
 // Built by tools/build.mjs from api-src/design.ts and src/. Do not edit.
 
-// services/design/src/handler.ts
+// src/handler.ts
 import { createHash as createHash2 } from "node:crypto";
 
-// services/design/src/book.ts
+// src/book.ts
 var SIZES = {
   feed: { w: 1080, h: 1350 },
   square: { w: 1080, h: 1080 },
@@ -75,7 +75,7 @@ function clamp(n, lo, hi) {
   return Math.min(hi, Math.max(lo, n));
 }
 
-// services/design/src/compose.ts
+// src/compose.ts
 function compose(book, format, words, l, family, widths = {}, logo) {
   const g = gridOf(book, format);
   const unit = book.spacing?.unitPx ?? 8;
@@ -202,7 +202,7 @@ function fitted(s, k) {
   return k && k < 1 ? { ...s, sizePx: Math.floor(s.sizePx * k) } : s;
 }
 function bindShort(text) {
-  return text.replace(/(?<=^|\s)(\p{L}{1,2}) (?=\S)/gu, "$1\xA0");
+  return text.replace(new RegExp("(?<=^|\\s)(\\p{L}{1,2}) (?=\\S)", "gu"), "$1\xA0");
 }
 function shadeFor(book, l, g, words) {
   if (l.ground !== "gradient" && l.ground !== "tint") return null;
@@ -274,7 +274,7 @@ var round = (n) => Math.round(n * 100) / 100;
 var q = (s) => JSON.stringify(s);
 var caseOf = (s) => s.case === "upper" ? ` textCase="upper"` : s.case === "lower" ? ` textCase="lower"` : "";
 
-// services/design/src/pixels.ts
+// src/pixels.ts
 function shadeAt(s, y, x = 0) {
   if (s.even) return s.from;
   if (s.edge === "left" || s.edge === "right") return shadeAt({ ...s, edge: s.edge === "left" ? "top" : "bottom" }, x);
@@ -372,7 +372,7 @@ function overlap(a, b) {
 }
 var round2 = (n) => Math.round(n * 100) / 100;
 
-// services/design/src/render.ts
+// src/render.ts
 import { createHash } from "node:crypto";
 import { SceneGraph } from "@open-pencil/scene-graph";
 import { renderJSX } from "@open-pencil/core/design-jsx";
@@ -604,7 +604,7 @@ function weightOf(style) {
   return Number.isFinite(n) ? n : 400;
 }
 
-// services/design/src/logo.ts
+// src/logo.ts
 import { SceneGraph as SceneGraph2 } from "@open-pencil/scene-graph";
 import { renderJSX as renderJSX2 } from "@open-pencil/core/design-jsx";
 import { createSVGNodes } from "@open-pencil/core/io";
@@ -718,7 +718,7 @@ function cornersFor(first, band, align) {
   return [...new Set(order)];
 }
 
-// services/design/src/room.ts
+// src/room.ts
 function plainEdges(data, width, height) {
   const lumAt = (x, y) => {
     const i = (y * width + x) * 4;
@@ -838,7 +838,7 @@ async function inset(picture, frame, scale) {
   };
 }
 
-// services/design/src/design.ts
+// src/design.ts
 var SCALE = 0.25;
 var INSETS = [0.82, 0.72];
 var BUDGET_MS = { first: 22e3, all: 4e4 };
@@ -1474,7 +1474,7 @@ function uniq(xs) {
   return [...new Set(xs)];
 }
 
-// services/design/src/fix.ts
+// src/fix.ts
 var RATIOS = [
   ["21:9", 21 / 9],
   ["16:9", 16 / 9],
@@ -1632,7 +1632,7 @@ async function encode(img) {
   return bytes;
 }
 
-// services/design/src/format.ts
+// src/format.ts
 var RATIO = { feed: 4 / 5, square: 1, story: 9 / 16, banner: 16 / 9 };
 var MODEL_RATIO = { feed: "4:5", square: "1:1", story: "9:16", banner: "16:9" };
 function windowFor(width, height, ratio, around) {
@@ -1781,7 +1781,7 @@ function guide(master, ratio, box, place2, most = 1536) {
   return { width: W, height: H, data };
 }
 
-// services/design/src/handler.ts
+// src/handler.ts
 var json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
 function signedLink(link, host, kind) {
   if (typeof link !== "string") return false;
@@ -2045,7 +2045,7 @@ async function formatStep(r2, deps) {
   }
 }
 
-// services/design/src/fonts.ts
+// src/fonts.ts
 var UA = "Mozilla/4.0";
 var WEIGHTS = [100, 200, 300, 400, 500, 600, 700, 800, 900];
 function googleFonts(get = fetch) {
@@ -2082,7 +2082,7 @@ function googleFonts(get = fetch) {
   };
 }
 
-// services/design/api-src/design.ts
+// api-src/design.ts
 start({ fonts: googleFonts(fetch), online: false });
 async function POST(req) {
   return handle(req, { storageHost: process.env.FUME_STORAGE_HOST ?? "vkusmctftfzsrxbcxtdz.supabase.co", fetch });
