@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-11T17:50:00Z",
+  "updated": "2026-11-12T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
@@ -224,6 +224,18 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-11-12",
+      "title": "A stricter picture check, and the brand's own photos",
+      "items": [
+        "The picture check is stricter about the product's printed face: words or logos on the product that are not in its own photos now fail it. This is live.",
+        "New Anthem pictures were made with it. The check caught a wrong brand name on the product, made once for 15 cents.",
+        "Two faults found in a test picture: the check passed a product that was cut off at the edge, and rules from another kind of picture entered its checklist. Both are being fixed now.",
+        "Next: a choice per creative to put the words on the picture or in their own area beside it. This is a proposal Marcus will see first.",
+        "Each design is saved as a Figma file next to the picture, with the words as real text.",
+        "Design thread: an asset library for the brand's own photos. A customer uploads a shoot, the Engine picks the best and says why, an expert checks, and a photo can become a creative. It is in the preview and waits for Marcus's yes."
+      ]
+    },
     {
       "date": "2026-11-11",
       "title": "The brand's taste, used in the real app",
