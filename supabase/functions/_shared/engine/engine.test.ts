@@ -29,7 +29,7 @@ import {
   type Verifier,
 } from "./index.ts";
 import { cardFromAnswers, CROPS, needOf, OFS, REF_QUESTIONS, VIEWS } from "./references.ts";
-import { plannedPlace } from "./context.ts";
+import { plannedPlace, plannedCreative, pictureScene, roomRules, wordsRoom } from "./context.ts";
 
 const task: EngineTask = {
   brand: { name: "Nordlys Kaffe (test)" },
@@ -545,7 +545,7 @@ Deno.test("the planned creative's crop reaches the picture check through the con
   const { checklist, evaluatorPrompt } = await import("./evaluate.ts");
   for (const crop of ["close", "half", "whole", undefined]) {
     const t = { ...task, plan: { ...task.plan, planned_creatives: [
-      { id: "other", name: "Other creative", format: "feed", crop: "wrong crop" },
+      { id: "other", name: "Other creative", format: "feed", scene: "Another scene.", crop: "wrong crop" },
       { ...task.plan.planned_creatives![0], ...(crop ? { crop } : {}) },
     ] } };
     const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
@@ -700,4 +700,36 @@ Deno.test("a classifier's answers about a reference picture become its card", ()
   assertEquals(Object.keys(REF_QUESTIONS.of.options), [...OFS]);
   assertEquals(Object.keys(REF_QUESTIONS.view.options), [...VIEWS, "cannot_tell"]);
   assertEquals(Object.keys(REF_QUESTIONS.crop.options), [...CROPS]);
+});
+
+Deno.test("words in their own area reserve no photographic room or room checklist, including a Studio override", () => {
+  const planned = { ...task.plan.planned_creatives![0], text: "HELLO", scene: "A cup on a bench. Left side kept clear for words." };
+  const t: EngineTask = { ...task, plan: { ...task.plan, planned_creatives: [planned] }, room: { id: "b", version: 1, layouts: [{ name: "L", band: "top", align: "left", wordsWidthPct: 40, ground: "photo" }] } };
+  assert(wordsRoom(t), "older plans still reserve room");
+  for (const own of [
+    { ...t, plan: { ...t.plan, planned_creatives: [{ ...planned, words: "own_area" as const }] } },
+    { ...t, creative: { ...t.creative, words: "own_area" as const } },
+  ]) {
+    assertEquals(plannedCreative(own)?.words, "own_area");
+    assertEquals(wordsRoom(own), null);
+    assertEquals(roomRules(own), []);
+    assertEquals(buildBrand(own, "a").rules.filter((r) => /^room-/.test(r.id)), []);
+    assertEquals(buildConcept(own).sceneIdea, "A cup on a bench.");
+  }
+  assertEquals(pictureScene("A cup in a living room."), "A cup in a living room.");
+  const override: EngineTask = { ...t, creative: { ...t.creative, words: "on_picture" }, plan: { ...t.plan, planned_creatives: [{ ...planned, words: "own_area" }] } };
+  assert(wordsRoom(override), "the designer can switch back to words on the photo");
+});
+
+Deno.test("own-area scenes remove only the room clause and keep a subject description", () => {
+  assertEquals(pictureScene("A cup on a bench with room for words on the left."), "A cup on a bench");
+  assertEquals(pictureScene("A cup on a bench. Right side kept clear."), "A cup on a bench.");
+  for (const scene of ["A cup on a bench with room for words on the left.", "A cup on a bench. Right side kept clear."]) {
+    const planned = { ...task.plan.planned_creatives![0], scene };
+    const t: EngineTask = { ...task, plan: { ...task.plan, planned_creatives: [planned] } };
+    assertEquals(buildConcept({ ...t, creative: { ...t.creative, words: "own_area" } }).sceneIdea, "A cup on a bench.");
+    assertEquals(buildConcept({ ...t, creative: { ...t.creative, words: "on_picture" } }).sceneIdea, scene);
+  }
+  assertEquals(pictureScene("Right side kept clear."), "Right side kept clear.");
+  assertEquals(pictureScene("Room for words on the left."), "Room for words on the left.");
 });

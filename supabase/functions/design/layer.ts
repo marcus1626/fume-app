@@ -20,7 +20,7 @@ export type Take = {
   brand: { name: string | null; language: string | null; market: string | null };
   picture: { bucket: string; path: string; width: number | null; height: number | null };
   creative: { id: string; title: string | null; format: string; slot: string | null };
-  planned: { text?: string; scene?: string; format?: string; name?: string; layout?: string };
+  planned: { text?: string; scene?: string; format?: string; name?: string; layout?: string; words?: "on_picture" | "own_area" };
   copy: CopyItem[];
   products: { name: string; variant: string | null }[];
   book: { id: string; version: number; state: string; body: Record<string, unknown> };
@@ -131,6 +131,7 @@ export function plannedLayout(t: Take): BrandLayout | null {
  * the older "… is bare". From 9 to 11 Nov 2026 only the older wording was read, so the room never led.
  */
 export function roomOf(t: Take): { band?: "top" | "bottom"; align?: "left" | "right" } {
+  if (t.planned.words === "own_area") return {};
   const side = /\bthe (left|right|top|bottom) \d+% of the (?:width|height)\b[^.;]*?\b(?:is bare|has no person)\b/i.exec(t.room ?? "")?.[1]?.toLowerCase();
   if (side === "top" || side === "bottom") return { band: side };
   if (side === "left" || side === "right") return { align: side };
@@ -185,10 +186,11 @@ export function reviewPrompt(t: Take, words: Words, set?: { cta?: string } | nul
   const noCta = Boolean(words.cta) && set?.cta === "none";
   const must = noCta ? { ...words, cta: undefined } : words;
   const note = noCta ? "\n\nThe brand's own layout carries no call to action, so it is left off on purpose; do not ask for it." : "";
+  const composition = t.planned?.words === "own_area" ? "\n\nThe words belong in their own brand-coloured area below the photograph. Judge that separate composition; do not ask for words over the photo or photographic room for them." : "";
   const seen = refs > 0
     ? `\n\nThe first ${refs === 1 ? "image is" : `${refs} images are`} the brand's own website or ads; the last image is the creative.`
     : "\n\nThe brand's own work is not on file, so judge onBrand from the colours and type only, and say so.";
-  return `<words_that_must_appear>\n${JSON.stringify(must)}\n</words_that_must_appear>${note}${seen}\n\nLook at the creative and answer.`;
+  return `<words_that_must_appear>\n${JSON.stringify(must)}\n</words_that_must_appear>${note}${composition}${seen}\n\nLook at the creative and answer.`;
 }
 
 /** The review judges taste against the brand's own work, so it is the careful model (Sonnet 5.5, dollars per million tokens). */

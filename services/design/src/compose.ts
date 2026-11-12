@@ -33,6 +33,7 @@ export type CtaLook = "pill" | "box" | "outline" | "slant" | "slant_double" | "u
 
 /** One way to lay the words out. */
 export interface Layout {
+  wordsPlacement?: "on_picture" | "own_area";
   band: Band;
   align: Align;
   /** The headline's type style, by name. */
@@ -106,7 +107,7 @@ export function compose(
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
   // A block or a panel in the brand's own colour from its ads (Møllers' green) carries words that read on it.
-  const ownGround = onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const ownGround = l.wordsPlacement === "own_area" ? (colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? book.colours[0]?.hex ?? "#FFFFFF") : onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
   const wordsHex = ownGround
     ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000")
     : isBlock
@@ -114,7 +115,7 @@ export function compose(
     : onPanel
       ? (colourOf(book, "text") ?? "#000000")
       : (colourOf(book, l.colour) ?? "#FFFFFF");
-  const subHex = isBlock || ownGround ? wordsHex : onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
+  const subHex = l.wordsPlacement === "own_area" ? wordsHex : isBlock || ownGround ? wordsHex : onPanel ? (colourOf(book, "text_muted") ?? wordsHex) : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -249,7 +250,7 @@ export function compose(
         logo.h,
       )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`
     : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "${l.wordsPlacement === "own_area" ? "FIT" : "FILL"}", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...(onPanel ? { panel: panelHex } : {}) };
 }
 

@@ -8,6 +8,8 @@ import type { Id, Instant } from "./common";
 import type { Format } from "./campaigns";
 
 /** FLOWS §22.3. */
+export type WordsPlacement = "on_picture" | "own_area";
+
 export type PlanState = "writing" | "in_check" | "ready" | "changes_asked" | "approved";
 
 /** Where a line of the plan comes from: her brief, her Brand DNA, her taste, her moodboard, an approved campaign
@@ -57,6 +59,8 @@ export interface PlannedCreative {
   scene: string;
   /** The words on the creative, in the market's language; none for a picture without words. */
   text?: string;
+  /** Missing in older plans means on_picture. */
+  words?: WordsPlacement;
   /** "No people", "Hands only", "Ane (AI person)" */
   people: string;
   changedBy?: Id;

@@ -1919,3 +1919,13 @@ and solo only dim their lanes. The four sounds in "Sounds" stand in for a real l
 
 **Open.** Precomps (a group of layers as one item, opened in its own timeline) are not built. The Timing sliders in
 the inspector can still stretch a thing over its neighbour on the same track. The 3D track stays behind its flag.
+
+
+## Words on the picture or in their own area — PROPOSED (12 Nov 2026)
+
+Marcus, 12 Nov: “det burde være en egen variabel, om teksten skal stå på bildet, eller på eget design separat fra bildet”.
+Each planned creative may set `words: on_picture | own_area`; absent means `on_picture` for older data. A Fume designer
+can change this in Studio beside the graphic design ask; starting the design saves an override on that creative,
+without editing the approved plan. `own_area` asks the Engine for a complete photograph, with no room-for-words or
+room-calm checklist or room remake. The design puts the approved words in a separate area below the picture, coloured
+from the brand's design tokens. The photo, words area and editable text remain separate layers in the `.fig`.

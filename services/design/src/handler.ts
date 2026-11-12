@@ -15,6 +15,7 @@ export interface DesignRequest {
   format: Format;
   book: DesignBook;
   words: Words;
+  wordsPlacement?: "on_picture" | "own_area";
   prefer?: Partial<Layout>;
   keepClear?: (Box & { what: string })[];
   /** A signed link to the brand's logo file in Fume's storage, when its design system names one. */
@@ -82,6 +83,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
   const op = (r as { op?: unknown }).op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r as unknown as FixRequest, deps);
   if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r as unknown as FormatRequest, deps);
+  if (r.wordsPlacement != null && r.wordsPlacement !== "on_picture" && r.wordsPlacement !== "own_area") return json(400, { error: "Unknown words placement." });
   const why = invalid(r, deps.storageHost);
   if (why) return json(400, { error: why });
   // A 2K picture from storage can be slow while other layers are being made; a slow read is answered, never thrown.
@@ -125,6 +127,7 @@ export async function handle(req: Request, deps: Deps): Promise<Response> {
     format: r.format!,
     book: r.book!,
     words: r.words!,
+    wordsPlacement: r.wordsPlacement ?? "on_picture",
     prefer: r.prefer ?? {},
     keepClear: (r.keepClear ?? []).filter(isBox).slice(0, 12),
     ...(logo ? { logo } : {}),

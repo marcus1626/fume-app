@@ -22,6 +22,7 @@ export type PlannedCreative = {
   productIds?: string[];
   scene: string;
   text?: string;
+  words?: "on_picture" | "own_area";
   people?: string;
   /** The brand's layout the plan sets this creative's words in (fume-plan, 9 Nov). */
   layout?: string;
@@ -54,7 +55,7 @@ export type Taste = { key: string; words: string | null; do_confidence: number; 
 /** What public.engine_take hands over, with the pictures' addresses signed by the function. */
 export type EngineTask = {
   brand: { name: string };
-  creative: { id: string; title: string; slot: string | null; format: string; kind: string };
+  creative: { id: string; title: string; slot: string | null; format: string; kind: string; words?: "on_picture" | "own_area" | null };
   plan: PlanBody;
   products: TaskProduct[];
   rules: { id: string; area: string; statement: string; kind: string; origin: string }[];
@@ -130,7 +131,7 @@ export type Side = "left" | "right" | "top" | "bottom";
  */
 export function wordsRoom(task: EngineTask): { side: Side; share: number; from: string; button?: "left" | "right"; tone?: "dark" | "light" } | null {
   const planned = plannedCreative(task);
-  if (!planned?.text?.trim() || task.master?.picked) return null;
+  if (planned?.words === "own_area" || !planned?.text?.trim() || task.master?.picked) return null;
   const scene = planned.scene ?? "";
   const said = scene.match(/\b(left|right|top|bottom|upper|lower)\b[^.]*\b(clear|empty|free|space|room)\b/i)?.[1]?.toLowerCase();
   const fromScene: Side | undefined = said === "upper" ? "top" : said === "lower" ? "bottom" : (said as Side | undefined);
@@ -306,7 +307,8 @@ function shown(task: EngineTask, planned: PlannedCreative | undefined): TaskProd
 }
 
 export function plannedCreative(task: EngineTask): PlannedCreative | undefined {
-  return (task.plan.planned_creatives ?? []).find((c) => c.id === task.creative.slot);
+  const planned = (task.plan.planned_creatives ?? []).find((c) => c.id === task.creative.slot);
+  return planned && task.creative.words ? { ...planned, words: task.creative.words } : planned;
 }
 
 /** Every picture the Engine could send for this creative, with its card: the shown products' own, front first, and
@@ -546,6 +548,21 @@ export function brainLessons(b: Brain): Knowledge["lessons"] {
   return [...changes, ...checks];
 }
 
+/** Remove room clauses while keeping the subject; a room-only scene keeps its original description. */
+export function pictureScene(scene: string): string {
+  const picture = scene
+    .split(/(?<=[.!?;])\s+|,\s+(?=(?:the )?(?:left|right|top|bottom|upper|lower|with (?:room|space))\b)|\s+(?=with (?:room|space) for (?:words?|text|headline|copy)\b)/i)
+    .filter((clause) => {
+      const room = /\b(room|space|clear|empty|free|calm|kept|reserve|leave)\b/i.test(clause);
+      const forWords = /\b(words?|text|headline|copy)\b/i.test(clause);
+      const clearSide = /^(?:the )?(?:left|right|top|bottom|upper|lower)\b[^.!?;]*\b(?:clear|empty|free)\b/i.test(clause);
+      return !((room && forWords) || clearSide);
+    })
+    .join(" ")
+    .trim();
+  return /[\p{L}\p{N}]/u.test(picture) ? picture : scene;
+}
+
 export function buildConcept(task: EngineTask): Concept {
   const planned = plannedCreative(task);
   const directionId = task.plan.chosen_direction_id ?? null;
@@ -553,7 +570,7 @@ export function buildConcept(task: EngineTask): Concept {
   return {
     id: `${directionId ?? "-"}.${task.creative.slot ?? task.creative.id}`,
     title: planned?.name ?? task.creative.title,
-    sceneIdea: sentence(planned?.scene ?? direction?.idea ?? task.creative.title) + (planned?.crop ? ` Planned crop: ${sentence(planned.crop)}` : ""),
+    sceneIdea: sentence(planned?.words === "own_area" ? pictureScene(planned.scene) : planned?.scene ?? direction?.idea ?? task.creative.title) + (planned?.crop ? ` Planned crop: ${sentence(planned.crop)}` : ""),
     productRole: (direction?.productRole ?? "the clear hero of the frame").replace(/\.$/, ""),
     lookKey: direction ? direction.id : null,
   };

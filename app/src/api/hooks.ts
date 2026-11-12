@@ -180,7 +180,9 @@ export const useAddVersion = () =>
 export const useDesignAsk = (documentId: Id, versionId: Id | undefined) =>
   useQ(["design-ask", documentId, versionId], (a) => a.designAsk(documentId, versionId!), Boolean(versionId));
 export const useDesignVersion = () =>
-  useM((a, v: { documentId: Id; versionId: Id; ask?: string }) => a.designVersion(v.documentId, v.versionId, v.ask));
+  useM((a, v: { documentId: Id; versionId: Id; ask?: string; words?: import("../contract").WordsPlacement }) =>
+    a.designVersion(v.documentId, v.versionId, v.ask, v.words),
+  );
 export const useOverrideProduct = () =>
   useM((a, v: { documentId: Id; field: string; value: string; scope: "this_render" | "product" }) =>
     a.overrideProduct(v.documentId, v),

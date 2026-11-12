@@ -246,6 +246,8 @@ export interface VersionDesign {
 
 /** Demo only: words drawn on a photograph, in per cent of the frame, sized as pixels at a frame 1080 wide. */
 export interface DesignDrawing {
+  /** Demo composition, with the photo above a separate brand-coloured area. */
+  area?: { picture: string; colour: string; top: number };
   /** A soft shade from one edge behind the words (the design system's scrim), 0–1. */
   shade?: { from: "top" | "bottom"; opacity: number };
   /** The faces to load, by their Google Fonts name. */
@@ -273,6 +275,7 @@ export interface DesignDrawing {
 
 /** What "Add graphic design" will lay on a version, and whether it can now (FLOWS §33). */
 export interface DesignAsk {
+  wordsPlacement?: import("./plan").WordsPlacement;
   /** The picture the words go on: the version asked for, or the picture under a designed one. */
   fromVersionId: Id;
   fromNumber: number;
@@ -355,6 +358,7 @@ export interface EngineEdit {
 
 /** The project file of one creative, like a PSD (FLOWS §9.2). */
 export interface CreativeDocument {
+  words?: import("./plan").WordsPlacement;
   id: Id;
   workspaceId: Id;
   campaignId?: Id;

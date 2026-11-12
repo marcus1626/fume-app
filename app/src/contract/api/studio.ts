@@ -59,7 +59,12 @@ export interface StudioApi {
    *  function). Answered at once: the document with a new version Fume is designing; it becomes a version of its
    *  own, picked, with its design file. On a designed version it designs again from the picture under it; asking
    *  while one is being made on that picture returns it. Fume's designers only. */
-  designVersion(documentId: Id, versionId: Id, ask?: string): Promise<CreativeDocument>;
+  designVersion(
+    documentId: Id,
+    versionId: Id,
+    ask?: string,
+    words?: import("../entities/plan").WordsPlacement,
+  ): Promise<CreativeDocument>;
   overrideProduct(
     documentId: Id,
     change: { field: string; value: string; scope: ProductOverride["scope"] },
