@@ -359,7 +359,7 @@ Deno.test("empty quality words are found, and a camera slot must name the lens, 
 Deno.test("the Look Book becomes rules for the camera slot, with the recipe closest to the scene", async () => {
   const { lookRules, recipeFor } = await import("./context.ts");
   const look = {
-    camera: { capture: "full-frame digital, clean", lenses: [{ focalMm: 35, use: "places" }], aperture: "f/2.8", height: "at table height" },
+    camera: { capture: "full-frame digital, clean", lenses: [{ focalMm: 35, use: "places" }], aperture: "f/2.8", height: "at table height", distance: "two metres away" },
     light: { key: "window daylight", quality: "soft", direction: "from the left", colourTemperatureK: "5600 K", contrast: "3:1" },
     colour: { grade: "warm, muted greens", blacks: "rich" },
     texture: { grainCharacter: "fine 35 mm grain", surfaces: "crumbs, worn linen" },
@@ -373,6 +373,10 @@ Deno.test("the Look Book becomes rules for the camera slot, with the recipe clos
   assertEquals(recipeFor(look, "Skoen på våt asfalt om natten"), null);
   const rules = lookRules({ ...task, look: { id: "lb", version: 1, state: "approved", body: look } });
   assertEquals(rules.map((r) => r.id), ["lookbook-recipe", "lookbook-camera", "lookbook-light", "lookbook-grade", "lookbook-texture", "lookbook-never-taste"]);
+  assertEquals(rules.find((r) => r.id === "lookbook-camera")!.statement, "lenses 35 mm for places; f/2.8; at table height; two metres away.");
+  assert(!rules.find((r) => r.id === "lookbook-camera")!.statement.includes(look.camera.capture));
+  assertMatch(rules.find((r) => r.id === "lookbook-light")!.statement, /window daylight/);
+  assertMatch(rules.find((r) => r.id === "lookbook-grade")!.statement, /warm, muted greens/);
   assertEquals(rules.some((r) => r.binding === "hard"), false);
   const brand = buildBrand({ ...task, look: { id: "lb", version: 1, state: "approved", body: look } }, null);
   const { compilePackage } = buildCompilePackage({
@@ -388,6 +392,48 @@ Deno.test("the Look Book becomes rules for the camera slot, with the recipe clos
   } as never);
   const camera = compilePackage.manifest.filter((m) => m.suggestedSlot === "camera").map((m) => m.id);
   assertEquals(camera, ["brand-lookbook-recipe", "brand-lookbook-camera", "brand-lookbook-light", "brand-lookbook-grade", "brand-lookbook-texture"]);
+});
+
+Deno.test("only a matching planned-scene recipe applies, while global Look Book and Brain rules remain", async () => {
+  const { lookRules, recipeFor } = await import("./context.ts");
+  const { checklist } = await import("./evaluate.ts");
+  // Anthem, job 78b061f7: shared composition words chose a keeper for a backyard batting cage.
+  const soccer = { scene: "High school soccer, a keeper leaping across the goal", camera: "sports-body at the sideline", light: "stadium lights", grade: "cool", composition: "backyard batting cage on the right" };
+  const cage = { scene: "Backyard batting cage at dusk", camera: "35 mm from lawn height", light: "afternoon daylight", grade: "warm", composition: "product on the right" };
+  const look = {
+    camera: { capture: "Full-frame digital sports-body file at the sideline" },
+    light: { key: "soft afternoon daylight" },
+    colour: { grade: "warm natural colours" },
+    recipes: [soccer],
+  };
+  const scene = "A backyard batting cage at dusk with a bat";
+  assertEquals(recipeFor(look, scene), null, "composition overlap is not a scene match");
+  assertEquals(recipeFor({ recipes: [soccer, cage] }, scene), cage);
+  assertEquals(recipeFor({ recipes: [soccer] }, soccer.scene), soccer, "the sports recipe still applies to its own scene");
+  const t: EngineTask = {
+    ...task, creative: { ...task.creative, title: soccer.scene },
+    plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0], scene, people: "No people" }] },
+    look: { id: "lb", version: 1, state: "approved", body: look },
+    brain: { ...brain, imagery: [{ id: "soccer", what: soccer.scene, confirmed: true }, { id: "cage", what: cage.scene, confirmed: true }] },
+  };
+  const compile = (x: EngineTask) => buildCompilePackage({ ...inputOf(x), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] }).compilePackage;
+  for (const body of [look, { ...look, recipes: [soccer, cage] }, { ...look, recipes: [] }]) {
+    const x = { ...t, look: { ...t.look!, body } };
+    const rules = lookRules(x);
+    assertEquals(rules.some((r) => r.id === "lookbook-recipe"), body.recipes.includes(cage));
+    assertEquals(rules.some((r) => r.id === "lookbook-camera"), false, "capture prose alone does not become a camera rule");
+    const pkg = compile(x);
+    const lookManifest = pkg.manifest.filter((m) => m.id.startsWith("brand-lookbook-"));
+    assert(!/soccer|keeper|sideline|sports-body/i.test(JSON.stringify(lookManifest)), "another scene's recipe and capture prose must not reach the prompt writer");
+    assert(lookManifest.some((m) => m.id === "brand-lookbook-light" && m.requirement.includes(look.light.key)));
+    assert(lookManifest.some((m) => m.id === "brand-lookbook-grade" && m.requirement.includes(look.colour.grade)));
+    assert(!/soccer|keeper|sideline|sports-body/i.test(JSON.stringify(checklist(lookManifest))), "nor the image checklist");
+    const imagery = pkg.manifest.find((m) => m.id === "brand-brain-imagery")!;
+    assertMatch(imagery.requirement, /high school soccer/);
+    assertMatch(imagery.requirement, /backyard batting cage/);
+  }
+  const ledger = buildLedger(t, compile(t));
+  assertEquals([ledger.find((e) => e.ref === "soccer")!.used, ledger.find((e) => e.ref === "cage")!.used], [true, true]);
 });
 
 Deno.test("a picture that carries words is made with room for them, where the plan or the brand puts them", async () => {

@@ -225,7 +225,7 @@ export function recipeFor(look: LookBody, scene: string) {
   const want = words(scene);
   let best: { r: NonNullable<LookBody["recipes"]>[number]; n: number } | null = null;
   for (const r of look.recipes ?? []) {
-    const n = [...words(`${r.scene} ${r.composition}`)].filter((w) => want.has(w)).length;
+    const n = [...words(r.scene)].filter((w) => want.has(w)).length;
     if (!best || n > best.n) best = { r, n };
   }
   // A recipe for another kind of scene would pull the picture away from the plan: none is better than a stranger.
@@ -245,7 +245,7 @@ export function lookRules(task: EngineTask): BrandRule[] {
       : [];
   const join = (...xs: (string | undefined | null)[]) => xs.filter((x) => x && x.trim()).join("; ");
   const planned = plannedCreative(task);
-  const recipe = recipeFor(look, `${planned?.scene ?? ""} ${task.creative.title}`);
+  const recipe = recipeFor(look, planned?.scene ?? "");
   const c = look.camera ?? {};
   const lenses = (c.lenses ?? []).map((l) => `${l.focalMm} mm for ${l.use}`).join(", ");
   const l = look.light ?? {};
@@ -257,7 +257,7 @@ export function lookRules(task: EngineTask): BrandRule[] {
     ...rule("recipe", "look recipe", recipe
       ? `Shoot it as the brand shoots ${recipe.scene}: ${recipe.camera}. Light: ${recipe.light}. Grade: ${recipe.grade}`
       : null),
-    ...rule("camera", "camera", join(c.capture && `Captured as ${c.capture}`, lenses && `lenses ${lenses}`, c.aperture, c.height, c.distance)),
+    ...rule("camera", "camera", join(lenses && `lenses ${lenses}`, c.aperture, c.height, c.distance)),
     ...rule("light", "light", join(l.key, l.quality, l.direction, l.colourTemperatureK, l.contrast)),
     ...rule("grade", "colour grade", join(g.grade, g.saturation, g.blacks && `blacks ${g.blacks}`, g.highlights && `highlights ${g.highlights}`)),
     ...rule("texture", "texture", join(t.grainCharacter, t.surfaces, t.lensCharacter)),
