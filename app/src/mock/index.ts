@@ -10,6 +10,7 @@ import { conversationCalls } from "./conversation";
 import { createDb } from "./db";
 import { deliveryCalls } from "./delivery";
 import { homeCalls } from "./home";
+import { libraryCalls } from "./library";
 import { identityCalls } from "./identity";
 import { notificationCalls } from "./notifications";
 import { planCalls } from "./plan";
@@ -53,6 +54,7 @@ export function createMockApi(options: MockOptions = {}): FumeApi {
     ...agencyCalls(m),
     ...notificationCalls(m),
     ...trainCalls(m),
+    ...libraryCalls(m),
     subscribe(handler) {
       m.listeners.add(handler);
       return () => m.listeners.delete(handler);

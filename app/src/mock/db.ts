@@ -55,6 +55,7 @@ import type {
   ReviewComment,
   Scene,
   ServiceClock,
+  Shoot,
   SourceAsset,
   StaffAssignment,
   StudioMode,
@@ -164,6 +165,8 @@ export interface Db {
   notifications: Notification[];
   // The agency
   clientSends: ClientSend[];
+  // The brand's own pictures (FLOWS §38)
+  shoots: Shoot[];
 }
 
 export interface DbOptions {
@@ -240,6 +243,7 @@ export function createDb(options: DbOptions = {}): Db {
     questions: [],
     notifications: seed.notifications,
     clientSends: [],
+    shoots: seed.shoots,
   });
   // See seed/products.ts: Night Body Oil's provenance is the seed's own object, shared by every mock.
   const oil = db.products.find((p) => p.id === "pr-oil");
@@ -326,6 +330,7 @@ function firstRun(db: Db) {
   db.checks = [];
   db.qualityLog = [];
   db.documents = [];
+  db.shoots = [];
   db.batches = [];
   db.qaItems = [];
   db.sessions = [];

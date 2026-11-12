@@ -12,7 +12,8 @@ export interface StudioApi {
   brandWorkspace(workspaceId: Id): Promise<BrandWorkspaceView>;
   studioCampaigns(): Promise<StudioCampaignRow[]>;
   /** The Library (FLOWS §37): every creative made for one brand, or for every brand the person works on, newest first.
-   *  Fume's people and an agency's (its own clients); the admin reads it too. */
+   *  Fume's people and an agency's (its own clients); the admin reads it too. A customer gets what has reached them:
+   *  approved and delivered (FLOWS §38.1). */
   library(workspaceId?: Id): Promise<LibraryItem[]>;
 
   // Creative documents

@@ -15,6 +15,7 @@ import type {
   TeamLoadRow,
   WaitingItem,
 } from "../contract";
+import { FumeError } from "../contract";
 import * as copy from "../copy";
 import { agencyUsage, packageOf, periodsOf } from "./agency";
 import type { Mock } from "./context";
@@ -469,7 +470,14 @@ export function homeCalls(m: Mock): Pick<FumeApi, Calls> {
       return wait(keep ? rows.filter((r) => keep.has(r.workspace.id)) : rows);
     },
     async library(workspaceId) {
-      m.mustStaff();
+      // A customer's Library holds what has reached them: approved and delivered, in their own brand (FLOWS §38.1).
+      if (!m.isStaff()) {
+        if (!m.role()) throw new FumeError("forbidden", "This brand is not yours.");
+        const reached = libraryItems(m, m.workspaceId).filter(
+          (i) => (i.state === "approved" || i.state === "delivered") && i.creativeId,
+        );
+        return wait(reached.map(({ documentId: _d, checkItemId: _c, ...i }) => i));
+      }
       return wait(libraryItems(m, workspaceId));
     },
     async teamLoad() {

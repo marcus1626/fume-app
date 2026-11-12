@@ -100,6 +100,7 @@ function brandPages(frame: "studio" | "agency") {
     { path: `${b}/queue`, lazy: page(() => import("./features/studio/QueuePage"), "QueuePage") },
     ...campaigns,
     { path: `${b}/library`, lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
+    { path: `${b}/library/shoots/:shootId`, lazy: page(() => import("./features/library/ShootPage"), "ShootPage") },
     { path: `${b}/studio`, lazy: page(() => import("./features/studio/doc/StudioHomePage"), "StudioHomePage") },
     { path: `${b}/studio/session/:sessionId`, lazy: page(() => import("./features/studio/StudioPage"), "StudioPage") },
     { path: `${b}/engine`, lazy: page(() => import("./features/engine/EngineChatPage"), "EngineChatPage") },
@@ -169,6 +170,11 @@ const routes = [
           { path: "studio/qa", lazy: page(() => import("./features/studio/qa/QaPage"), "QaPage") },
           // Everything made, in one place (FLOWS §37)
           { path: "studio/library", lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
+          // The brand's own pictures in it (FLOWS §38)
+          {
+            path: "studio/library/shoots/:shootId",
+            lazy: page(() => import("./features/library/ShootPage"), "ShootPage"),
+          },
           { path: "studio/queue", element: <Navigate to="/studio/qa" replace /> },
           {
             path: "studio/campaigns",
@@ -195,6 +201,10 @@ const routes = [
           { path: "agency/check", lazy: agencyPage("AgencyCheckPage") },
           { path: "agency/campaigns", lazy: agencyPage("AgencyCampaignsPage") },
           { path: "agency/library", lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
+          {
+            path: "agency/library/shoots/:shootId",
+            lazy: page(() => import("./features/library/ShootPage"), "ShootPage"),
+          },
           {
             path: "agency/deliveries",
             lazy: page(() => import("./features/studio/StudioDeliveriesPage"), "StudioDeliveriesPage"),
@@ -243,6 +253,9 @@ const routes = [
             lazy: page(() => import("./features/review/ReviewCampaign"), "ReviewCampaign"),
           },
           { path: "deliveries", lazy: page(() => import("./features/deliveries/DeliveriesPage"), "DeliveriesPage") },
+          // The customer's Library: what reached them and their own pictures (FLOWS §38.1)
+          { path: "library", lazy: page(() => import("./features/library/LibraryPage"), "LibraryPage") },
+          { path: "library/shoots/:shootId", lazy: page(() => import("./features/library/ShootPage"), "ShootPage") },
           {
             path: "deliveries/:deliveryId",
             lazy: page(() => import("./features/deliveries/DeliveryPage"), "DeliveryPage"),

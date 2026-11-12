@@ -25,9 +25,20 @@ test("Fume's admin reads the Library too", async () => {
   expect(items.length).toBeGreaterThan(0);
 });
 
-test("an agency gets its own clients only, and a customer has no Library", async () => {
+test("an agency gets its own clients only", async () => {
   const agency = createMockApi({ latency: 0, agency: true });
   const clients = new Set((await agency.agencyClients()).map((c) => c.workspace.id));
   for (const i of await agency.library()) expect(clients.has(i.workspaceId)).toBe(true);
-  await expect(createMockApi({ latency: 0 }).library()).rejects.toThrow();
+});
+
+test("a customer's Library holds what reached them: approved and delivered, in their own brand (FLOWS §38.1)", async () => {
+  const items = await createMockApi({ latency: 0 }).library("w-solv");
+  expect(items.length).toBeGreaterThan(0);
+  for (const i of items) {
+    expect(i.workspaceId).toBe("w-lysne");
+    expect(["approved", "delivered"]).toContain(i.state);
+    // the ways into Fume's own places stay out
+    expect(i.documentId).toBeUndefined();
+    expect(i.checkItemId).toBeUndefined();
+  }
 });

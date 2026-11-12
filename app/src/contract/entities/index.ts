@@ -17,3 +17,4 @@ export * from "./conversation";
 export * from "./agency";
 export * from "./notifications";
 export * from "./train";
+export * from "./library";

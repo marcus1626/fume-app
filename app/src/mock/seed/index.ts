@@ -34,3 +34,4 @@ export { messages, seedQuestions, threads, type QuestionRecord } from "./convers
 export { notifications } from "./notifications";
 export { cameras, defaults, lights, modes } from "./studioModes";
 export { cast, creativeTypes, documents, placements, scenes, sessions } from "./studio";
+export { shoots } from "./library";

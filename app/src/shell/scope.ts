@@ -66,6 +66,7 @@ const CUSTOMER: RegExp[] = [
   /^\/fume(\/|$)/,
   /^\/review(\/[^/]+)?$/,
   /^\/deliveries(\/|$)/,
+  /^\/library(\/|$)/,
   /^\/products(\/|$)/,
   /^\/check\/products$/,
   /^\/calendar$/,

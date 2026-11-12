@@ -1,8 +1,8 @@
 // The one layout of every page in a frame. It picks the frame: Fume's people and an agency's people work in the staff
 // frame (StudioShell.tsx); a customer, and a client of an agency, in the customer's. The frame itself (sidebar, bar,
 // ⌘K, tab bar) is Frame.tsx.
-// The customer's places are Home, Review, Campaigns, Deliveries, Brand and Fume (FLOWS §26.3); the phone's tab bar
-// keeps five (Deliveries lives in Campaigns there). A page inside a place lights it: a moodboard lights Brand or its
+// The customer's places are Home, Review, Campaigns, Deliveries, Library, Brand and Fume (FLOWS §26.3, §38.1); the
+// phone's tab bar keeps five (Deliveries lives in Campaigns there, the Library in Brand). A page inside a place lights it: a moodboard lights Brand or its
 // campaign, a campaign's review lights Review.
 // Fume's people see a brand exactly as its customer does through Customer view (scope.ts), marked "Fume view", until
 // they go back to the studio. A client of an agency has no Fume place unless the agency turns it on (FLOWS §24.5). A
@@ -118,6 +118,7 @@ function CustomerWorkspace() {
       except: [CAMPAIGN_REVIEW],
     },
     { to: "/deliveries", label: "Deliveries", icon: "package", keywords: "deliveries download zip ready masters" },
+    { to: "/library", label: "Library", icon: "folder", keywords: "library pictures photos shoot upload own" },
     {
       to: "/brand",
       label: "Brand",
@@ -126,10 +127,16 @@ function CustomerWorkspace() {
     },
     ...(agencyClient ? [] : [{ to: "/fume", label: "Fume", icon: "message-square" as IconName }]),
   ];
-  // The phone's tab bar keeps five: Deliveries lives in Campaigns there.
+  // The phone's tab bar keeps five: Deliveries lives in Campaigns there, the Library in Brand.
   const tabs = nav
-    .filter((i) => i.to !== "/deliveries")
-    .map((i) => (i.to === "/campaigns" ? { ...i, holds: [...(i.holds ?? []), "/deliveries"] } : i));
+    .filter((i) => i.to !== "/deliveries" && i.to !== "/library")
+    .map((i) =>
+      i.to === "/campaigns"
+        ? { ...i, holds: [...(i.holds ?? []), "/deliveries"] }
+        : i.to === "/brand"
+          ? { ...i, holds: [...(i.holds ?? []), "/library"] }
+          : i,
+    );
   if (agencyClient && under(pathname, "/fume")) return <Navigate to="/" replace />;
   const place = `${session.workspace.brandName} in Fume`;
   return (

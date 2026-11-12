@@ -1961,3 +1961,88 @@ version yet (the Nike masters), which read as In the Studio.
 references) stay under Brand. Drafts are in it. Its icon is the folder.
 
 **Open.** Whether the admin should see every place (Check, Studio, Engine) to read, or only the Library added to §20.
+
+## 38. The brand's own pictures in the Library (12 Nov 2026, PROPOSED)
+
+Marcus, 12 Nov: "The Fume app must have an asset library, so the customer does not have to use AI-made creatives but
+can upload, use and reuse real pictures. The Engine can take a big photo shoot, judge the pictures, pick the best, and
+do the graphic design, the copy, the content plan, and maybe cut videos. This is an important part of the Fume app."
+
+What was there before: the first upload at Welcome (§7, guidelines, logos, fonts, earlier campaigns, packshots) only
+teaches the Engine the brand; a product's own photographs are what the Engine checks a product against (§17); the
+staff page of models and references (§9.6) is for the Studio; the video editor has the brand's own clips (§27, §34);
+and the Library (§37) showed only what Fume made. Nothing kept a customer's shoot to use, and nothing made a real
+photograph into a creative.
+
+### 38.1 Two halves of one Library
+The Library (§37) opens on **Made by Fume** and has a second tab, **Uploaded**: the brand's own photographs and clips,
+kept as they are. Both tabs carry their count. `?from=uploaded` keeps the tab in the address. There is no second place
+called "assets": a person looking for a picture looks in one Library, and filters by where it came from.
+- **The customer has the Library too** (a place in their sidebar after Deliveries, `/library`). Made by Fume shows
+  only what has reached them: approved and delivered. Uploaded is theirs: they upload there, and see what Fume picked
+  once an expert has checked it. An agency's client sees what its agency shows it, as everywhere else.
+- **Upload a shoot** is the page header's action (not for Fume's admin, who reads, nor a customer's viewer). It opens
+  the upload panel at the side.
+
+### 38.2 Add a shoot
+One panel, because pictures without their rights cannot be used:
+- **The pictures and clips**: drop them or choose them (JPEG, PNG, WebP, MP4, MOV, up to 2 GB each, many at once;
+  HEIC and RAW live). Each shows as it lands. Fume keeps every file as it is; nothing is ever deleted by the Engine.
+- **Name of the shoot** ("Autumn studio day"), **Who took them** (optional), **Shot on** (optional, a day).
+- **How long you may use them**: for good, or until a day (a licence that runs out).
+- **People in the pictures**: No people · Everyone in them signed a release · Not sure yet. "Not sure yet" keeps the
+  pictures out of any creative until someone answers it ("Ask who is in them before they are used").
+- On all brands, the brand it belongs to. The button counts what it adds: "Add 24 pictures and 2 clips".
+
+### 38.3 The Engine reads the shoot; an expert checks the picks
+A shoot opens on its own page (`…/library/shoots/:id`). While the Engine reads it, the line under the header says so in
+the white shimmer ("The Engine is going through 24 pictures"; the customer reads "Fume is going through your 24 pictures"). Then
+every picture has a place, and one line of why:
+- **Picks**: the best of the shoot for creatives. Sharp where it matters, the product whole and its label readable,
+  lit and framed the way the Look Book shoots, and different from each other.
+- **The rest**: good pictures kept for later; nothing wrong, just not the strongest.
+- **Left out**: soft focus, burnt out, too dark or washed out, the product cut at the edge, or a near copy of a better one
+  ("Like 01, a step to the side and darker; 01 is sharper"). Left out is not deleted: it stays in the shoot.
+- **Clips** are kept for the video editor (§27, Cut from footage), with their length.
+The page is a segmented row (Picks · The rest · Left out · Clips · All, with counts) over a grid of tiles at each
+picture's own shape. A tile says its number and its why; a pick waiting for its check says "Pick", a checked pick
+carries the Amber triangle and the checker's name. A tile opens the viewer: the picture large, the Engine's read (its
+place and why, sharp or not, how close it is to the Look Book, the product it shows), where it has been used, the
+rights, and for an expert the moves: **Make it a pick**, **Keep for later**, **Leave it out**. The expert's move wins
+over the Engine's and says who moved it.
+- **Check the picks** (an expert; never the admin; an agency checks its own clients) marks the picks checked by name.
+  Only then does the customer see Fume's picks.
+- The line under the shoot's title holds the rights: who took it, until when, and the people. A shoot with "Not sure
+  yet" carries a warning under it, and its picks cannot be used until it is answered.
+
+### 38.4 A real photograph becomes a creative
+**Use in a campaign** (Fume's people, on a checked shoot): pick one of the brand's open campaigns; the picks not used
+yet are ticked (all of them when every one has been used), untick any. Each pick becomes a creative in that campaign
+with the photograph as its V1 ("LYSNE's own photograph · Autumn studio day, by Ingrid Holm"), and the Studio opens on
+the first. From there it is the chain Fume already has: **Add graphic design** (§33) lays the plan's approved
+words on it in the brand's design system, **Make formats** (§16) crops or expands it keeping the photograph's own
+pixels, the copy comes from the plan and its check (§31), it goes to Check, and only the customer approves it. Live,
+each becomes a master in the campaign's Masters step; the mock opens it in the Studio.
+- **The content plan from a shoot** (not drawn yet): a campaign started from a shoot gets a plan written around its
+  picks (which picture carries which message, in which week and channel), the same plan step as §22.
+- **Used in**: every picture remembers where it went (campaign, creative, day); the viewer lists it, linked to the
+  creative, and a shoot's card counts the pictures used. A **Not used yet** filter is not drawn yet.
+- **The limit Fume proposes**: on a real photograph, the Engine never changes a real person's face or body, and never
+  adds an AI person beside one. It may grade, crop, expand the background, retouch dust and lay design on it. A fix
+  (§17) on a real photograph is for the product only.
+
+### 38.5 What it reads (contract)
+`shoots(workspaceId?)` → `ShootSummary[]` (cover, counts, state, rights); `shoot(id)` → `Shoot` with its pictures;
+`addShoot({ workspaceId, name, shotOn, rights, files })` → the shoot, reading; `movePicture(pictureId, sort)` and
+`checkPicks(shootId)` for an expert; `useShootInCampaign({ shootId, campaignId, pictureIds })` → the documents made.
+A picture is `OwnPicture` (kind photo or clip, src, size, the Engine's read, the expert's move, usedIn). The mock reads
+a shoot dropped in the preview for real in the browser (`lib/probe.ts`, `domain/shoot.ts`): sharpness where the
+picture is in focus (its sharpest tiles, so a shallow depth of field is not "soft"), light and the spread of its tones,
+pure white in its middle (a packshot's white backdrop is not burnt out), and near copies from a small fingerprint of
+each picture. Live, the Engine reads it with vision, the Look Book and the products.
+
+**Order.** Real photographs are statics, so they come with statics and graphic design, before video (§33, the decided
+order). The clips wait in the shoot for the video editor.
+
+**Open.** Whether a customer can start a campaign from a shoot themselves ("Make creatives from these"), or asks Fume
+in the chat. Whether a shoot with people needs the release file itself uploaded, or a yes is enough.

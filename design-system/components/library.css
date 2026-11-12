@@ -2,7 +2,12 @@
    Markup: div.ui-library > .ui-library-stages (a SegmentedControl of where it stands, with counts), the filter bar,
    then ul.ui-creative-grid of tiles. A tile's caption holds span.ui-library-caption (the campaign over the format) and
    the check, or span.ui-library-state for a draft still in the Studio (no triangle: it has not been checked).
-   The viewer's info list holds span.ui-library-ways, the way to the place to work on it. */
+   The viewer's info list holds span.ui-library-ways, the way to the place to work on it.
+   Uploaded (FLOWS §38, PROPOSED 12 Nov 2026), the brand's own pictures: ul.ui-library-shoots of a.ui-card.ui-library-shoot
+   (span.ui-library-shoot-cover[data-count] of up to four pictures, the first large; then span.ui-library-shoot-text:
+   name, meta, where it stands, a warning). A shoot's page: p.ui-library-shoot-line (the one shimmer while the Engine
+   reads it, then the check), and ul.ui-creative-grid.ui-library-own of tiles at each picture's own shape, the why
+   under the number (.ui-library-why), a pick's word (.ui-library-state[data-sort="pick"]) until it is checked. */
 
 .ui-library { display: flex; flex-direction: column; gap: var(--ui-space-md); min-width: 0; }
 /* a library is for looking through many: smaller tiles than a campaign's, five or six to a row on a desk */
@@ -25,3 +30,39 @@
 
 /* the ways out of the viewer, on the info list */
 .ui-library-ways { display: inline-flex; flex-wrap: wrap; gap: var(--ui-space-xs); }
+
+/* ─── Uploaded: the brand's own shoots (FLOWS §38) ─────────────────────── */
+
+.ui-library-shoots { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: var(--ui-space-lg); margin: 0; padding: 0; list-style: none; } /* gate-allow:space-from-tokens a shoot card's least width: three across on a desk, one on a phone */
+.ui-library-shoot { display: flex; flex-direction: column; gap: var(--ui-space-md); min-width: 0; height: 100%; color: inherit; text-decoration: none; }
+
+/* the cover: the first picture large on the left, the next three stacked on the right; fewer pictures share the room */
+.ui-library-shoot-cover { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: repeat(3, 1fr); gap: var(--ui-space-2xs); aspect-ratio: 4 / 3; overflow: hidden; border-radius: var(--ui-radius-item); background: var(--ui-surface-sunken); }
+.ui-library-shoot-cover[data-count="3"] { grid-template-rows: repeat(2, 1fr); }
+.ui-library-shoot-cover[data-count="2"] { grid-template-rows: 1fr; }
+.ui-library-shoot-cover[data-count="1"] { grid-template-columns: 1fr; grid-template-rows: 1fr; }
+.ui-library-shoot-cover img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; }
+.ui-library-shoot-cover img:first-child { grid-row: 1 / -1; }
+
+.ui-library-shoot-text { display: flex; flex-direction: column; gap: var(--ui-space-xs); min-width: 0; font-size: var(--ui-type-label); }
+.ui-library-shoot-name { overflow: hidden; color: var(--ui-text); font-size: var(--ui-type-body); font-weight: var(--ui-type-weight-medium); text-overflow: ellipsis; white-space: nowrap; }
+.ui-library-shoot-meta { color: var(--ui-text-tertiary); font-variant-numeric: tabular-nums; }
+.ui-library-shoot-standing { display: flex; min-width: 0; }
+.ui-library-shoot-state { color: var(--ui-text-secondary); }
+/* a warning is told by its icon and words, not a colour (alert.css) */
+.ui-library-shoot-warn { display: inline-flex; align-items: center; gap: var(--ui-space-xs); color: var(--ui-text-secondary); }
+.ui-library-shoot-warn svg { flex: none; width: 1em; height: 1em; }
+
+/* a shoot's page: where it stands in one line, under the header */
+.ui-library-shoot-line { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ui-space-xs) var(--ui-space-md); margin: 0; color: var(--ui-text-secondary); font-size: var(--ui-type-label); }
+
+/* the pictures at their own shape, so a tall picture is not cut to a square; the why under the number, two lines at most */
+.ui-library-why { display: -webkit-box; overflow: hidden; color: var(--ui-text-tertiary); white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+.ui-library-state[data-sort="pick"] { color: var(--ui-text); font-weight: var(--ui-type-weight-medium); }
+.ui-library-own .ui-creative-media video { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* the viewer: the campaigns a picture is in */
+.ui-library-used { display: inline-flex; flex-wrap: wrap; gap: var(--ui-space-xs) var(--ui-space-sm); }
+
+/* Upload a shoot: who took them beside when, one under the other on a phone */
+.ui-library-add-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: var(--ui-space-lg); } /* gate-allow:space-from-tokens a field's least width beside another */

@@ -10,6 +10,7 @@ test("every main place in Maja's sidebar opens", async ({ page }) => {
     ["Review", "Review"],
     ["Campaigns", "Campaigns"],
     ["Deliveries", "Deliveries"],
+    ["Library", "Library"],
     ["Brand", "Brand"],
     ["Home", /, Maja$/],
   ];

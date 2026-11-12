@@ -101,6 +101,31 @@ export const useHold = () => useM((a, v: { checkId: Id; reason: string }) => a.h
 export const useRelease = () => useM((a, campaignId: Id) => a.release(campaignId));
 export const useStudioCampaigns = () => useQ(["studio", "campaigns"], (a) => a.studioCampaigns());
 export const useLibrary = (workspaceId?: Id) => useQ(["studio", "library", workspaceId], (a) => a.library(workspaceId));
+
+// The brand's own pictures in the Library (FLOWS §38): a shoot reads for a moment after it is added.
+export const useShoots = (workspaceId?: Id) => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["library", "shoots", workspaceId],
+    queryFn: () => api.shoots(workspaceId),
+    refetchInterval: (query) => (query.state.data?.some((s) => s.state === "reading") ? 700 : false),
+  });
+};
+export const useShoot = (shootId: Id | undefined) => {
+  const api = useApi();
+  return useQuery({
+    queryKey: ["library", "shoot", shootId],
+    queryFn: () => api.shoot(shootId!),
+    enabled: Boolean(shootId),
+    refetchInterval: (query) => (query.state.data?.state === "reading" ? 700 : false),
+  });
+};
+export const useAddShoot = () => useM((a, v: Parameters<FumeApi["addShoot"]>[0]) => a.addShoot(v));
+export const useMovePicture = () =>
+  useM((a, v: { pictureId: Id; sort: Parameters<FumeApi["movePicture"]>[1] }) => a.movePicture(v.pictureId, v.sort));
+export const useCheckPicks = () => useM((a, shootId: Id) => a.checkPicks(shootId));
+export const useShootInCampaign = () =>
+  useM((a, v: Parameters<FumeApi["useShootInCampaign"]>[0]) => a.useShootInCampaign(v));
 export const useQualityLog = () => useQ(["studio", "quality"], (a) => a.qualityLog());
 export const useTeamLoad = () => useQ(["studio", "team"], (a) => a.teamLoad());
 
@@ -132,7 +157,7 @@ export const useSetCampaignScope = () =>
   useM((a, v: { campaignId: Id; productIds: Id[]; collectionIds: Id[] }) => a.setCampaignScope(v.campaignId, v));
 export const useMakeDelivery = () => useM((a, v: { campaignId: Id; collectionId?: Id }) => a.makeDelivery(v));
 // Fume's people: switcher levels and the Studio
-export const useAllBrands = () => useQ(["studio", "all"], (a) => a.allBrands());
+export const useAllBrands = (enabled = true) => useQ(["studio", "all"], (a) => a.allBrands(), enabled);
 export const useBrandWorkspace = (id: Id | undefined) =>
   useQ(["studio", "brand", id], (a) => a.brandWorkspace(id!), Boolean(id));
 export const useStudioKit = (workspaceId: Id | undefined) =>
