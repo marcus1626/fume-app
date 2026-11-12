@@ -553,7 +553,7 @@ export function buildConcept(task: EngineTask): Concept {
   return {
     id: `${directionId ?? "-"}.${task.creative.slot ?? task.creative.id}`,
     title: planned?.name ?? task.creative.title,
-    sceneIdea: sentence(planned?.scene ?? direction?.idea ?? task.creative.title),
+    sceneIdea: sentence(planned?.scene ?? direction?.idea ?? task.creative.title) + (planned?.crop ? ` Planned crop: ${sentence(planned.crop)}` : ""),
     productRole: (direction?.productRole ?? "the clear hero of the frame").replace(/\.$/, ""),
     lookKey: direction ? direction.id : null,
   };

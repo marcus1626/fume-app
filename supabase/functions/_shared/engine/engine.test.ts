@@ -477,6 +477,42 @@ Deno.test("the picture check holds the product's printed face to its photographs
   assertEquals([e.productTruth, e.brandRules, e.printedText], ["flag", "pass", false]);
 });
 
+Deno.test("the picture check distinguishes built-wrong parts from natural hiding and planned crops", async () => {
+  const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } = await import("./evaluate.ts");
+  const checks = checklist([], true);
+  for (const text of [checks[0].requirement, EVALUATOR_SYSTEM]) {
+    assertMatch(text, /whole product unless the plan explicitly asks for a crop/);
+    assertMatch(text, /unrequested crop at the frame edge/);
+    assertMatch(text, /defining part visibly missing or changed \(built wrong\)/);
+    assertMatch(text, /naturally hidden.*worn on a person, seen from another side, or opened as the scene asks.*judged by what is visible.*not .*off.*for being hidden/);
+    assertMatch(text, /part left out by the crop the plan asks for is fine/);
+  }
+  assertMatch(evaluatorPrompt(checks, true), /whole product unless the plan explicitly asks for a crop/);
+  assertMatch(EVALUATOR_SYSTEM, /product completeness at the frame edges/);
+  for (const note of ["The product is cut off at the right edge.", "A defining part is visibly missing."]) {
+    const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "off", note }], artefacts: "none", artefactNotes: [], printedText: false });
+    assertEquals([e.productTruth, e.items[0].verdict, e.notes], ["flag", "off", [note]]);
+  }
+});
+
+Deno.test("the planned creative's crop reaches the picture check through the concept and manifest", async () => {
+  const { checklist, evaluatorPrompt } = await import("./evaluate.ts");
+  for (const crop of ["close", "half", "whole", undefined]) {
+    const t = { ...task, plan: { ...task.plan, planned_creatives: [
+      { id: "other", name: "Other creative", format: "feed", crop: "wrong crop" },
+      { ...task.plan.planned_creatives![0], ...(crop ? { crop } : {}) },
+    ] } };
+    const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+    const prompt = evaluatorPrompt(checklist(compilePackage.manifest, true), true);
+    assert(!prompt.includes("wrong crop"));
+    if (crop) assertMatch(prompt, new RegExp(`Planned crop: ${crop}\\.`));
+    else {
+      assert(!prompt.includes("Planned crop:"));
+      assertMatch(prompt, /Show the whole product unless the plan explicitly asks for a crop/);
+    }
+  }
+});
+
 Deno.test("only the room-for-words checklist item carries the designer's judging note", async () => {
   const { checklist, ROOM_REF } = await import("./evaluate.ts");
   const requirement = "Keep the left 40% of the picture clear for words.";
