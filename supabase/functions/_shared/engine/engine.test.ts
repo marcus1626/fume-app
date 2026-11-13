@@ -394,6 +394,64 @@ Deno.test("the Look Book becomes rules for the camera slot, with the recipe clos
   assertEquals(camera, ["brand-lookbook-recipe", "brand-lookbook-camera", "brand-lookbook-light", "brand-lookbook-grade", "brand-lookbook-texture"]);
 });
 
+Deno.test("recipes require a shared subject, not a shared setting or time", async () => {
+  const { recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  const soccer = recipe("High school soccer, a keeper leaping across the goal");
+  const cage = recipe("Backyard batting cage at dusk");
+  const look = { recipes: [soccer] };
+  // Job 4ec63f69: "high" and "school" must not bring a soccer keeper into the sled picture.
+  assertEquals(recipeFor(look, "A football sled on a high school practice field"), null);
+  assertEquals(recipeFor(look, "High school baseball batting cage on the practice field"), null);
+  assertEquals(recipeFor(look, "A backyard batting cage at dusk with a bat"), null);
+  assertEquals(recipeFor({ recipes: [cage] }, "A backyard batting cage at dusk with a bat"), cage);
+  assertEquals(recipeFor(look, "Soccer practice on an outdoor field"), null, "one shared word is not the full recipe scene");
+  const sport = recipe("Soccer practice on an outdoor field");
+  assertEquals(recipeFor({ recipes: [sport] }, "A soccer scene"), sport);
+  assertEquals(recipeFor(look, soccer.scene), soccer);
+  assertEquals(recipeFor({ recipes: [recipe("Football keeper leaping across the goal")] }, soccer.scene), null,
+    "different sports cannot match even with multiple distinctive shared words");
+  assertEquals(recipeFor({ recipes: [recipe("School baseball, a keeper leaping across the goal")] }, soccer.scene), null);
+
+  const detail = recipe("Weathered woven basket");
+  assertEquals(recipeFor({ recipes: [detail] }, "A weathered woven lampshade"), detail, "two distinctive words are enough");
+  assertEquals(recipeFor({ recipes: [detail] }, "Weathered weathered field at dusk"), null, "repeating one word does not match a multi-word recipe");
+  const sled = recipe("A sled at home");
+  assertEquals(recipeFor({ recipes: [sled] }, "A sled outdoors"), sled, "all distinctive recipe words are shared");
+  assertEquals(recipeFor({ recipes: [recipe("A bottle by the sea at sunset")] }, "A family by the sea at sunset"), null);
+  for (const scene of ["The bedside at night", "Cups in studio", "Skoen i studio"]) {
+    const r = recipe(scene);
+    const planned = scene === "Cups in studio" ? "Two cups in the studio" : scene;
+    assertEquals(recipeFor({ recipes: [r] }, planned), r);
+  }
+  for (const [scene, planned] of [
+    ["Cup in studio", "Cups in studio"],
+    ["Sko i studio", "Skoen i studio"],
+    ["Bord i studio", "Bordet i studio"],
+    ["Kopp i studio", "Koppene i studio"],
+    ["Bok i studio", "Boka i studio"],
+  ]) {
+    const r = recipe(scene);
+    assertEquals(recipeFor({ recipes: [r] }, planned), r);
+  }
+  assertEquals(recipeFor({ recipes: [recipe("The sea at sunset")] }, "The sea at sunset"), null);
+  assertEquals(recipeFor({ recipes: [sled, detail] }, "A sled beside a weathered woven basket"), detail,
+    "the most shared distinctive words wins");
+  for (const setting of [
+    "high school backyard day game field practice training team kids youth outdoor indoor morning evening night dusk home park",
+    "dawn afternoon garden yard pitch court stadium gym street room studio outside inside",
+    "sea sunset sunrise beach sky water light rain snow wind fog coast ocean lake forest summer winter",
+    "sunsets sunrises waters lights mornings evenings nights parks",
+    "sjøen havet solnedgangen soloppgangen stranda himmelen vannet lyset regnet snøen vinden skyene",
+    "høy skole bakgård dag kamp bane trening lag barn ungdom utendørs innendørs morgen kveld natt skumring hjem park",
+    "videregående skolen hagen dagen kampen banen treningen laget barna morgenen kvelden natten parken",
+  ]) {
+    assertEquals(recipeFor({ recipes: [recipe(`${setting} soccer`)] }, `${setting} baseball`), null);
+    assertEquals(recipeFor({ recipes: [recipe(`${setting} basket`)] }, `${setting} lampshade`), null,
+      "setting words alone never establish a subject match");
+  }
+});
+
 Deno.test("only a matching planned-scene recipe applies, while global Look Book and Brain rules remain", async () => {
   const { lookRules, recipeFor } = await import("./context.ts");
   const { checklist } = await import("./evaluate.ts");

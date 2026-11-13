@@ -219,18 +219,46 @@ export type LookBody = {
   recipes?: { scene: string; camera: string; light: string; grade: string; composition: string }[];
 };
 
-const words = (t: string) => new Set(t.toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 3));
+const recipeWord = (word: string) => word.replace(/(?:ene|en|et|s|a)$/, "");
 
-/** The Look Book's recipe closest to the planned scene, by the words they share (at least two), else none. */
+// Place, time and generic activity describe the setting, not what the picture is of.
+const RECIPE_GENERIC = new Set(`a an the and or with without at in on of for from to by as it its is are this that
+  their your our has have into onto through while when where which some only also very just one two three
+  high school backyard day game field practice training team kids youth outdoor outdoors indoor indoors
+  morning evening night dusk dawn afternoon daytime nighttime home park garden yard pitch court stadium
+  gym street room studio kitchen outside inside background foreground scene picture photo image
+  sea sunset sunrise beach sky water light daylight sunlight moonlight twilight sunshine rain snow wind
+  fog mist cloud cloudy sunny rainy snowy windy storm weather summer winter spring autumn fall
+  coast shore ocean lake river mountain forest city town village
+  left right front back side across under over near behind beside during before after
+  en ei et den det de og eller med uten på i av for fra til ved som er dette denne deres våre også bare gjennom
+  høy høg skole skolen videregående bakgård bakgården hage hagen dag dagen kamp kampen bane banen
+  øvelse øvelsen trening treningen lag laget barn barna ungdom ute utendørs inne innendørs
+  morgen morgenen kveld kvelden natt natten skumring daggry ettermiddag hjemme hjem park parken
+  gate gaten rom rommet kjøkken bakgrunn forgrunn bilde bildet venstre høyre foran bak over under
+  sjø hav solnedgang soloppgang strand himmel vann lys dagslys sollys måneskinn sol regn snø vind
+  tåke sky uvær vær sommer vinter vår høst kyst innsjø elv fjell skog by landsby`.split(/\s+/).map(recipeWord));
+const RECIPE_SPORTS = new Set(`soccer football baseball softball basketball volleyball handball hockey tennis
+  rugby cricket golf lacrosse badminton skiing snowboarding cycling swimming
+  fotball håndball ishockey landhockey ski snowboard sykling svømming`.split(/\s+/).map(recipeWord));
+const recipeWords = (t: string) => new Set(t.toLowerCase().split(/[^\p{L}\p{N}]+/u).map(recipeWord)
+  .filter((w) => w.length > 2 && !RECIPE_GENERIC.has(w)));
+
+/** Match two distinctive words or all recipe words (at least one), never a different named sport. */
 export function recipeFor(look: LookBody, scene: string) {
-  const want = words(scene);
+  const want = recipeWords(scene);
+  const sports = [...want].filter((w) => RECIPE_SPORTS.has(w));
   let best: { r: NonNullable<LookBody["recipes"]>[number]; n: number } | null = null;
   for (const r of look.recipes ?? []) {
-    const n = [...words(r.scene)].filter((w) => want.has(w)).length;
+    const have = recipeWords(r.scene);
+    const recipeSports = [...have].filter((w) => RECIPE_SPORTS.has(w));
+    if (sports.length && recipeSports.length && !recipeSports.some((w) => sports.includes(w))) continue;
+    const n = [...have].filter((w) => want.has(w)).length;
+    if (n === 0 || (n < 2 && n !== have.size)) continue;
     if (!best || n > best.n) best = { r, n };
   }
   // A recipe for another kind of scene would pull the picture away from the plan: none is better than a stranger.
-  return best && best.n >= 2 ? best.r : null;
+  return best?.r ?? null;
 }
 
 const AI_TELL = /skin|finger|hand|smooth|cgi|render|symmetr|no source|glow|bloom|halo|garbl|warp|invent|front to back|everything (razor )?sharp|in focus|oversaturat|neon|plastic|waxy|airbrush/i;
