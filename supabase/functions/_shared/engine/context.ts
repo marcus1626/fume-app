@@ -219,7 +219,8 @@ export type LookBody = {
   recipes?: { scene: string; camera: string; light: string; grade: string; composition: string }[];
 };
 
-const recipeWord = (word: string) => word.replace(/(?:ene|en|et|s|a)$/, "");
+// "net" is an English subject noun, not a Norwegian definite-form suffix.
+const recipeWord = (word: string) => word === "net" ? word : (word === "linemen" ? "lineman" : word).replace(/(?:ene|en|et|s|a)$/, "");
 
 // Place, time and generic activity describe the setting, not what the picture is of.
 const RECIPE_GENERIC = new Set(`a an the and or with without at in on of for from to by as it its is are this that
@@ -238,21 +239,55 @@ const RECIPE_GENERIC = new Set(`a an the and or with without at in on of for fro
   gate gaten rom rommet kjøkken bakgrunn forgrunn bilde bildet venstre høyre foran bak over under
   sjø hav solnedgang soloppgang strand himmel vann lys dagslys sollys måneskinn sol regn snø vind
   tåke sky uvær vær sommer vinter vår høst kyst innsjø elv fjell skog by landsby`.split(/\s+/).map(recipeWord));
-const RECIPE_SPORTS = new Set(`soccer football baseball softball basketball volleyball handball hockey tennis
-  rugby cricket golf lacrosse badminton skiing snowboarding cycling swimming
-  fotball håndball ishockey landhockey ski snowboard sykling svømming`.split(/\s+/).map(recipeWord));
-const recipeWords = (t: string) => new Set(t.toLowerCase().split(/[^\p{L}\p{N}]+/u).map(recipeWord)
+const RECIPE_SPORTS = new Map([
+  ["soccer", "fotball"], ["football"], ["baseball"], ["softball"], ["basketball"], ["volleyball"],
+  ["handball", "håndball"], ["hockey", "ishockey", "landhockey"], ["tennis"], ["rugby"], ["cricket"],
+  ["golf"], ["lacrosse"], ["badminton"], ["skiing", "ski"], ["snowboarding", "snowboard"],
+  ["cycling", "sykling"], ["swimming", "svømming"],
+].flatMap(([sport, ...aliases]) => [sport, ...aliases].map((word) => [recipeWord(word), sport] as const)));
+// Conjunctions keep ambiguous words (hitter, keeper, net, ball) from naming a sport by themselves.
+const RECIPE_SPORT_NOUNS = [
+  { sports: ["football"], nouns: ["lineman", "tackle", "sled", "dummy", "slede", "taklingsdukke"] },
+  { sports: ["baseball", "softball"], nouns: ["batting cage", "hitter bat", "pitch back", "pitching", "slagbur", "slagmann balltre"] },
+  { sports: ["soccer"], nouns: ["keeper goal", "keeper mål", "målvakt mål"] },
+  { sports: ["basketball"], nouns: ["layup", "hoop", "kurv"] },
+  { sports: ["volleyball"], nouns: ["spike", "setter", "opplegger"] },
+  { sports: ["hockey"], nouns: ["stick field hockey", "kølle landhockey"] },
+];
+// A negation ends at a clause boundary. Keep comma-separated noun lists under the same
+// negation: "no player, pad or ball" must not leave "pad or ball" as positive evidence.
+const recipePositive = (t: string) => t.toLowerCase().split(/[.;]|\b(?:but|men)\b/u).map((clause) =>
+  clause.replace(/\b(?:no|without|not|never|uten|ingen|ikke)\b[^,]*(?:,\s*(?:[\p{L}\p{N}-]+\s*,\s*)*[\p{L}\p{N}-]+\s+(?:or|and|eller|og)\b[^,]*)?/gu, " ")
+).join(" ");
+const recipeTokens = (t: string) => recipePositive(t).replace(/\bamerikansk\s+fotball\b/g, "football").split(/[^\p{L}\p{N}]+/u).map(recipeWord);
+const recipeWords = (t: string) => new Set(recipeTokens(t).map((w) => RECIPE_SPORTS.get(w) ?? w)
   .filter((w) => w.length > 2 && !RECIPE_GENERIC.has(w)));
+const recipeSports = (t: string) => new Set(recipeTokens(t).flatMap((w) => RECIPE_SPORTS.has(w) ? [RECIPE_SPORTS.get(w)!] : []));
+function contextSports(context: string[]) {
+  const sports = new Set(context.flatMap((text) => [...recipeSports(text)]));
+  // An explicit sport anywhere in the creative's evidence wins over ambiguous nouns.
+  if (sports.size) return sports;
+  for (const text of context) {
+    const words = new Set(recipeTokens(text));
+    for (const entry of RECIPE_SPORT_NOUNS)
+      if (entry.nouns.some((noun) => recipeTokens(noun).every((w) => words.has(w))))
+        for (const sport of entry.sports) sports.add(sport);
+  }
+  return sports;
+}
 
-/** Match two distinctive words or all recipe words (at least one), never a different named sport. */
-export function recipeFor(look: LookBody, scene: string) {
+/** Match two distinctive words or all recipe words (at least one). A named sport needs the creative's own evidence;
+ *  inferred sports count towards subject overlap, but a title or product never replaces the planned scene. */
+export function recipeFor(look: LookBody, scene: string, context: string[] = []) {
   const want = recipeWords(scene);
-  const sports = [...want].filter((w) => RECIPE_SPORTS.has(w));
+  const sports = contextSports([scene, ...context]);
+  // Context can permit a sport, but only the planned scene can supply subject overlap.
+  for (const sport of contextSports([scene])) if (sports.has(sport)) want.add(sport);
   let best: { r: NonNullable<LookBody["recipes"]>[number]; n: number } | null = null;
   for (const r of look.recipes ?? []) {
     const have = recipeWords(r.scene);
-    const recipeSports = [...have].filter((w) => RECIPE_SPORTS.has(w));
-    if (sports.length && recipeSports.length && !recipeSports.some((w) => sports.includes(w))) continue;
+    const namedSports = recipeSports(r.scene);
+    if (namedSports.size && ![...namedSports].some((w) => sports.has(w))) continue;
     const n = [...have].filter((w) => want.has(w)).length;
     if (n === 0 || (n < 2 && n !== have.size)) continue;
     if (!best || n > best.n) best = { r, n };
@@ -274,7 +309,9 @@ export function lookRules(task: EngineTask): BrandRule[] {
       : [];
   const join = (...xs: (string | undefined | null)[]) => xs.filter((x) => x && x.trim()).join("; ");
   const planned = plannedCreative(task);
-  const recipe = recipeFor(look, planned?.scene ?? "");
+  const context = [task.creative.title, ...shown(task, planned).flatMap((p) =>
+    [p.name, p.variant ?? "", ...p.facts.map((f) => `${f.label}: ${f.statement}`)])];
+  const recipe = recipeFor(look, planned?.scene ?? "", context);
   const c = look.camera ?? {};
   const lenses = (c.lenses ?? []).map((l) => `${l.focalMm} mm for ${l.use}`).join(", ");
   const l = look.light ?? {};

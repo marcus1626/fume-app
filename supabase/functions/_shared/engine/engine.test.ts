@@ -452,6 +452,142 @@ Deno.test("recipes require a shared subject, not a shared setting or time", asyn
   }
 });
 
+Deno.test("Anthem product scenes never borrow another sport's recipe", async () => {
+  const { lookRules, recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  const football = recipe("High school football, a lineman driving into a red dummy");
+  const look = { recipes: [
+    recipe("High school soccer, a keeper at a pop-up goal"),
+    football,
+    recipe("Park basketball, a layup"),
+    recipe("Youth club soccer, a keeper diving"),
+    recipe("School gym volleyball, a hitter at the top of the jump at the net"),
+    recipe("Club field hockey, a masked player lunging for the ball"),
+  ] };
+  const cage = "...The Jaypro Big League Bomber Pro stands whole on the right... a cast teenage hitter ... mid-swing ... sloped net rising to the top rail...";
+  const sled = "...The Fisher 2-Man Bull sled ... two cast linemen ... fire into the pads ... with no player, pad or ball in it";
+  const forScene = (scene: string): EngineTask => ({
+    ...task,
+    plan: { planned_creatives: [{ ...task.plan.planned_creatives![0], scene }] },
+    products: [],
+    look: { id: "anthem", version: 1, state: "approved", body: look },
+  });
+  const applied = (t: EngineTask) => lookRules(t).find((r) => r.id === "lookbook-recipe")?.statement;
+  assertEquals(recipeFor(look, cage), null);
+  assertEquals(applied(forScene(cage)), undefined);
+  const baseball = recipe("Baseball batting cage, a hitter with a bat at the net");
+  const cageTask = forScene(cage);
+  cageTask.products = [{ id: "p1", name: "Jaypro Big League Bomber Pro", facts: [
+    { id: "cage", area: "description", label: "Use", statement: "A baseball batting cage", status: "verified" },
+  ], pictures: [] }];
+  assertEquals(applied(cageTask), undefined);
+  cageTask.look!.body = { recipes: [...look.recipes, baseball] };
+  assertMatch(applied(cageTask)!, /Baseball batting cage/);
+  assertEquals(recipeFor(look, sled), football, "linemen and sled establish football, never hockey from a negated player or ball");
+  assertMatch(applied(forScene(sled))!, /High school football/);
+
+  const neutral = "A cast athlete driving into a red pad, with no player, pad or ball in the words area";
+  assertEquals(applied(forScene(neutral)), undefined, "shared words cannot establish a sport");
+  const productTask = forScene(neutral);
+  productTask.products = [{ id: "p1", name: "Fisher 2-Man Bull", facts: [
+    { id: "sled", area: "description", label: "Product", statement: "A two-man sled", status: "verified" },
+  ], pictures: [] }];
+  assertMatch(applied(productTask)!, /High school football/, "the shown product's facts establish football");
+  const titleTask = forScene(neutral);
+  titleTask.creative = { ...titleTask.creative, title: "Football practice" };
+  assertMatch(applied(titleTask)!, /High school football/);
+  for (const product of [
+    { ...productTask.products[0], name: "Fisher 2-Man Bull sled", facts: [] },
+    { ...productTask.products[0], variant: "Football", facts: [] },
+  ]) assertMatch(applied({ ...forScene(neutral), products: [product] })!, /High school football/);
+  productTask.plan.planned_creatives![0].productIds = ["other"];
+  productTask.products.push({ id: "other", name: "Plain pad", facts: [], pictures: [] });
+  assertEquals(applied(productTask), undefined, "another creative's product cannot supply the sport");
+});
+
+Deno.test("recipe sport nouns recognise English and Norwegian subjects without guessing from generic sports words", async () => {
+  const { recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  for (const [sport, noun] of [
+    ["football", "lineman"], ["football", "linemen"], ["football", "tackle"], ["football", "sled"], ["football", "dummy"],
+    ["baseball", "batting cage"], ["softball", "hitter with a bat"], ["baseball", "pitch-back"], ["baseball", "pitching"],
+    ["soccer", "keeper with a goal"], ["basketball", "layup"], ["basketball", "hoop"],
+    ["volleyball", "spike"], ["volleyball", "setter"], ["hockey", "stick with field hockey"],
+    ["football", "taklingsdukke"], ["football", "slede"], ["soccer", "keeper med et mål"],
+    ["basketball", "kurv"], ["volleyball", "opplegger"], ["hockey", "kølle med landhockey"],
+    ["soccer", "fotball"], ["handball", "håndball"],
+  ]) {
+    const r = recipe(`${sport}, a red pad`);
+    assertEquals(recipeFor({ recipes: [r] }, `A red pad beside ${noun}`), r, noun);
+  }
+  for (const noun of ["hitter", "top", "net", "player", "ball", "keeper", "goal", "stick", "kølle", "mål"]) {
+    const r = recipe("Volleyball, a red pad");
+    assertEquals(recipeFor({ recipes: [r] }, `A red pad beside ${noun}`), null, noun);
+  }
+  const r = recipe("A lineman driving");
+  assertEquals(recipeFor({ recipes: [r] }, "Two linemen driving"), r);
+});
+
+Deno.test("title and product context allow sports but never supply scene overlap", async () => {
+  const { recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  const football = recipe("Football practice");
+  for (const context of ["A two-man sled", "Football practice"]) {
+    assertEquals(recipeFor({ recipes: [football] }, "Coffee cup on a kitchen bench", [context]), null);
+    const pad = recipe("Football, a red pad");
+    assertEquals(recipeFor({ recipes: [pad] }, "A red pad", [context]), pad);
+    assertEquals(recipeFor({ recipes: [recipe("Football, a pad")] }, "A pad", [context]), null,
+      "context cannot supply the second overlapping word");
+  }
+  assertEquals(recipeFor({ recipes: [football] }, "A two-man sled"), football,
+    "a sport inferred from the planned scene can supply overlap");
+});
+
+Deno.test("negated phrases supply neither sports nor subject overlap", async () => {
+  const { recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  const football = recipe("Football, a red pad");
+  const soccer = recipe("Soccer, a keeper by a goal");
+  assertEquals(recipeFor({ recipes: [soccer] }, "A keeper portrait, with no goal or ball"), null);
+  for (const negation of ["no", "without", "not", "never", "uten", "ingen", "ikke"]) {
+    for (const noun of ["sled", "football"]) {
+      assertEquals(recipeFor({ recipes: [football] }, `A red pad with ${negation} ${noun}`), null);
+      assertEquals(recipeFor({ recipes: [football] }, "A red pad", [`${negation} ${noun}`]), null);
+    }
+    assertEquals(recipeFor({ recipes: [recipe("Red pad")] }, `A cup with ${negation} red pad`), null);
+    assertEquals(recipeFor({ recipes: [recipe(`A cup with ${negation} red pad`)] }, "Red pad"), null);
+  }
+  for (const boundary of [",", ".", ";", " but", " men"]) {
+    assertEquals(recipeFor({ recipes: [football] }, `No soccer${boundary} football, a red pad`), football);
+  }
+  assertEquals(recipeFor({ recipes: [recipe("Player pad ball")] }, "A cup with no player, pad or ball in it"), null,
+    "a comma within a negated list does not restore its remaining nouns");
+  assertEquals(recipeFor({ recipes: [football] }, "A red pad with no player, sled or ball in it"), null);
+  assertEquals(recipeFor({ recipes: [football] }, "A red pad with no player, sled or ball in it, but football"), football);
+});
+
+Deno.test("explicit sports across scene, title and product context win over noun inference", async () => {
+  const { recipeFor } = await import("./context.ts");
+  const recipe = (scene: string) => ({ scene, camera: "35 mm", light: "daylight", grade: "natural", composition: "subject right" });
+  for (const [named, inferred, subject] of [
+    ["Fotball", "Football", "a player making a tackle"],
+    ["Soccer", "Football", "a player making a tackle"],
+    ["Baseball", "Softball", "a hitter with a bat"],
+    ["Softball", "Baseball", "a hitter with a bat"],
+  ]) {
+    const wrong = recipe(`${inferred}, ${subject}`);
+    const right = recipe(`${named}, ${subject}`);
+    assertEquals(recipeFor({ recipes: [wrong] }, `${named}, ${subject}`), null);
+    assertEquals(recipeFor({ recipes: [wrong] }, subject, [named]), null);
+    assertEquals(recipeFor({ recipes: [wrong] }, subject, [named, subject]), null,
+      "nouns in a separate context entry cannot broaden an explicit sport");
+    assertEquals(recipeFor({ recipes: [right] }, `${named}, ${subject}`), right);
+    assertEquals(recipeFor({ recipes: [right] }, subject, [named]), right);
+  }
+  const football = recipe("Football, a player making a tackle");
+  assertEquals(recipeFor({ recipes: [football] }, "Amerikansk fotball, a player making a tackle"), football);
+});
+
 Deno.test("only a matching planned-scene recipe applies, while global Look Book and Brain rules remain", async () => {
   const { lookRules, recipeFor } = await import("./context.ts");
   const { checklist } = await import("./evaluate.ts");
