@@ -356,7 +356,7 @@ Deno.test("the layout keeps where each part sits, as shares of the frame, and th
 
 Deno.test("own_area looks for crop subjects while bypassing photographic room for the approved copy", async () => {
   let looks = 0;
-  const choice = { keepClear: [{ what: "the shoe", x: 0.2, y: 0.5, w: 0.3, h: 0.3 }], people: [{ x: 0.6, y: 0.2, w: 0.2, h: 0.6 }], band: "top" as const, align: "left" as const, colour: "on_photo", layout: "", why: "crop subjects" };
+  const choice = { keepClear: [{ what: "the shoe", x: 0.2, y: 0.5, w: 0.3, h: 0.3 }], people: [{ x: 0.6, y: 0.2, w: 0.2, h: 0.6 }], band: "top" as const, align: "left" as const, colour: "on_photo" as const, layout: "", why: "crop subjects" };
   const { d, calls } = deps({ choose: () => { looks++; return Promise.resolve(choice); } });
   const own: Take = { ...take, planned: { ...take.planned, words: "own_area" }, room: "the left 40% of the width has no person" };
   assertEquals(roomOf(own), {});

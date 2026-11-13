@@ -132,7 +132,8 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
             .neq("state", "superseded")
             .order("campaign_id")
             .order("version")
-            .range(from, to),
+            .range(from, to)
+            .overrideTypes<Plan[], { merge: false }>(),
         ),
       ]);
       if (!found.length) return [];
@@ -170,10 +171,7 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
           ? readIn<{ version_id: Id; kind: "design" | "picture" }>(
               found.flatMap((c) => (c.creative_versions ?? []).map((v) => v.id)),
               (batch, from, to) =>
-                supabase()
-                  .rpc("library_version_kinds", { p_version_ids: batch })
-                  .order("version_id")
-                  .range(from, to),
+                supabase().rpc("library_version_kinds", { p_version_ids: batch }).order("version_id").range(from, to),
             )
           : Promise.resolve([]),
       ]);

@@ -191,7 +191,8 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
     logo.h
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "${l.wordsPlacement === "own_area" ? "FIT" : "FILL"}", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
+  const picture = `<Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`;
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}>${l.wordsPlacement === "own_area" ? `<Frame name="Picture area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} overflow="hidden">${picture}</Frame>` : picture}${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
 }
 function splitPrice(line) {
@@ -273,6 +274,21 @@ var clamp01 = (n) => Math.min(1, Math.max(0, Math.round(n * 1e3) / 1e3));
 var round = (n) => Math.round(n * 100) / 100;
 var q = (s) => JSON.stringify(s);
 var caseOf = (s) => s.case === "upper" ? ` textCase="upper"` : s.case === "lower" ? ` textCase="lower"` : "";
+function ownAreaPicture(size, area, format, keep) {
+  const subjects = keep.map((k) => ({ x: k.x * size.w / format.w, y: k.y * size.h / format.h, w: k.w * size.w / format.w, h: k.h * size.h / format.h }));
+  const left = subjects.length ? Math.min(...subjects.map((k) => k.x)) : size.w / 2;
+  const right = subjects.length ? Math.max(...subjects.map((k) => k.x + k.w)) : size.w / 2;
+  const first = subjects.length ? Math.min(...subjects.map((k) => k.y)) : size.h / 2;
+  const last = subjects.length ? Math.max(...subjects.map((k) => k.y + k.h)) : size.h / 2;
+  const fill = Math.max(area.w / size.w, area.h / size.h);
+  const scale = Math.min(fill, right > left ? area.w / (right - left) : fill, last > first ? area.h / (last - first) : fill);
+  const offset = (area2, image, first2, last2) => {
+    const low = Math.max(Math.min(0, area2 - image), -first2 * scale);
+    const high = Math.min(Math.max(0, area2 - image), area2 - last2 * scale);
+    return Math.max(low, Math.min(high, (area2 - (first2 + last2) * scale) / 2));
+  };
+  return { x: offset(area.w, size.w * scale, left, right), y: offset(area.h, size.h * scale, first, last), w: size.w * scale, h: size.h * scale };
+}
 
 // src/pixels.ts
 function shadeAt(s, y, x = 0) {
@@ -481,7 +497,10 @@ function imageHash(bytes) {
   return createHash("sha1").update(bytes).digest("hex");
 }
 async function build(jsx, picture, logo) {
-  await start();
+  const { ck } = await start();
+  const image = ck.MakeImageFromEncoded(picture);
+  const pictureSize = image ? { w: image.width(), h: image.height() } : void 0;
+  image?.delete();
   const graph = new SceneGraph();
   const hash = imageHash(picture);
   graph.images.set(hash, picture);
@@ -502,6 +521,7 @@ async function build(jsx, picture, logo) {
   walk(root);
   return {
     graph,
+    pictureSize,
     root,
     ids,
     faithful: Boolean(fonts.faithful),
@@ -900,7 +920,7 @@ async function designOn(asked, until = Infinity) {
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const keep = ask.wordsPlacement === "own_area" ? [] : ask.keepClear ?? [];
+  const keep = ask.keepClear ?? [];
   const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
   let best = null;
   let tried = 0;
@@ -1133,7 +1153,9 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   if (l.wordsPlacement === "own_area") {
     const top = Math.max(g.top, words.y - g.margin);
     place(doc, "Words area", { y: top, height: g.h - top });
-    place(doc, "Picture", { height: top });
+    place(doc, "Picture area", { height: top });
+    const photo = ownAreaPicture(doc.pictureSize ?? g, { w: g.w, h: top }, g, keep);
+    place(doc, "Picture", { x: photo.x, y: photo.y, width: photo.w, height: photo.h });
   }
   const shades = [];
   const shade = shadeFor(book, l, g, words);
@@ -1158,6 +1180,17 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     if (b) boxes[n] = b;
   }
   const checks = [];
+  if (l.wordsPlacement === "own_area") {
+    const area = boxOf(doc, "Picture area");
+    const picture = boxOf(doc, "Picture");
+    boxes["Picture area"] = area;
+    boxes.Picture = picture;
+    for (const k of keep) {
+      const moved = { x: picture.x + k.x / g.w * picture.w, y: picture.y + k.y / g.h * picture.h, w: k.w / g.w * picture.w, h: k.h / g.h * picture.h };
+      const inside = moved.x >= area.x - 0.01 && moved.y >= area.y - 0.01 && moved.x + moved.w <= area.x + area.w + 0.01 && moved.y + moved.h <= area.y + area.h + 0.01;
+      checks.push({ check: "fits", node: "Picture", ok: inside, hard: true, note: inside ? `Keeps ${k.what} whole.` : `The picture area is too small to keep ${k.what} whole.` });
+    }
+  }
   if (l.wordsPlacement === "own_area") checks.push({ check: "fits", node: "Words", ok: words.y - g.margin >= g.h * 0.35, hard: true, note: "The separate words area leaves at least 35% of the frame for the picture." });
   const safe = { x: g.margin - 1, y: g.top - 1, w: g.w - 2 * g.margin + 2, h: g.h - g.top - g.bottom + 2 };
   for (const n of ["Words", "CTA"]) {
@@ -1248,7 +1281,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
       note: u.contrast < 3 ? `The button reads ${u.contrast}:1 against the picture under it (needs 3:1).` : u.worst < 2 ? `A bright or dark spot under the button: ${u.worst}:1 at the worst patch.` : `The button reads ${u.contrast}:1 against the picture under it.`
     });
   }
-  for (const k of keep) {
+  for (const k of l.wordsPlacement === "own_area" ? [] : keep) {
     for (const n of ["Words", "CTA", "Action"]) {
       const b = boxes[n];
       if (!b) continue;
