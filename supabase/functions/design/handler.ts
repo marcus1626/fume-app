@@ -93,7 +93,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     // person or the product while every measured check still passes (Anthem "Two on two", 9 Nov: a headline across
     // the father's body, no keep-clear box at all).
     let blind: string | null = null;
-    for (let i = 0; t.planned.words !== "own_area" && !choice && !kept && i < 2; i++) {
+    for (let i = 0; !choice && !kept && i < 2; i++) {
       try {
         choice = await d.choose(t, words, picture, spent);
         if (!choice) blind = "the model gave no answer";
@@ -102,7 +102,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
         blind = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);
       }
     }
-    if (choice || t.planned.words === "own_area") blind = null;
+    if (choice) blind = null;
     // The layout the plan chose is the one the Engine left room for (9 Nov): the words go there. The model's eye still
     // marks what to keep clear and the colour; only an earlier design kept above, or a designer's ask, sets it apart.
     const planned = t.planned.words === "own_area" || kept || t.ask ? null : plannedLayout(t);
@@ -154,7 +154,9 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     if (blind) {
       findings.unshift({
         severity: "major",
-        what: "Fume could not read the picture, so nothing in it was kept clear: check that the words cover no person and not the product.",
+        what: t.planned.words === "own_area"
+          ? "Fume could not read the picture: check that the crop keeps the product and people whole."
+          : "Fume could not read the picture, so nothing in it was kept clear: check that the words cover no person and not the product.",
         by: "code",
       });
     }
@@ -227,7 +229,7 @@ async function attempt(
     // Where the Engine left room for the words comes first; the model's eye places the rest. Not on a second try, a
     // layout kept from an earlier design, or a designer's own ask: those choose their own place.
     prefer: {
-      ...(choice
+      ...(choice && t.planned.words !== "own_area"
         ? {
           band: choice.band,
           align: choice.align,
@@ -239,7 +241,7 @@ async function attempt(
         : {}),
       ...(alt || kept || t.ask ? {} : roomOf(t)),
     },
-    keepClear: t.planned.words === "own_area" ? [] : choice ? keepClearOf(choice, format) : [],
+    keepClear: choice ? keepClearOf(choice, format) : [],
     ...(links.logo ? { logo: links.logo } : {}),
     ...(links.fonts?.length ? { fonts: links.fonts } : {}),
     upload: { png: links.png, fig: links.fig },

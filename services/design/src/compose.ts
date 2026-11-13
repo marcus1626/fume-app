@@ -13,7 +13,7 @@ import {
   radiusOf,
   styleOf,
 } from "./book.ts";
-import { type Shade } from "./pixels.ts";
+import { type Box, type Shade } from "./pixels.ts";
 
 export interface Words {
   headline: string;
@@ -250,7 +250,8 @@ export function compose(
         logo.h,
       )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`
     : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "${l.wordsPlacement === "own_area" ? "FIT" : "FILL"}", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
+  const picture = `<Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />`;
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}>${l.wordsPlacement === "own_area" ? `<Frame name="Picture area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} overflow="hidden">${picture}</Frame>` : picture}${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...(onPanel ? { panel: panelHex } : {}) };
 }
 
@@ -360,3 +361,23 @@ const clamp01 = (n: number) => Math.min(1, Math.max(0, Math.round(n * 1000) / 10
 const round = (n: number) => Math.round(n * 100) / 100;
 const q = (s: string) => JSON.stringify(s);
 const caseOf = (s: Style) => (s.case === "upper" ? ` textCase="upper"` : s.case === "lower" ? ` textCase="lower"` : "");
+
+/** Cover a separate picture area using the original photo's aspect ratio and the model's subject boxes.
+ *  Subject coordinates are normalized against the full format, as sent by keepClearOf in the edge handler. */
+export function ownAreaPicture(size: { w: number; h: number }, area: { w: number; h: number }, format: { w: number; h: number }, keep: Box[]): Box {
+  const subjects = keep.map((k) => ({ x: k.x * size.w / format.w, y: k.y * size.h / format.h, w: k.w * size.w / format.w, h: k.h * size.h / format.h }));
+  const left = subjects.length ? Math.min(...subjects.map((k) => k.x)) : size.w / 2;
+  const right = subjects.length ? Math.max(...subjects.map((k) => k.x + k.w)) : size.w / 2;
+  const first = subjects.length ? Math.min(...subjects.map((k) => k.y)) : size.h / 2;
+  const last = subjects.length ? Math.max(...subjects.map((k) => k.y + k.h)) : size.h / 2;
+  const fill = Math.max(area.w / size.w, area.h / size.h);
+  // If the protected union cannot fit a cover crop, reduce the image just enough to keep it whole.
+  // The frame's background fills exposed edges; one oversized box must not reject every text layout.
+  const scale = Math.min(fill, right > left ? area.w / (right - left) : fill, last > first ? area.h / (last - first) : fill);
+  const offset = (area: number, image: number, first: number, last: number) => {
+    const low = Math.max(Math.min(0, area - image), -first * scale);
+    const high = Math.min(Math.max(0, area - image), area - last * scale);
+    return Math.max(low, Math.min(high, (area - (first + last) * scale) / 2));
+  };
+  return { x: offset(area.w, size.w * scale, left, right), y: offset(area.h, size.h * scale, first, last), w: size.w * scale, h: size.h * scale };
+}

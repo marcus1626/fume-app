@@ -155,6 +155,7 @@ export function imageHash(bytes: Uint8Array): string {
 
 export interface Doc {
   graph: SceneGraph;
+  pictureSize?: { w: number; h: number };
   root: string;
   /** Node ids by name. */
   ids: Map<string, string>;
@@ -166,7 +167,10 @@ export interface Doc {
 
 /** Builds and lays out a design document from design JSX; PHOTO in it stands for the picture's hash. */
 export async function build(jsx: string, picture: Uint8Array, logo?: { hash: string; png: Uint8Array }[]): Promise<Doc> {
-  await start();
+  const { ck } = await start();
+  const image = ck.MakeImageFromEncoded(picture);
+  const pictureSize = image ? { w: image.width(), h: image.height() } : undefined;
+  image?.delete();
   const graph = new SceneGraph();
   const hash = imageHash(picture);
   graph.images.set(hash, picture);
@@ -188,6 +192,7 @@ export async function build(jsx: string, picture: Uint8Array, logo?: { hash: str
   walk(root);
   return {
     graph,
+    pictureSize,
     root,
     ids,
     faithful: Boolean(fonts.faithful),

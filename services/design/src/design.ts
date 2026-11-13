@@ -3,7 +3,7 @@
 // each one in the picture (contrast under every line of words, how busy it is, what it covers, whether it fits the
 // safe area), and keeps the best that passes. What did not pass is said, for the expert.
 import { type DesignBook, type Format, type Grid, type Style, brandLayouts, seesBrand, colourOf, componentOf, gridOf, headlineSteps, signatureOf, STEP_FLOOR, styleOf } from "./book.ts";
-import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, shadeFill, shadeFor, tintOf } from "./compose.ts";
+import { type Band, type Composed, type FamilyFor, type Ground, type Layout, type Words, compose, ownAreaPicture, shadeFill, shadeFor, tintOf } from "./compose.ts";
 import { type Box, type Pixels, type Shade, contrast, luminance, overlap, rgbOf, under } from "./pixels.ts";
 import { type BrandFace, type Doc, boxOf, build, fig, capHeightOf, hasFont, pixelsOf, place, png, lineWidth, splitWords, useBrandFaces, wordWidths } from "./render.ts";
 import { type Logo, type Where, CORNERS, cornersFor, logoOf } from "./logo.ts";
@@ -17,7 +17,7 @@ export interface Ask {
   wordsPlacement?: "on_picture" | "own_area";
   /** The model's choice, tried first. */
   prefer?: Partial<Layout>;
-  /** What the words must never cover (the product, a face, a logo), in layout pixels. */
+  /** Subjects normalized to format pixels: kept clear of words, and kept inside an own_area picture crop. */
   keepClear?: (Box & { what: string })[];
   /** The brand's logo file (SVG, PNG, JPEG or WebP), when its design system names one. */
   logo?: Uint8Array;
@@ -153,7 +153,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const keep = ask.wordsPlacement === "own_area" ? [] : ask.keepClear ?? [];
+  const keep = ask.keepClear ?? [];
   const logo = ask.logo
     ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null)
     : null;
@@ -454,10 +454,13 @@ export function measure(
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words")!;
   if (l.wordsPlacement === "own_area") {
-    // The panel reaches the edges; the photograph has its own rectangle and keeps its whole subject (FIT).
+    // Boxes arrive as shares of the original picture expressed in format pixels. Scale the original
+    // photo to the actual area, not to the full format, and move its editable layer behind the clip.
     const top = Math.max(g.top, words.y - g.margin);
     place(doc, "Words area", { y: top, height: g.h - top });
-    place(doc, "Picture", { height: top });
+    place(doc, "Picture area", { height: top });
+    const photo = ownAreaPicture(doc.pictureSize ?? g, { w: g.w, h: top }, g, keep);
+    place(doc, "Picture", { x: photo.x, y: photo.y, width: photo.w, height: photo.h });
   }
   const shades: Shade[] = [];
   const shade = shadeFor(book, l, g, words);
@@ -482,6 +485,17 @@ export function measure(
     if (b) boxes[n] = b;
   }
   const checks: Check[] = [];
+  if (l.wordsPlacement === "own_area") {
+    const area = boxOf(doc, "Picture area")!;
+    const picture = boxOf(doc, "Picture")!;
+    boxes["Picture area"] = area;
+    boxes.Picture = picture;
+    for (const k of keep) {
+      const moved = { x: picture.x + k.x / g.w * picture.w, y: picture.y + k.y / g.h * picture.h, w: k.w / g.w * picture.w, h: k.h / g.h * picture.h };
+      const inside = moved.x >= area.x - 0.01 && moved.y >= area.y - 0.01 && moved.x + moved.w <= area.x + area.w + 0.01 && moved.y + moved.h <= area.y + area.h + 0.01;
+      checks.push({ check: "fits", node: "Picture", ok: inside, hard: true, note: inside ? `Keeps ${k.what} whole.` : `The picture area is too small to keep ${k.what} whole.` });
+    }
+  }
   if (l.wordsPlacement === "own_area") checks.push({ check: "fits", node: "Words", ok: words.y - g.margin >= g.h * 0.35, hard: true, note: "The separate words area leaves at least 35% of the frame for the picture." });
   const safe = { x: g.margin - 1, y: g.top - 1, w: g.w - 2 * g.margin + 2, h: g.h - g.top - g.bottom + 2 };
   for (const n of ["Words", "CTA"]) {
@@ -580,7 +594,7 @@ export function measure(
         : u.worst < 2 ? `A bright or dark spot under the button: ${u.worst}:1 at the worst patch.` : `The button reads ${u.contrast}:1 against the picture under it.`,
     });
   }
-  for (const k of keep) {
+  for (const k of l.wordsPlacement === "own_area" ? [] : keep) {
     for (const n of ["Words", "CTA", "Action"]) {
       const b = boxes[n];
       if (!b) continue;

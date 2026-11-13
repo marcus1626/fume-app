@@ -3,17 +3,17 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { better, design, fitFor, layoutsFor, searchOrder, tasteOf, type Tried } from "../src/design.ts";
 import { bindShort, compose, shadeFor } from "../src/compose.ts";
-import { boxOf, build, lineWidth, png, pixelsOf, slantJSX, splitWords } from "../src/render.ts";
-import { type DesignBook } from "../src/book.ts";
+import { boxOf, build, lineWidth, png, pixelsOf, slantJSX, splitWords, start } from "../src/render.ts";
+import { type DesignBook, SIZES } from "../src/book.ts";
 import { startWithTestFonts } from "./fonts.ts";
 
 const book = JSON.parse(await readFile(new URL("./fixtures/book.json", import.meta.url), "utf8")) as DesignBook;
 startWithTestFonts();
 
 /** A test picture: a pale top, a dark bottom and a "product" in the middle. */
-async function picture(top: string, bottom: string) {
+async function picture(top: string, bottom: string, subject = product) {
   const doc = await build(
-    `<Frame name="P" w={1080} h={1350} bg=${JSON.stringify(top)}><Rectangle name="Bottom" position="absolute" x={0} y={700} w={1080} h={650} bg=${JSON.stringify(bottom)} /><Rectangle name="Product" position="absolute" x={380} y={520} w={320} h={420} bg="#C8102E" /></Frame>`,
+    `<Frame name="P" w={1080} h={1350} bg=${JSON.stringify(top)}><Rectangle name="Bottom" position="absolute" x={0} y={700} w={1080} h={650} bg=${JSON.stringify(bottom)} /><Rectangle name="Product" position="absolute" x={${subject.x}} y={${subject.y}} w={${subject.w}} h={${subject.h}} bg="#C8102E" /></Frame>`,
     new Uint8Array([0]),
   );
   return png(doc, 0.5);
@@ -453,14 +453,105 @@ test("own_area keeps the photograph and a brand-coloured words panel as separate
   const { measure } = await import("../src/design.ts");
   const pixels = await pixelsOf(await png(doc, 0.25), 0.25);
   measure(doc, c, l, book, pixels, []);
-  const photo = boxOf(doc, "Picture")!;
+  const photo = boxOf(doc, "Picture area")!;
+  const image = boxOf(doc, "Picture")!;
+  assert.equal(image.y, -(c.grid.h - photo.h) / 2, "without subjects the crop is centred");
   const area = boxOf(doc, "Words area")!;
   const text = boxOf(doc, "Words")!;
   assert.equal(photo.y + photo.h, area.y);
   assert.ok(text.y >= area.y);
   assert.ok(text.y + text.h <= area.y + area.h);
   assert.ok(book.colours.some((x) => x.hex.toUpperCase() === c.panel?.toUpperCase()));
-  assert.match(c.jsx, /imageScaleMode: "FIT"/);
+  assert.match(c.jsx, /imageScaleMode: "FILL"/);
   const { fig } = await import("../src/render.ts");
   assert.ok((await fig(doc)).length > 100);
+});
+
+test("own_area covers a feed picture area edge to edge and keeps the product and people inside its crop", async () => {
+  // A 4:5 picture; a product low in it would be cut by a centred cover crop.
+  const subject = { x: 380, y: 1080, w: 320, h: 220, what: "the product" };
+  const person = { x: 100, y: 800, w: 200, h: 240, what: "a person" };
+  const out = await design({ picture: await picture("#EEEEEE", "#222222", subject), format: "feed", book, words, wordsPlacement: "own_area", keepClear: [subject, person] });
+  const area = out.boxes["Picture area"];
+  const photo = out.boxes.Picture;
+  assert.equal(area.x, 0);
+  assert.equal(area.y, 0);
+  assert.equal(area.w, out.width);
+  assert.equal(photo.w, out.width);
+  assert.ok(area.h < out.height);
+  for (const box of [subject, person]) {
+    const moved = { ...box, y: box.y + photo.y };
+    assert.ok(moved.x >= area.x && moved.x + moved.w <= area.x + area.w);
+    assert.ok(moved.y >= area.y && moved.y + moved.h <= area.y + area.h, JSON.stringify({ moved, area }));
+  }
+  assert.equal(out.checks.filter((c) => c.node === "Picture" && c.ok).length, 2);
+  const unionCentre = (person.y + subject.y + subject.h) / 2;
+  const expectedY = Math.max(0, Math.min(out.height - area.h, unionCentre - area.h / 2));
+  assert.equal(photo.y, -expectedY, "the crop centres on the subjects’ union");
+  assert.ok(!out.checks.some((c) => c.check === "covers"), "crop subjects do not constrain the separate words");
+  // Inspect both edges, and the product's first and last rows: geometry alone would miss FIT's side bars.
+  const px = await pixelsOf(out.png, 1);
+  const rgb = (x: number, y: number) => [...px.data.slice((Math.floor(y) * px.width + Math.floor(x)) * 4, (Math.floor(y) * px.width + Math.floor(x)) * 4 + 3)];
+  assert.deepEqual(rgb(2, area.h - 3), [34, 34, 34]);
+  assert.deepEqual(rgb(area.w - 3, area.h - 3), [34, 34, 34]);
+  assert.deepEqual(rgb(subject.x + subject.w / 2, subject.y + photo.y + 3), [200, 16, 46]);
+  assert.deepEqual(rgb(subject.x + subject.w / 2, subject.y + subject.h + photo.y - 3), [200, 16, 46]);
+});
+
+for (const format of ["feed", "story", "banner"] as const) {
+  test(`own_area fills a ${format} picture area from the original landscape photo and preserves it in the fig`, async () => {
+    const sourceSize = { w: 1920, h: 1080 };
+    const subject = { x: 1440, y: 400, w: 160, h: 200 };
+    const source = await png(await build(`<Frame name="Landscape" w={1920} h={1080} bg="#222222"><Rectangle position="absolute" x={${subject.x}} y={${subject.y}} w={${subject.w}} h={${subject.h}} bg="#C8102E" /></Frame>`, new Uint8Array([0])));
+    const frame = SIZES[format];
+    const keep = [{ x: subject.x / sourceSize.w * frame.w, y: subject.y / sourceSize.h * frame.h, w: subject.w / sourceSize.w * frame.w, h: subject.h / sourceSize.h * frame.h, what: "the product" }];
+    const out = await design({ picture: source, format, book, words, wordsPlacement: "own_area", keepClear: keep });
+    const area = out.boxes["Picture area"];
+    const photo = out.boxes.Picture;
+    const scale = Math.max(area.w / sourceSize.w, area.h / sourceSize.h);
+    assert.ok(Math.abs(photo.w - sourceSize.w * scale) < 0.01, JSON.stringify({ photo, area }));
+    assert.ok(Math.abs(photo.h - sourceSize.h * scale) < 0.01);
+    assert.ok(photo.x <= 0.01 && photo.y <= 0.01);
+    assert.ok(photo.x + photo.w >= area.w - 0.01 && photo.y + photo.h >= area.h - 0.01);
+    assert.equal(out.checks.filter((c) => c.node === "Picture" && c.ok).length, 1);
+    const moved = { x: photo.x + subject.x * scale, y: photo.y + subject.y * scale, w: subject.w * scale, h: subject.h * scale };
+    assert.ok(moved.x >= -0.01 && moved.y >= -0.01);
+    assert.ok(moved.x + moved.w <= area.w + 0.01 && moved.y + moved.h <= area.h + 0.01);
+    const px = await pixelsOf(out.png, 1);
+    const rgb = (x: number, y: number) => [...px.data.slice((Math.floor(y) * px.width + Math.floor(x)) * 4, (Math.floor(y) * px.width + Math.floor(x)) * 4 + 3)];
+    assert.deepEqual(rgb(2, area.h - 3), [34, 34, 34]);
+    assert.deepEqual(rgb(area.w - 3, area.h - 3), [34, 34, 34]);
+    assert.deepEqual(rgb(photo.x + (subject.x + subject.w / 2) * scale, photo.y + (subject.y + subject.h / 2) * scale), [200, 16, 46]);
+
+    // Reopen the actual deliverable: the clip and the original editable image must survive export.
+    const { io } = await start();
+    const { graph } = await io.readDocument({ name: "design.fig", data: out.fig });
+    const nodes = [...graph.nodes.values()];
+    const savedPhoto = nodes.find((n) => n.name === "Picture")!;
+    const savedArea = nodes.find((n) => n.name === "Picture area")!;
+    assert.ok(savedPhoto && savedArea);
+    assert.equal(savedPhoto.parentId, savedArea.id);
+    assert.equal(savedArea.clipsContent, true);
+    assert.ok(Math.abs(savedArea.height - area.h) < 0.01);
+    assert.ok(Math.abs(savedPhoto.width - photo.w) < 0.01);
+    assert.ok(Math.abs(savedPhoto.height - photo.h) < 0.01);
+    assert.ok(Math.abs(savedPhoto.x - photo.x) < 0.01);
+    assert.ok(Math.abs(savedPhoto.y - photo.y) < 0.01);
+    const fill = savedPhoto.fills.find((f) => f.type === "IMAGE")!;
+    assert.equal(fill.imageScaleMode, "FILL");
+    assert.deepEqual(graph.images.get(fill.imageHash!), source);
+  });
+}
+
+test("own_area reduces an oversized protected product instead of failing every layout", async () => {
+  const source = await picture("#EEEEEE", "#222222");
+  const out = await design({ picture: source, format: "feed", book, words, wordsPlacement: "own_area", keepClear: [{ x: 0, y: 0, w: 1080, h: 1350, what: "the whole product" }] });
+  const area = out.boxes["Picture area"];
+  const photo = out.boxes.Picture;
+  assert.ok(photo.h <= area.h + 0.01);
+  assert.ok(photo.x >= -0.01 && photo.x + photo.w <= area.w + 0.01);
+  assert.ok(out.checks.some((c) => c.node === "Picture" && c.ok));
+  assert.ok(!out.checks.some((c) => c.node === "Picture" && !c.ok));
+  assert.ok(!out.checks.some((c) => c.check === "covers"));
+  assert.ok(out.png.length > 100 && out.fig.length > 100);
 });
