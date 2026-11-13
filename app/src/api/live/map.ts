@@ -170,12 +170,12 @@ export type VersionWithParts = VersionRow & {
 };
 export type CreativeWithVersions = CreativeRow & { creative_versions: VersionWithParts[] | null };
 
-const CREATIVE_WITH_PARTS =
+export const CREATIVE_WITH_PARTS =
   `${CREATIVE}, creative_versions(${VERSION}, expert_checks(${CHECK}), ` +
   `approvals(id, version_id, decided_by, created_at, revoked_at, recorded_by, recorded_note), files(${FILE}))`;
 
 /** Signed addresses for files already read, by file id (one round to storage, none for links still good). */
-async function signFiles(files: FileRow[]): Promise<Map<Id, { url: string; file: FileRow }>> {
+export async function signFiles(files: FileRow[]): Promise<Map<Id, { url: string; file: FileRow }>> {
   const out = new Map<Id, { url: string; file: FileRow }>();
   if (files.length === 0) return out;
   const links = await signedLinks(
