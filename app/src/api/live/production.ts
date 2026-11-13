@@ -40,9 +40,11 @@ import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 export interface StudioCreativeRow extends CreativeRow {
   slot: string | null;
-  words: "on_picture" | "own_area" | null;
+  words?: "on_picture" | "own_area" | null;
 }
-export const STUDIO_CREATIVE = `${CREATIVE}, slot, words`;
+// creatives.words is read once migration 20261112174210_creative_words.sql is live (see WORDS_COLUMN in ./supabase):
+// add ", words" here in the same change.
+export const STUDIO_CREATIVE = `${CREATIVE}, slot`;
 
 interface JobRow {
   id: string;

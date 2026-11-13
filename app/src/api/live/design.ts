@@ -17,7 +17,7 @@ import {
 } from "../../contract";
 import type { Live } from "./context";
 import { fileUrls } from "./map";
-import { command, rows, supabase } from "./supabase";
+import { command, rows, supabase, WORDS_COLUMN } from "./supabase";
 import { designScores } from "./scores";
 
 type Json = Record<string, unknown>;
@@ -373,7 +373,7 @@ export function designCalls(live: Live, read: (documentId: Id) => Promise<Creati
       if (a.blocked) throw new FumeError("invalid", a.blocked);
       const layer = await command<{ id: string }>("design_candidate", {
         p_candidate_id: a.fromVersionId,
-        p_words: words ?? null,
+        ...(WORDS_COLUMN ? { p_words: words ?? null } : {}),
         p_ask: ask?.trim() ? ask.trim().slice(0, 1000) : null,
       });
       const { error } = await supabase().functions.invoke("design", { body: { layerId: layer.id } });

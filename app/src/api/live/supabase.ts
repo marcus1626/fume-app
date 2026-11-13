@@ -125,3 +125,7 @@ export async function askEngine(jobId: string, now = false): Promise<void> {
     .functions.invoke("engine", { body: { jobId } })
     .catch(() => undefined);
 }
+
+/** creatives.words and design_candidate's p_words come with migration 20261112174210_creative_words.sql. Until it is
+ *  applied to the live database they are not used, so Studio keeps working; turn this on in the same change. */
+export const WORDS_COLUMN = false;
