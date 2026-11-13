@@ -105,7 +105,7 @@ export function SendToCheck({
     );
   };
   const fixFirst = () => {
-    if (!picked) return;
+    if (!picked || doc.protectedPhoto) return;
     onBefore();
     for (const { find } of flags)
       fix.mutate(
@@ -161,7 +161,7 @@ export function SendToCheck({
                 <Button variant="glass-clear" onClick={() => (setAsking(false), send(true))}>
                   Send anyway
                 </Button>
-                <AlertDialogAction variant="white" icon="refresh-cw" onClick={fixFirst}>
+                <AlertDialogAction variant="white" icon="refresh-cw" disabled={doc.protectedPhoto} onClick={fixFirst}>
                   Fix it first
                 </AlertDialogAction>
               </>

@@ -235,3 +235,51 @@ test("rights can be resolved after upload; returning to unsure blocks every late
     createMockApi({ latency: 0, userId: "u-ida" }).updateShootRights("sh-autumn", { people: "none" }),
   ).rejects.toThrow(/viewer/);
 });
+
+test("a released person photo marks the document and V1 and refuses rendering, fixes and regenerated formats", async () => {
+  const api = createMockApi({ latency: 0, userId: "u-anna" });
+  await api.updateShootRights("sh-autumn", { people: "released" });
+  await api.checkPicks("sh-autumn");
+  const {
+    documentIds: [id],
+  } = await api.useShootInCampaign({ shootId: "sh-autumn", campaignId: "c-winter", pictureIds: ["sh-autumn-p1"] });
+  const doc = await api.document(id);
+  expect(doc.protectedPhoto).toBe(true);
+  expect(doc.versions[0]).toMatchObject({ protectedPhoto: true, cost: 0, number: 1 });
+  await expect(api.render(id)).rejects.toThrow(/Real people/);
+  await expect(api.fixProduct(id, { versionId: doc.versions[0].id, what: "Change her face" })).rejects.toThrow(
+    /Real people/,
+  );
+  await expect(api.setFormatTile(id, "ig-story", { method: "regenerate" })).rejects.toThrow(/Real people/);
+});
+
+test("a later rights label cannot make a known person photograph renderable on reuse", async () => {
+  const api = createMockApi({ latency: 0, userId: "u-anna" });
+  await api.checkPicks("sh-autumn");
+  await api.updateShootRights("sh-autumn", { people: "released" });
+  await api.updateShootRights("sh-autumn", { people: "none" });
+  const {
+    documentIds: [id],
+  } = await api.useShootInCampaign({ shootId: "sh-autumn", campaignId: "c-winter", pictureIds: ["sh-autumn-p1"] });
+  expect((await api.document(id)).protectedPhoto).toBe(true);
+  await expect(api.render(id)).rejects.toThrow(/Real people/);
+});
+
+test("formats of a person photograph keep the original image and a crop inside its bounds", async () => {
+  const api = createMockApi({ latency: 0, userId: "u-anna" });
+  await api.updateShootRights("sh-autumn", { people: "released" });
+  await api.checkPicks("sh-autumn");
+  const {
+    documentIds: [id],
+  } = await api.useShootInCampaign({ shootId: "sh-autumn", campaignId: "c-winter", pictureIds: ["sh-autumn-p1"] });
+  const doc = await api.document(id);
+  await api.makeFormats(id, ["pl-ig-square", "pl-ig-story"]);
+  await new Promise((r) => setTimeout(r, 20));
+  const made = await api.document(id);
+  for (const tile of made.formats!) {
+    expect(tile.method).toBe("crop");
+    expect(tile.image).toBe(doc.versions[0].image);
+    expect(tile.crop!.x + tile.crop!.w).toBeLessThanOrEqual(1);
+    expect(tile.crop!.y + tile.crop!.h).toBeLessThanOrEqual(1);
+  }
+});

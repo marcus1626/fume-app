@@ -2,6 +2,7 @@
 // and the creative documents (production.ts reads them; ids are explained there: a document is a creative, a version
 // on its strip is a candidate picture). Render asks the Engine for the picture; a designer can also make it elsewhere
 // and add it to the creative with how it was made.
+import { requirePhotoEdit } from "../../domain/shoot";
 import {
   FumeError,
   type CreativeDocument,
@@ -85,6 +86,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
    *  Studio waits a while for the outcome. */
   async function renderWith(documentId: Id, direction: Direction | undefined): Promise<CreativeDocument> {
     const read = await readDocument(live, documentId);
+    requirePhotoEdit(read.doc);
     const job = await command<{ id: string; state: string; error: string | null }>("render_creative", {
       p_creative_id: read.creative.id,
       p_key: requestKey(),
@@ -277,6 +279,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
         desk.variables = { ...read.doc.variables, ...Object.fromEntries(edit.changes.map((c) => [c.key, c.from])) };
         return doc(documentId);
       }
+      requirePhotoEdit(read.doc);
       edit.state = "kept";
       // With a picture on the desk, the words change it; without one, the Direction goes into a new picture.
       const picture = read.doc.versions.find(
@@ -326,6 +329,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
     async fixProduct(documentId, { versionId, tokenId, region: brushed, what }) {
       await mustBeStaff(live);
       const read = await readDocument(live, documentId);
+      requirePhotoEdit(read.doc);
       const picture = read.candidates.find((c) => c.id === versionId);
       if (!picture) throw new FumeError("not_found", "No such version.");
       // A detail the picture check read wrong: its place, and what the real product says.
@@ -428,6 +432,7 @@ export function studioCalls(live: Live): Pick<FumeApi, Calls> {
       const format = placements.find((p) => p.id === placementId)?.format ?? placementId;
       if (!tile) throw new FumeError("not_found", "Make this format first.");
       const method = change.crop ? "crop" : change.method;
+      if (method !== "crop") requirePhotoEdit(doc);
       if (method !== "crop" && method !== "expand" && method !== "regenerate") {
         throw new FumeError("invalid", "A format is cropped, expanded or drawn again from the master.");
       }

@@ -324,7 +324,7 @@ export function Board({
                   label="Brush a fix: draw a box on the creative"
                   icon="pencil"
                   pressed={brushing}
-                  disabled={!shown || Boolean(rendering)}
+                  disabled={!shown || Boolean(rendering) || doc.protectedPhoto}
                   onPressedChange={setBrushing}
                 />
               </>
@@ -458,13 +458,21 @@ export function RenderButton({
   const needsProduct = needsAProduct(doc, mode);
   const busy = tabVersions(doc).some((v) => v.state === "rendering");
   return (
-    <WithTooltip label={needsProduct ? "Pick a product first" : "Render a new version from the variables as they are"}>
+    <WithTooltip
+      label={
+        doc.protectedPhoto
+          ? "Real people in this photograph are protected"
+          : needsProduct
+            ? "Pick a product first"
+            : "Render a new version from the variables as they are"
+      }
+    >
       <Button
         size="sm"
         variant="secondary"
         icon="refresh-cw"
         loading={render.isPending}
-        disabled={busy || needsProduct}
+        disabled={busy || needsProduct || doc.protectedPhoto}
         onClick={() => {
           onBefore();
           render.mutate(doc.id, {

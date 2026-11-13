@@ -1,6 +1,7 @@
 // The Studio: the expert's sessions with candidates, and creative documents with a mode, versions and Engine edits;
 // placements and Make formats, the product fix with detail tokens, light and camera presets, and the brand's own
 // presets, models and references.
+import { requirePhotoEdit } from "../domain/shoot";
 import { designEvaluation, designFindings, withMeasures } from "./measures";
 import {
   FumeError,
@@ -346,6 +347,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
   }
 
   function startRender(d: CreativeDocument, instruction?: string) {
+    requirePhotoEdit(d);
     const pool = POOL[d.modeId] ?? POOL["m-free"];
     const n = d.versions.length + 1;
     const fmt = d.modeId === "m-model" || d.modeId === "m-reference" ? "square" : d.specs.format;
@@ -1108,13 +1110,22 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
         const a = ratioOf(p.ratio);
         const b = ratioOf(from.ratio);
         const same = Math.abs(a - b) < 0.01;
-        const method: FormatTile["method"] = same ? "native" : a < b && b / a < 1.6 ? "crop" : "expand";
+        const method: FormatTile["method"] = same
+          ? "native"
+          : d.protectedPhoto || (a < b && b / a < 1.6)
+            ? "crop"
+            : "expand";
         const why = same
           ? "Same ratio as the master."
           : method === "crop"
             ? "The product fits inside the crop with air around it."
             : "Cropping would cut the product; the Engine extends the scene.";
-        const crop = method === "crop" ? { x: (1 - a / b) / 2, y: 0, w: a / b, h: 1 } : undefined;
+        const crop =
+          method === "crop"
+            ? a < b
+              ? { x: (1 - a / b) / 2, y: 0, w: a / b, h: 1 }
+              : { x: 0, y: (1 - b / a) / 2, w: 1, h: b / a }
+            : undefined;
         return {
           placementId: id,
           method,
@@ -1129,10 +1140,12 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       later(() => {
         for (const t of d.formats ?? []) {
           t.state = "done";
-          t.image = img(
-            source.image.match(/(\d\d-\d\d)-/)?.[1] ?? "05-06",
-            m.find(db.placements, t.placementId, "placement").format,
-          );
+          t.image = d.protectedPhoto
+            ? source.image
+            : img(
+                source.image.match(/(\d\d-\d\d)-/)?.[1] ?? "05-06",
+                m.find(db.placements, t.placementId, "placement").format,
+              );
         }
         touch(d);
       }, 14);
@@ -1141,6 +1154,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     async setFormatTile(documentId, placementId, change) {
       m.mustStaff();
       const d = doc(documentId);
+      if (change.method && !["crop", "native"].includes(change.method)) requirePhotoEdit(d);
       const t = (d.formats ?? []).find((x) => x.placementId === placementId);
       if (!t) throw new FumeError("not_found", `No format ${placementId}`);
       if (change.crop) t.crop = change.crop;
@@ -1163,6 +1177,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     async fixProduct(documentId, { versionId, tokenId, region, what }) {
       m.mustStaff();
       const d = doc(documentId);
+      requirePhotoEdit(d);
       const v = m.find(d.versions, versionId, "version");
       const token = tokenId ? m.find(db.detailTokens, tokenId, "detail") : undefined;
       const findOn = token ? v.details?.find((f) => f.tokenId === token.id) : undefined;

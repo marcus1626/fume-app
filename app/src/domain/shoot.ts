@@ -167,3 +167,12 @@ export function requireShootUse(rights: ShootRights, today = new Date().toISOStr
   if (rights.people === "unsure") throw new FumeError("invalid", "Ask who is in the pictures before they are used.");
   if (rights.until && rights.until < today) throw new FumeError("invalid", "The shoot's usage period has ended.");
 }
+
+/** Generative image jobs cannot guarantee that a real person's face/body stays unchanged. */
+export function requirePhotoEdit(photo: { protectedPhoto?: boolean }): void {
+  if (photo.protectedPhoto)
+    throw new FumeError(
+      "invalid",
+      "Real people in this photograph are protected. Use graphic design or a pixel-preserving crop.",
+    );
+}

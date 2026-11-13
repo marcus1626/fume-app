@@ -384,8 +384,12 @@ function FormatTileView({
             }
           >
             <SegmentedOption value="crop">Crop</SegmentedOption>
-            <SegmentedOption value="expand">Expand</SegmentedOption>
-            <SegmentedOption value="regenerate">Regenerate</SegmentedOption>
+            <SegmentedOption value="expand" disabled={doc.protectedPhoto}>
+              Expand
+            </SegmentedOption>
+            <SegmentedOption value="regenerate" disabled={doc.protectedPhoto}>
+              Regenerate
+            </SegmentedOption>
           </SegmentedControl>
         )}
         <p className="ui-fmt-tile-why" title={why}>

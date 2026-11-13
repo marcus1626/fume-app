@@ -13,6 +13,7 @@ type Calls =
 
 export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
   const { db, wait } = m;
+  const protectedShoots = new Set(db.shoots.filter((s) => s.rights.people === "released").map((s) => s.id));
 
   const workspaceOf = (id: Id) => db.workspaces.find((w) => w.id === id);
   /** The brands the signed-in person may see shoots in. */
@@ -98,6 +99,7 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
         })),
       };
       db.shoots.unshift(s);
+      if (s.rights.people === "released") protectedShoots.add(s.id);
       void read(s);
       return wait(seen(s));
     },
@@ -105,6 +107,17 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
       mustAdd();
       const s = shootOf(id);
       s.rights = { ...rights, photographer: rights.photographer?.trim() || undefined };
+      if (rights.people === "released") {
+        protectedShoots.add(s.id);
+        for (const p of s.pictures)
+          for (const use of p.usedIn) {
+            const doc = db.documents.find((d) => d.id === use.documentId);
+            if (doc) {
+              doc.protectedPhoto = true;
+              for (const v of doc.versions) v.protectedPhoto = true;
+            }
+          }
+      }
       return wait(seen(s));
     },
     async movePicture(pictureId, sort) {
@@ -159,6 +172,7 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
         });
         const d = db.documents.find((x) => x.id === opened.id)!;
         const format = nearestFormat(p.width, p.height);
+        if (protectedShoots.has(s.id)) d.protectedPhoto = true;
         d.title = `${s.name} ${pad(p.number)}`;
         d.slot = `${p.read?.productName ?? `${brand}'s photograph`} · ${s.name} ${pad(p.number)}`;
         d.specs = { ...d.specs, format, productId: p.read?.productId ?? d.specs.productId };
@@ -175,6 +189,7 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
             evaluation: { productTruth: "pass", brandRules: "pass", artefacts: "none", notes: [] },
             instruction: `${brand}'s own photograph · ${s.name}${by}`,
             cost: 0,
+            ...(d.protectedPhoto ? { protectedPhoto: true } : {}),
           },
         ];
         d.pickedVersionId = d.versions[0].id;

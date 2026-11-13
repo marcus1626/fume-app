@@ -130,3 +130,43 @@ test("large shoots resolve every original below PostgREST's row cap", async () =
   expect(result.pictures[1000].src).toBe("signed:f1000");
   expect(db.urls.mock.calls.every(([ids]) => ids.length <= 100)).toBe(true);
 });
+
+test("expert moves and checks persist through RPC and return freshly signed originals", async () => {
+  const api = shootCalls(live("expert"));
+  expect((await api.movePicture("p1", "pick")).pictures[0].src).toBe("signed-original");
+  expect(db.command).toHaveBeenLastCalledWith("move_shoot_picture", { p_picture_id: "p1", p_sort: "pick" });
+  await api.checkPicks("shoot");
+  expect(db.command).toHaveBeenLastCalledWith("check_shoot_picks", { p_shoot_id: "shoot" });
+});
+test("use creates selected photo masters atomically and returns their Studio ids", async () => {
+  const s = { ...stored(), state: "checked", rights: { people: "released" } };
+  db.command.mockResolvedValueOnce(s).mockResolvedValueOnce({ documentIds: ["master1", "master2"] });
+  const result = await shootCalls(live("expert")).useShootInCampaign({
+    shootId: "shoot",
+    campaignId: "c1",
+    pictureIds: ["p1", "p2"],
+  });
+  expect(result).toEqual({ documentIds: ["master1", "master2"] });
+  expect(db.command).toHaveBeenLastCalledWith("use_shoot_in_campaign", {
+    p_shoot_id: "shoot",
+    p_campaign_id: "c1",
+    p_picture_ids: ["p1", "p2"],
+  });
+});
+test("omitted selection asks the database for all picks; an empty selection stays empty", async () => {
+  for (const pictureIds of [undefined, []]) {
+    db.command
+      .mockResolvedValueOnce({ ...stored(), rights: { people: "none" } })
+      .mockResolvedValueOnce({ documentIds: [] });
+    await shootCalls(live("expert")).useShootInCampaign({ shootId: "shoot", campaignId: "c1", pictureIds });
+    expect(db.command).toHaveBeenLastCalledWith("use_shoot_in_campaign", {
+      p_shoot_id: "shoot",
+      p_campaign_id: "c1",
+      p_picture_ids: pictureIds ?? null,
+    });
+  }
+});
+test("database denials propagate without creating a client-side creative", async () => {
+  db.command.mockRejectedValueOnce(Object.assign(new Error("An expert checks the picks."), { code: "forbidden" }));
+  await expect(shootCalls(live()).checkPicks("shoot")).rejects.toMatchObject({ code: "forbidden" });
+});

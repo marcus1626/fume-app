@@ -144,6 +144,7 @@ function PictureChange({
     decide.mutate({ documentId: doc.id, editId: edit.id, verdict: "undo" });
   };
   const keepIt = () => {
+    if (doc.protectedPhoto) return;
     desk?.onBefore();
     decide.mutate({ documentId: doc.id, editId: edit.id, verdict: "keep" });
   };
@@ -232,7 +233,7 @@ function PictureChange({
               variant="secondary"
               icon="refresh-cw"
               loading={decide.isPending}
-              disabled={busy}
+              disabled={busy || doc.protectedPhoto}
               onClick={keepIt}
             >
               Keep and render

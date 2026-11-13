@@ -124,7 +124,9 @@ export function DetailsOverlay({
       {show && !brushing && !version.details?.length && (
         <span className="ui-pfix-hint">The Engine masked no product details on this version</span>
       )}
-      {brushing && !readOnly && <Brush doc={doc} version={version} onDone={() => onBrushingChange(false)} />}
+      {brushing && !readOnly && !doc.protectedPhoto && (
+        <Brush doc={doc} version={version} onDone={() => onBrushingChange(false)} />
+      )}
     </span>
   );
 }
@@ -168,7 +170,7 @@ function DetailRegion({
   const label = part
     ? `${token.label}: ${find.ok ? "as on the real product" : (find.note ?? "not as on the real product")}`
     : `${token.label}: the Engine reads ${find.read}${find.ok ? "" : `, should be ${token.value}`}`;
-  if (readOnly)
+  if (readOnly || doc.protectedPhoto)
     return (
       <span
         className="ui-pfix-region"

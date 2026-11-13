@@ -345,6 +345,7 @@ export async function readDocuments(
         evaluation: evaluationOf(c),
         instruction: c.origin === "manual" ? `Made by hand${c.note ? `: ${c.note}` : ""}` : (c.note ?? undefined),
         cost: 0,
+        ...(cr.protected_photo ? { protectedPhoto: true } : {}),
         ...(p ? { prompt: toEnginePrompt(p) } : {}),
       };
     });
@@ -393,7 +394,7 @@ export async function readDocuments(
     const picked =
       (desk.picked && unsent.some((c) => c.id === desk.picked) ? desk.picked : undefined) ??
       unsent.at(-1)?.id ??
-      (state !== "draft" ? (latest?.candidate_id ?? undefined) : undefined);
+      (state !== "draft" || latest?.state === "making" ? (latest?.candidate_id ?? undefined) : undefined);
     // Each format: made from the master's own picture (crop or expand, the Engine's choice unless the designer chose),
     // then a version of its own creative once it goes to check.
     const formats: FormatTile[] = children
@@ -453,6 +454,7 @@ export async function readDocuments(
       workspaceId: cr.workspace_id,
       campaignId: cr.campaign_id,
       creativeId: cr.id,
+      ...(cr.protected_photo ? { protectedPhoto: true } : {}),
       title: desk.title ?? cr.title,
       slot: cr.title,
       ...(cr.words ? { words: cr.words } : {}),
@@ -560,7 +562,7 @@ export function productionCalls(live: Live): Pick<FumeApi, Calls> {
         // Fume makes the format from the master's own picture: a crop when the product fits the new shape, else the
         // scene extended. A format that already has a version follows the expert's correction in its own creative.
         try {
-          await makeFormat(opened.id, null, null);
+          await makeFormat(opened.id, creative.protected_photo ? "crop" : null, null);
         } catch {
           // Made later, from its own creative.
         }

@@ -1,4 +1,4 @@
-// FLOWS §38 storage and uploads. Assessment/production workers are a separate wiring step.
+// FLOWS §38 originals, rights, expert picks and zero-cost photo masters. Assessment remains a separate worker.
 import { FumeError, type FumeApi, type Id, type OwnPicture, type Shoot } from "../../contract";
 import { requireShootUse, summarise } from "../../domain/shoot";
 import type { Live } from "./context";
@@ -96,18 +96,22 @@ export function shootCalls(live: Live): Pick<FumeApi, Calls> {
       await mustWrite(s.workspaceId);
       return original(await command<StoredShoot>("update_shoot_rights", { p_shoot_id: id, p_rights: rights }));
     },
-    async movePicture() {
-      throw new FumeError("unavailable", "The shoot assessment and picks are not connected yet.");
+    async movePicture(pictureId, sort) {
+      return original(await command<StoredShoot>("move_shoot_picture", { p_picture_id: pictureId, p_sort: sort }));
     },
-    async checkPicks() {
-      throw new FumeError("unavailable", "The shoot assessment and picks are not connected yet.");
+    async checkPicks(shootId) {
+      return original(await command<StoredShoot>("check_shoot_picks", { p_shoot_id: shootId }));
     },
-    async useShootInCampaign({ shootId }) {
+    async useShootInCampaign({ shootId, campaignId, pictureIds }) {
       const me = await live.me();
       if (!me.staffRole || me.staffRole === "admin" || me.agency)
         throw new FumeError("forbidden", "Only Fume starts creatives from a shoot.");
       requireShootUse((await shoot(shootId)).rights);
-      throw new FumeError("unavailable", "Making campaign masters from a shoot is not connected yet.");
+      return command<{ documentIds: Id[] }>("use_shoot_in_campaign", {
+        p_shoot_id: shootId,
+        p_campaign_id: campaignId,
+        p_picture_ids: pictureIds ?? null,
+      });
     },
   };
 }

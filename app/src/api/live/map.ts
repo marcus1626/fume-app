@@ -37,6 +37,7 @@ export const CAMPAIGN =
   "id, workspace_id, name, state, stage, approver_id, rounds_included, rounds_used, due_at, created_by, created_at, brief_draft, board_id, moodboard_skipped";
 
 export interface CreativeRow {
+  protected_photo?: boolean;
   id: string;
   workspace_id: string;
   campaign_id: string;
@@ -48,9 +49,11 @@ export interface CreativeRow {
   title: string;
   created_at: string;
 }
-export const CREATIVE = "id, workspace_id, campaign_id, master_id, kind, format, channel, name, title, created_at";
+export const CREATIVE =
+  "id, workspace_id, campaign_id, master_id, kind, format, channel, name, title, created_at, protected_photo";
 
 export interface VersionRow {
+  protected_photo?: boolean;
   id: string;
   workspace_id: string;
   creative_id: string;
@@ -66,7 +69,7 @@ export interface VersionRow {
   created_at: string;
 }
 export const VERSION =
-  "id, workspace_id, creative_id, number, state, file_id, candidate_id, job_id, master_version_id, held_reason, sent_at, sent_by, created_at";
+  "id, workspace_id, creative_id, number, state, file_id, candidate_id, job_id, master_version_id, held_reason, sent_at, sent_by, created_at, protected_photo";
 
 export interface CheckRow {
   id: string;
@@ -239,6 +242,7 @@ export function toCreatives(found: CreativeWithVersions[], files: Map<Id, { url:
         height: file?.file.height ?? FORMAT_SIZE[format].height,
         state: v.state,
         madeAt: v.created_at,
+        ...(v.protected_photo ? { protectedPhoto: true } : {}),
         ...(check ? { checkId: check.id } : {}),
         ...(check?.state === "checked" && check.expert_id
           ? { checkedBy: check.expert_id, checkedAt: check.decided_at ?? v.created_at }

@@ -126,6 +126,8 @@ export interface Layer {
 
 /** One render: a version in the strip at the bottom. Nothing is overwritten (FLOWS §9.2). */
 export interface RenderVersion {
+  /** A real person in an original photograph: refuse generative image edits. */
+  protectedPhoto?: boolean;
   id: Id;
   number: number;
   image: string;
@@ -358,6 +360,8 @@ export interface EngineEdit {
 
 /** The project file of one creative, like a PSD (FLOWS §9.2). */
 export interface CreativeDocument {
+  /** A real person in an original photograph: refuse generative image edits. */
+  protectedPhoto?: boolean;
   words?: import("./plan").WordsPlacement;
   id: Id;
   workspaceId: Id;

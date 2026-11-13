@@ -13,6 +13,8 @@ export type VersionState =
   "making" | "in_check" | "correcting" | "held" | "checked" | "changes_requested" | "approved" | "delivered";
 
 export interface CreativeVersion {
+  /** A real person in an original photograph: refuse generative image edits. */
+  protectedPhoto?: boolean;
   id: Id;
   creativeId: Id;
   number: number;
