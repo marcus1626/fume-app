@@ -1,9 +1,9 @@
-// FLOWS §38 originals, rights, expert picks and zero-cost photo masters. Assessment remains a separate worker.
+// FLOWS §38 originals, rights, expert picks and zero-cost photo masters. Vision assessment runs in shoot-read; reads poll its stored result.
 import { FumeError, type FumeApi, type Id, type OwnPicture, type Shoot } from "../../contract";
 import { requireShootUse, summarise } from "../../domain/shoot";
 import type { Live } from "./context";
 import { fileUrls, uploadFile } from "./map";
-import { command } from "./supabase";
+import { command, supabase } from "./supabase";
 
 type StoredShoot = Omit<Shoot, "pictures"> & { pictures: (Omit<OwnPicture, "src"> & { fileId: Id })[] };
 type Calls =
@@ -34,14 +34,30 @@ export function shootCalls(live: Live): Pick<FumeApi, Calls> {
     if (!(await live.workspaces()).some((w) => w.id === workspaceId))
       throw new FumeError("forbidden", "This brand is not yours.");
   };
-  const shoot = async (id: Id) => original(await command<StoredShoot>("get_shoot", { p_shoot_id: id }));
+  const asked = new Map<Id, number>();
+  const reading = (s: StoredShoot) => {
+    if (
+      s.state === "reading" &&
+      s.rights.people !== "unsure" &&
+      (!s.rights.until || s.rights.until >= new Date().toISOString().slice(0, 10)) &&
+      Date.now() - (asked.get(s.id) ?? 0) >= 60_000
+    ) {
+      asked.set(s.id, Date.now());
+      // The worker answers at once; failures keep the shoot retryable on the next poll, after a minute.
+      void supabase()
+        .functions.invoke("shoot-read", { body: { shootId: s.id } })
+        .catch(() => undefined);
+    }
+    return original(s);
+  };
+  const shoot = async (id: Id) => reading(await command<StoredShoot>("get_shoot", { p_shoot_id: id }));
   return {
     shoot,
     async shoots(workspaceId) {
       const me = await live.me();
       if (!me.staffRole) workspaceId = await live.workspaceId();
       const list = await command<StoredShoot[]>("list_shoots", { p_workspace_id: workspaceId ?? null });
-      return Promise.all(list.map(async (s) => summarise(await original(s), !me.staffRole)));
+      return Promise.all(list.map(async (s) => summarise(await reading(s), !me.staffRole)));
     },
     async addShoot({ workspaceId, name, shotOn, rights, files }) {
       await mustWrite(workspaceId);
@@ -81,7 +97,7 @@ export function shootCalls(live: Live): Pick<FumeApi, Calls> {
         });
         pictures.push({ fileId, kind: f.kind, seconds: f.seconds ?? null });
       }
-      return original(
+      return reading(
         await command<StoredShoot>("add_shoot", {
           p_workspace_id: workspaceId,
           p_name: name.trim(),
@@ -92,9 +108,9 @@ export function shootCalls(live: Live): Pick<FumeApi, Calls> {
       );
     },
     async updateShootRights(id, rights) {
-      const s = await shoot(id);
+      const s = await command<StoredShoot>("get_shoot", { p_shoot_id: id });
       await mustWrite(s.workspaceId);
-      return original(await command<StoredShoot>("update_shoot_rights", { p_shoot_id: id, p_rights: rights }));
+      return reading(await command<StoredShoot>("update_shoot_rights", { p_shoot_id: id, p_rights: rights }));
     },
     async movePicture(pictureId, sort) {
       return original(await command<StoredShoot>("move_shoot_picture", { p_picture_id: pictureId, p_sort: sort }));

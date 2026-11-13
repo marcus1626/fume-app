@@ -34,8 +34,8 @@ select public.update_shoot_rights(test.id('own_shoot'), '{"people":"unsure"}');
 
 reset role;
 select test.refuses($$select public.shoot_use_input(test.id('own_shoot'))$$, 'invalid', 'unknown people block production input');
-select test.ok(public.shoot_read_input(test.id('own_shoot')) -> 'pictures' -> 0 ->> 'path' is not null,
-  'assessment still reads originals through its service function');
+select test.ok(public.shoot_read_input(test.id('own_shoot')) -> 'pictures' = '[]'::jsonb,
+  'assessment withholds originals while rights are unsettled');
 set role authenticated;
 select test.act('kristian@fumecreatives.com');
 select test.ok(public.get_shoot(test.id('own_shoot')) -> 'pictures' -> 0 ? 'read', 'Fume sees the pending assessment');

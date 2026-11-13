@@ -2,8 +2,11 @@ import { beforeEach, expect, test, vi } from "vitest";
 import type { Live } from "../src/api/live/context";
 import { shootCalls } from "../src/api/live/shoots";
 
-const db = vi.hoisted(() => ({ command: vi.fn(), upload: vi.fn(), urls: vi.fn() }));
-vi.mock("../src/api/live/supabase", () => ({ command: db.command }));
+const db = vi.hoisted(() => ({ command: vi.fn(), upload: vi.fn(), urls: vi.fn(), invoke: vi.fn() }));
+vi.mock("../src/api/live/supabase", () => ({
+  command: db.command,
+  supabase: () => ({ functions: { invoke: db.invoke } }),
+}));
 vi.mock("../src/api/live/map", () => ({ uploadFile: db.upload, fileUrls: db.urls }));
 const stored = () => ({
   id: "shoot",
@@ -36,6 +39,7 @@ function live(staffRole?: string, role = "owner", agency?: object): Live {
 }
 beforeEach(() => {
   vi.resetAllMocks();
+  db.invoke.mockResolvedValue({ data: { reading: true }, error: null });
   db.command.mockResolvedValue(stored());
   db.upload.mockResolvedValue("f1");
   db.urls.mockResolvedValue(new Map([["f1", { url: "signed-original" }]]));
@@ -169,4 +173,59 @@ test("omitted selection asks the database for all picks; an empty selection stay
 test("database denials propagate without creating a client-side creative", async () => {
   db.command.mockRejectedValueOnce(Object.assign(new Error("An expert checks the picks."), { code: "forbidden" }));
   await expect(shootCalls(live()).checkPicks("shoot")).rejects.toMatchObject({ code: "forbidden" });
+});
+
+test("a permitted upload starts shoot-read and answers immediately with reading; polling reads the stored result", async () => {
+  const waiting = { ...stored(), rights: { people: "none" } };
+  db.command.mockResolvedValue(waiting);
+  const api = shootCalls(live());
+  const result = await api.addShoot({
+    workspaceId: "w1",
+    name: "Autumn",
+    rights: { people: "none" },
+    files: [{ name: "a.jpg", src: "blob:original", kind: "photo" }],
+  });
+  expect(result.state).toBe("reading");
+  expect(db.invoke).toHaveBeenCalledWith("shoot-read", { body: { shootId: "shoot" } });
+  await api.shoot("shoot");
+  expect(db.invoke).toHaveBeenCalledTimes(1);
+  const read = { sort: "pick", sharp: true, why: "Sharp label and warm side light.", look: 92 };
+  db.command.mockResolvedValue({ ...waiting, state: "read", pictures: waiting.pictures.map((p) => ({ ...p, read })) });
+  expect((await api.shoot("shoot")).pictures[0].read).toEqual(read);
+  expect(db.invoke).toHaveBeenCalledTimes(1);
+});
+
+test("blocked shoots never start reading; settling rights starts the waiting shoot", async () => {
+  const api = shootCalls(live());
+  await api.shoot("shoot");
+  expect(db.invoke).not.toHaveBeenCalled();
+  db.command.mockResolvedValue({ ...stored(), rights: { people: "none", until: "2000-01-01" } });
+  await api.shoot("shoot");
+  expect(db.invoke).not.toHaveBeenCalled();
+  db.command.mockResolvedValue({ ...stored(), rights: { people: "released" } });
+  await api.updateShootRights("shoot", { people: "released" });
+  expect(db.invoke).toHaveBeenCalledTimes(1);
+});
+
+test("a worker failure preserves originals and retries after a minute; list polling starts waiting shoots", async () => {
+  vi.useFakeTimers();
+  try {
+    db.invoke.mockRejectedValue(new Error("offline"));
+    db.command.mockResolvedValue([{ ...stored(), rights: { people: "none" } }]);
+    const api = shootCalls(live());
+    expect((await api.shoots())[0].state).toBe("reading");
+    await api.shoots();
+    expect(db.invoke).toHaveBeenCalledTimes(1);
+    vi.advanceTimersByTime(60_000);
+    await api.shoots();
+    expect(db.invoke).toHaveBeenCalledTimes(2);
+  } finally {
+    vi.useRealTimers();
+  }
+});
+
+test("tightening rights never starts reading with the previous rights", async () => {
+  db.command.mockResolvedValueOnce({ ...stored(), rights: { people: "none" } }).mockResolvedValueOnce(stored());
+  await shootCalls(live()).updateShootRights("shoot", { people: "unsure" });
+  expect(db.invoke).not.toHaveBeenCalled();
 });
