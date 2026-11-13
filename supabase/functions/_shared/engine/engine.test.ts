@@ -513,32 +513,93 @@ Deno.test("a kind's own deep focus applies when the top-level taste lines are em
 Deno.test("the picture check holds the product's printed face to its photographs", async () => {
   const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } = await import("./evaluate.ts");
   const checks = checklist([], true);
-  assertEquals([checks.length, checks[0].area, checks[0].hard], [1, "product", true]);
-  assertEquals(/Added or changed words, logos, badges or panels on a face shown in its own photographs make this item off/.test(checks[0].requirement), true);
-  assertEquals(evaluatorPrompt(checks, true).includes(checks[0].requirement), true);
+  assertEquals([checks.length, checks[1].n, checks[1].area, checks[1].hard], [2, 2, "product", true]);
+  assertMatch(checks[1].requirement, /same shape, proportions, colours, label and materials/);
+  assertMatch(checks[1].requirement, /Added or changed words, logos, badges or panels on a face shown in its own photographs make this item off/);
+  assert(!/crop|cut off|missing|whole product/.test(checks[1].requirement));
+  assertEquals(evaluatorPrompt(checks, true).includes(checks[1].requirement), true);
   assertEquals(/do not infer a match from a familiar brand or plausible packaging/.test(EVALUATOR_SYSTEM), true);
   assertEquals(EVALUATOR_SYSTEM.includes("checked elsewhere"), false);
   // Møllers Trankapsler, 11 Nov (job a70e3578): a plausible pack with an invented label must not pass.
-  const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "off", note: "The pack has a label panel absent from its own photographs." }], artefacts: "none", artefactNotes: [], printedText: false });
-  assertEquals([e.productTruth, e.brandRules, e.printedText], ["flag", "pass", false]);
+  const note = "The pack has a label panel absent from its own photographs.";
+  const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "holds", note: "" }, { n: 2, verdict: "off", note }], artefacts: "none", artefactNotes: [], printedText: false });
+  assertEquals([e.productTruth, e.brandRules, e.printedText, e.notes], ["flag", "pass", false, [note]]);
 });
 
-Deno.test("the picture check distinguishes built-wrong parts from natural hiding and planned crops", async () => {
-  const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation } = await import("./evaluate.ts");
-  const checks = checklist([], true);
-  for (const text of [checks[0].requirement, EVALUATOR_SYSTEM]) {
-    assertMatch(text, /whole product unless the plan explicitly asks for a crop/);
-    assertMatch(text, /unrequested crop at the frame edge/);
-    assertMatch(text, /defining part visibly missing or changed \(built wrong\)/);
-    assertMatch(text, /naturally hidden.*worn on a person, seen from another side, or opened as the scene asks.*judged by what is visible.*not .*off.*for being hidden/);
-    assertMatch(text, /part left out by the crop the plan asks for is fine/);
-  }
-  assertMatch(evaluatorPrompt(checks, true), /whole product unless the plan explicitly asks for a crop/);
+Deno.test("the picture check asks product completeness first, separately from identity and scene", async () => {
+  const { checklist, EVALUATOR_SYSTEM, evaluatorPrompt, toEvaluation, ROOM_REF, roomTaken } = await import("./evaluate.ts");
+  const manifest = [
+    { kind: "reference_text_locked" as const, requirement: "Locked text", required: true, refId: "text" },
+    { kind: "brand_rule_soft" as const, requirement: "Taste", required: false, refId: "taste-light" },
+    { kind: "brand_rule_soft" as const, requirement: "Schema", required: false, refId: "schema-camera" },
+    { kind: "product_invariant" as const, requirement: "A black batting cage", required: true, refId: "cage" },
+    { kind: "concept" as const, requirement: "A batting cage in a garden", required: false, refId: "concept" },
+    { kind: "brand_rule_hard" as const, requirement: "Keep the left clear for words", required: true, refId: ROOM_REF },
+  ];
+  const checks = checklist(manifest, true);
+  assertEquals([checks[0].n, checks[0].area, checks[0].hard], [1, "product", true]);
+  assert(checks[0].requirement.startsWith("Is any part of the product cut off by the frame edge, or is a defining part missing? Answer off if yes."));
+  assertMatch(checks[0].requirement, /whole product unless the plan explicitly asks for a crop/);
+  assertMatch(checks[0].requirement, /part left out by the crop the plan asks for is fine/);
+  assertMatch(checks[0].requirement, /naturally hidden.*worn on a person, seen from another side, or opened as the scene asks.*judged by what is visible.*not off for being hidden/);
+  assertMatch(checks[0].requirement, /Never assume an unrequested cut-off part continues outside the frame/);
+  assertMatch(EVALUATOR_SYSTEM, /judge completeness separately in the first checklist item/);
+  assertMatch(EVALUATOR_SYSTEM, /Answer that item "off" if yes, unless the plan explicitly asks for that crop/);
+  assertMatch(EVALUATOR_SYSTEM, /defining part visibly changed \(built wrong\)/);
   assertMatch(EVALUATOR_SYSTEM, /product completeness at the frame edges/);
+  assertEquals(checks.map((c) => c.n), [1, 2, 3, 4, 5]);
+  assertEquals(checks.map((c) => c.area), ["product", "product", "product", "scene", "brand"]);
+  const withoutPhotos = checklist(manifest);
+  assertEquals(withoutPhotos.map((c) => c.n), [1, 2, 3]);
+  assertEquals(withoutPhotos.map((c) => c.requirement), checks.slice(2).map((c) => c.requirement));
+  const prompt = evaluatorPrompt(checks, true);
+  assert(prompt.indexOf(`1. [product] ${checks[0].requirement}`) < prompt.indexOf(`2. [product] ${checks[1].requirement}`));
+  // Anthem batting cage, job 78b061f7 attempt 4: identity holds while the scene sees the cut right edge.
   for (const note of ["The product is cut off at the right edge.", "A defining part is visibly missing."]) {
-    const e = toEvaluation(checks, { answers: [{ n: 1, verdict: "off", note }], artefacts: "none", artefactNotes: [], printedText: false });
-    assertEquals([e.productTruth, e.items[0].verdict, e.notes], ["flag", "off", [note]]);
+    const e = toEvaluation(checks, {
+      answers: checks.toReversed().map((c) => ({ n: c.n, verdict: c.n === 1 || c.area === "scene" ? "off" : "holds", note: c.n === 1 ? note : c.area === "scene" ? "The cage is cut." : "" })),
+      artefacts: "none", artefactNotes: [], printedText: false,
+    });
+    assertEquals([e.productTruth, e.brandRules, e.items[0].verdict, e.items[1].verdict, e.items[3].verdict], ["flag", "pass", "off", "holds", "off"]);
+    assertEquals(e.notes, [note, "The cage is cut."]);
+    assertEquals(e.items[0].hard, true);
+    assertEquals(roomTaken(e), null);
   }
+  // A planned crop can hold; an unclear or omitted completeness answer cannot silently pass.
+  for (const verdict of ["holds", "unclear", undefined] as const) {
+    const e = toEvaluation(checks, {
+      answers: checks.filter((c) => c.n !== 1 || verdict !== undefined).map((c) => ({ n: c.n, verdict: c.n === 1 ? verdict! : "holds", note: "" })),
+      artefacts: "none", artefactNotes: [], printedText: false,
+    });
+    assertEquals(e.productTruth, verdict === "holds" ? "pass" : "flag");
+    assertEquals(e.items[0].verdict, verdict ?? "unclear");
+    e.items.find((i) => i.ref === ROOM_REF)!.verdict = "off";
+    assertEquals(roomTaken(e), "Something stands in the room kept for the words.");
+  }
+});
+
+Deno.test("the room answer keeps its note after the two product photograph checks renumber it", async () => {
+  const { checklist, toEvaluation, ROOM_REF, roomTaken } = await import("./evaluate.ts");
+  const checks = checklist([
+    { kind: "concept", requirement: "A bottle beside a lamp", required: false, refId: "concept" },
+    { kind: "brand_rule_hard", requirement: "Keep the left clear for words", required: true, refId: ROOM_REF },
+  ], true);
+  assertEquals(checks.map((c) => [c.n, c.area, c.ref]), [
+    [1, "product", undefined], [2, "product", undefined], [3, "scene", undefined], [4, "brand", ROOM_REF],
+  ]);
+  const note = "The lamp stands in the left side kept for the words.";
+  const e = toEvaluation(checks, {
+    answers: [
+      { n: 4, verdict: "off", note },
+      { n: 3, verdict: "off", note: "The bottle is on the floor." },
+      { n: 2, verdict: "holds", note: "" },
+      { n: 1, verdict: "holds", note: "" },
+    ],
+    artefacts: "none", artefactNotes: [], printedText: false,
+  });
+  assertEquals([e.productTruth, e.brandRules], ["pass", "flag"]);
+  assertEquals(e.notes, [note, "The bottle is on the floor."]);
+  assertEquals(roomTaken(e), note);
 });
 
 Deno.test("the planned creative's crop reaches the picture check through the concept and manifest", async () => {

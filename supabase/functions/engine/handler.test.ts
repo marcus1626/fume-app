@@ -346,8 +346,9 @@ Deno.test("the Engine looks at the picture it kept, against what the prompt had 
   assertEquals(seen[0].pictureUrl, "https://signed/ws1/engine/x.png");
   // The Engine fetched the product's photographs itself and handed over their bytes.
   assertEquals(seen[0].productPhotos.map((p) => (p as { mediaType: string }).mediaType), ["image/png", "image/png"]);
-  assertEquals(seen[0].checks.map((c) => c.requirement).slice(1), ["A small amber glass bottle", "No people"]);
-  assert(seen[0].checks[0].requirement.startsWith("The product in the picture is the product in the photographs"));
+  assertEquals(seen[0].checks.map((c) => c.requirement).slice(2), ["A small amber glass bottle", "No people"]);
+  assert(seen[0].checks[0].requirement.startsWith("Is any part of the product cut off by the frame edge"));
+  assert(seen[0].checks[1].requirement.startsWith("The product in the picture is the product in the photographs"));
   const [id, evaluation, usd] = kept[0] as [string, { productTruth: string; brandRules: string; notes: string[]; evaluated: boolean }, number];
   assertEquals([id, evaluation.productTruth, evaluation.brandRules, evaluation.evaluated, usd], ["cand-1", "flag", "pass", true, 0.0008]);
   assertEquals(evaluation.notes, ["The label is hidden."]);
@@ -475,7 +476,7 @@ Deno.test("what the picture check found on the brand's last pictures is avoided 
 
 Deno.test("a picture that left no room for the words is made once more, told what stood in the room", async () => {
   const room = { id: "brand-room", kind: "brand_rule_hard" as const, refId: "room-for-words", required: true, check: "decision" as const, requirement: "The left 40% of the width is bare ground for the words.", suggestedSlot: "scene" as const };
-  const run = async (verdicts: ("holds" | "off" | "unclear")[], queue = true) => {
+  const run = async (verdicts: ("holds" | "off" | "unclear")[], queue = true, withProductPhotos = false) => {
     const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
     const asked: [string, string][] = [];
     const ran: string[] = [];
@@ -483,6 +484,12 @@ Deno.test("a picture that left no room for the words is made once more, told wha
     f.deps.later = (w) => void later.push(w);
     let picture = 0;
     f.deps.models.evaluate = async (input) => {
+      if (withProductPhotos) {
+        assertEquals(input.productPhotos.length, 2);
+        assertEquals(input.checks.map((c) => [c.n, c.area, c.ref]), [
+          [1, "product", undefined], [2, "product", undefined], [3, "brand", room.refId],
+        ]);
+      }
       const verdict = verdicts[picture++];
       return {
         looked: {
@@ -493,7 +500,14 @@ Deno.test("a picture that left no room for the words is made once more, told wha
       };
     };
     f.deps.service.toEvaluate = async () => ({
-      data: { candidates: verdicts.map((_, i) => ({ id: `cand-${i}`, path: `ws1/engine/${i}.png` })), manifest: [room], references: [] },
+      data: {
+        candidates: verdicts.map((_, i) => ({ id: `cand-${i}`, path: `ws1/engine/${i}.png` })),
+        manifest: [room],
+        references: withProductPhotos ? [
+          { url: "https://signed/ws1/oil.png", role: "Oil, front" },
+          { url: "https://signed/ws1/oil-back.png", role: "Oil, back" },
+        ] : [],
+      },
       error: null,
     });
     f.deps.service.evaluated = async () => ({ error: null });
@@ -506,6 +520,9 @@ Deno.test("a picture that left no room for the words is made once more, told wha
   const off = await run(["off"]);
   assertEquals(off.asked.map((a) => a[1]), ["The sled fills the left side."], "the job is queued once more with what stood in the room");
   assertEquals(off.ran, [JOB], "and the next picture starts at once");
+  const withPhotos = await run(["off"], true, true);
+  assertEquals(withPhotos.asked, [["att-1", "The sled fills the left side."]], "the renumbered room answer supplies the remake reason with product pictures");
+  assertEquals(withPhotos.ran, [JOB]);
   assertEquals((await run(["off", "holds"])).asked, [], "one picture with room is enough for the expert");
   assertEquals((await run(["unclear"])).asked, [], "a room the check cannot tell is left to the expert");
   assertEquals((await run(["off"], false)).ran, [], "nothing starts when the job may not be made again");
