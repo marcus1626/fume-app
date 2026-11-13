@@ -1,0 +1,26 @@
+{
+  "id": "boolean",
+  "label_nb": "Ja eller nei",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": true,
+      "label_nb": "Ja",
+      "definition": "Ja."
+    },
+    {
+      "id": false,
+      "label_nb": "Nei",
+      "definition": "Nei."
+    }
+  ]
+}

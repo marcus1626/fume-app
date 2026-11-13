@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "EU",
+    "CAP",
+    "alle"
+  ],
+  "x-list": "../../lists/legal-area.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/legal-area.schema.json",
+  "title": "legal-area"
+}

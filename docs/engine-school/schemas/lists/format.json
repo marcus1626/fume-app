@@ -1,0 +1,485 @@
+{
+  "id": "format",
+  "label_nb": "Format",
+  "source": [
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+    },
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/407108559393196",
+      "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/1722124",
+      "locator": "Ad formats available in a Google Ads account",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+      "locator": "Format comparison; Where it serves",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+      "locator": "Ad format eligibility",
+      "read_on": "2026-11-13",
+      "verified": false,
+      "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+      "locator": "For You Feed; Search Feed; Search Results Page",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+      "locator": "Spark Ads (Pull); Non-Spark Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Ads Guide",
+      "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+      "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Help",
+      "url": "https://www.linkedin.com/help/lms/answer/a422880",
+      "locator": "Ad Objective / Goal / Ad Formats",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    }
+  ],
+  "values": [
+    {
+      "id": "tekst",
+      "label_nb": "Tekst",
+      "definition": "Tekstannonse eller tekstleveranse.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "bilde",
+      "label_nb": "Bilde",
+      "definition": "Ett stillbilde.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "label_nb": "Video",
+      "definition": "Én videoressurs.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "karusell",
+      "label_nb": "Karusell",
+      "definition": "Flere kort som kan blas.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+        }
+      ]
+    },
+    {
+      "id": "samling",
+      "label_nb": "Samling",
+      "definition": "Produktsamling med hovedressurs.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+        }
+      ]
+    },
+    {
+      "id": "fleksibel",
+      "label_nb": "Fleksibel",
+      "definition": "Meta setter sammen ressurser i støttet oppsett.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+        }
+      ]
+    },
+    {
+      "id": "responsiv-display",
+      "label_nb": "Responsiv display",
+      "definition": "Google kombinerer ressurser til display.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "shopping",
+      "label_nb": "Shopping",
+      "definition": "Google-produktoppføring fra produktdata.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "app",
+      "label_nb": "App",
+      "definition": "Google-annonse for appinstallasjon eller bruk.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-skippable",
+      "label_nb": "Yt skippable",
+      "definition": "Video som kan hoppes over.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-non-skippable",
+      "label_nb": "Yt non skippable",
+      "definition": "Video uten hopp over, etter kampanjetype.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-in-feed",
+      "label_nb": "Yt in feed",
+      "definition": "Videoannonse valgt fra YouTube-feed eller søk.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-bumper",
+      "label_nb": "Yt bumper",
+      "definition": "Kort YouTube-video med egen lengdegrense.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-masthead",
+      "label_nb": "Yt masthead",
+      "definition": "Reservasjonsformat på YouTube-forsiden.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-shorts",
+      "label_nb": "Yt shorts",
+      "definition": "Video i YouTube Shorts.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-spark",
+      "label_nb": "Tt spark",
+      "definition": "Annonse fra autorisert organisk TikTok-innlegg.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+          "locator": "Spark Ads (Pull); Non-Spark Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-non-spark",
+      "label_nb": "Tt non spark",
+      "definition": "Separat opplastet TikTok in-feed-annonse.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+          "locator": "Spark Ads (Pull); Non-Spark Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-dokument",
+      "label_nb": "Li dokument",
+      "definition": "Dokumentannonse i LinkedIn.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-event",
+      "label_nb": "Li event",
+      "definition": "Annonse for LinkedIn-arrangement.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-melding",
+      "label_nb": "Li melding",
+      "definition": "Direkte sponsormelding der tilgjengelig.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-samtale",
+      "label_nb": "Li samtale",
+      "definition": "Sponset meldingsforløp med svarvalg.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-follower",
+      "label_nb": "Li follower",
+      "definition": "Dynamisk LinkedIn-annonse for følgere.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-spotlight",
+      "label_nb": "Li spotlight",
+      "definition": "Dynamisk LinkedIn-annonse for tilbud.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-jobb",
+      "label_nb": "Li jobb",
+      "definition": "LinkedIn jobbannonse.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-artikkel-nyhetsbrev",
+      "label_nb": "Li artikkel nyhetsbrev",
+      "definition": "Sponset LinkedIn-artikkel eller nyhetsbrev.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-thought-leader",
+      "label_nb": "Li thought leader",
+      "definition": "Sponset innlegg fra autorisert person.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    }
+  ]
+}

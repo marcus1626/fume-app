@@ -1,0 +1,36 @@
+{
+  "id": "validation-status",
+  "label_nb": "Valideringsstatus",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "bestått",
+      "label_nb": "Bestått",
+      "definition": "Alle relevante porter er dokumentert oppfylt."
+    },
+    {
+      "id": "avvist",
+      "label_nb": "Avvist",
+      "definition": "Minst ett krav er ikke oppfylt."
+    },
+    {
+      "id": "uavklart",
+      "label_nb": "Uavklart",
+      "definition": "Grunnlag eller vurdering mangler; videreføring blokkeres."
+    },
+    {
+      "id": "avventer",
+      "label_nb": "Avventer",
+      "definition": "Steget er ennå ikke utført."
+    }
+  ]
+}

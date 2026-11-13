@@ -1,0 +1,41 @@
+{
+  "id": "offer-type",
+  "label_nb": "Tilbudstype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "ordinaer-pris",
+      "label_nb": "Ordinaer pris",
+      "definition": "Salg til ordinær pris."
+    },
+    {
+      "id": "prisnedsettelse",
+      "label_nb": "Prisnedsettelse",
+      "definition": "Påstått individuell prisreduksjon."
+    },
+    {
+      "id": "betinget-tilbud",
+      "label_nb": "Betinget tilbud",
+      "definition": "Fordel avhengig av bestemte vilkår."
+    },
+    {
+      "id": "kombinasjon",
+      "label_nb": "Kombinasjon",
+      "definition": "Flere tilbudsmekanismer må kontrolleres hver for seg."
+    },
+    {
+      "id": "ikke-relevant",
+      "label_nb": "Ikke relevant",
+      "definition": "Ingen pris- eller tilbudsoppgave; begrunn hvorfor."
+    }
+  ]
+}

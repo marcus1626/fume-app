@@ -1,0 +1,36 @@
+{
+  "id": "category-type",
+  "label_nb": "Kategoritype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "produkt",
+      "label_nb": "Produkt",
+      "definition": "Fysisk vare."
+    },
+    {
+      "id": "tjeneste",
+      "label_nb": "Tjeneste",
+      "definition": "Utført tjeneste."
+    },
+    {
+      "id": "opplevelse",
+      "label_nb": "Opplevelse",
+      "definition": "Deltatt opplevelse."
+    },
+    {
+      "id": "kombinasjon",
+      "label_nb": "Kombinasjon",
+      "definition": "Kombinert leveranse; bestanddelene navngis."
+    }
+  ]
+}

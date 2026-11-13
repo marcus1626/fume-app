@@ -1,0 +1,21 @@
+{
+  "result": "PASS",
+  "counts": {
+    "schema_enums": 37768,
+    "registry_values": 1222,
+    "condition_operators": 59,
+    "presence_operands": 42,
+    "condition_operands": 61,
+    "metadata": 4001,
+    "checkpoints": 1092,
+    "skill_predicates": 1567,
+    "field_types": 820,
+    "placement_channels": 120,
+    "placement_parents": 18,
+    "format_contract": 252,
+    "structured_examples": 15,
+    "channel_separation": 3
+  },
+  "errors": [],
+  "limits": "Independent membership audit: reads delivered JSON, never imports the generator.\n\nProse, free-text locators and explicitly open records are outside closed-list\nmembership. Platform combinations still require account/objective/market evidence."
+}

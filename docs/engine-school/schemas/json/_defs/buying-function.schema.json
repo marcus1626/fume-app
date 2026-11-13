@@ -1,0 +1,14 @@
+{
+  "enum": [
+    "fag",
+    "innkjop",
+    "okonomi",
+    "juridisk",
+    "drift",
+    "annet"
+  ],
+  "x-list": "../../lists/buying-function.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/buying-function.schema.json",
+  "title": "buying-function"
+}

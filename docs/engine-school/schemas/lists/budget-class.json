@@ -1,0 +1,36 @@
+{
+  "id": "budget-class",
+  "label_nb": "Budsjettklasse",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "mikro",
+      "label_nb": "Mikro",
+      "definition": "Begrenset pilot med lokalt fastsatt øvre beløp."
+    },
+    {
+      "id": "liten",
+      "label_nb": "Liten",
+      "definition": "Liten plan etter kundens terskeltabell."
+    },
+    {
+      "id": "middels",
+      "label_nb": "Middels",
+      "definition": "Mellomnivå etter kundens terskeltabell."
+    },
+    {
+      "id": "stor",
+      "label_nb": "Stor",
+      "definition": "Stor plan etter kundens terskeltabell."
+    }
+  ]
+}

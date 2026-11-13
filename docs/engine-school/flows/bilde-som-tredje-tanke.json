@@ -1,0 +1,349 @@
+{
+  "id": "bilde-som-tredje-tanke",
+  "name": "Bildet som en tredje tanke",
+  "purpose": "La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+  "sources": [
+    {
+      "source": "Bill Bernbach / DDB — Creative Hall of Fame",
+      "url": "https://creativehalloffame.org/inductees/bill-bernbach/",
+      "locator": "Career, avsnittene om samspillet mellom art director og tekstforfatter"
+    },
+    {
+      "source": "D&AD — Everything Starts With a Handmade Square",
+      "url": "https://www.dandad.org/work/new-blood-archive/everything-starts-with-a-handmade-square",
+      "locator": "Everything Starts With a Handmade Square, de to beskrivende avsnittene"
+    },
+    {
+      "source": "Claude Hopkins — Scientific Advertising (1923)",
+      "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+      "locator": "sources/scientific-advertising.txt, kapittel 9; Art In Advertising, innledningen om bildets salgsargument"
+    },
+    {
+      "source": "Dave Trott — Blog",
+      "url": "https://davetrott.co.uk/2026/11/sabotaging-ourselves-2/",
+      "locator": "SABOTAGING OURSELVES, 9. november 2026, avsnittene etter listen med åtte handlinger"
+    },
+    {
+      "source": "Språkrådet — Skriveråd for ulike teksttypar",
+      "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+      "locator": "Brev → 4 Språk, avsnittet om teiknsetjing og korrektur"
+    },
+    {
+      "source": "Meta — Ad creative",
+      "url": "https://www.facebook.com/business/ads/ad-creative",
+      "locator": "Placements"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "BRIEF.md",
+      "locator": "Step 2 — Skills; avsnittet Fume ethics beat platform advice"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "../BRIEF.md",
+      "locator": "Step 2 — Skills, punktet Fume ethics beat platform advice"
+    }
+  ],
+  "checkpoints": [
+    9
+  ],
+  "input": "artefakter/{oppdrag_id}/08-kundevalg.json",
+  "steps": [
+    {
+      "n": 1,
+      "what": "Lag tre samlede ord- og bildeskisser til den valgte hovedlinjen. Hver skisse har konsept-ID, uendret tekst, konkret bildebeskrivelse, bildets egen opplysning, den tredje tanken som oppstår i kombinasjonen og kobling til fordel, bevis eller kjøpssituasjon. Forklar eventuelle metaforers to sider og fellestrekk. Angi hvordan godkjente testlinjer kan utføres med samme idé. Foreslå dokumenterbare bilder eller ærlige illustrasjoner med planlagt opphav. Registrer skriverens faktiske leverandør- og modell-ID i modellsporet; modellalias alene er ikke nok. Les og viderefør kampanjekortet etter input_fields.kampanjekort; bruk aktiv del som bindende ramme.",
+      "who": "modell",
+      "input": "artefakter/{oppdrag_id}/08-kundevalg.json",
+      "output": "artefakter/{oppdrag_id}/09-bildekonsepter.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Tre ulike konsepter har alle de navngitte feltene; ordlyden samsvarer med kundevalget.",
+          "Ingen konseptbeskrivelse foreslår KI-generert UGC eller KI-personer som virkelige kunder; manglende opphavsplan gir avvist.",
+          "Kampanjekortet finnes gjennom inndata, er bestått, og aktiv del_id, kortversjon, SHA-256 og bibliotekmanifest samsvarer; kontekst og ferdighetsvalg er videreført.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Smaksoverstyring: ekstern signatur-/myndighetskontroll og nyberegnet kanonisk SHA-256 binder eksakt merke, felt, før/etter, versjoner, begrunnelse og kampanje/del. Eventuelle kampanjeavvik har bestått taste_override_contract og schemas/merkevare-vs-kampanje.json; manglende menneskevedtak, utløpt vedtak eller forsøk på å endre merkeidentitet/etikk blokkerer.",
+          "Utdata følger schemas/09-bildekonsepter.json med importert felleskontrakt; inndata følger schemas/08-kundevalg.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/08-kundevalg.json",
+      "output_schema": "schemas/09-bildekonsepter.json"
+    },
+    {
+      "n": 2,
+      "what": "Les ord og bilde både hver for seg og sammen. Kontroller at bildet tilfører en konkret opplysning eller tolkning som teksten ikke sier alene, og at kombinasjonen bærer en forståelig tredje tanke. Avvis ren gjentakelse og pynt uten oppgave. Viderefør bare konsepter med begrunnet bestått, uten å velge på menneskets vegne. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/09-bildekonsepter.json",
+      "output": "artefakter/{oppdrag_id}/09-bildekonseptkritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Kritikeren er en annen faktisk modell enn skriveren.",
+          "Minst ett konsept har bestått på tilleggsmening, forståelig forbindelse, merkevare, dokumentasjon og etikk.",
+          "Hvert vurdert konsept har en eksplisitt beskrivelse av hva som forsvinner i meningen dersom bildet fjernes.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/09-bildekonseptkritikk.json med importert felleskontrakt; inndata følger schemas/09-bildekonsepter.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/09-bildekonsepter.json",
+      "output_schema": "schemas/09-bildekonseptkritikk.json"
+    },
+    {
+      "n": 3,
+      "what": "La en designer velge ett bestått konsept og lage faktiske annonseutkast for hovedlinjen og godkjente testalternativer i de avtalte plasseringene. Stegets ene utdataartefakt er et JSON-objekt med et tilgangsstyrt referansemanifest for faktiske forhåndsvisninger og mediefiler, tekst, format, landingsside og materielloversikt. Produsenten registrerer mediene én gang i autorisert ressurslager; bare referanser videreføres, og ingen ekstra rapportfil lages. Registrer opphav, bruksrett, faktisk personrolle, eventuell KI-bruk og faktisk bildemodell-ID per ressurs. Fume-forbudene gjelder også når innhold merkes som KI.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/09-bildekonseptkritikk.json",
+      "output": "artefakter/{oppdrag_id}/09-annonseutkast.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Ett konsept er valgt med begrunnelse, navn, dato og versjon, og 1–3 godkjente linjer er utført med uendret ordlyd.",
+          "Hver bestilt plassering har en faktisk, tilgangsstyrt referert forhåndsvisning eller mediefil som kan åpnes; kun en tekstlig bildebeskrivelse er ikke nok.",
+          "Alle ressurser har dokumentert opphav og bruksrett; faktisk KI-modell er registrert der KI er brukt.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Utdata følger schemas/09-annonseutkast.json med importert felleskontrakt; inndata følger schemas/09-bildekonseptkritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-bildekonseptkritikk.json",
+      "output_schema": "schemas/09-annonseutkast.json"
+    },
+    {
+      "n": 4,
+      "what": "Dekod refererte ressurser og kontroller integritet, dimensjoner, varighet og filtype mot de bestilte plasseringene og datert plattformgrunnlag. Kontroller tekst mot kundevalget og materielloversikten mot opphavskravene. Lagre målinger og ressursenes SHA-256 i samme annonsepakke.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/09-annonseutkast.json",
+      "output": "artefakter/{oppdrag_id}/09-annonseformat-kontrollert.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle refererte filer kan dekodes og har forventet SHA-256 og plasseringens dokumenterte formatkrav.",
+          "Ingen ressurs mangler opphav eller KI-status, og ingen tekst er endret siden kundevalget.",
+          "Foreldede eller utilgjengelige plattformkrav gir retur for ny kildekontroll; ukjent samsvar er ikke bestått.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Utdata følger schemas/09-annonseformat-kontrollert.json med importert felleskontrakt; inndata følger schemas/09-annonseutkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-annonseutkast.json",
+      "output_schema": "schemas/09-annonseformat-kontrollert.json"
+    },
+    {
+      "n": 5,
+      "what": "Vurder de faktiske refererte annonseutkastene i sammenheng med teksten, ikke bare konseptbeskrivelsen. Kontroller at tredje tanke overlever utførelsen, at bildet ikke gir nye udokumenterte løfter, og at ord, bilde, avsender og målhandling kan oppfattes i plasseringen. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/09-annonseformat-kontrollert.json",
+      "output": "artefakter/{oppdrag_id}/09-annonseutkast-kritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Kritikeren er aldri samme faktiske modell som tekstskriver, konseptskriver eller eventuell bildeskriver; kode kontrollerer hele modellsporet før vurdering.",
+          "Alle utkast har begrunnet bestått på bildets tilleggsmening, lesbarhet, avsender, oppfordring, påstander og opphav.",
+          "Ingen KI-generert UGC eller KI-person fremstilt som virkelig kunde er til stede; ukjent personrolle gir avvist.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/09-annonseutkast-kritikk.json med importert felleskontrakt; inndata følger schemas/09-annonseformat-kontrollert.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/09-annonseformat-kontrollert.json",
+      "output_schema": "schemas/09-annonseutkast-kritikk.json"
+    },
+    {
+      "n": 6,
+      "what": "La kunden og redaksjonelt ansvarlig kontrollere utførelsen og utføre menneskelig korrektur av ordvalg og tegnsetting. Godkjenn de konkrete refererte filenes SHA-256. Endringer i tekst, bilde eller vilkår sendes tilbake til riktig produsent og valideres på nytt. Dette er en foreløpig kreativ utførelsesgodkjenning. Endelig frigivelse krever etterfølgende lovsjekk og menneskelig frigivelsesgodkjenning for eksakt versjon.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/09-annonseutkast-kritikk.json",
+      "output": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle meningsendrende korrekturfeil er lukket; både kundens godkjenning og korrektur har navn, dato, versjon og ressursenes SHA-256.",
+          "Bare kontrollerte utkast følger videre til lovsjekk; utførelsesgodkjenning er ikke juridisk godkjenning.",
+          "Utdata følger schemas/09-annonseutforelse-godkjent.json med importert felleskontrakt; inndata følger schemas/09-annonseutkast-kritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-annonseutkast-kritikk.json",
+      "output_schema": "schemas/09-annonseutforelse-godkjent.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at flytens lagrede inndata finnes, er lesbart og har validering.status lik bestått. Det første oppdragsartefaktet må oppfylle inngangskontrakten i flows/_index.json. Senere flyter leser bare den umiddelbart foregående flytens godkjente sluttartefakt. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Kampanjekortets referanse i inndata skal oppfylle input_fields.kampanjekort. Kode sjekker bestått status, del_id, versjon og SHA-256 mot den godkjente kortversjonen og biblioteket; feil eller mangler stopper før skriving.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": " Kampanjekortets versjon, hash og aktiv del_id videreføres uendret i grunnlaget; ved motstrid returneres til kampanjekort før videre skriving."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "ide-samlet-skisse",
+    "ide-bildets-bidrag",
+    "ide-metafor-med-forbindelse",
+    "ide-bilde-med-oppgave",
+    "ide-bevar-baerende-grep",
+    "copy-menneskelig-korrektur",
+    "plattform-plassering-stoetter-format",
+    "plattform-ingen-ki-ugc-eller-falske-kunder"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "kampanjekort": {
+      "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+      "required": [
+        "kort_id",
+        "versjon",
+        "SHA-256",
+        "validering.status bestått",
+        "aktiv del_id",
+        "funnel.stage og funnel.mode",
+        "kundestatus",
+        "salgsrunde",
+        "schwartz.level med belegg",
+        "foresporsel",
+        "maling",
+        "ferdighetsvalg og konfliktlosninger",
+        "ferdighetsbibliotek med versjon og hash"
+      ],
+      "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+      "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+      "schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  },
+  "input_schema": "schemas/08-kundevalg.json",
+  "output_artifact_schema": "schemas/09-annonseutforelse-godkjent.json",
+  "schema_reads": [
+    "schemas/kampanje.json",
+    "schemas/kanal-format.json",
+    "schemas/leser.json",
+    "schemas/merkevare-vs-kampanje.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "taste_override_contract": {
+    "schema": "schemas/merkevare-vs-kampanje.json",
+    "verification": "Krev ekstern verifisering av signatur og menneskelig myndighet for merket, bind eksakt felt, merke, før-/etterverdi og versjon, kampanje/del, begrunnelse, tidspunkt og beregnede hasher; avvis uten betrodd verifier.",
+    "rule": "Les arvet merkeverdi og effektiv kampanjeverdi separat. Overstyring av et tillatt felt krever navngitt menneske, før-/etterhash, begrunnelse, kampanje/del og gyldighetsperiode før bruk. Ufravikelige felt kan ikke overstyres. Merkeprofilen endres aldri av kampanjevalget. Nytt vedtak krever ny kortversjon og berørte nedstrømsgodkjenninger."
+  },
+  "field_reads": {
+    "kampanje.id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kampanje.goal": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kampanje.funnel.stage": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kampanje.funnel.mode": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.ceps": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.jtbd.progress": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.ceps[].cue_type": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.jtbd.dimension": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "leser.jtbd.circumstances": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.channel": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.placement": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.format": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.binding.creative_medium": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.binding.ad_product": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.binding.delivery_behavior": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.asset_features": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.specs.aspect_ratio": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.specs.safe_zone": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.availability": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.binding": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "kanal-format.component": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.brand_id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.identity": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.ethics": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.schema_version": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.profile_ref": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.gender_expression": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.standing": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.sample": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.field_ref": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.old_value": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.new_value": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.reason": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.approval": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.invalidates": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.old_value.value": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.old_value.version": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.new_value.value": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.new_value.version": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.signature": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.decision_id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.version": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.scope": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.brand_profile_mutated": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.proposal": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.approval": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.approved_by": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.approved_by.actor_type": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.approved_at": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.expires_at": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.scope.campaign_id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.scope.del_id": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.before_sha256": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.override.after_sha256": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.available": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "merkevare-vs-kampanje.taste.kind": "Grunnlag for La ord og bilde sammen skape en ny mening og føre konseptet frem til et ekte annonseutkast.",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

@@ -1,0 +1,814 @@
+{
+  "id": "leser",
+  "label_nb": "Leserens situasjon og kunnskap",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "bilde-som-tredje-tanke",
+    "east-tiltak-og-test",
+    "innsiktsjakt",
+    "kampanjekort",
+    "klarsprak-revisjon",
+    "konkurrenter-for-loftet",
+    "leseren-klar-for-kjoep",
+    "leseren-ukjent-problem",
+    "leserkort",
+    "linjebredde-og-valg",
+    "logikkjede",
+    "testplan-ekte-annonser",
+    "trakt-schwartz-fra-kunnskap"
+  ],
+  "fields": [
+    {
+      "id": "leser.id",
+      "path": "id",
+      "group": "id",
+      "label_nb": "Leser-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Binder én avgrenset mottakergruppe og kildegrunnlag.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder én avgrenset mottakergruppe og kildegrunnlag."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.schwartz.level",
+      "path": "schwartz.level",
+      "group": "schwartz",
+      "label_nb": "Schwartz-nivå",
+      "type": "integer",
+      "values": [
+        {
+          "value": 1,
+          "definition": "Kjenner ikke problemet."
+        },
+        {
+          "value": 2,
+          "definition": "Kjenner problemet."
+        },
+        {
+          "value": 3,
+          "definition": "Kjenner løsningstypen."
+        },
+        {
+          "value": 4,
+          "definition": "Kjenner det konkrete produktet."
+        },
+        {
+          "value": 5,
+          "definition": "Kjenner og ønsker produktet; trenger kjøpsinformasjon."
+        }
+      ],
+      "definition": "Velger hvor teksten begynner; utledes fra kunnskap med belegg, aldri fra trinn eller klikk alene.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "De fem nivåene: Unaware; Problem Aware; Solution Aware; Product Aware; Most Aware; fri forklaring, ikke originalboken"
+      },
+      "lever": {
+        "flows": [
+          "innsiktsjakt",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger hvor teksten begynner; utledes fra kunnskap med belegg, aldri fra trinn eller klikk alene."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "leseren-klar-for-kjoep",
+        "leseren-ukjent-problem",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser",
+        "trakt-schwartz-fra-kunnskap"
+      ]
+    },
+    {
+      "id": "leser.schwartz.evidence",
+      "path": "schwartz.evidence",
+      "group": "schwartz",
+      "label_nb": "Kunnskapsbelegg",
+      "type": "object",
+      "values": [],
+      "definition": "Dokumenter problemkunnskap, løsningskunnskap, produktkunnskap og kjøpsønske, kilde/dato, motbelegg og usikkerhet.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "De fem nivåene: Unaware; Problem Aware; Solution Aware; Product Aware; Most Aware; fri forklaring, ikke originalboken"
+      },
+      "lever": {
+        "flows": [
+          "innsiktsjakt",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Dokumenter problemkunnskap, løsningskunnskap, produktkunnskap og kjøpsønske, kilde/dato, motbelegg og usikkerhet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser",
+        "trakt-schwartz-fra-kunnskap"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.ceps",
+      "path": "ceps",
+      "group": "ceps",
+      "label_nb": "Kjøpssituasjoner",
+      "type": "array",
+      "values": [],
+      "definition": "Liste over faktiske signaler som kan hente kategorien frem fra minnet; situasjonsteksten er åpen, ingen universell CEP-liste.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Ehrenberg-Bass — Identifying and Prioritising Category Entry Points",
+        "url": "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/categoryentrypoints.pdf",
+        "locator": "Identifying and Prioritising Category Entry Points; kjøpssituasjoner og kildebasert prioritering"
+      },
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Liste over faktiske signaler som kan hente kategorien frem fra minnet; situasjonsteksten er åpen, ingen universell CEP-liste."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.jtbd.progress",
+      "path": "jtbd.progress",
+      "group": "jtbd",
+      "label_nb": "Ønsket fremgang",
+      "type": "object",
+      "values": [],
+      "definition": "Fremgangen leseren søker i en bestemt situasjon, med nåsituasjon, ønsket utfall og alternativ.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Jobs to Be Done theory; progress; circumstances; functional, social and emotional dimensions"
+      },
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Fremgangen leseren søker i en bestemt situasjon, med nåsituasjon, ønsket utfall og alternativ."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.beliefs",
+      "path": "beliefs",
+      "group": "beliefs",
+      "label_nb": "Oppfatninger",
+      "type": "array",
+      "values": [],
+      "definition": "Dokumenterte oppfatninger med kilde og mulig motbelegg; ikke en oppdiktet personlighet.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "leserkort",
+          "logikkjede"
+        ],
+        "choices": "Dokumenterte oppfatninger med kilde og mulig motbelegg; ikke en oppdiktet personlighet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "leserkort",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.objections",
+      "path": "objections",
+      "group": "objections",
+      "label_nb": "Innvendinger",
+      "type": "array",
+      "values": [],
+      "definition": "Konkrete hindre eller spørsmål med belegg, alvor og mulig dokumentert svar.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "logikkjede"
+        ],
+        "choices": "Konkrete hindre eller spørsmål med belegg, alvor og mulig dokumentert svar."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.roles.evidence",
+      "path": "roles.evidence",
+      "group": "roles",
+      "label_nb": "Rollegrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Dokumenter hvilke personer/funksjoner som fyller hver rolle og deres kriterier; flere roller per person tillates.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Dokumenter hvilke personer/funksjoner som fyller hver rolle og deres kriterier; flere roller per person tillates."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.ceps[].cue_type",
+      "path": "ceps[].cue_type",
+      "group": "ceps",
+      "label_nb": "Type situasjonssignal",
+      "type": "array",
+      "values": [
+        {
+          "value": "motiv",
+          "definition": "Behov eller begrunnelse."
+        },
+        {
+          "value": "folelse",
+          "definition": "Følelse i situasjonen."
+        },
+        {
+          "value": "tid",
+          "definition": "Tidspunkt eller hendelse."
+        },
+        {
+          "value": "sted",
+          "definition": "Hvor kjøpsbehovet oppstår."
+        },
+        {
+          "value": "sammen-med",
+          "definition": "Andre personer eller produkter i situasjonen."
+        },
+        {
+          "value": "aktivitet",
+          "definition": "Hva leseren gjør."
+        },
+        {
+          "value": "annet",
+          "definition": "Kildebelagt signal utenfor disse kodene."
+        }
+      ],
+      "definition": "Fume-koding av situasjonssignaler, inspirert av intern/ekstern CEP-forståelse. Ikke ferdige kundesituasjoner.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Fume-koding av situasjonssignaler, inspirert av intern/ekstern CEP-forståelse. Ikke ferdige kundesituasjoner."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "leser.jtbd.dimension",
+      "path": "jtbd.dimension",
+      "group": "jtbd",
+      "label_nb": "Jobbens dimensjoner",
+      "type": "array",
+      "values": [
+        {
+          "value": "funksjonell",
+          "definition": "Praktisk fremgang."
+        },
+        {
+          "value": "emosjonell",
+          "definition": "Hvordan leseren ønsker å føle seg."
+        },
+        {
+          "value": "sosial",
+          "definition": "Hvordan leseren ønsker å bli oppfattet."
+        }
+      ],
+      "definition": "Hvilken fremgang innholdet skal hjelpe med; dimensjonene kan opptre sammen.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Jobs to Be Done theory; progress; circumstances; functional, social and emotional dimensions"
+      },
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Hvilken fremgang innholdet skal hjelpe med; dimensjonene kan opptre sammen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "leser.jtbd.circumstances",
+      "path": "jtbd.circumstances",
+      "group": "jtbd",
+      "label_nb": "Omstendigheter",
+      "type": "object",
+      "values": [],
+      "definition": "Når, hvor og under hvilke begrensninger jobben oppstår; bruk observert hendelse og kilde.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Jobs to Be Done theory; progress; circumstances; functional, social and emotional dimensions"
+      },
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Når, hvor og under hvilke begrensninger jobben oppstår; bruk observert hendelse og kilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "leser.roles.b2b",
+      "path": "roles.b2b",
+      "group": "roles",
+      "label_nb": "Roller i kjøpsgruppen",
+      "type": "array",
+      "values": [
+        {
+          "value": "initiativtaker",
+          "definition": "Starter kjøpsprosessen."
+        },
+        {
+          "value": "pavirker",
+          "definition": "Bidrar med kriterier eller råd."
+        },
+        {
+          "value": "portvakt",
+          "definition": "Filtrerer tilgang eller informasjon."
+        },
+        {
+          "value": "innkjoper",
+          "definition": "Forhandler og gjennomfører innkjøp."
+        },
+        {
+          "value": "beslutter",
+          "definition": "Har myndighet til endelig valg."
+        },
+        {
+          "value": "bruker",
+          "definition": "Bruker leveransen."
+        }
+      ],
+      "definition": "Velger hvem argumentasjon og bevis skal hjelpe. Rollene overlapper; dette er funksjoner i kjøpet.",
+      "filled_by": "modell",
+      "source": {
+        "source": "OpenStax — Buyers and Buying Situations in a B2B Market",
+        "url": "https://openstax.org/books/principles-marketing/pages/4-2-buyers-and-buying-situations-in-a-b2b-market",
+        "locator": "4.2; Figure 4.5 Individuals in the Buying Center; Types of Buying Situations"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Velger hvem argumentasjon og bevis skal hjelpe. Rollene overlapper; dette er funksjoner i kjøpet."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "leser.roles.b2c",
+      "path": "roles.b2c",
+      "group": "roles",
+      "label_nb": "Roller i forbrukerkjøpet",
+      "type": "array",
+      "values": [
+        {
+          "value": "initiativtaker",
+          "definition": "Foreslår behov eller kjøp."
+        },
+        {
+          "value": "pavirker",
+          "definition": "Gir råd eller påvirker."
+        },
+        {
+          "value": "velger",
+          "definition": "Tar kjøpsvalget."
+        },
+        {
+          "value": "betaler",
+          "definition": "Bærer betalingen."
+        },
+        {
+          "value": "bruker",
+          "definition": "Bruker produktet."
+        }
+      ],
+      "definition": "Fume-inndeling for å skille betaler, velger og bruker i husholdningen; ikke likestilt med B2B-modellen.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Fume-inndeling for å skille betaler, velger og bruker i husholdningen; ikke likestilt med B2B-modellen."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2C"
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "leser.roles.expertise",
+      "path": "roles.expertise",
+      "group": "roles",
+      "label_nb": "Kjøpsekspertise",
+      "type": "array",
+      "values": [
+        {
+          "value": "produkt",
+          "definition": "Vurderer funksjon og ytelse."
+        },
+        {
+          "value": "prosess",
+          "definition": "Vurderer risiko og gjennomføring."
+        }
+      ],
+      "definition": "Skiller produktvurdering fra prosess- og risikovurdering uten å tildele roller etter stilling alene.",
+      "filled_by": "modell",
+      "source": {
+        "source": "LinkedIn B2B Institute — The Hidden Buyer Gap",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/the-hidden-buyer-gap",
+        "locator": "The Problem; Hidden Buyers; risk mitigation and reputation"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Skiller produktvurdering fra prosess- og risikovurdering uten å tildele roller etter stilling alene."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "leser.roles.functions",
+      "path": "roles.functions",
+      "group": "roles",
+      "label_nb": "Funksjoner i virksomheten",
+      "type": "array",
+      "values": [
+        {
+          "value": "fag",
+          "definition": "Produkt- eller fagekspertise."
+        },
+        {
+          "value": "innkjop",
+          "definition": "Anskaffelsesprosess."
+        },
+        {
+          "value": "okonomi",
+          "definition": "Økonomi og finansiering."
+        },
+        {
+          "value": "juridisk",
+          "definition": "Avtaler og regelkrav."
+        },
+        {
+          "value": "drift",
+          "definition": "Gjennomføring og drift."
+        },
+        {
+          "value": "annet",
+          "definition": "Annen dokumentert funksjon."
+        }
+      ],
+      "definition": "Planlegger bevis for funksjonenes kjøpskriterier; ikke en uttømmende organisasjonsmodell.",
+      "filled_by": "modell",
+      "source": {
+        "source": "LinkedIn B2B Institute — The Hidden Buyer Gap",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/the-hidden-buyer-gap",
+        "locator": "The Problem; Hidden Buyers; risk mitigation and reputation"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Planlegger bevis for funksjonenes kjøpskriterier; ikke en uttømmende organisasjonsmodell."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "leser.buying_situation",
+      "path": "buying_situation",
+      "group": "buying_situation",
+      "label_nb": "B2B-kjøpssituasjon",
+      "type": "string",
+      "values": [
+        {
+          "value": "nykjop",
+          "definition": "Ny oppgave eller første anskaffelse."
+        },
+        {
+          "value": "endret-gjenkjop",
+          "definition": "Tidligere kjøp med nye vilkår eller krav."
+        },
+        {
+          "value": "rent-gjenkjop",
+          "definition": "Gjentakelse uten vesentlig endring."
+        }
+      ],
+      "definition": "Tilpasser informasjonsbehov til kjøpets situasjon, ikke til en fast personlighet.",
+      "filled_by": "modell",
+      "source": {
+        "source": "OpenStax — Buyers and Buying Situations in a B2B Market",
+        "url": "https://openstax.org/books/principles-marketing/pages/4-2-buyers-and-buying-situations-in-a-b2b-market",
+        "locator": "4.2; Figure 4.5 Individuals in the Buying Center; Types of Buying Situations"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Tilpasser informasjonsbehov til kjøpets situasjon, ikke til en fast personlighet."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    }
+  ],
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

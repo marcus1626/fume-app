@@ -1,0 +1,234 @@
+{
+  "id": "11-resultater-start",
+  "label_nb": "Hent resultater og lag en læringsbeslutning — steg 1",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kategori"
+  ],
+  "read_by": [
+    "resultater-og-laering"
+  ],
+  "fields": [
+    {
+      "id": "11-resultater-start.innhold.resultater",
+      "path": "innhold.resultater",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet resultater for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Samlet resultater for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.start",
+      "path": "innhold.resultater.start",
+      "group": "innhold",
+      "label_nb": "Menneskestyrt start",
+      "type": "object",
+      "values": [],
+      "definition": "Verifisert frigivelse og gyldig lovsjekk; signert start eller attestert tidligere start, kampanje-/variant-ID, budsjett og stoppgrenser.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Verifisert frigivelse og gyldig lovsjekk; signert start eller attestert tidligere start, kampanje-/variant-ID, budsjett og stoppgrenser."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.data",
+      "path": "innhold.resultater.data",
+      "group": "innhold",
+      "label_nb": "Faktiske utfallsdata",
+      "type": "array",
+      "values": [],
+      "definition": "Minimert eksport koblet til plan, variant, periode, kostnad, visninger, rekkevidde, svar, kunder og inntekt med valuta/attribusjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Minimert eksport koblet til plan, variant, periode, kostnad, visninger, rekkevidde, svar, kunder og inntekt med valuta/attribusjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.analyse",
+      "path": "innhold.resultater.analyse",
+      "group": "innhold",
+      "label_nb": "Beregnet effekt",
+      "type": "object",
+      "values": [],
+      "definition": "Forhåndsbestemt metode, effektanslag/intervall eller merket mangel, frafall, avvik og stopp; respons holdes atskilt fra salg.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Forhåndsbestemt metode, effektanslag/intervall eller merket mangel, frafall, avvik og stopp; respons holdes atskilt fra salg."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.tolkning",
+      "path": "innhold.resultater.tolkning",
+      "group": "innhold",
+      "label_nb": "Tolkning og usikkerhet",
+      "type": "object",
+      "values": [],
+      "definition": "Hypotesestatus, resultat, alternative forklaringer og generaliseringsgrenser; ingen sikker vinner uten grunnlag.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Hypotesestatus, resultat, alternative forklaringer og generaliseringsgrenser; ingen sikker vinner uten grunnlag."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.beslutning",
+      "path": "innhold.resultater.beslutning",
+      "group": "innhold",
+      "label_nb": "Menneskets læringsvedtak",
+      "type": "object",
+      "values": [],
+      "definition": "Stopp, viderefør innen ramme, undersøk eller foreslå ny test; nytt budsjett/opptrapping krever eget vedtak; medieplan gir obligatorisk etterkontroll.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Stopp, viderefør innen ramme, undersøk eller foreslå ny test; nytt budsjett/opptrapping krever eget vedtak; medieplan gir obligatorisk etterkontroll."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "11-resultater-start.innhold.resultater.tolkning.hypotesestatus",
+      "path": "innhold.resultater.tolkning.hypotesestatus",
+      "group": "innhold",
+      "label_nb": "Hypotesestatus",
+      "type": "string",
+      "values": [
+        {
+          "value": "stottet",
+          "definition": "Data støtter hypotesen innen designets grenser."
+        },
+        {
+          "value": "ikke-stottet",
+          "definition": "Data støtter ikke hypotesen."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Data/design gir ikke tilstrekkelig beslutningsgrunnlag."
+        }
+      ],
+      "definition": "Binder tolkningen til forhåndsregistrert hypotese og faktisk usikkerhet.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "resultater-og-laering"
+        ],
+        "choices": "Binder tolkningen til forhåndsregistrert hypotese og faktisk usikkerhet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/11-resultater-start.json",
+  "artifact_family": "resultater",
+  "producer": {
+    "flow": "resultater-og-laering",
+    "step": 1,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.resultater.",
+  "validation_profile": {
+    "step_validation": "flows/resultater-og-laering.json#/steps/0/validation",
+    "required_from_steps": {
+      "start": 1,
+      "data": 2,
+      "analyse": 3,
+      "tolkning": 4,
+      "beslutning": 6
+    },
+    "critic_required": false,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "type": "object",
+  "properties": {
+    "grunnlag": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-39738bb975be8493"
+    },
+    "oppdrag_id": {
+      "type": "string",
+      "description": "Binder hele kjeden til samme oppdrag.",
+      "x-field": "artefakt-felles.oppdrag_id",
+      "minLength": 1
+    },
+    "artefakt_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-00098db6a529f2d9"
+    },
+    "versjon": {
+      "type": "integer",
+      "description": "Positiv, monoton versjon; tidligere versjoner beholdes.",
+      "x-field": "artefakt-felles.versjon",
+      "minimum": 1
+    },
+    "schema_id": {
+      "type": "string",
+      "description": "Eksakt fil-ID i schemas; skal samsvare med bindingen.",
+      "x-field": "artefakt-felles.schema_id",
+      "minLength": 1,
+      "const": "10-annonser-lovsjekket"
+    },
+    "schema_version": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-32c8f5511361ee2c"
+    },
+    "del_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e0a3a64d4bf43b6c"
+    },
+    "SHA-256": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-da68fd3020cb8faa"
+    },
+    "modellspor": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b3d2ff5e207838fe"
+    },
+    "validering": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-12d48ff3ddd99165"
+    },
+    "kritikk": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-de89ebdd22cefb11"
+    },
+    "godkjenning": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8670546d38279230"
+    },
+    "feilrute": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5aa59bec774d609d"
+    },
+    "personvern": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2f24747d1974d863"
+    },
+    "state": {
+      "type": "string",
+      "description": "Godkjent artefakt endrer ikke forslagets status.",
+      "x-field": "artefakt-felles.state",
+      "$ref": "_defs/state.schema.json"
+    },
+    "lang": {
+      "type": "string",
+      "description": "Språket i de interne registrene.",
+      "x-field": "artefakt-felles.lang",
+      "$ref": "_defs/language.schema.json"
+    },
+    "innhold": {
+      "type": "object",
+      "properties": {
+        "lovsjekk": {
+          "type": "object",
+          "description": "Samlet lovsjekk for dette steget; grunnlaget videreføres uten tap.",
+          "x-field": "10-annonser-lovsjekket.innhold.lovsjekk",
+          "additionalProperties": true,
+          "properties": {
+            "landmatrise": {
+              "type": "array",
+              "description": "Alle land, regelområder, kanaler, plasseringer, påstander, tilbud og målsteder med eksakte hasher; ingen stille utelatelser.",
+              "x-field": "10-annonser-lovsjekket.innhold.lovsjekk.landmatrise",
+              "items": {}
+            },
+            "regelkontroller": {
+              "type": "array",
+              "description": "Land × annonse: regel, paragraf/locator, kilde, kontrolltid, konkret påstand, belegg og bestått/avvist/uavklart.",
+              "x-field": "10-annonser-lovsjekket.innhold.lovsjekk.regelkontroller",
+              "items": {}
+            },
+            "landgodkjenninger": {
+              "type": "array",
+              "description": "Juridisk ansvarlig, lokal fagperson ved behov, rolle, dato, regelgrunnlag, hasher, vilkår og ny kontrollfrist.",
+              "x-field": "10-annonser-lovsjekket.innhold.lovsjekk.landgodkjenninger",
+              "items": {}
+            },
+            "gyldighetsomfang": {
+              "type": "object",
+              "description": "Eksakte land, perioder, filer, landingssider og vilkår som godkjenningene dekker.",
+              "x-field": "10-annonser-lovsjekket.innhold.lovsjekk.gyldighetsomfang",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "landmatrise",
+            "regelkontroller",
+            "landgodkjenninger",
+            "gyldighetsomfang"
+          ]
+        }
+      },
+      "required": [
+        "lovsjekk"
+      ],
+      "additionalProperties": false
+    },
+    "forrige_artefakt": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0bf9922cb3c05c2f"
+    },
+    "signatur": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "Betrodd signaturbevis; leverandørformat verifiseres av kjørelaget."
+    }
+  },
+  "required": [
+    "grunnlag",
+    "oppdrag_id",
+    "artefakt_id",
+    "versjon",
+    "schema_id",
+    "schema_version",
+    "del_id",
+    "SHA-256",
+    "modellspor",
+    "validering",
+    "state",
+    "lang",
+    "innhold",
+    "kritikk",
+    "forrige_artefakt"
+  ],
+  "allOf": [
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-cd6114a29f1066b4"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0706ca412b952ec3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-79ddd10da0198cc3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bfb48024d0625b99"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-58585ae11a6c2fad"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-36a1fdf99108d7aa"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-94833092961d11ae"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-93c9fe1ef7b28083"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c33a97b4d5ecf761"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-147a0bfcb7dd992f"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dd936acab73bcd38"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-070d6a61317b04ab"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1e6ef15d7aefe6d6"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-37023c1eb0d1febc"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e8ea0087c5ac9c25"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2818b5be86703548"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bcdc292956fa9b09"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5f7e732abe8446ec"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-471d90e53bb1b234"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8b40814607832a2c"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5b9b68ddef2e1766"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c12c64b575dbe9fb"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c4a8517413f5bee4"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-f8c8c633dfa07d54"
+    }
+  ],
+  "additionalProperties": false,
+  "x-envelope-source": "flows/*/validation/artifact_contract; schemas/artefakt-felles.json#hash_contract",
+  "x-registry": "../10-annonser-lovsjekket.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/10-annonser-lovsjekket.schema.json",
+  "title": "10-annonser-lovsjekket"
+}

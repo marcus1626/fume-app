@@ -1,0 +1,36 @@
+{
+  "id": "override-approval",
+  "label_nb": "Vedtak om kampanjeavvik",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "foreslatt",
+      "label_nb": "Foreslatt",
+      "definition": "Forslag; kan ikke brukes."
+    },
+    {
+      "id": "godkjent",
+      "label_nb": "Godkjent",
+      "definition": "Signert av menneskelig merkeansvarlig for eksakt versjon/hash."
+    },
+    {
+      "id": "avvist",
+      "label_nb": "Avvist",
+      "definition": "Ikke tillatt."
+    },
+    {
+      "id": "utlopt",
+      "label_nb": "Utlopt",
+      "definition": "Godkjenningens tid eller omfang er passert."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "nye",
+    "eksisterende",
+    "begge"
+  ],
+  "x-list": "../../lists/customer-status.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/customer-status.schema.json",
+  "title": "customer-status"
+}

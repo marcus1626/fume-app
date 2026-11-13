@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "funksjonell",
+    "emosjonell",
+    "sosial"
+  ],
+  "x-list": "../../lists/jtbd-dimension.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/jtbd-dimension.schema.json",
+  "title": "jtbd-dimension"
+}

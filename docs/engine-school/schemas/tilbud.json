@@ -1,0 +1,509 @@
+{
+  "id": "tilbud",
+  "label_nb": "Tilbud og produkt",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "brief-en-setning",
+    "kampanjekort",
+    "klarsprak-revisjon",
+    "konkurrenter-for-loftet",
+    "logikkjede",
+    "lovsjekk-per-land",
+    "testplan-ekte-annonser"
+  ],
+  "fields": [
+    {
+      "id": "tilbud.id",
+      "path": "id",
+      "group": "id",
+      "label_nb": "Tilbuds-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Binder tilbudets versjon til pris, vilkår og annonse.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder tilbudets versjon til pris, vilkår og annonse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.product_id",
+      "path": "product_id",
+      "group": "product_id",
+      "label_nb": "Produkt-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Stabil produktidentitet; endret produkt krever ny dokumentasjonsvurdering.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Stabil produktidentitet; endret produkt krever ny dokumentasjonsvurdering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.name",
+      "path": "name",
+      "group": "name",
+      "label_nb": "Navn",
+      "type": "string",
+      "values": [],
+      "definition": "Avsenderens faktiske produkt- eller tilbudsnavn.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Avsenderens faktiske produkt- eller tilbudsnavn."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.type",
+      "path": "type",
+      "group": "type",
+      "label_nb": "Tilbudstype",
+      "type": "string",
+      "values": [
+        {
+          "value": "ordinaer-pris",
+          "definition": "Salg til ordinær pris."
+        },
+        {
+          "value": "prisnedsettelse",
+          "definition": "Påstått individuell prisreduksjon."
+        },
+        {
+          "value": "betinget-tilbud",
+          "definition": "Fordel avhengig av bestemte vilkår."
+        },
+        {
+          "value": "kombinasjon",
+          "definition": "Flere tilbudsmekanismer må kontrolleres hver for seg."
+        },
+        {
+          "value": "ikke-relevant",
+          "definition": "Ingen pris- eller tilbudsoppgave; begrunn hvorfor."
+        }
+      ],
+      "definition": "Utløser riktig pris- og tilbudskontroll.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "Forbrukertilsynet — Salg og betingede tilbud (2025)",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2025/06/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.pdf",
+        "locator": "Salg og betingede tilbud; klassifisering og vilkår"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Utløser riktig pris- og tilbudskontroll."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "tilbud.deliverable",
+      "path": "deliverable",
+      "group": "deliverable",
+      "label_nb": "Leveranse",
+      "type": "object",
+      "values": [],
+      "definition": "Hva kunden faktisk får, egenskaper, kapasitet, levering og begrensninger.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Hva kunden faktisk får, egenskaper, kapasitet, levering og begrensninger."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.benefit",
+      "path": "benefit",
+      "group": "benefit",
+      "label_nb": "Dokumentert fordel",
+      "type": "string",
+      "values": [],
+      "definition": "Hvilken nytte tilbudet kan gi i valgt situasjon, før løftet formuleres.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Hvilken nytte tilbudet kan gi i valgt situasjon, før løftet formuleres."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.price.amount",
+      "path": "price.amount",
+      "group": "price",
+      "label_nb": "Prisbeløp",
+      "type": "number",
+      "values": [],
+      "definition": "Faktisk pris med avgiftsgrunnlag og valuta; null er bare reell nullpris.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Faktisk pris med avgiftsgrunnlag og valuta; null er bare reell nullpris."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "tilbud.type",
+            "op": "in",
+            "value": [
+              "ordinaer-pris",
+              "prisnedsettelse",
+              "betinget-tilbud",
+              "kombinasjon"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.price.currency",
+      "path": "price.currency",
+      "group": "price",
+      "label_nb": "Prisens valuta",
+      "type": "string",
+      "values": [],
+      "definition": "Valuta fra godkjent priskilde; samme grunnlag i alle visninger.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Valuta fra godkjent priskilde; samme grunnlag i alle visninger."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "tilbud.type",
+            "op": "in",
+            "value": [
+              "ordinaer-pris",
+              "prisnedsettelse",
+              "betinget-tilbud",
+              "kombinasjon"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.price.history",
+      "path": "price.history",
+      "group": "price",
+      "label_nb": "Prishistorikk",
+      "type": "array",
+      "values": [],
+      "definition": "Datert historikk, omfang og sammenligningspris der prisfordel hevdes; lovsjekk avgjør relevant grunnlag.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Datert historikk, omfang og sammenligningspris der prisfordel hevdes; lovsjekk avgjør relevant grunnlag."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "tilbud.type",
+            "op": "in",
+            "value": [
+              "ordinaer-pris",
+              "prisnedsettelse",
+              "betinget-tilbud",
+              "kombinasjon"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.terms",
+      "path": "terms",
+      "group": "terms",
+      "label_nb": "Vilkår",
+      "type": "object",
+      "values": [],
+      "definition": "Binding, fornyelse, oppsigelse, prøveperiode, frakt, avgifter og forbehold med kilde.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "logikkjede",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Binding, fornyelse, oppsigelse, prøveperiode, frakt, avgifter og forbehold med kilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "logikkjede",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.availability",
+      "path": "availability",
+      "group": "availability",
+      "label_nb": "Tilgjengelighet",
+      "type": "object",
+      "values": [],
+      "definition": "Lager/kapasitet, land, start/slutt og dokumentasjon for reell begrensning.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Lager/kapasitet, land, start/slutt og dokumentasjon for reell begrensning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.claims",
+      "path": "claims",
+      "group": "claims",
+      "label_nb": "Påstandsgrunnlag",
+      "type": "array",
+      "values": [],
+      "definition": "Per påstand: produkt, egenskap, bevis, metode, kilde/locator, dato og avgrensning.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "logikkjede",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Per påstand: produkt, egenskap, bevis, metode, kilde/locator, dato og avgrensning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "logikkjede",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "tilbud.destination",
+      "path": "destination",
+      "group": "destination",
+      "label_nb": "Målsted",
+      "type": "string",
+      "values": [],
+      "definition": "Direkte mål-URL eller annen gjennomførbar handling, med kontrolltidspunkt.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "klarsprak-revisjon",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Direkte mål-URL eller annen gjennomførbar handling, med kontrolltidspunkt."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

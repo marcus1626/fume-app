@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "Alle ferdigheter i skills/*.json. skills_used i en flyt er kandidater for oppgaven, ikke en beskjed om å bruke dem ved alle kjøringer. Trakt-kortets egne strukturporter gjelder alltid, uavhengig av målgruppens ferdighetsfilter.",
+    "kampanjevalg",
+    "merkevarekonstant",
+    "begge"
+  ],
+  "x-list": "../../lists/scope.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/scope.schema.json",
+  "title": "scope"
+}

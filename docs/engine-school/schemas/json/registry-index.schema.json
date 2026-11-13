@@ -1,0 +1,330 @@
+{
+  "type": "object",
+  "properties": {
+    "artifact_bindings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "producer": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "flow": {
+                    "type": "string"
+                  },
+                  "step": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "flow",
+                  "step"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "read_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          },
+          "schema": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "producer",
+          "read_by",
+          "schema"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 0
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "via": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 0
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "from",
+          "to",
+          "via"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "field_count_rule": {
+      "type": "string"
+    },
+    "flow_bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "flow": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "input_schema": {
+            "type": "string"
+          },
+          "output_artifact": {
+            "type": "string"
+          },
+          "output_artifact_schema": {
+            "type": "string"
+          },
+          "schema_reads": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "flow",
+          "input",
+          "input_schema",
+          "output_artifact",
+          "output_artifact_schema",
+          "schema_reads"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "import_semantics": {
+      "type": "string"
+    },
+    "lang": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "registry_contract": {
+      "type": "object",
+      "properties": {
+        "applies_when": {
+          "type": "string"
+        },
+        "critic": {
+          "type": "string"
+        },
+        "field_paths": {
+          "type": "string"
+        },
+        "field_required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "filled_by": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "read_by": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "source": {
+          "type": "string"
+        },
+        "type": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "values": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "applies_when",
+        "critic",
+        "field_paths",
+        "field_required",
+        "filled_by",
+        "read_by",
+        "scope",
+        "source",
+        "type",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "schemas": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field_count": {
+            "type": "integer"
+          },
+          "file": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "imports": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          },
+          "read_by": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          }
+        },
+        "required": [
+          "field_count",
+          "file",
+          "id",
+          "imports",
+          "read_by"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "skill_bindings": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "state": {
+      "type": "string"
+    },
+    "taste_alignment": {
+      "type": "object",
+      "properties": {
+        "principles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        }
+      },
+      "required": [
+        "principles",
+        "refs"
+      ],
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "command": {
+          "type": "string"
+        },
+        "field_counts": {
+          "type": "string"
+        },
+        "report": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "command",
+        "field_counts",
+        "report"
+      ],
+      "additionalProperties": false
+    },
+    "version": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "artifact_bindings",
+    "connections",
+    "field_count_rule",
+    "flow_bindings",
+    "import_semantics",
+    "lang",
+    "name",
+    "registry_contract",
+    "schemas",
+    "skill_bindings",
+    "state",
+    "taste_alignment",
+    "validation",
+    "version"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/registry-index.schema.json",
+  "title": "registry-index"
+}

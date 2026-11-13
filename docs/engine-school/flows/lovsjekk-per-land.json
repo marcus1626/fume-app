@@ -1,0 +1,494 @@
+{
+  "id": "lovsjekk-per-land",
+  "name": "Lovsjekk for hvert land",
+  "purpose": "Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+  "sources": [
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 3, begge punktum"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 7 første ledd bokstav a og b"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 8 første ledd andre punktum; § 28"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 8, bokstav e i avsnittet Ved oppfordring til kjøp; definisjonen Med oppfordring til kjøp"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 8, bokstav b i avsnittet Ved oppfordring til kjøp"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 8, bokstav d i avsnittet Ved oppfordring til kjøp"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 8, avsnittet som begynner med Når en næringsdrivende gir forbrukere tilgang til forbrukeromtaler"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 15 første og tredje ledd"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 15 tredje ledd"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 15 tredje ledd tredje punktum"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 20 andre ledd"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 21 bokstav b"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 26 første og andre ledd; § 3"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 23 første ledd bokstav a–e og andre og tredje ledd"
+    },
+    {
+      "source": "Norge — Markedsføringsloven",
+      "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+      "locator": "§ 30"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 6 Absatz 2 Nummer 1"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 6 Absatz 2 Nummer 2"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 7 Absatz 2 Nummer 1"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 7a Absatz 1 og Absatz 2 Satz 1"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 7 Absatz 2 Nummer 2 og Absatz 3 Nummer 1–4"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 5b Absatz 2 Nummer 1 og 2 samt etterfølgende setninger"
+    },
+    {
+      "source": "Tyskland — UWG, gjeldende tysk tekst",
+      "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+      "locator": "§ 5b Absatz 3"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 2 og 4"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 7"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 4b, innført ved direktiv (EU) 2024/825; konsolidert tekst 27.09.2026"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 10"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 11a"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 23b og 23c"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 20"
+    },
+    {
+      "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+      "locator": "Vedlegg I punkt 22"
+    },
+    {
+      "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02006R1924-20141213",
+      "locator": "Artikkel 10 nr. 1"
+    },
+    {
+      "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02006R1924-20141213",
+      "locator": "Artikkel 10 nr. 3"
+    },
+    {
+      "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02006R1924-20141213",
+      "locator": "Artikkel 12 bokstav b"
+    },
+    {
+      "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02006R1924-20141213",
+      "locator": "Vedlegget, SUGARS-FREE"
+    },
+    {
+      "source": "UK — CAP Code section 03, Misleading advertising",
+      "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+      "locator": "Regel 3.9 og 3.10"
+    },
+    {
+      "source": "UK — CAP Code section 03, Misleading advertising",
+      "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+      "locator": "Regel 3.50"
+    },
+    {
+      "source": "UK — CAP Code section 03, Misleading advertising",
+      "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+      "locator": "Regel 3.45"
+    },
+    {
+      "source": "Google — Misrepresentation policy",
+      "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+      "locator": "Misleading ad design, punktlisten om knapper, ikoner og systemvarsler"
+    },
+    {
+      "source": "Google — Misrepresentation policy",
+      "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+      "locator": "Unavailable offers"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "../BRIEF.md",
+      "locator": "Step 2 — Skills, punktet Fume ethics beat platform advice"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "BRIEF.md",
+      "locator": "Step 2 — Skills; avsnittet Fume ethics beat platform advice"
+    }
+  ],
+  "checkpoints": [
+    10
+  ],
+  "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+  "steps": [
+    {
+      "n": 1,
+      "what": "Lag én matrise over alle bestilte land, målgrupper, kanaler, produktkategorier, annonserevisjoner, påstander og landingssider. Hent gjeldende offisielle regelkilder ved kjøring og registrer hjemmel, sted, hentet dato, ikrafttredelse og virkeområde, uten å lagre full lovtekst. For Norge kontrolleres norske regler og relevant EØS-innlemmelse; for Tyskland gjeldende tysk UWG og relevant EU- og nasjonalrett; for Storbritannia CAP-reglenes virkeområde og relevant lov. Mat-, helse-, miljø-, pris-, omtale- og kontaktregler aktiveres når innholdet krever det. Land uten dekkende ferdigheter krever navngitt lokal fagperson og offisielt regelgrunnlag før videreføring. Les og viderefør kampanjekortet etter input_fields.kampanjekort; bruk aktiv del som bindende ramme.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output": "artefakter/{oppdrag_id}/10-land-og-regelgrunnlag.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Hvert planlagt land har eksplisitt nasjonalt regelgrunnlag, dato og anvendelsesvurdering; EU-regler er ikke automatisk behandlet som norsk eller britisk rett.",
+          "Offisielle kilder er faktisk hentet, relevante bestemmelser er identifisert og ikrafttredelse er avklart; en gammel ferdighetskilde alene er ikke tilstrekkelig.",
+          "Alle annonsefiler, landingssider og produktopplysninger har låst versjon eller innholdshash; utilgjengelig målsted blokkerer.",
+          "Kampanjekortet finnes gjennom inndata, er bestått, og aktiv del_id, kortversjon, SHA-256 og bibliotekmanifest samsvarer; kontekst og ferdighetsvalg er videreført.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Utdata følger schemas/10-land-og-regelgrunnlag.json med importert felleskontrakt; inndata følger schemas/09-annonseutforelse-godkjent.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_schema": "schemas/10-land-og-regelgrunnlag.json"
+    },
+    {
+      "n": 2,
+      "what": "Anvend matrisens regler på hver annonse og hvert målsted i hvert land. Lag en kontrollrad per kombinasjon av land, annonse, påstand og relevant regel, med kilde, bevis, funn og foreslått bestått, avvist eller ikke relevant med grunn. Kontroller dokumentasjon, pris, forbehold, reklamemerking, kundeuttalelser, målgruppe, kontaktgrunnlag og produktkrav der de gjelder. Gjør særskilt opphavskontroll etter Fumes etikk. Foreslå rettinger, men ikke endre annonsene. Registrer skriverens faktiske leverandør- og modell-ID i modellsporet; modellalias alene er ikke nok.",
+      "who": "modell",
+      "input": "artefakter/{oppdrag_id}/10-land-og-regelgrunnlag.json",
+      "output": "artefakter/{oppdrag_id}/10-lovkontrollutkast.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle planlagte land og alle innholdsversjoner har kontrollrader; ikke relevant har konkret begrunnelse.",
+          "Alle faktapåstander er koblet til dokumentasjon for riktig produkt, effekt og bruksvilkår, tilgjengelig før planlagt publisering.",
+          "Funn og endringsforslag er skilt fra de låste annonsene; ingen modellgodkjenning fremstilles som menneskelig juridisk godkjenning.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Utdata følger schemas/10-lovkontrollutkast.json med importert felleskontrakt; inndata følger schemas/10-land-og-regelgrunnlag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-land-og-regelgrunnlag.json",
+      "output_schema": "schemas/10-lovkontrollutkast.json"
+    },
+    {
+      "n": 3,
+      "what": "Etterprøv hele landmatrisen mot de innhentede kildene og de faktiske annonsefilene og målstedene. Kontroller feil i virkeområde, manglende dokumentasjon, skjulte forbehold og etikk. Registrer konkret retting og produsentsteg ved avvik; aldri reparer annonsen i kritikkartefaktet. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/10-lovkontrollutkast.json",
+      "output": "artefakter/{oppdrag_id}/10-lovkritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Kritikerens faktiske modell er ulik alle skrivermodeller bak lovutkast, tekst og bilder.",
+          "Hver relevant kontrollrad er etterprøvd med hjemmel og konkret bevis; alle blokkerende funn er lukket før videreføring.",
+          "Ingen planlagt land- eller annonsekombinasjon er hoppet over; rettslig usikkerhet krever avklaring hos lokal fagperson.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/10-lovkritikk.json med importert felleskontrakt; inndata følger schemas/10-lovkontrollutkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/10-lovkontrollutkast.json",
+      "output_schema": "schemas/10-lovkritikk.json"
+    },
+    {
+      "n": 4,
+      "what": "La juridisk ansvarlig, med lokal fagperson ved behov, godkjenne hver planlagt land- og annonsekombinasjon. Registrer navn, rolle, dato, regelgrunnlag, godkjente hasher, vilkår og dato for ny kontroll. En usikker eller avvist kombinasjon stopper flyten inntil grunnlaget eller bestillingen er rettet. Ingen stille utelatelse av land.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/10-lovkritikk.json",
+      "output": "artefakter/{oppdrag_id}/10-landgodkjenninger.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Hvert planlagt land og hver annonse har uttrykkelig menneskelig godkjenning av samme versjon som kritikeren vurderte.",
+          "Alle avvik er lukket og godkjenningens forutsetninger og kontrollfrist er registrert; manglende kompetanse eller grunnlag gir retur.",
+          "Godkjenneren har bekreftet dokumentert opphav og null KI-generert UGC eller falske KI-kunder.",
+          "Utdata følger schemas/10-landgodkjenninger.json med importert felleskontrakt; inndata følger schemas/10-lovkritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-lovkritikk.json",
+      "output_schema": "schemas/10-landgodkjenninger.json"
+    },
+    {
+      "n": 5,
+      "what": "Bind de godkjente landradene til de uendrede annonsefilene, landingssidene og tilbudsvilkårene ved versjon og SHA-256. Lag én lovsjekket annonsepakke med alle refererte ressurser, kilder og godkjenninger. Marker nøyaktig hvilke land og perioder pakken er godkjent for.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/10-landgodkjenninger.json",
+      "output": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle hasher stemmer med menneskegodkjenningen, og alle planlagte land er dekket uten åpne funn.",
+          "Godkjenning og kildegrunnlag er gyldige ved overlevering; endret annonse, tilbud, land, målgruppe, kanal, målsted eller utløpt kontrollfrist krever ny relevant lovsjekk.",
+          "Pakken er klar for testplanlegging og er ikke en automatisk publiseringsordre.",
+          "Utdata følger schemas/10-annonser-lovsjekket.json med importert felleskontrakt; inndata følger schemas/10-landgodkjenninger.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-landgodkjenninger.json",
+      "output_schema": "schemas/10-annonser-lovsjekket.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at flytens lagrede inndata finnes, er lesbart og har validering.status lik bestått. Det første oppdragsartefaktet må oppfylle inngangskontrakten i flows/_index.json. Senere flyter leser bare den umiddelbart foregående flytens godkjente sluttartefakt. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Kampanjekortets referanse i inndata skal oppfylle input_fields.kampanjekort. Kode sjekker bestått status, del_id, versjon og SHA-256 mot den godkjente kortversjonen og biblioteket; feil eller mangler stopper før skriving.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": " Kampanjekortets versjon, hash og aktiv del_id videreføres uendret i grunnlaget; ved motstrid returneres til kampanjekort før videre skriving."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "lov-no-dokumentasjon-for-publisering",
+    "lov-no-egenskaper-stemmer",
+    "lov-no-synlig-reklame",
+    "lov-no-pris-med-tillegg",
+    "lov-no-selgerens-identitet",
+    "lov-no-opplys-angrerett",
+    "lov-no-forklar-omtaleverifisering",
+    "lov-no-samtykke-elektronisk",
+    "lov-no-kundeunntak",
+    "lov-no-gratis-avmelding",
+    "lov-no-barn-kjopspress",
+    "lov-no-barn-sosialt-press",
+    "lov-no-b2b-faktasjekk",
+    "lov-no-garantivilkar",
+    "lov-no-forvekslende-etterligning",
+    "lov-de-samme-behov",
+    "lov-de-etterprovbar-sammenligning",
+    "lov-de-telefon-samtykke",
+    "lov-de-oppbevar-telefonsamtykke",
+    "lov-de-epost-grunnlag",
+    "lov-de-forklar-rangering",
+    "lov-de-forklar-omtaler",
+    "lov-eu-godkjenning-av-merker",
+    "lov-eu-ekte-tidsfrist",
+    "lov-eu-avgrens-miljopastand",
+    "lov-eu-ikke-eksklusive-lovrettigheter",
+    "lov-eu-merk-betalt-rangering",
+    "lov-eu-ekte-kundeomtaler",
+    "lov-eu-gratis-uten-skjulte-gebyrer",
+    "lov-eu-ikke-utgi-selger-for-kunde",
+    "lov-mat-godkjent-helsepastand",
+    "lov-mat-generell-helsefordel",
+    "lov-mat-ikke-vekttapstall",
+    "lov-mat-sukkerfri-grense",
+    "lov-uk-forbehold-uten-motsigelse",
+    "lov-uk-tillatelse-til-kundeuttalelse",
+    "lov-uk-opplys-belonnede-omtaler",
+    "lov-google-ekte-grensesnitt",
+    "lov-google-finnbart-tilbud",
+    "plattform-ingen-ki-ugc-eller-falske-kunder"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "kampanjekort": {
+      "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+      "required": [
+        "kort_id",
+        "versjon",
+        "SHA-256",
+        "validering.status bestått",
+        "aktiv del_id",
+        "funnel.stage og funnel.mode",
+        "kundestatus",
+        "salgsrunde",
+        "schwartz.level med belegg",
+        "foresporsel",
+        "maling",
+        "ferdighetsvalg og konfliktlosninger",
+        "ferdighetsbibliotek med versjon og hash"
+      ],
+      "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+      "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+      "schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  },
+  "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+  "output_artifact_schema": "schemas/10-annonser-lovsjekket.json",
+  "schema_reads": [
+    "schemas/kampanje.json",
+    "schemas/kanal-format.json",
+    "schemas/kategori.json",
+    "schemas/tilbud.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "field_reads": {
+    "kampanje.id": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kampanje.market": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kampanje.timing.start": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kampanje.timing.end": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kampanje.sales_round.active": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kampanje.countries": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kategori.id": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kategori.regulation.areas": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kategori.regulation.basis": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.id": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.product_id": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.name": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.type": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.deliverable": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.benefit": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.price.amount": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.price.currency": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.price.history": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.terms": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.availability": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.claims": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "tilbud.destination": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.channel": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.placement": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.format": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.binding.creative_medium": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.binding.ad_product": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.binding.delivery_behavior": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.availability": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.binding": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "kanal-format.component": "Grunnlag for Kontrollere de konkrete annonsene, tilbudet og målstedet i hvert planlagt land før testplanen godkjennes.",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

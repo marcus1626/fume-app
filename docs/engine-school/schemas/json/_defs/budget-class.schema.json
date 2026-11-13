@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "mikro",
+    "liten",
+    "middels",
+    "stor"
+  ],
+  "x-list": "../../lists/budget-class.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/budget-class.schema.json",
+  "title": "budget-class"
+}

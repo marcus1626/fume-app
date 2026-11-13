@@ -1,0 +1,31 @@
+{
+  "id": "legal-area",
+  "label_nb": "Regelområde",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "EU",
+      "label_nb": "EU",
+      "definition": "EU-regelverk vurderes konkret for markedet; ingen automatisk EØS- eller NO-utvidelse."
+    },
+    {
+      "id": "CAP",
+      "label_nb": "Britisk CAP-regelverk",
+      "definition": "CAP Code er vurdert relevant for annonsen."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ferdigheten avgrenser ikke regelområde."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "bekreftet",
+    "ikke-tilgjengelig",
+    "uavklart"
+  ],
+  "x-list": "../../lists/availability.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/availability.schema.json",
+  "title": "availability"
+}

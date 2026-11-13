@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "ukentlig",
+    "manedlig",
+    "kvartalsvis",
+    "arlig",
+    "sjeldnere",
+    "engang",
+    "ukjent"
+  ],
+  "x-list": "../../lists/purchase-frequency.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/purchase-frequency.schema.json",
+  "title": "purchase-frequency"
+}

@@ -1,0 +1,14 @@
+{
+  "enum": [
+    "helars",
+    "kalender",
+    "vaer",
+    "hendelse",
+    "fornyelse",
+    "ukjent"
+  ],
+  "x-list": "../../lists/seasonality.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/seasonality.schema.json",
+  "title": "seasonality"
+}

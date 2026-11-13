@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "counts": {
+    "artifact_bindings": 87,
+    "artifact_schemas": 87,
+    "cross_references": 11725,
+    "fields": 820,
+    "flows": 17,
+    "generated_files": 245,
+    "independent_coverage_checks": 47040,
+    "independent_coverage_runs": 1,
+    "indexes": 2,
+    "json_schemas": 173,
+    "list_references": 1417,
+    "lists": 70,
+    "meta_schema_checks": 173,
+    "mined_occurrences": 8296,
+    "pensum_entries": 115,
+    "registries": 95,
+    "registry_integrity_checks": 30114,
+    "registry_integrity_runs": 1,
+    "skills": 251,
+    "strict_json_files": 365
+  },
+  "errors": []
+}

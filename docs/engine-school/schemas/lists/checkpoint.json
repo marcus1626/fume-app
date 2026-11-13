@@ -1,0 +1,66 @@
+{
+  "id": "checkpoint",
+  "label_nb": "Sjekkpunkt",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": 2,
+      "label_nb": "Leseren",
+      "definition": "Leseren"
+    },
+    {
+      "id": 4,
+      "label_nb": "Løftet og USP-en",
+      "definition": "Løftet og USP-en"
+    },
+    {
+      "id": 9,
+      "label_nb": "Utførelse",
+      "definition": "Utførelse"
+    },
+    {
+      "id": 5,
+      "label_nb": "Logikkjeden",
+      "definition": "Logikkjeden"
+    },
+    {
+      "id": 7,
+      "label_nb": "Bredde så valg",
+      "definition": "Bredde så valg"
+    },
+    {
+      "id": 8,
+      "label_nb": "Kunden velger",
+      "definition": "Kunden velger"
+    },
+    {
+      "id": 10,
+      "label_nb": "Sjekket og godkjent",
+      "definition": "Sjekket og godkjent"
+    },
+    {
+      "id": 1,
+      "label_nb": "Briefen forstått",
+      "definition": "Briefen forstått"
+    },
+    {
+      "id": 3,
+      "label_nb": "Innsikten",
+      "definition": "Innsikten"
+    },
+    {
+      "id": 6,
+      "label_nb": "Salgsmålet",
+      "definition": "Salgsmålet"
+    }
+  ]
+}

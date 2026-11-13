@@ -1,0 +1,66 @@
+{
+  "id": "regulation",
+  "label_nb": "Reguleringsområde",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "generell",
+      "label_nb": "Generell",
+      "definition": "Allmenn markedsføringskontroll."
+    },
+    {
+      "id": "mat",
+      "label_nb": "Mat",
+      "definition": "Mat og ernæring; påstander krever egen kontroll."
+    },
+    {
+      "id": "helse",
+      "label_nb": "Helse",
+      "definition": "Helsepåstander, behandling eller medisinske produkter må avklares."
+    },
+    {
+      "id": "finans",
+      "label_nb": "Finans",
+      "definition": "Finansielle produkter og tjenester krever lokal kontroll."
+    },
+    {
+      "id": "alkohol",
+      "label_nb": "Alkohol",
+      "definition": "Alkohol eller felles merke/kjennetegn krever lokal kontroll."
+    },
+    {
+      "id": "barn",
+      "label_nb": "Barn",
+      "definition": "Barn kan være mottakere; egen vurdering kreves."
+    },
+    {
+      "id": "personvern",
+      "label_nb": "Personvern",
+      "definition": "Databehandling, sporing eller direkte kontakt må vurderes."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Navngi ekstra regulering og lokal ansvarlig."
+    },
+    {
+      "id": "uavklart",
+      "label_nb": "Uavklart",
+      "definition": "Kan ikke avgjøres; menneskelig avklaring før videreføring."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

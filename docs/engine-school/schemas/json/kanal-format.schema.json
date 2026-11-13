@@ -1,0 +1,203 @@
+{
+  "type": "object",
+  "properties": {
+    "channel": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-d84687ffcc5748d5"
+    },
+    "placement": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-862a5b087b9aedb5"
+    },
+    "format": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-08b63a9890c883b9"
+    },
+    "binding": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-42260671bf6ff58a"
+    },
+    "asset_features": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ac7173cd837afd95"
+    },
+    "specs": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-da75835671d0ff86"
+    },
+    "availability": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-da3d7abb2d48b7b2"
+    },
+    "component": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c3f4294d3de31dd6"
+    }
+  },
+  "required": [
+    "channel",
+    "placement",
+    "format",
+    "binding",
+    "asset_features",
+    "specs",
+    "availability",
+    "component"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "allOf": [
+          {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dc7128e79028bd05"
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "specs"
+        ],
+        "properties": {
+          "specs": {
+            "type": "object",
+            "required": [
+              "width_px"
+            ],
+            "properties": {
+              "width_px": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dc7128e79028bd05"
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "specs"
+        ],
+        "properties": {
+          "specs": {
+            "type": "object",
+            "required": [
+              "height_px"
+            ],
+            "properties": {
+              "height_px": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-fc714e7e3a83fa85"
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "specs"
+        ],
+        "properties": {
+          "specs": {
+            "type": "object",
+            "required": [
+              "duration_s"
+            ],
+            "properties": {
+              "duration_s": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0e267d2187111e23"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-d640a9ade6cb1abb"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-04a06e86bfe93fad"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-4bb9c2c9b24f0237"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-cc38f98b8f81e077"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-4342bea144cb4381"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-080afa82860b25bd"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-4afebb19d863e895"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-a8c99882a08b0c50"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-72a5bee7dc9858ec"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1d5de2b438bb4f9b"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-7702eb767b91fcac"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-56fba527d49ec06d"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8ed4ec1e09f755a9"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6a0d6f8d1ab1dc21"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-82eb96e56665fce1"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ee7638aa01b29448"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1c80dca0ce10e741"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-46cfbd94bdd10c9d"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-a8d3d4199af29aef"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-01030666f1f4a3ee"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8573f4c5de6a8c40"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-d1f3125fee73f402"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-f95756e06185f424"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-505fdd49668962e1"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-7f1ac4fd44e05514"
+    }
+  ],
+  "additionalProperties": false,
+  "x-registry": "../kanal-format.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/kanal-format.schema.json",
+  "title": "kanal-format"
+}

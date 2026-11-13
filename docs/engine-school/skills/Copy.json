@@ -1,0 +1,1694 @@
+[
+  {
+    "id": "copy-overskrift-viser-relevans",
+    "subject": "Copy",
+    "name": "Vis relevansen i overskriften",
+    "principle": "Overskriften hjelper riktig leser å oppdage at tilbudet gjelder en aktuell interesse.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 5: Headlines; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Overskriften skal navngi minst én kjøpssituasjon, oppgave eller fordel fra leserkortet. En overskrift som bare sier at noe er spennende, gir ikke bestått. Ved spenning med strategi-prospektdekning eller strategi-fremtidige-kjopere skal medieplanen bevare kategoriens rekkevidde og bruke flere kreative innganger. Denne kontrollen gjelder relevansen i én annonse og pålegger ikke snever målretting.",
+    "check": "kritiker",
+    "example_bad": "Dette må du se!",
+    "example_good": "Få oversikt over ubetalte fakturaer før månedsavslutningen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [
+      "strategi-prospektdekning",
+      "strategi-fremtidige-kjopere"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver overskriften som et middel til å fange interessen til de rette potensielle kjøperne."
+  },
+  {
+    "id": "copy-overskrift-holder-loeftet",
+    "subject": "Copy",
+    "name": "La teksten innfri overskriften",
+    "principle": "Oppmerksomhet er nyttig når innholdet svarer på forventningen overskriften skaper.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 5: Headlines; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Hvert løfte og hvert spørsmål i overskriften skal ha et svar i annonseteksten eller på den direkte lenkede målsiden. Manglende svar gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Slik flytter du regnskapet: lenken åpner bare bedriftens historie.",
+    "example_good": "Slik flytter du regnskapet: lenken åpner en veiledning med flyttetrinnene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler overskrifter som trekker relevante lesere inn i annonsens salgsargument."
+  },
+  {
+    "id": "copy-overskriftsalternativer",
+    "subject": "Copy",
+    "name": "Skriv ulike overskriftsvinkler",
+    "principle": "Ulike interesser kan kreve ulike innganger til det samme tilbudet. Den presise kontrollporten er en foreslått Fume-operasjonalisering.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 5: Headlines; lokal tekst: sources/scientific-advertising.txt; Avgrensning: Hopkins støtter utprøving av ulike overskriftsvinkler; minst tre alternativer er Fumes foreslåtte arbeidsport, ikke en dokumentert effektgrense."
+      }
+    ],
+    "rule": "Foreslått Fume-kontroll: Før valg skal utkastet inneholde minst tre overskrifter som fremhever forskjellige, dokumenterte fordeler eller kjøpssituasjoner. Rene synonymbytter teller som én vinkel.",
+    "check": "kritiker",
+    "example_bad": "Rask rapport. Kjapp rapport. Hurtig rapport.",
+    "example_good": "Rapporten ferdig på fem minutter. Finn avvik før innsending. Del rapporten uten regneark.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7,
+      8
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver utprøving av overskrifter som appellerer til forskjellige interesser."
+  },
+  {
+    "id": "copy-spor-overskriftstesten",
+    "subject": "Copy",
+    "name": "Knytt resultatet til riktig overskrift",
+    "principle": "En overskriftstest kan bare informere neste tekstvalg når resultatet kan knyttes til teksten som ble vist.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 5: Headlines; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Hver variant i en overskriftstest skal ha egen variant-id og lagret, nøyaktig overskrift. Resultater uten slik kobling skal ikke brukes til å kåre en overskrift som vinner.",
+    "check": "kode",
+    "example_bad": "Variant B vant, men ingen har lagret hva overskriften var.",
+    "example_good": "Variant B er knyttet til lagret overskrift og antall bestillinger.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver sporbare annonser og resultatmåling som grunnlag for å sammenligne overskrifter."
+  },
+  {
+    "id": "copy-fordel-for-leseren",
+    "subject": "Copy",
+    "name": "Beskriv hva leseren får",
+    "principle": "Selgerens ønske om salg er ikke en fordel for kjøperen.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 3: Offer Service; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "En annonse som ber om handling, skal før handlingsoppfordringen oppgi minst én konkret leveranse eller brukergevinst som handlingen gir.",
+    "check": "kritiker",
+    "example_bad": "Støtt veksten vår. Bestill nå.",
+    "example_good": "Få en ferdig vedlikeholdsplan for maskinen din. Bestill befaring.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å fremheve hva selgeren kan gjøre for kjøperen fremfor selgerens ønske om salg."
+  },
+  {
+    "id": "copy-proevetilbudets-vilkaar",
+    "subject": "Copy",
+    "name": "Avklar hva prøven innebærer",
+    "principle": "Et prøvetilbud må gi leseren grunnlag for å forstå forpliktelsen. Den presise kontrollporten er en foreslått Fume-operasjonalisering.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 3: Offer Service; lokal tekst: sources/scientific-advertising.txt; Avgrensning: Hopkins støtter prøving og service; sjekklisten for varighet, pris og videre forpliktelse er Fumes forslag, ikke et sitert lovkrav."
+      }
+    ],
+    "rule": "Foreslått Fume-kontroll: Når teksten tilbyr en prøveperiode, skal varighet, pris under prøven og hva som skjer etterpå stå ved tilbudet. Alle tre må stemme med bestillingsløpet.",
+    "check": "kritiker+menneske",
+    "example_bad": "Prøv gratis; automatisk betaling etter sju dager vises først etter registrering.",
+    "example_good": "Prøv i sju dager uten betaling. Tilgangen stopper deretter; videre bruk krever ny bestilling.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins omtaler prøving og service som måter å gjøre tilbudet nyttig for mottakeren."
+  },
+  {
+    "id": "copy-konkret-produktegenskap",
+    "subject": "Copy",
+    "name": "Gjør egenskapen etterprøvbar",
+    "principle": "En presis egenskap gir leseren mer å vurdere enn et generelt kvalitetsord.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 7: Being Specific; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Hver egenskap som brukes som hovedargument, skal beskrive en observerbar funksjon, et materiale, en kapasitet eller en målt ytelse. Bare ord som kvalitet og førsteklasses gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "En løsning med førsteklasses kvalitet.",
+    "example_good": "Løsningen eksporterer fakturaene til PDF og CSV.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler konkrete opplysninger fremfor generelle kvalitetsord."
+  },
+  {
+    "id": "copy-tall-med-grunnlag",
+    "subject": "Copy",
+    "name": "Knytt tall til dokumentasjon",
+    "principle": "Presise tall må bygge på presise opplysninger, ikke skape et skinn av måling. Den presise kontrollporten er en foreslått Fume-operasjonalisering.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 7: Being Specific; lokal tekst: sources/scientific-advertising.txt; Avgrensning: Hopkins støtter konkrete fremfor generelle påstander; dokumentasjonsfeltene er Fumes foreslåtte kontroll."
+      }
+    ],
+    "rule": "Foreslått Fume-kontroll: Hvert tall om produktets effekt skal ha en kilde i kontrollgrunnlaget med måleenhet, testbetingelser og resultat som støtter tallet. Manglende grunnlag gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Spar 37 prosent tid, anslått av tekstforfatteren.",
+    "example_good": "Testloggen viser 37 prosent kortere kjøretid for den oppgitte oppgaven på testmaskinen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins fremhever presise opplysninger som mer overbevisende enn generelle påstander."
+  },
+  {
+    "id": "copy-avgrens-superlativer",
+    "subject": "Copy",
+    "name": "Avgrens påstander om å være best",
+    "principle": "Store kvalitetsord kan skjule hva som faktisk er sammenlignet.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 7: Being Specific; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Best, raskest, billigst og tilsvarende overlegenhetspåstander skal enten fjernes eller ha oppgitt sammenligningsgruppe, kriterium og dokumentasjon. Uavgrensede påstander gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Norges raskeste system.",
+    "example_good": "Kortest behandlingstid blant de tre systemene i den navngitte testen; metode og dato er lenket.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver at overdrevne superlativer ofte oppfattes som tom skryt fremfor troverdige opplysninger."
+  },
+  {
+    "id": "copy-svar-paa-kjoepsspoersmaal",
+    "subject": "Copy",
+    "name": "Behold svarene kjøperen trenger",
+    "principle": "Lengden skal romme opplysningene leseren trenger for den forespurte beslutningen.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 8: Tell Your Full Story; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Kontrollgrunnlaget skal inneholde en ikke-tom liste over kjøpsspørsmål knyttet til leserkort, observerte kundespørsmål eller dokumenterte brukertester; manglende observasjoner merkes som antakelser som må vurderes. En kritiker med annen faktisk modell enn skriveren, eller et uavhengig menneske, skal kontrollere fullstendigheten mot tilbud, pris og forpliktelser, vesentlige forbehold, levering og neste handling; ikke relevante felt krever begrunnelse. Hvert nødvendig spørsmål må ha et konkret svarsted i teksten eller en tydelig direkte lenke ved handlingen. En tom liste, utelatt nødvendig spørsmål, ubesvart spørsmål eller uavklart fullstendighet gir avvist og sendes til menneske. Ved spenning med strategi-ett-budskap-per-annonse beholdes ett hovedbudskap og nødvendig støtteinformasjon; bruk tilgjengelig landingsside der lov og sammenheng tillater det.",
+    "check": "kritiker",
+    "example_bad": "Kjøpssiden ber om betaling uten å oppgi hva pakken inneholder.",
+    "example_good": "Kjøpssiden oppgir innhold, pris og levering før bestilling.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [
+      "strategi-ett-budskap-per-annonse"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å gi potensielle kjøpere hele den relevante salgshistorien."
+  },
+  {
+    "id": "copy-uavhengig-av-forrige-annonse",
+    "subject": "Copy",
+    "name": "La annonsen stå på egne ben",
+    "principle": "Leseren kan møte én annonse uten å ha sett resten av serien.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 8: Tell Your Full Story; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "En annonse som kan vises alene, skal identifisere tilbudet, mottakerens relevante situasjon, vesentlige kvalifikasjoner eller begrensninger og neste handling, der disse er relevante for oppgaven. Ikke relevante felt krever begrunnelse; ingen nødvendig opplysning kan forutsette en tidligere annonse. En uavhengig kritiker med annen faktisk modell enn skriveren, eller et menneske, vurderer annonsen uten serien og peker ut tekst eller tydelig direkte lenket svarsted for hvert felt. Manglende, misvisende eller uavklart sammenheng gir avvist og menneskelig avklaring. Ved spenning med strategi-ett-budskap-per-annonse skiller kontrollen hovedbudskap fra nødvendig støtteinformasjon; vesentlige forbehold kan ikke skjules på en landingsside.",
+    "check": "kritiker",
+    "example_bad": "Som forklart i del én: Bestill dette nå.",
+    "example_good": "Bestill vår servicepakke for varmepumper: årlig kontroll og filterbytte.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [
+      "strategi-ett-budskap-per-annonse"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler at hver annonse formidler sin relevante salgshistorie uten å forutsette at tidligere annonser er lest."
+  },
+  {
+    "id": "copy-bevis-for-hovedloeftet",
+    "subject": "Copy",
+    "name": "La beviset gjelde hovedløftet",
+    "principle": "Dokumentasjon må handle om den egenskapen teksten ber leseren tro på. Den presise kontrollporten er en foreslått Fume-operasjonalisering.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 7: Being Specific; lokal tekst: sources/scientific-advertising.txt; Avgrensning: Hopkins støtter konkretisering og troverdighet; koblingen mellom produkt, egenskap og brukssituasjon er Fumes foreslåtte beviskontroll."
+      }
+    ],
+    "rule": "Foreslått Fume-kontroll: Hovedløftet skal være koblet til minst ett bevis i kontrollgrunnlaget som gjelder samme produkt, egenskap og brukssituasjon. Bevis for en annen egenskap gir ikke bestått.",
+    "check": "kritiker+menneske",
+    "example_bad": "Lang batteritid begrunnes med at produktet har vunnet en designpris.",
+    "example_good": "Oppgitt batteritid begrunnes med en test av samme modell og bruksmønster.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins fremhever konkretisering og troverdighet i produktpåstander."
+  },
+  {
+    "id": "copy-proeven-lar-leseren-proeve",
+    "subject": "Copy",
+    "name": "Gi nok til å prøve løftet",
+    "principle": "En prøve har verdi når den lar mottakeren undersøke den relevante egenskapen.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 13: Use Of Samples; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "For hvert prøvetilbud skal kontrollgrunnlaget angi hvilken egenskap mottakeren kan undersøke, og vise at prøvens innhold og varighet gjør dette mulig.",
+    "check": "kritiker",
+    "example_bad": "Prøv månedsrapporten med tilgang som utløper før du kan laste inn data.",
+    "example_good": "Prøvetilgangen lar deg laste inn testdata og lage en fullstendig rapport.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver vareprøver som en måte å la interesserte undersøke produktet på."
+  },
+  {
+    "id": "copy-bestill-proeven-tydelig",
+    "subject": "Copy",
+    "name": "Si hvordan prøven bestilles",
+    "principle": "Interesse for en prøve må kunne følges av en angitt handling.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 13: Use Of Samples; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Et prøvetilbud skal ha en instruks som navngir bestillingshandlingen og hvor den utføres. Bare omtale av at prøver finnes, gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Gratis prøver er tilgjengelige.",
+    "example_good": "Velg ønsket farge og trykk Bestill prøve for å få en stoffprøve tilsendt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å gjøre det lett for interesserte å be om en prøve."
+  },
+  {
+    "id": "copy-samme-avsenderstemme",
+    "subject": "Copy",
+    "name": "Bevar den avtalte avsenderstemmen",
+    "principle": "En gjenkjennelig stemme hjelper leseren å kjenne igjen avsenderen.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 17: Individuality; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Teksten skal følge alle språkvalg i den godkjente stemmebeskrivelsen, som tiltaleform og navngitte ord som skal unngås. Brudd uten et godkjent unntak gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "En avsender med avtalt du-form bytter til De midt i brevet.",
+    "example_good": "Brevet bruker du-form gjennom hele teksten.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver verdien av en gjenkjennelig og konsekvent personlighet i annonseringen."
+  },
+  {
+    "id": "copy-be-om-en-handling",
+    "subject": "Copy",
+    "name": "Si hva leseren skal gjøre",
+    "principle": "En positiv instruks gir en handling leseren kan utføre.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 18: Negative Advertising; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Handlingsoppfordringen skal inneholde et verb som beskriver ønsket handling. Bare en advarsel om hva leseren skal unngå, gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Ikke gå glipp av dette.",
+    "example_good": "Bestill en befaring.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å vise den ønskede positive handlingen fremfor bare å advare mot uønsket atferd."
+  },
+  {
+    "id": "copy-foelg-opp-samme-interesse",
+    "subject": "Copy",
+    "name": "Følg opp det leseren spurte om",
+    "principle": "Oppfølgingen bør bygge på interessen mottakeren allerede har vist. Plassering av svaret i første innholdsavsnitt er foreslått Fume-praksis.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 19: Letter Writing, avsnittet om brev til en interessert mottaker og å følge den opprinnelige interessen; lokal tekst: sources/scientific-advertising.txt, linje 2397–2402. Åpnet 2026-11-13; støtter relevans, ikke kravet om første avsnitt."
+      }
+    ],
+    "rule": "Første innholdsavsnitt i et svar på en forespørsel skal besvare forespørselen eller lenke direkte til det etterspurte materialet. Et annet salgstilbud alene gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Du ba om størrelsestabellen. Her er vårt nyeste abonnement.",
+    "example_good": "Her er størrelsestabellen du ba om, med mål for hver modell.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "e-post",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "fume",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler at svarbrev følger interessen som utløste mottakerens forespørsel."
+  },
+  {
+    "id": "copy-forklar-ukjent-produktnavn",
+    "subject": "Copy",
+    "name": "Forklar hva et ukjent produktnavn betyr",
+    "principle": "Et nytt navn forklarer ikke nødvendigvis hva produktet gjør.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Kapittel 20: A Name That Helps; lokal tekst: sources/scientific-advertising.txt"
+      }
+    ],
+    "rule": "Når leserkortet angir at produktnavnet er ukjent, skal første omtale også oppgi produktkategori eller funksjon.",
+    "check": "kritiker",
+    "example_bad": "Oppdag Zentro.",
+    "example_good": "Oppdag Zentro, et verktøy for å planlegge vakter.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver fordelen ved produktnavn som bidrar til å forklare hva produktet er."
+  },
+  {
+    "id": "copy-vanlig-prosess-er-ikke-enerett",
+    "subject": "Copy",
+    "name": "Skill en konkret prosess fra en unik prosess",
+    "principle": "En produksjonsdetalj kan være interessant selv om konkurrentene bruker samme metode.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — My Life in Advertising (1927)",
+        "url": "https://archive.org/details/mylifeinadverti00unkngoog",
+        "locator": "Kapittel VII: Medical Advertising, trykte sider 79–81, Schlitz-eksempelet; lokal tekst: sources/my-life-in-advertising.txt"
+      }
+    ],
+    "rule": "Når en produksjonsprosess omtales som unik eller bare vår, skal kontrollgrunnlaget dokumentere at den avgrensede konkurrentgruppen ikke bruker prosessen. Uten dette skal enerettspåstanden fjernes.",
+    "check": "kritiker",
+    "example_bad": "Bare vi vasker alle delene før montering, uten konkurrentdata.",
+    "example_good": "Vi vasker alle delene før montering; teksten påstår ikke at metoden er unik.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins' Schlitz-eksempel beskriver hvordan en vanlig bryggeprosess ble fortalt som et konkret salgsargument."
+  },
+  {
+    "id": "copy-beskriv-den-faktiske-prosessen",
+    "subject": "Copy",
+    "name": "La produksjonsdetaljer bygge på observasjon",
+    "principle": "Kunnskap om fremstillingen kan gi konkrete grunner til å velge produktet.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — My Life in Advertising (1927)",
+        "url": "https://archive.org/details/mylifeinadverti00unkngoog",
+        "locator": "Kapittel XIII: Puffed Grains and Quaker Oats, trykte sider 144–145, fabrikkbesøket og beskrivelsen av prosessen; lokal tekst: sources/my-life-in-advertising.txt"
+      }
+    ],
+    "rule": "Hver produksjonsdetalj i teksten skal kunne spores til en datert observasjon eller teknisk beskrivelse fra produsenten. Udokumenterte maskiner, temperaturer eller prosesstrinn gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Håndpolert i fem trinn, funnet på for å gi teksten særpreg.",
+    "example_good": "Polert i to maskintrinn, bekreftet i produsentens prosessbeskrivelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      4,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver hvordan observasjoner fra fabrikken ga konkrete argumenter om fremstillingen av puffet korn."
+  },
+  {
+    "id": "copy-navngi-den-virkelige-opphavspersonen",
+    "subject": "Copy",
+    "name": "Kontroller hvem som står bak utviklingen",
+    "principle": "En navngitt opphavsperson kan gjøre produktets historie konkret når rollen er ekte.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — My Life in Advertising (1927)",
+        "url": "https://archive.org/details/mylifeinadverti00unkngoog",
+        "locator": "Kapittel XIII: Puffed Grains and Quaker Oats, trykt side 145, Professor A. P. Anderson; lokal tekst: sources/my-life-in-advertising.txt"
+      }
+    ],
+    "rule": "Når teksten tilskriver en forbedring til en person, skal kontrollgrunnlaget bekrefte personens navn, rolle og bidrag. En oppdiktet utvikler gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Vår oppfinner Anna skapte metoden; Anna er en oppdiktet person.",
+    "example_good": "Vår ingeniør Kari utviklet festet; rollen og bidraget er bekreftet av produsenten.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins knytter utviklingen av puffet korn til professor Anderson i den beskrevne historien."
+  },
+  {
+    "id": "copy-kontroller-sitater",
+    "subject": "Copy",
+    "name": "Kontroller sitatet mot originalen",
+    "principle": "Et sitat må gjengi den faktiske uttalelsen.",
+    "sources": [
+      {
+        "source": "David Ogilvy — How to Write memo, commentary",
+        "url": "https://fs.blog/david-ogilvy-10-tips-on-writing/",
+        "locator": "Memoet «How to Write», punkt 6, gjengitt i den gratis kommentarartikkelen; ikke den betalte boken"
+      }
+    ],
+    "rule": "Hvert sitat skal ha originalkilde og kontrollert ordlyd. Endret mening eller manglende original gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Et muntlig kanskje blir til et sikkert kundeløfte.",
+    "example_good": "Originalopptaket bekrefter ordene og sammenhengen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ogilvys memo anbefaler å kontrollere sitater."
+  },
+  {
+    "id": "copy-les-hoeyt-og-rett",
+    "subject": "Copy",
+    "name": "Les høyt når lyd eller språklig flyt skal prøves",
+    "principle": "Høytlesing kan avdekke språklige hindringer.",
+    "sources": [
+      {
+        "source": "David Ogilvy — How to Write memo, commentary",
+        "url": "https://fs.blog/david-ogilvy-10-tips-on-writing/",
+        "locator": "Memoet «How to Write», punkt 7, gjengitt i den gratis kommentarartikkelen; ikke den betalte boken"
+      }
+    ],
+    "rule": "Brukes når teksten skal fremføres som tale, eller korrektur eller forståelsestest har påvist problemer med rytme og setningsflyt. Da skal et menneske lese den aktuelle versjonen høyt og logge om uttale, pustepauser og flyt hindrer forståelse, med retting av observerte problemer før godkjenning. Ellers logges ikke relevant med begrunnelse. Dette er en metode under copy-menneskelig-korrektur; felles rettinger og avvik gjenbrukes og telles ikke to ganger.",
+    "check": "menneske",
+    "example_bad": "Teksten godkjennes rett fra førsteutkastet.",
+    "example_good": "Høytlesing er logget; en ufullstendig setning er rettet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ogilvys memo anbefaler å lese egen tekst høyt etter å ha lagt den bort en stund."
+  },
+  {
+    "id": "copy-annen-leser-kontrollerer",
+    "subject": "Copy",
+    "name": "La en annen person lese",
+    "principle": "En annen leser kan oppdage uklarheter skribenten overser.",
+    "sources": [
+      {
+        "source": "David Ogilvy — How to Write memo, commentary",
+        "url": "https://fs.blog/david-ogilvy-10-tips-on-writing/",
+        "locator": "Memoet «How to Write», punkt 8, gjengitt i den gratis kommentarartikkelen; ikke den betalte boken"
+      }
+    ],
+    "rule": "Teksten skal ha en navngitt medleser som ikke skrev utkastet, og alle medleserens avvik skal være lukket før godkjenning.",
+    "check": "menneske",
+    "example_bad": "Forfatteren er eneste leser.",
+    "example_good": "En kollega har lest; merknaden om uklar pris er løst.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ogilvys memo anbefaler at en kollega forbedrer viktig tekst før den sendes."
+  },
+  {
+    "id": "copy-mottakeren-vet-neste-steg",
+    "subject": "Copy",
+    "name": "Gjør neste steg entydig",
+    "principle": "Mottakeren trenger å vite hvilken handling avsenderen ber om.",
+    "sources": [
+      {
+        "source": "David Ogilvy — How to Write memo, commentary",
+        "url": "https://fs.blog/david-ogilvy-10-tips-on-writing/",
+        "locator": "Memoet «How to Write», punkt 9, gjengitt i den gratis kommentarartikkelen; ikke den betalte boken"
+      }
+    ],
+    "rule": "En e-post som krever svar, skal navngi hva mottakeren skal sende eller beslutte. Bare ønske om tilbakemelding gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi hører gjerne fra deg.",
+    "example_good": "Svar med ønsket møtedato.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "e-post",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ogilvys memo anbefaler å gjøre det helt klart hva man vil at mottakeren skal gjøre."
+  },
+  {
+    "id": "copy-ett-tema-per-avsnitt",
+    "subject": "Copy",
+    "name": "Hold ett tema i hvert avsnitt",
+    "principle": "Et avsnitt med flere temaer kan skjule svar ved skumming.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How Users Read on the Web",
+        "url": "https://www.nngroup.com/articles/how-users-read-on-the-web/",
+        "locator": "Innledende punktliste etter «As a result, Web pages have to employ scannable text»: one idea per paragraph"
+      }
+    ],
+    "rule": "Hvert brødtekstavsnitt skal kunne få én dekkende temaetikett. Uavhengige temaer i samme avsnitt gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Levering, retur og selskapshistorie står i samme avsnitt.",
+    "example_good": "Levering og retur har hvert sitt avsnitt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler ett poeng per avsnitt for å gjøre nettinnhold lettere å skanne."
+  },
+  {
+    "id": "copy-mellomtittel-navngir-innhold",
+    "subject": "Copy",
+    "name": "Navngi innholdet i mellomtittelen",
+    "principle": "Mellomtitler skal hjelpe leseren å finne riktig avsnitt.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How Users Read on the Web",
+        "url": "https://www.nngroup.com/articles/how-users-read-on-the-web/",
+        "locator": "Innledende punktliste om skannbar tekst: meaningful sub-headings"
+      }
+    ],
+    "rule": "Hver mellomtittel skal angi temaet eller spørsmålet avsnittet besvarer. En tittel uten innholdsord gir ikke bestått. Dette er den generelle kontrollen; leseren-overskrifter-for-skumming er anvendelsen på informasjonssider. Gjenbruk samme resultat og avviks-ID når begge gjelder.",
+    "check": "kritiker",
+    "example_bad": "Det lille ekstra.",
+    "example_good": "Dette følger med installasjonen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler informative mellomtitler som hjelper leseren å finne innholdet."
+  },
+  {
+    "id": "copy-oppregning-som-liste",
+    "subject": "Copy",
+    "name": "Gjør oppregninger skannbare",
+    "principle": "Lister gjør separate opplysninger lettere å finne.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How Users Read on the Web",
+        "url": "https://www.nngroup.com/articles/how-users-read-on-the-web/",
+        "locator": "Innledende punktliste om skannbar tekst: bulleted lists"
+      }
+    ],
+    "rule": "En oppregning med minst tre selvstendige krav skal stå som liste med ett krav per punkt.",
+    "check": "kritiker",
+    "example_bad": "Send navn, adresse, kundenummer og modell i én lang setning.",
+    "example_good": "Feltene vises som fire listepunkter: navn, adresse, kundenummer og modell.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler punktlister som et virkemiddel for skannbar tekst."
+  },
+  {
+    "id": "copy-lenk-til-faglig-grunnlag",
+    "subject": "Copy",
+    "name": "La leseren finne faggrunnlaget",
+    "principle": "Kildelenker gir leseren mulighet til å undersøke opplysningene.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How Users Read on the Web",
+        "url": "https://www.nngroup.com/articles/how-users-read-on-the-web/",
+        "locator": "Avsnittet om credibility og outbound hypertext links før «In This Article»"
+      }
+    ],
+    "rule": "Når netteksten bygger et argument på en navngitt undersøkelse, skal en lenke føre til undersøkelsen eller en åpen metodebeskrivelse.",
+    "check": "kritiker",
+    "example_bad": "En undersøkelse nevnes uten lenke.",
+    "example_good": "Undersøkelsens navn lenker til metode og resultater.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver at lenker til andre kilder kan øke en nettsides troverdighet."
+  },
+  {
+    "id": "copy-vis-sammenhengen",
+    "subject": "Copy",
+    "name": "Forklar forbindelsen mellom leddene",
+    "principle": "Bindeord kan vise hvordan utsagn henger sammen.",
+    "sources": [
+      {
+        "source": "Språkrådet — Skriveråd for ulike teksttypar",
+        "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+        "locator": "Brev → 4 Språk → Setningar"
+      }
+    ],
+    "rule": "Når teksten bruker derfor eller fordi, skal den oppgitte grunnen faktisk støtte konklusjonen. Manglende sammenheng gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi har blå logo, derfor leverer vi raskt.",
+    "example_good": "Lageret ligger ved terminalen, derfor kan ordren sendes samme dag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Språkrådet anbefaler å gjøre sammenhengen mellom setninger og opplysninger tydelig."
+  },
+  {
+    "id": "copy-sammendrag-i-lange-brev",
+    "subject": "Copy",
+    "name": "Åpne lange brev med saken",
+    "principle": "Et sammendrag hjelper mottakeren å orientere seg.",
+    "sources": [
+      {
+        "source": "Språkrådet — Skriveråd for ulike teksttypar",
+        "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+        "locator": "Brev → 2 Oppsett → Samandrag"
+      }
+    ],
+    "rule": "Et kundebrev over én side skal åpne med formål og eventuell handling mottakeren må utføre. Mangler ett av disse, er kontrollen ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "To sider bakgrunn før bestillingsendringen.",
+    "example_good": "Åpningen forklarer endringen og ber om bekreftelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "brev",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Språkrådet anbefaler sammendrag i lengre brev slik at leseren raskt finner det viktigste."
+  },
+  {
+    "id": "copy-menneskelig-korrektur",
+    "subject": "Copy",
+    "name": "Kontroller mer enn stavefeil",
+    "principle": "Korrekte ord kan likevel gi feil mening.",
+    "sources": [
+      {
+        "source": "Språkrådet — Skriveråd for ulike teksttypar",
+        "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+        "locator": "Brev → 4 Språk, avsnittet om teiknsetjing og korrektur"
+      }
+    ],
+    "rule": "Før godkjenning skal menneskelig korrektur av ordvalg og tegnsetting være logget, med alle meningsendrende feil lukket. Stavekontroll alene gir ikke bestått. Korrekturen er den felles kontrollen; copy-les-hoeyt-og-rett er en betinget metode for tale eller påvist flytproblem. Loggen viser om høytlesing var relevant og lenker eventuelt til samme rettings- og avvikslogg.",
+    "check": "menneske",
+    "example_bad": "Bare automatisk stavekontroll kjøres.",
+    "example_good": "Korrektur finner og retter et manglende ikke.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Språkrådet anbefaler korrektur og oppmerksomhet på tegnsetting fremfor å stole på automatiske hjelpemidler alene."
+  },
+  {
+    "id": "copy-selvforklarende-skjemafelt",
+    "subject": "Copy",
+    "name": "Forklar feltene der de fylles ut",
+    "principle": "Skjemateksten må hjelpe brukeren ved selve feltet.",
+    "sources": [
+      {
+        "source": "Språkrådet — Skriveråd for ulike teksttypar",
+        "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+        "locator": "Skjema, innledningen og «Råd om skjema»"
+      }
+    ],
+    "rule": "Hvert felt skal ha navn og nødvendig formatforklaring synlig ved feltet. Forklaring bare i en generell innledning gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Et datofelt heter Opplysning.",
+    "example_good": "Feltet heter Ønsket leveringsdato og viser formatet dag.måned.år.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "trigger": "skjema",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Språkrådet anbefaler forståelige feltbetegnelser og forklaringer der skjemabrukeren trenger dem."
+  },
+  {
+    "id": "copy-navngi-den-som-handler",
+    "subject": "Copy",
+    "name": "Si hvem som gjør oppgaven",
+    "principle": "Synlig ansvar gjør instruksjoner lettere å følge.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/writing",
+        "locator": "Overview → Use the active voice"
+      }
+    ],
+    "rule": "Hver instruks skal navngi den ansvarlige eller henvende seg direkte til mottakeren. Uklart ansvar gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Bekreftelse må sendes.",
+    "example_good": "Du sender bekreftelsen i bestillingsportalen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov anbefaler aktivt språk som gjør det tydelig hvem som gjør hva."
+  },
+  {
+    "id": "copy-bruk-verb-for-handlinger",
+    "subject": "Copy",
+    "name": "Skriv handlingen som verb",
+    "principle": "Direkte verb kan gjøre en beskjed kortere.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/writing",
+        "locator": "Overview → Avoid hidden verbs; What are hidden verbs?"
+      }
+    ],
+    "rule": "Uttrykkene foreta en vurdering, gjennomføre en bestilling og utføre en kontroll skal erstattes med vurdere, bestille og kontrollere når betydningen er den samme.",
+    "check": "kode+kritiker",
+    "example_bad": "Foreta en vurdering av størrelsen.",
+    "example_good": "Vurder størrelsen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov anbefaler verb fremfor substantiver som skjuler handlingen."
+  },
+  {
+    "id": "copy-riktig-tid-i-produktbeskrivelsen",
+    "subject": "Copy",
+    "name": "Skill dagens funksjoner fra fremtidige",
+    "principle": "Tidsformen må gjøre produktets nåværende tilstand forståelig.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/writing",
+        "locator": "Overview → Use the present tense, inkludert unntaket for accuracy"
+      }
+    ],
+    "rule": "Nåværende funksjoner skal beskrives i nåtid. Planlagte funksjoner skal merkes som planlagte med forventet tidspunkt. Fremtidsløfter presentert som tilgjengelige gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Eksporter til regneark, selv om funksjonen først lanseres neste år.",
+    "example_good": "Eksport er planlagt til januar og er ikke tilgjengelig ennå.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov anbefaler nåtid når det er korrekt og andre tider når presisjon krever det."
+  },
+  {
+    "id": "copy-overskriftsnivaa-viser-struktur",
+    "subject": "Copy",
+    "name": "Bruk overskriftsnivåer konsekvent",
+    "principle": "Overskriftsnivåene skal vise hvordan delene hører sammen.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/design",
+        "locator": "Overview, punktlisten om heading levels"
+      }
+    ],
+    "rule": "Underordnede avsnitt skal bruke neste overskriftsnivå under sin foreldreseksjon. Et hopp fra nivå 2 til nivå 4 gir ikke bestått.",
+    "check": "kode",
+    "example_bad": "Levering har nivå 2; Levering i Oslo har nivå 4.",
+    "example_good": "Levering har nivå 2; Levering i Oslo har nivå 3.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov anbefaler et overskriftshierarki som viser forholdet mellom deler av teksten."
+  },
+  {
+    "id": "copy-unngaa-hele-setninger-med-versaler",
+    "subject": "Copy",
+    "name": "Unngå versaler i hele setninger",
+    "principle": "Store bokstaver i hele setninger kan gjøre teksten tyngre å lese.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/design",
+        "locator": "Overview → Highlight important concepts"
+      }
+    ],
+    "rule": "Ingen hel setning skal ha alle bokstaver som versaler. Registrerte navn og forkortelser er unntatt.",
+    "check": "kode",
+    "example_bad": "BESTILL EN BEFARING I DAG.",
+    "example_good": "Bestill en befaring i dag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov fraråder sammenhengende tekst med bare store bokstaver fordi den er vanskeligere å lese."
+  },
+  {
+    "id": "copy-test-tekstutkastet-tidlig",
+    "subject": "Copy",
+    "name": "Test teksten før endelig utførelse",
+    "principle": "Tidlig testing gjør det mulig å rette tekst før ferdigstilling.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/test",
+        "locator": "Overview → When to test"
+      }
+    ],
+    "rule": "Før endelig utførelse skal minst én forståelsestest av et datert tekstutkast være logget med funn. Bare testing etter ferdigstilling gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Første lesertest skjer etter lansering.",
+    "example_good": "Et datert utkast er testet før designet ferdigstilles.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      8,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov anbefaler å teste tekst tidlig nok til at funn kan brukes til forbedring."
+  },
+  {
+    "id": "copy-test-rettingen",
+    "subject": "Copy",
+    "name": "Test teksten på nytt etter retting",
+    "principle": "En endring trenger kontroll av om problemet er løst.",
+    "sources": [
+      {
+        "source": "Plainlanguage.gov — Federal plain language guidelines",
+        "url": "https://digital.gov/guides/plain-language/test",
+        "locator": "Overview → When to test, avsnittet om iteration"
+      }
+    ],
+    "rule": "Hvert forståelsesproblem som førte til omskriving, skal ha en ny test med logget resultat før det lukkes.",
+    "check": "menneske",
+    "example_bad": "Uklar pris skrives om og markeres løst uten ny test.",
+    "example_good": "Ny lesertest viser at prisen forstås etter omskriving.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Plainlanguage.gov beskriver testing og revisjon som en gjentatt prosess."
+  },
+  {
+    "id": "copy-leseren-forklarer-med-egne-ord",
+    "subject": "Copy",
+    "name": "Kontroller forståelsen med egne ord",
+    "principle": "En gjengivelse kan vise om meningen er forstått.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — Testing Content",
+        "url": "https://www.nngroup.com/articles/testing-content-websites/",
+        "locator": "Test Structure & Facilitation → Use Moderated Instead of Unmoderated Studies, tabellen om follow-up questions"
+      }
+    ],
+    "rule": "Testen skal be deltakeren gjengi tilbudet og forpliktelsen med egne ord. Feil i ett av disse gir ikke bestått forståelse.",
+    "check": "menneske",
+    "example_bad": "Likte du teksten? Ja.",
+    "example_good": "Deltakeren forklarer riktig hva som leveres og betales.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      8,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler oppfølgingsspørsmål i modererte innholdstester for å undersøke deltakernes forståelse."
+  },
+  {
+    "id": "copy-test-med-relevante-lesere",
+    "subject": "Copy",
+    "name": "Bruk lesere i riktig situasjon",
+    "principle": "Motivasjon og forkunnskaper påvirker tekstforståelsen.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — Testing Content",
+        "url": "https://www.nngroup.com/articles/testing-content-websites/",
+        "locator": "Participants & Tasks → Recruit the Right Participants"
+      }
+    ],
+    "rule": "Hver testdeltaker skal oppfylle leserkortets situasjons- og kunnskapskrav. Rollespill alene oppfyller ikke kravene.",
+    "check": "menneske",
+    "example_bad": "Kollegaer later som de skal kjøpe sitt første regnskapssystem.",
+    "example_good": "Deltakerne vurderer faktisk sitt første regnskapssystem.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      8,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler å rekruttere testdeltakere som er relevante for innholdet og oppgavene."
+  },
+  {
+    "id": "copy-ikke-forklar-fasiten-i-testen",
+    "subject": "Copy",
+    "name": "La teksten forklare seg selv i testen",
+    "principle": "Ledende hjelp kan skjule tekstens svakheter.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — Testing Content",
+        "url": "https://www.nngroup.com/articles/testing-content-websites/",
+        "locator": "Test Structure & Facilitation → Be Comfortable with Silence"
+      }
+    ],
+    "rule": "En oppgave skal ikke registreres som løst uten hjelp dersom testlederen forklarte ord eller ga svaret underveis.",
+    "check": "menneske",
+    "example_bad": "Testlederen forklarer bindingstiden og registrerer selvstendig forståelse.",
+    "example_good": "Hjelpen logges; oppgaven registreres som løst med hjelp.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      8,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler at testlederen tåler stillhet og lar deltakeren forsøke uten å få løsningen forklart."
+  },
+  {
+    "id": "copy-temaord-tidlig-i-titler",
+    "subject": "Copy",
+    "name": "Vurder temaord tidlig i overskriftene",
+    "principle": "Tidlige temaord kan hjelpe skummende lesere. Plassering i de to første ordene er en valgfri skriveheuristikk som må vurderes i sammenheng.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — F-shaped pattern of reading",
+        "url": "https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/",
+        "locator": "The Best Antidotes to the F-Shaped Pattern, punkt 3"
+      }
+    ],
+    "rule": "Dette er en rådgivende kontroll og kan ikke alene blokkere godkjenning. En kritiker eller et menneske identifiserer temaet i avsnittet og vurderer en tittelvariant med temaord blant de to første ordene opp mot den valgte tittelen; logg valgt variant og begrunnelse for gjenfinning og forståelse. Heuristikken er vurdert når denne loggen finnes, uavhengig av valgt ordstilling. Faktisk forståelighet kontrolleres separat etter copy-mellomtittel-navngir-innhold og ved behov med lesere.",
+    "check": "kritiker",
+    "example_bad": "Tittelen avvises automatisk fordi temaordet er ord nummer tre.",
+    "example_good": "Kritikeren sammenligner «Hva koster levering?» med «Levering: pris» og beholder spørsmålet fordi det svarer tydelig på leserens oppgave.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g anbefaler å legge meningsbærende ord tidlig i overskrifter for å støtte skanning."
+  },
+  {
+    "id": "copy-kontroller-tekst-paa-mobil",
+    "subject": "Copy",
+    "name": "Kontroller teksten i flere skjermbredder",
+    "principle": "Tekst flyter forskjellig på mobil og større skjermer.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — F-shaped pattern of reading",
+        "url": "https://www.nngroup.com/articles/f-shaped-pattern-reading-web-content/",
+        "locator": "The F-Shape Is Bad for Users and Businesses, avsnittet om responsive design"
+      }
+    ],
+    "rule": "Ved både 360 og 1280 pikslers skjermbredde skal tittel, pris, vilkår og handlingsoppfordring kunne leses uten avklipping eller vannrett rulling. Ett avvik gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Mobilvisningen kutter bort slutten av prisvilkåret.",
+    "example_good": "Hele prisvilkåret brytes over flere lesbare linjer på mobil.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g påpeker at responsiv utforming kan endre hvor ordene havner i lesernes skannemønstre."
+  }
+]

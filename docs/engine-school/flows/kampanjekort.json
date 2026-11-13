@@ -1,0 +1,770 @@
+{
+  "id": "kampanjekort",
+  "name": "Kampanjekort før skriving",
+  "purpose": "Avklare traktoppgave, kundestatus, salgsrunde, merkebygging eller høsting, kunnskapsnivå, forespørsel og relevante ferdigheter før videre skriving.",
+  "sources": [
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "BRIEF.md",
+      "locator": "Step 2 — Skills; Step 3 — Flows og regler for validering"
+    },
+    {
+      "source": "Amazon Ads — What is a marketing funnel?",
+      "url": "https://advertising.amazon.com/en-gb/library/guides/marketing-funnel",
+      "locator": "Stages of the marketing funnel"
+    },
+    {
+      "source": "Google / The Behavioural Architects — Navigating purchase behavior and decision-making",
+      "url": "https://business.google.com/en-all/think/consumer-insights/navigating-purchase-behavior-and-decision-making/",
+      "locator": "What happens in the messy middle? Two mental modes"
+    },
+    {
+      "source": "Binet & Field — The 5 Principles of Growth in B2B Marketing, rapport",
+      "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/b2b-research/LIN_B2B-Marketing-Report-Digital-v02.pdf",
+      "locator": "Trykt side 13, Figure 6 og forbeholdet om lite utvalg (PDF-side 14)"
+    },
+    {
+      "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+      "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+      "locator": "The five levels, in plain words"
+    },
+    {
+      "source": "Forbrukertilsynet — Salg og bruk av førpriser",
+      "url": "https://www.forbrukertilsynet.no/vi-jobber-med/prismarkedsforing/salg-og-bruk-av-forpriser",
+      "locator": "Reglene dere må kjenne til; Når skal dere oppgi førpris?; Sjekkliste for markedsføring av salg på tjenester"
+    }
+  ],
+  "checkpoints": [
+    1,
+    2,
+    6,
+    10
+  ],
+  "input": "artefakter/{oppdrag_id}/oppdrag.json",
+  "steps": [
+    {
+      "n": 1,
+      "who": "kode",
+      "what": "Les oppdraget og registrer eksisterende fakta og kildereferanser samt mangler i feltene som kampanjekortet krever. Ikke utled kjøpsberedskap, nivå eller målgruppe ved gjetting. Ingen kampanjetekst skrives. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/oppdrag.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-grunnlag.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Oppdragets kildeopphav og referanser er kontrollert; hvert nødvendig felt har belegg eller en eksplisitt mangel med eier.",
+          "Kun grunnlagssteget kan passere med markerte mangler; ingen slik mangel er en godkjent kampanjebeslutning.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Utdata følger schemas/00-kampanjekort-grunnlag.json med importert felleskontrakt; inndata følger schemas/oppdrag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/oppdrag.json",
+      "output_schema": "schemas/00-kampanjekort-grunnlag.json"
+    },
+    {
+      "n": 2,
+      "who": "menneske",
+      "what": "La kunde og oppdragsansvarlig avklare manglende fakta og godkjenne arbeidsgrunnlaget. Registrer kilder, daterte svar og avgrensning av eventuelle antakelser; ikke skriv annonseinnhold. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-grunnlag.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-avklart.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Avgjørende spørsmål om mål, kundestatus, trinn, tilbud, land og kanaler har daterte svar eller uttrykkelig godkjente arbeidshypoteser med testplan.",
+          "Oppgitte salgsfrister og prisfakta har kilde; uavklart juridisk klassifisering eller manglende belegg for en påstand blokkerer og går til fagansvarlig menneske.",
+          "Smaksoverstyring: ekstern signatur-/myndighetskontroll og nyberegnet kanonisk SHA-256 binder eksakt merke, felt, før/etter, versjoner, begrunnelse og kampanje/del. Eventuelle kampanjeavvik har bestått taste_override_contract og schemas/merkevare-vs-kampanje.json; manglende menneskevedtak, utløpt vedtak eller forsøk på å endre merkeidentitet/etikk blokkerer.",
+          "Utdata følger schemas/00-kampanjekort-avklart.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-grunnlag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/00-kampanjekort-grunnlag.json",
+      "output_schema": "schemas/00-kampanjekort-avklart.json"
+    },
+    {
+      "n": 3,
+      "who": "modell",
+      "what": "Lag kampanjekortutkast etter campaign_card_contract, med en del per oppgave. Utled Schwartz fra kildebelagt kunnskap, begrunn forespørselens størrelse og skill kundestatus, hovedtrinn, salgsrunde og modus. Kortet er en plan; ingen overskrifter, løfter eller annonsetekster skrives. Registrer attestert modellspor. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-avklart.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json",
+      "validation": {
+        "who": "kode+modell",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Alle felter unntatt endelig ferdighetsutvalg og godkjenning er utfylt med kilder, begrunnelser og usikkerhet.",
+          "Struktur: én hovedstage per del, salgsrunde-overlay samsvarer med boolsk aktiv, modus er merkebygging eller hosting, nivå er heltall 1–5, forespørsel er ingen/liten/middels/stor.",
+          "Ingen automatisk likhet mellom kundestatus, trinn og kunnskap; begge aktiviteter er delt i egne deler. Faglige konklusjoner er fortsatt utkast frem til kritikersteget.",
+          "Utdata følger schemas/00-kampanjekort-utkast.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-avklart.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/00-kampanjekort-avklart.json",
+      "output_schema": "schemas/00-kampanjekort-utkast.json"
+    },
+    {
+      "n": 4,
+      "who": "kode",
+      "what": "Les hele ferdighetsbiblioteket og beregn ferdighetsvalg per del etter skill_filter. Lagre utkastet, komplett utvalgslogg, bibliotekmanifest og gjensidige konfliktpar i det ene artefaktet. Kode gjør struktur- og treffkontroll, ingen faglig godkjenning av etikettene. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-filtrert.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Alle bibliotek-ID-er har sporbar beslutning per applies_when-dimensjon; selected_ids og excluded_ids er komplette og uten duplikater.",
+          "Alle valgte ID-er og konfliktmål finnes; hvert konfliktpar er gjensidig. Ukjente felter blokkerer; konfliktpar merkes for faglig vurdering, de løses ikke automatisk.",
+          "Bibliotekets filversjoner og SHA-256 er lagret; de deklarerte eksemplene i skill_filter etterprøves mot biblioteket før videreføring.",
+          "Utdata følger schemas/00-kampanjekort-filtrert.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-utkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/00-kampanjekort-utkast.json",
+      "output_schema": "schemas/00-kampanjekort-filtrert.json"
+    },
+    {
+      "n": 5,
+      "who": "kritiker",
+      "what": "Etterprøv kortets trinn, kundestatus, salgsrunde, modus, nivå, forespørsel, mål, kildeomfang og faktisk anvendelse av kanal-/landetikketter. Kontroller at ferdighetsutvalg stemmer, at ingen lov eller etikk er filtrert bort, og foreslå begrunnet avgrensning av konfliktpar. Gi belegg, motbelegg, begrunnelse og bestått/avvist/uavklart per kriterium. Innholdsretting går til produsenten og krever ny filtrering og kritikk. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-filtrert.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-kritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Betrodd kjørelag attesterer ulik faktisk modell fra alle skrivere i det rekursive modellsporet, også eventuelle bidrag i oppdragsgrunnlaget; identiteten verifiseres før kall og ved svar.",
+          "Hvert faglig kriterium har artefakt-/kildelocator, begrunnelse og selvstendig vurdering; et utfylt felt er ikke tilstrekkelig. Uavklart kildegrunnlag går straks til fagansvarlig menneske.",
+          "Ingen gjenbrukt 95/5-andel eller budsjettprosent presenteres som lokal fasit. Juridiske kildekrav skilles fra Fume-husregler.",
+          "Utdata følger schemas/00-kampanjekort-kritikk.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-filtrert.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/00-kampanjekort-filtrert.json",
+      "output_schema": "schemas/00-kampanjekort-kritikk.json"
+    },
+    {
+      "n": 6,
+      "who": "menneske",
+      "what": "La kunde og oppdragsansvarlig godkjenne den kritiserte kortversjonen og hver konfliktavgrensning. Bevar PROPOSED som definisjonens og kortets tilstand; godkjent er bare artefaktets valideringsstatus. Endret innhold returneres til produsenten med ny filtrering og kritikk. Les bare bestått inndata og lagre hele resultatet med validering i ett JSON-objekt etter artifact_contract.",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-kritikk.json",
+      "output": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Kortet har komplett ferdighetsvalg, løste konfliktpar og datert godkjenning bundet til versjon og SHA-256; ingen åpne blokkerende avvik.",
+          "Ingen kampanjetekst er produsert før kortet har bestått. Hver senere kjøring velger del_id og binder seg til denne kortversjonen.",
+          "Smaksoverstyring: ekstern signatur-/myndighetskontroll og nyberegnet kanonisk SHA-256 binder eksakt merke, felt, før/etter, versjoner, begrunnelse og kampanje/del. Eventuelle kampanjeavvik har bestått taste_override_contract og schemas/merkevare-vs-kampanje.json; manglende menneskevedtak, utløpt vedtak eller forsøk på å endre merkeidentitet/etikk blokkerer.",
+          "Utdata følger schemas/00-kampanjekort-godkjent.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-kritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle strukturelle og faglige kontroller for dette steget må være bestått i det ene lagrede artefaktet før neste steg kan lese det. Ukjent eller avvist resultat bruker fail_route; kode alene bekrefter ikke faglig sannhet."
+      },
+      "input_schema": "schemas/00-kampanjekort-kritikk.json",
+      "output_schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at flytens lagrede inndata finnes, er lesbart og har validering.status lik bestått. Det første oppdragsartefaktet må oppfylle inngangskontrakten i flows/_index.json. Senere flyter leser bare den umiddelbart foregående flytens godkjente sluttartefakt. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Inngangen er oppdrag.json, aldri en ferdig brief, et leserkort eller et tidligere kampanjekort; flyten kan starte uten sirkulære avhengigheter.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": " Kampanjekortet er bindende før all senere skriving. Ny kunnskap som endrer kortet krever retur hit, ny versjon, filtrering, uavhengig kritikk og menneskegodkjenning; alle berørte etterfølgere ugyldiggjøres."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "trakt-kort-for-tekst",
+    "trakt-navngi-oppgaven",
+    "trakt-ingen-tvungen-reise",
+    "trakt-kundestatus-er-egen-akse",
+    "trakt-kjopsberedskap-med-belegg",
+    "trakt-ikke-fast-nittifem",
+    "trakt-merkebygging-med-minne",
+    "trakt-hosting-har-kjopshinder",
+    "trakt-balanse-er-lokal",
+    "trakt-samme-merke-i-begge",
+    "trakt-mal-over-riktig-tid",
+    "trakt-na-fremtidige-kjopere",
+    "trakt-penetrasjon-egen-maling",
+    "trakt-lojalitet-med-riktig-nevner",
+    "trakt-lojalitet-er-ikke-hele-veksten",
+    "trakt-lojalitet-gir-bruksverdi",
+    "trakt-topp-har-liten-foresporsel",
+    "trakt-midt-svarer-pa-valget",
+    "trakt-bunn-har-gjennomforbart-kjop",
+    "trakt-utforskning-og-vurdering",
+    "trakt-foresporsel-har-kostnad",
+    "trakt-schwartz-fra-kunnskap",
+    "trakt-flere-nivaer-flere-deler",
+    "trakt-salgsrunde-er-eget-valg",
+    "trakt-klassifiser-pristilbudet",
+    "trakt-forpris-med-historikk",
+    "trakt-reell-prisfordel",
+    "trakt-betingelser-for-fordelen",
+    "trakt-frist-har-kilde",
+    "trakt-verdi-for-rabatt",
+    "trakt-filtrer-ferdigheter"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "oppdrag": {
+      "path": "artefakter/{oppdrag_id}/oppdrag.json",
+      "required": [
+        "kunde",
+        "ansvarlig",
+        "oppgavetekst",
+        "produktfakta og kildegrunnlag",
+        "mål og tidshorisont",
+        "målgruppe og kundestatus",
+        "land, marked og kanal",
+        "tilbud, priser og eventuell salgsperiode"
+      ],
+      "missing": "Ukjente felt tillates bare i grunnlagssteget. Steg 2 innhenter kundesvar; manglende avgjørende svar blokkerer før modellutkast. Ingen tidligere brief eller leserkort kreves som inngang.",
+      "schema": "schemas/oppdrag.json"
+    }
+  },
+  "campaign_card_contract": {
+    "location": "innhold.kampanjekort i hvert artefakt fra og med steg 3; godkjent sluttversjon er bindende",
+    "required": [
+      "kort_id",
+      "versjon",
+      "oppdrag_id",
+      "state",
+      "lang",
+      "grunnlagsreferanser",
+      "deler",
+      "ferdighetsbibliotek",
+      "godkjenning"
+    ],
+    "constants": {
+      "state": "PROPOSED",
+      "lang": "nb"
+    },
+    "deler": {
+      "type": "ikke-tom liste; unik del_id per oppgave, kundesegment, hovedtrinn, modus og forespørsel",
+      "required": [
+        "del_id",
+        "malgruppe",
+        "kundestatus",
+        "funnel",
+        "salgsrunde",
+        "schwartz",
+        "foresporsel",
+        "maling",
+        "kontekst",
+        "ferdighetsvalg",
+        "konfliktlosninger"
+      ],
+      "kundestatus": {
+        "value": [
+          "nye",
+          "eksisterende",
+          "begge"
+        ],
+        "required": [
+          "definisjon av ny i produkt/kategori og periode",
+          "datakilde",
+          "begrunnelse"
+        ],
+        "begge": "Tillatt bare når oppgave, nivå, modus og forespørsel er felles med begrunnelse; ellers separate deler."
+      },
+      "funnel": {
+        "stage": "Liste med nøyaktig ett av topp, midt, bunn, lojalitet, pluss salgsrunde hvis og bare hvis salgsrunde.aktiv er true. Aldri alle på en konkret del.",
+        "mode": [
+          "merkebygging",
+          "hosting"
+        ],
+        "required": [
+          "begrunnelse",
+          "malhandling"
+        ],
+        "mode_note": "hosting er maskinverdi for høsting/salgsaktivering. Begge aktiviteter i kampanjen gir separate deler; bibliotekets begge matcher hver av dem. Modus utledes ikke fra trinn eller kanal."
+      },
+      "salgsrunde": {
+        "aktiv": "boolsk true eller false, aldri utledet av trinn alene",
+        "required": [
+          "begrunnelse",
+          "kilde",
+          "tilbudstype"
+        ],
+        "when_true": [
+          "formål",
+          "start med tidssone",
+          "slutt med tidssone",
+          "omfang og varer/tjenester",
+          "ansvarlig",
+          "prisgrunnlag og tilbudshistorikk når prisfordel påstås"
+        ],
+        "tilbudstype": [
+          "ordinaer-pris",
+          "prisnedsettelse",
+          "betinget-tilbud",
+          "kombinasjon",
+          "ikke-relevant"
+        ],
+        "note": "En avgrenset salgsrunde er ikke automatisk lovens salgsmarkedsføring. Tilbud kan utløse lovkontroll selv om feltet aktiv er false. Slutt er planens faktiske avgrensning, ikke automatisk lovlig grunnlag for siste sjanse. Varslet knapphet krever egen kilde."
+      },
+      "schwartz": {
+        "level": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "definitions": {
+          "1": "Kjenner ikke problemet",
+          "2": "Kjenner problemet",
+          "3": "Kjenner løsningstypen",
+          "4": "Kjenner produktet",
+          "5": "Kjenner og ønsker produktet"
+        },
+        "required": [
+          "belegg for kunnskap om problem",
+          "belegg for kunnskap om løsningstype",
+          "belegg for produktkunnskap",
+          "belegg for kjøpsønske",
+          "kilde og dato",
+          "begrunnelse for valgt nivå",
+          "usikkerhet og motbelegg"
+        ],
+        "derivation": "Utled nivå fra de fire kunnskapsvurderingene og oppgaven; trinn, tidligere kjøp og klikk er ikke alene belegg. Trinn gir bare en hypotese: topp ofte 1–2, midt ofte 2–4, bunn ofte 4–5; salgsrunde og lojalitet har ingen fast verdi. Annet nivå er tillatt med belegg. Vesentlig uvisshet går til menneske; godkjent arbeidshypotese merkes som antakelse med test og frist."
+      },
+      "foresporsel": {
+        "size": [
+          "ingen",
+          "liten",
+          "middels",
+          "stor"
+        ],
+        "required": [
+          "handling",
+          "anslått tid i minutter med grunnlag",
+          "penger og valuta",
+          "nødvendige data",
+          "binding og risiko",
+          "verdi for mottaker",
+          "begrunnelse for størrelse"
+        ],
+        "classification": "Fume-vurdering, ikke forskningsskala. Ingen betyr ingen oppfordret handling. Liten innebærer liten innsats uten betaling, påkrevde kontaktdata eller binding; middels er en begrunnet mellomkategori; betaling, vesentlig tid, datadeling eller forpliktelse skal vurderes særskilt og kan gjøre forespørselen stor. Laveste pris avgjør ikke alene. Stor forespørsel tidlig krever særskilt belegg og mindre alternativ."
+      },
+      "maling": {
+        "required": [
+          "ønsket utfall",
+          "startverdi eller merket mangel",
+          "målkilde",
+          "målefrist",
+          "tidshorisont",
+          "suksesskriterium"
+        ],
+        "note": "Merkebygging og høsting får hver sin måleoppgave; respons og salg holdes atskilt."
+      },
+      "kontekst": {
+        "required": [
+          "kombinasjoner",
+          "kanal_og_land_begrunnelse"
+        ],
+        "market": [
+          "B2B",
+          "B2C"
+        ],
+        "tags": "Hver kombinasjon har stabil ID, filter_values og filter_fakta. Verdier kommer fra skill-filter. Land er ISO alpha-2. EU/CAP står separat i legal_area. Ingen jokerverdier i konkret kontekst; ukjent blokkerer. filter_fakta dokumenterer formatfamilie, sideforhold, regelområder, betalt/egen og eksplisitt vurderte utløsere.",
+        "schema": "schemas/skill-filter.json",
+        "evaluation": "Evaluer filter_values separat per kombinasjon, og bind hvert selected_id til kombinasjons-ID. Ingen sammenslåing av kanaler og format fra ulike annonser før filtrering."
+      },
+      "ferdighetsvalg": {
+        "required": [
+          "selected_ids sortert uten duplikater",
+          "excluded_ids",
+          "beslutning per bibliotek-ID og per applies_when-dimensjon",
+          "uavklarte forhold",
+          "bibliotekets versjon og SHA-256"
+        ],
+        "note": "Ukjent er ikke avslag og ikke bestått; det blokkerer godkjenning inntil konteksten er avklart. Ekskludert liste viser faktisk årsak. Anvendelsesetiketter vurderes også når ingen ferdighet ble valgt; en manglende etikett kan ellers skjule relevante kontroller."
+      },
+      "konfliktlosninger": "For hvert gjensidig konfliktspar der begge er valgt: ID-er, relevant oppgave/flate, prioritet eller avgrensning, begrunnelse og menneskevedtak. Ingen automatisk sletting av den ene."
+    },
+    "ferdighetsbibliotek": "Manifest over alle skills/*.json med versjon og SHA-256, inkludert Trakt. Endret bibliotek krever ny filtrering og ny kortgodkjenning.",
+    "godkjenning": "Navngitt oppdragsansvarlig og kunde, tidspunkt, kortversjon og SHA-256; ingen åpne blokkerende avvik.",
+    "schema": "schemas/00-kampanjekort-godkjent.json",
+    "schema_aliases": {
+      "deler[].funnel": "kampanje.funnel",
+      "deler[].schwartz": "leser.schwartz",
+      "deler[].kundestatus.value": "kampanje.customer_status",
+      "deler[].salgsrunde.aktiv": "kampanje.sales_round.active",
+      "deler[].salgsrunde.tilbudstype": "tilbud.type",
+      "deler[].kontekst": "skill-filter",
+      "innhold.kampanjekort.versjon": "artefakt-felles.versjon",
+      "innhold.kampanjekort.oppdrag_id": "artefakt-felles.oppdrag_id",
+      "innhold.kampanjekort.state": "artefakt-felles.state",
+      "innhold.kampanjekort.lang": "artefakt-felles.lang",
+      "innhold.kampanjekort.godkjenning": "artefakt-felles.godkjenning"
+    }
+  },
+  "skill_filter": {
+    "scope": "Alle ferdigheter i skills/*.json. skills_used i en flyt er kandidater for oppgaven, ikke en beskjed om å bruke dem ved alle kjøringer. Trakt-kortets egne strukturporter gjelder alltid, uavhengig av målgruppens ferdighetsfilter.",
+    "predicate": {
+      "channel": "match(skill.applies_when.channel, kombinasjon.filter_values.channel); joker bare i skill; liste betyr OR",
+      "awareness_level": "match(skill.applies_when.awareness_level, kombinasjon.filter_values.awareness_level); joker bare i skill; liste betyr OR",
+      "market": "match(skill.applies_when.market, kombinasjon.filter_values.market); joker bare i skill; liste betyr OR",
+      "country": "match(skill.applies_when.country, kombinasjon.filter_values.country); joker bare i skill; liste betyr OR",
+      "funnel.stage": "match(skill.applies_when.funnel.stage, kombinasjon.filter_values.funnel.stage); joker bare i skill; liste betyr OR",
+      "funnel.mode": "match(skill.applies_when.funnel.mode, kombinasjon.filter_values.funnel.mode); joker bare i skill; liste betyr OR",
+      "format": "match(skill.applies_when.format, kombinasjon.filter_values.format); joker bare i skill; liste betyr OR",
+      "aspect_ratio": "match(skill.applies_when.aspect_ratio, kombinasjon.filter_values.aspect_ratio); joker bare i skill; liste betyr OR",
+      "legal_area": "match(skill.applies_when.legal_area, kombinasjon.filter_values.legal_area); joker bare i skill; liste betyr OR",
+      "media_class": "match(skill.applies_when.media_class, kombinasjon.filter_values.media_class); joker bare i skill; liste betyr OR",
+      "regulation": "match(skill.applies_when.regulation, kombinasjon.filter_values.regulation); joker bare i skill; liste betyr OR",
+      "trigger": "match(skill.applies_when.trigger, kombinasjon.filter_values.trigger); joker bare i skill; liste betyr OR",
+      "selected": "AND over alle eksplisitte predikater; manglende nødvendig kontekst gir uavklart og blokkering."
+    },
+    "conditional_rule": "Treff gjør ferdigheten til kandidat. Regelens egen utløser, for eksempel ved prisbudskap, vurderes og lagres som relevant eller ikke relevant med grunn. Lov og Fume-etikk gjelder uansett trinn og modus; ingen lov-/etikkport kan fravelges ved markedsføringsfilter. Lov-ferdighetenes traktfelt er derfor alle/begge, og lovsjekk og etikkport kjøres fortsatt. Feil land-/kanalmerking gir retur til kortet.",
+    "trace": "Kode registrerer alle testede ID-er, inputverdier, treff per dimensjon og resultat; kritiker kontrollerer at kontekstetikettene faktisk stemmer. Lagres i samme artefakt, ingen egen sidefil.",
+    "unknown": "Manglende felt, uavklart kanal/territorium eller ukjent bibliotekversjon blokkerer. En tom relevant liste gir avvist og rutes til menneske.",
+    "conflicts": "Beregn uordnede gjensidige par i selected_ids. Uavklart konflikt gir avvist. Konflikt betyr faglig spenning som må avgrenses, ikke at begge ID-er må fjernes.",
+    "examples": [
+      {
+        "context": "topp + merkebygging, nivå 1",
+        "include": [
+          "leseren-ukjent-problem",
+          "trakt-topp-har-liten-foresporsel"
+        ],
+        "exclude": [
+          "leseren-klar-for-kjoep",
+          "strategi-salgsutlosende-informasjon"
+        ],
+        "input": {
+          "channel": [
+            "e-post"
+          ],
+          "awareness_level": 1,
+          "market": "B2B",
+          "country": [
+            "NO"
+          ],
+          "funnel": {
+            "stage": [
+              "topp"
+            ],
+            "mode": "merkebygging"
+          },
+          "trigger": [],
+          "regulation": [
+            "generell"
+          ],
+          "legal_area": [],
+          "media_class": "egen"
+        }
+      },
+      {
+        "context": "bunn + hosting, nivå 5",
+        "include": [
+          "leseren-klar-for-kjoep",
+          "strategi-salgsutlosende-informasjon"
+        ],
+        "exclude": [
+          "leseren-ukjent-problem",
+          "strategi-folelsens-rolle"
+        ],
+        "input": {
+          "channel": [
+            "e-post"
+          ],
+          "awareness_level": 5,
+          "market": "B2B",
+          "country": [
+            "NO"
+          ],
+          "funnel": {
+            "stage": [
+              "bunn"
+            ],
+            "mode": "hosting"
+          },
+          "trigger": [],
+          "regulation": [
+            "generell"
+          ],
+          "legal_area": [],
+          "media_class": "egen"
+        }
+      },
+      {
+        "context": "lojalitet + hosting, nivå 4",
+        "include": [
+          "trakt-lojalitet-med-riktig-nevner",
+          "leseren-allerede-kunde"
+        ],
+        "exclude": [
+          "leseren-klar-for-kjoep"
+        ],
+        "input": {
+          "channel": [
+            "e-post"
+          ],
+          "awareness_level": 4,
+          "market": "B2C",
+          "country": [
+            "NO"
+          ],
+          "funnel": {
+            "stage": [
+              "lojalitet"
+            ],
+            "mode": "hosting"
+          },
+          "trigger": [],
+          "regulation": [
+            "generell"
+          ],
+          "legal_area": [],
+          "media_class": "egen"
+        }
+      },
+      {
+        "context": "bunn og salgsrunde + hosting, nivå 5, B2C Norge",
+        "include": [
+          "trakt-klassifiser-pristilbudet",
+          "trakt-forpris-med-historikk"
+        ],
+        "exclude": [],
+        "input": {
+          "channel": [
+            "nettside"
+          ],
+          "awareness_level": 5,
+          "market": "B2C",
+          "country": [
+            "NO"
+          ],
+          "funnel": {
+            "stage": [
+              "bunn",
+              "salgsrunde"
+            ],
+            "mode": "hosting"
+          },
+          "trigger": [],
+          "regulation": [
+            "generell"
+          ],
+          "legal_area": [],
+          "media_class": "egen"
+        }
+      }
+    ],
+    "schema": "schemas/skill-filter.json",
+    "normalization": {
+      "mapping": "review/schema-value-mapping.json",
+      "runtime": "Bruk scripts/schema_filter.py. Utvid konkrete format til godkjent formatfamilie (f.eks. yt-shorts→video); aldri utvid et konkret format til alle. Kanalhierarki er eksplisitt i helperen.",
+      "context": "Del.kontekst.kombinasjoner inneholder én rad per faktisk kanal/format/land-kombinasjon: filter_values sendes til scripts/schema_filter.py, mens filter_fakta og belegg beholdes utenfor predikatet. Trinn/modus/nivå må samsvare med delen. Logg treff per kombinasjons-ID og bruk bare treffende skills på denne kombinasjonen; aldri kryssprodukt av ulike annonser.",
+      "override": "Skjemaendring eller menneskegodkjent smaksoverstyring gir ny kortversjon og ny filtrering; nedstrømsartefakter ugyldiggjøres.",
+      "channel_contract": "schemas/kanal-format.json#/channel_contract; filter_values.placement kreves for Demand Gen og avleder YouTube-regler bare på dg-youtube-*. Familieverdier er forbudt i konkret kontekst."
+    }
+  },
+  "input_schema": "schemas/oppdrag.json",
+  "output_artifact_schema": "schemas/00-kampanjekort-godkjent.json",
+  "schema_reads": [
+    "schemas/kampanje.json",
+    "schemas/kanal-format.json",
+    "schemas/kategori.json",
+    "schemas/leser.json",
+    "schemas/merkevare-vs-kampanje.json",
+    "schemas/skill-filter.json",
+    "schemas/tilbud.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "taste_override_contract": {
+    "schema": "schemas/merkevare-vs-kampanje.json",
+    "verification": "Krev ekstern verifisering av signatur og menneskelig myndighet for merket, bind eksakt felt, merke, før-/etterverdi og versjon, kampanje/del, begrunnelse, tidspunkt og beregnede hasher; avvis uten betrodd verifier.",
+    "rule": "Les arvet merkeverdi og effektiv kampanjeverdi separat. Overstyring av et tillatt felt krever navngitt menneske, før-/etterhash, begrunnelse, kampanje/del og gyldighetsperiode før bruk. Ufravikelige felt kan ikke overstyres. Merkeprofilen endres aldri av kampanjevalget. Nytt vedtak krever ny kortversjon og berørte nedstrømsgodkjenninger."
+  },
+  "field_reads": {
+    "kampanje.id": "Validering av godkjent domenegrunnlag",
+    "kampanje.goal": "Validering av godkjent domenegrunnlag",
+    "kampanje.funnel.stage": "Validering av godkjent domenegrunnlag",
+    "kampanje.funnel.mode": "Validering av godkjent domenegrunnlag",
+    "kampanje.market": "Validering av godkjent domenegrunnlag",
+    "kampanje.audience": "Validering av godkjent domenegrunnlag",
+    "kampanje.audience.reader_id": "Validering av godkjent domenegrunnlag",
+    "kampanje.offer_id": "Validering av godkjent domenegrunnlag",
+    "kampanje.category_id": "Validering av godkjent domenegrunnlag",
+    "kampanje.timing.start": "Validering av godkjent domenegrunnlag",
+    "kampanje.timing.end": "Validering av godkjent domenegrunnlag",
+    "kampanje.channels": "Validering av godkjent domenegrunnlag",
+    "kampanje.customer_status": "Validering av godkjent domenegrunnlag",
+    "kampanje.sales_round.active": "Validering av godkjent domenegrunnlag",
+    "kampanje.kpi.metric": "Validering av godkjent domenegrunnlag",
+    "kampanje.kpi.baseline": "Validering av godkjent domenegrunnlag",
+    "kampanje.kpi.target": "Validering av godkjent domenegrunnlag",
+    "kampanje.kpi.definition": "Validering av godkjent domenegrunnlag",
+    "kampanje.budget.class": "Validering av godkjent domenegrunnlag",
+    "kampanje.budget.amount": "Validering av godkjent domenegrunnlag",
+    "kampanje.budget.currency": "Validering av godkjent domenegrunnlag",
+    "kampanje.budget.thresholds": "Validering av godkjent domenegrunnlag",
+    "kampanje.evidence": "Validering av godkjent domenegrunnlag",
+    "kampanje.countries": "Validering av godkjent domenegrunnlag",
+    "leser.id": "Validering av godkjent domenegrunnlag",
+    "leser.schwartz.level": "Validering av godkjent domenegrunnlag",
+    "leser.schwartz.evidence": "Validering av godkjent domenegrunnlag",
+    "leser.ceps": "Validering av godkjent domenegrunnlag",
+    "leser.jtbd.progress": "Validering av godkjent domenegrunnlag",
+    "leser.beliefs": "Validering av godkjent domenegrunnlag",
+    "leser.objections": "Validering av godkjent domenegrunnlag",
+    "leser.roles.evidence": "Validering av godkjent domenegrunnlag",
+    "leser.ceps[].cue_type": "Validering av godkjent domenegrunnlag",
+    "leser.jtbd.dimension": "Validering av godkjent domenegrunnlag",
+    "leser.jtbd.circumstances": "Validering av godkjent domenegrunnlag",
+    "leser.roles.b2b": "Validering av godkjent domenegrunnlag",
+    "leser.roles.b2c": "Validering av godkjent domenegrunnlag",
+    "leser.roles.expertise": "Validering av godkjent domenegrunnlag",
+    "leser.roles.functions": "Validering av godkjent domenegrunnlag",
+    "leser.buying_situation": "Validering av godkjent domenegrunnlag",
+    "kategori.id": "Validering av godkjent domenegrunnlag",
+    "kategori.name": "Validering av godkjent domenegrunnlag",
+    "kategori.type": "Validering av godkjent domenegrunnlag",
+    "kategori.purchase_frequency.class": "Validering av godkjent domenegrunnlag",
+    "kategori.purchase_frequency.measurement": "Validering av godkjent domenegrunnlag",
+    "kategori.involvement.level": "Validering av godkjent domenegrunnlag",
+    "kategori.involvement.evidence": "Validering av godkjent domenegrunnlag",
+    "kategori.regulation.areas": "Validering av godkjent domenegrunnlag",
+    "kategori.regulation.basis": "Validering av godkjent domenegrunnlag",
+    "kategori.seasonality.pattern": "Validering av godkjent domenegrunnlag",
+    "kategori.seasonality.evidence": "Validering av godkjent domenegrunnlag",
+    "tilbud.id": "Validering av godkjent domenegrunnlag",
+    "tilbud.product_id": "Validering av godkjent domenegrunnlag",
+    "tilbud.name": "Validering av godkjent domenegrunnlag",
+    "tilbud.type": "Validering av godkjent domenegrunnlag",
+    "tilbud.deliverable": "Validering av godkjent domenegrunnlag",
+    "tilbud.benefit": "Validering av godkjent domenegrunnlag",
+    "tilbud.price.amount": "Validering av godkjent domenegrunnlag",
+    "tilbud.price.currency": "Validering av godkjent domenegrunnlag",
+    "tilbud.price.history": "Validering av godkjent domenegrunnlag",
+    "tilbud.terms": "Validering av godkjent domenegrunnlag",
+    "tilbud.availability": "Validering av godkjent domenegrunnlag",
+    "tilbud.claims": "Validering av godkjent domenegrunnlag",
+    "tilbud.destination": "Validering av godkjent domenegrunnlag",
+    "kanal-format.channel": "Validering av godkjent domenegrunnlag",
+    "kanal-format.placement": "Validering av godkjent domenegrunnlag",
+    "kanal-format.format": "Validering av godkjent domenegrunnlag",
+    "kanal-format.binding.creative_medium": "Validering av godkjent domenegrunnlag",
+    "kanal-format.binding.ad_product": "Validering av godkjent domenegrunnlag",
+    "kanal-format.binding.delivery_behavior": "Validering av godkjent domenegrunnlag",
+    "kanal-format.asset_features": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.aspect_ratio": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.width_px": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.height_px": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.duration_s": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.max_bytes": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.mime": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.text_limits": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.safe_zone": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.rule_kind": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.read_on": "Validering av godkjent domenegrunnlag",
+    "kanal-format.specs.source": "Validering av godkjent domenegrunnlag",
+    "kanal-format.availability": "Validering av godkjent domenegrunnlag",
+    "kanal-format.binding": "Validering av godkjent domenegrunnlag",
+    "kanal-format.component": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.brand_id": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.identity": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.ethics": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.schema_version": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.profile_ref": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.gender_expression": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.standing": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.sample": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.field_ref": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.old_value": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.new_value": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.reason": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.approval": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.invalidates": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.old_value.value": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.old_value.version": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.new_value.value": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.new_value.version": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.signature": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.decision_id": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.version": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.scope": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.brand_profile_mutated": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.proposal": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.approval": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.approved_by": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.approved_by.actor_type": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.approved_at": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.expires_at": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.scope.campaign_id": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.scope.del_id": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.before_sha256": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.override.after_sha256": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.available": "Validering av godkjent domenegrunnlag",
+    "merkevare-vs-kampanje.taste.kind": "Validering av godkjent domenegrunnlag",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

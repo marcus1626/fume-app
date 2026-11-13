@@ -1,0 +1,21 @@
+{
+  "id": "state",
+  "label_nb": "Status for definisjon",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "PROPOSED",
+      "label_nb": "Foreslått",
+      "definition": "Foreslått definisjon, ingen beslutning om implementering."
+    }
+  ]
+}

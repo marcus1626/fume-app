@@ -1,0 +1,1370 @@
+[
+  {
+    "id": "strategi-felles-brief",
+    "subject": "Strategi",
+    "name": "Bekreft samme forståelse av briefen",
+    "principle": "Ulik forståelse mellom kunde og byrå kan føre til at arbeidet løser feil oppgave. En felles bekreftet formulering gjør uenigheten synlig før produksjon.",
+    "sources": [
+      {
+        "source": "The BetterBriefs Project (2021), IPA EffWorks presentation",
+        "url": "https://ipa.co.uk/effworks/effworks-global-2021/day-4/betterbriefs",
+        "locator": "BetterBriefs, innledende avsnitt om misalignment and miscommunication"
+      }
+    ],
+    "rule": "Bestått når briefen har én oppsummering av oppgaven og både kunden og den ansvarlige for arbeidet har bekreftet samme versjon med dato; ellers ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Kunden mener salg, mens byrået planlegger kjennskap uten avklaring.",
+    "example_good": "Begge bekrefter versjon 3: få flere nye bedriftskunder til å be om tilbud.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      8
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "BetterBriefs beskriver manglende felles forståelse mellom oppdragsgiver og byrå som et problem ved briefer."
+  },
+  {
+    "id": "strategi-avklar-uenighet",
+    "subject": "Strategi",
+    "name": "Lukk åpne spørsmål i briefen",
+    "principle": "En brief må avklare det partene legger ulik mening i. Å registrere en uenighet er først nyttig når et svar blir del av arbeidsgrunnlaget.",
+    "sources": [
+      {
+        "source": "The BetterBriefs Project (2021), IPA EffWorks presentation",
+        "url": "https://ipa.co.uk/effworks/effworks-global-2021/day-4/betterbriefs",
+        "locator": "BetterBriefs, innledende avsnitt om shortcomings of marketing briefs"
+      }
+    ],
+    "rule": "Bestått når hvert spørsmål merket som avgjørende for mål, målgruppe eller leveranse har et svar bekreftet av kunden før briefen godkjennes; ellers ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Målgruppen står som alle relevante, og teamet gjetter videre.",
+    "example_good": "Kunden avklarer at relevante betyr norske regnskapsbyråer med 5–50 ansatte.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      8
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "BetterBriefs peker på svakheter og misforståelser i markedsføringsbriefer."
+  },
+  {
+    "id": "strategi-lokal-vekstevidens",
+    "subject": "Strategi",
+    "name": "Kontroller om vekstmønsteret gjelder her",
+    "principle": "Generelle vekstmønstre bør undersøkes i den aktuelle kategorien og landet. En antakelse er ikke en lokal måling.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Byron Sharp — Laws of Growth",
+        "url": "https://marketingscience.info/learn-with-us/commercial-research/laws-of-growth-analysis",
+        "locator": "Are you growing your brand with best-practice marketing?, formål 1"
+      }
+    ],
+    "rule": "Bestått når bruk av et generelt vekstmønster enten viser til data for den aktuelle kategorien og landet eller er merket som en antakelse med en navngitt undersøkelse som skal teste den; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Lojalitetsmønsteret gjelder garantert i vårt nye marked.",
+    "example_good": "Mønsteret er en antakelse for Norge; kundeanalysen skal undersøke det før budsjettet bindes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass tilbyr analyser av om kjente vekstmønstre gjelder i en bestemt kategori og et bestemt land."
+  },
+  {
+    "id": "strategi-penetrasjonshinder",
+    "subject": "Strategi",
+    "name": "Finn et hinder for nye kjøp",
+    "principle": "Vekstanalyse kan avdekke hva som hindrer flere fra å kjøpe. Et navngitt hinder gir tiltaket en oppgave som kan undersøkes.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Byron Sharp — Laws of Growth",
+        "url": "https://marketingscience.info/learn-with-us/commercial-research/laws-of-growth-analysis",
+        "locator": "Are you growing your brand with best-practice marketing?, formål 2"
+      }
+    ],
+    "rule": "For en plan med mål om flere kjøpere: bestått når planen navngir minst ett hinder for nye kjøp, viser til datagrunnlaget og kobler et tiltak til hinderet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi trenger vekst, så vi lager en ny film.",
+    "example_good": "Kundeundersøkelsen viser at kjøperne ikke finner forhandlere; planen legger inn en søkbar forhandleroversikt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      4,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass beskriver kategorianalyse som hjelp til å finne hindringer for merkevekst."
+  },
+  {
+    "id": "strategi-lette-kjopere",
+    "subject": "Strategi",
+    "name": "Undersøk dem som kjøper sjelden",
+    "principle": "En analyse av kundebasen bør også vise dem som kjøper sjelden. Bare å studere de største kundene kan skjule en del av vekstgrunnlaget.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Byron Sharp — Laws of Growth",
+        "url": "https://marketingscience.info/learn-with-us/commercial-research/laws-of-growth-analysis",
+        "locator": "Identify how your brand competes., punktet The prevalence of light buyers in your customer base"
+      }
+    ],
+    "rule": "Bestått når kundeanalysen viser kjøpshyppighet i en angitt periode og inkluderer gruppen med lavest positiv kjøpshyppighet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Bare de 20 største kundene inngår i analysen av kundebasen.",
+    "example_good": "Årsanalysen viser også kundene som kjøpte én gang, og deres andel av kundebasen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass trekker frem utbredelsen av kjøpere som handler sjelden som en del av konkurranseanalysen."
+  },
+  {
+    "id": "strategi-sammenlign-kjoperprofiler",
+    "subject": "Strategi",
+    "name": "Sammenlign egne kjøpere med konkurrentenes",
+    "principle": "Påstander om en særskilt kundeprofil trenger en sammenligning. Konkurrentenes kjøpere gir et relevant grunnlag for å vurdere forskjellen.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Byron Sharp — Laws of Growth",
+        "url": "https://marketingscience.info/learn-with-us/commercial-research/laws-of-growth-analysis",
+        "locator": "Identify how your brand competes., punktet How your brand user profile compares with competing brands"
+      }
+    ],
+    "rule": "Bestått når en påstand om at egne kjøpere skiller seg fra konkurrentenes viser samme profilvariabel, periode og marked for begge grupper; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Våre kjøpere er yngre, fordi salgsteamet tror det.",
+    "example_good": "Samme undersøkelse viser aldersfordelingen hos oss og to konkurrenter i Norge i 2026.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass undersøker hvordan merkets kjøperprofil ligner på eller skiller seg fra konkurrentenes."
+  },
+  {
+    "id": "strategi-kartlegg-merkeelementer",
+    "subject": "Strategi",
+    "name": "Lag en oversikt over merkeelementene",
+    "principle": "Farger, former, lyd og andre kjennetegn kan minne kjøpere om merket. De må identifiseres før styrken deres kan undersøkes.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Jenni Romaniuk — Distinctive Assets",
+        "url": "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/dameasurement.pdf",
+        "locator": "PDF side 1, What are Distinctive Assets and why should you be measuring them?; Our process, trinn 1"
+      }
+    ],
+    "rule": "Bestått når briefen lister hvert merkeelement som skal brukes, og hvert element har en filreferanse eller en entydig beskrivelse; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Bruk merkevarens stil.",
+    "example_good": "Bruk logo hovedlogo.svg, mørkeblå #16324F og den lagrede lydsignaturen lyd-02.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass beskriver kartlegging av eksisterende merkeelementer som første trinn i måling av særpreg."
+  },
+  {
+    "id": "strategi-mal-for-merkeendring",
+    "subject": "Strategi",
+    "name": "Undersøk før et kjent merkeelement endres",
+    "principle": "Endring av et innarbeidet kjennetegn kan påvirke gjenkjenningen. Beslutningen bør bygge på måling av elementet som foreslås endret.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Jenni Romaniuk — Distinctive Assets",
+        "url": "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/dameasurement.pdf",
+        "locator": "PDF side 1, Measuring Distinctive Assets is valuable for many reasons: Changes or updates; Our process"
+      }
+    ],
+    "rule": "Ved forslag om å erstatte et eksisterende merkeelement: bestått når beslutningsgrunnlaget inneholder en datert måling av det eksisterende elementet hos kjøpere i kategorien og en begrunnelse som viser til målingen; ellers ikke bestått.",
+    "check": "kritiker+menneske",
+    "example_bad": "Vi fjerner lydsignaturen fordi teamet er lei av den.",
+    "example_good": "Undersøkelsen viser hvem som kobler lyden til merket; beslutningen om endring viser til disse resultatene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      9,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass anbefaler måling av merkeelementer som grunnlag ved endring eller oppdatering."
+  },
+  {
+    "id": "strategi-merkeelement-nytt-marked",
+    "subject": "Strategi",
+    "name": "Undersøk merkeelementet i det nye markedet",
+    "principle": "Et kjennetegn som fungerer i ett land eller én kategori, har ikke nødvendigvis samme styrke i et annet. Ny bruk trenger relevant dokumentasjon.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Jenni Romaniuk — Distinctive Assets",
+        "url": "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/dameasurement.pdf",
+        "locator": "PDF side 1, Measuring Distinctive Assets is valuable for many reasons: Brand extension og Market expansion"
+      }
+    ],
+    "rule": "Ved bruk av et merkeelement i et nytt land eller en ny kategori: bestått når planen inneholder en måling i det nye markedet eller en datert plan for å måle elementet før det brukes uten merkenavn; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Den norske fargen brukes alene i Tyskland fordi alle sikkert kjenner den.",
+    "example_good": "Logoen følger fargen frem til testen blant tyske kategorikjøpere er gjennomført.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      9,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass omtaler måling av merkeelementer ved kategoriutvidelse og etablering i nye markeder."
+  },
+  {
+    "id": "strategi-konkret-kjopssituasjon",
+    "subject": "Strategi",
+    "name": "Beskriv en konkret kjøpssituasjon",
+    "principle": "En kjøpssituasjon forklarer når eller hvorfor noen leter etter en løsning i kategorien. En demografisk merkelapp alene beskriver ikke situasjonen.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Growing Sales; Background to Category Entry Points"
+      }
+    ],
+    "rule": "Bestått når hver prioritert kjøpssituasjon beskriver et behov eller en hendelse som kan utløse søk etter kategorien; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Ledere mellom 35 og 55 år.",
+    "example_good": "Når en leder trenger bemanning til en kundesamling på fredag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      4
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass beskriver kjøpssituasjoner som signaler som får kategorikjøpere til å hente frem merker fra hukommelsen."
+  },
+  {
+    "id": "strategi-kjoperskapte-situasjoner",
+    "subject": "Strategi",
+    "name": "Forankre kjøpssituasjonene hos kjøpere",
+    "principle": "Forslag fra teamet kan gi en første liste over kjøpssituasjoner. Undersøkelser blant kjøpere trengs for å vurdere hvor relevante forslagene er.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass — Identifying and Prioritising Category Entry Points",
+        "url": "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/categoryentrypoints.pdf",
+        "locator": "Our two-stage approach, første og andre trinn"
+      }
+    ],
+    "rule": "Bestått når hver situasjon som omtales som bekreftet, har en referanse til kjøperintervju eller undersøkelse med dato og beskrevet utvalg; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Teamets idé omtales som dokumentert kundebehov.",
+    "example_good": "Situasjonen er foreløpig en hypotese; 12 kjøperintervjuer skal undersøke den.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ehrenberg-Bass beskriver en prosess som først finner mulige kjøpssituasjoner og deretter undersøker dem blant kategorikjøpere."
+  },
+  {
+    "id": "strategi-troverdig-kjopssituasjon",
+    "subject": "Strategi",
+    "name": "Kontroller at tilbudet dekker situasjonen",
+    "principle": "En attraktiv kjøpssituasjon er uegnet som løfte hvis virksomheten ikke kan levere det den krever. Prioritering må derfor omfatte en kontroll av tilbudet.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Step 2 – Prioritising CEPs, Credibility, avsnittet om internal credibility assessment"
+      }
+    ],
+    "rule": "Bestått når hver prioritert situasjon har en navngitt vare eller tjeneste som dekker behovet, med bekreftelse fra produktansvarlig; ellers ikke bestått.",
+    "check": "kritiker+menneske",
+    "example_bad": "Vi lover hjelp til internasjonal levering, men leverer bare i Norge.",
+    "example_good": "Vi prioriterer innenlands levering, som den tilgjengelige tjenesten faktisk dekker.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      4,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk beskriver intern vurdering av merkets troverdighet som ett hensyn ved prioritering av kjøpssituasjoner."
+  },
+  {
+    "id": "strategi-konkurranse-per-situasjon",
+    "subject": "Strategi",
+    "name": "Vurder konkurransen i kjøpssituasjonen",
+    "principle": "Merker konkurrerer om å bli husket i samme situasjon. Prioriteringen bør derfor se på hvilke merker kjøperne allerede forbinder med den.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Step 2 – Prioritising CEPs, Competitiveness"
+      }
+    ],
+    "rule": "Bestått når prioriteringen viser hvilke konkurrenter som forbindes med hver vurdert situasjon i kjøperdata; mangler data, må konkurransen stå som ukjent og en undersøkelse være angitt; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Denne situasjonen eier ingen, antar vi.",
+    "example_good": "Kjøperundersøkelsen viser to sterke konkurrenter; vi vurderer deres koblinger før vi velger situasjonen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      4
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk vurderer hvor sterkt konkurrerende merker er knyttet til en kjøpssituasjon når situasjoner prioriteres."
+  },
+  {
+    "id": "strategi-kommersiell-situasjonsverdi",
+    "subject": "Strategi",
+    "name": "Vurder hvor mye kjøpssituasjonen er verdt",
+    "principle": "Hyppige situasjoner og store ordre kan gi ulike muligheter. Ved store forskjeller i ordreverdi må verdien vurderes sammen med utbredelsen.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Step 2 – Prioritising CEPs, Commonality/Currency"
+      }
+    ],
+    "rule": "Bestått når prioriteringen av kjøpssituasjoner har kildebelagte anslag for utbredelse og, dersom ordreverdien varierer mellom situasjonene, også ordreverdi; antakelser skal være merket; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi velger den mest omtalte situasjonen uten å undersøke verdien.",
+    "example_good": "Årlige utskiftinger er sjeldnere enn småkjøp, men høyere ordreverdi inngår i anslaget.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      4,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk vurderer kjøpssituasjoners utbredelse og økonomiske verdi som deler av prioriteringen."
+  },
+  {
+    "id": "strategi-ett-budskap-per-annonse",
+    "subject": "Strategi",
+    "name": "Velg én kjøpssituasjon per annonse",
+    "principle": "En enkel annonse kan bygge en tydelig forbindelse til én situasjon. Flere situasjoner kan fordeles mellom annonser over tid.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "The Value of Building CEPs, avsnittet om one CEP per execution"
+      }
+    ],
+    "rule": "For en annonse som skal bygge en kjøpssituasjon: bestått når briefen navngir nøyaktig én situasjon og ingen del av hovedbudskapet introduserer en annen; ellers ikke bestått. Ved spenning med copy-svar-paa-kjoepsspoersmaal eller copy-uavhengig-av-forrige-annonse gjelder én situasjon hovedbudskapet. Nødvendige tilbudsopplysninger og forbehold skal beholdes; støtteinformasjon kan ligge på en tydelig, direkte tilgjengelig landingsside når dette er forsvarlig og lovlig.",
+    "check": "kritiker",
+    "example_bad": "Samme annonse handler om oppstart, ferieavvikling og oppkjøp.",
+    "example_good": "Annonsen handler bare om behovet for en vikar når regnskapsføreren tar ferie.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [
+      "copy-svar-paa-kjoepsspoersmaal",
+      "copy-uavhengig-av-forrige-annonse"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk anbefaler én kjøpssituasjon per enkeltannonse og flere situasjoner gjennom den langsiktige kommunikasjonen."
+  },
+  {
+    "id": "strategi-merke-og-situasjon-sammen",
+    "subject": "Strategi",
+    "name": "Vis merket sammen med kjøpssituasjonen",
+    "principle": "Forbindelsen mellom merket og situasjonen bygges når kjøperen møter dem sammen. En situasjon uten identifiserbart merke kan bygge minne for kategorien alene.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Building Wider, Fresher Memory Networks, avsnittet om co-presentation"
+      }
+    ],
+    "rule": "Bestått når annonseutkastet har minst ett bilde, én skjermsekvens eller ett lydparti der valgt kjøpssituasjon og merkenavn eller dokumentert gjenkjennelig merkeelement opptrer samtidig; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Filmen viser kjøpssituasjonen, men navnet kommer bare i et løsrevet sluttbilde.",
+    "example_good": "Merkenavnet er synlig i sekvensen som viser behovet for akutt bemanning.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk beskriver samtidig presentasjon av merke og kjøpssituasjon som grunnlag for å bygge minnekoblinger."
+  },
+  {
+    "id": "strategi-bredere-situasjonsnettverk",
+    "subject": "Strategi",
+    "name": "Planlegg flere situasjoner over tid",
+    "principle": "Merket kan knyttes til flere kjøpssituasjoner gjennom ulike annonser. En langsiktig plan bør vise hvordan dette skal skje innenfor budsjettet.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "The Value of Building CEPs, avsnittene om single execution goal og long-term message strategy"
+      }
+    ],
+    "rule": "For en langsiktig plan for mental tilgjengelighet: bestått når planen fordeler minst to kjøpssituasjoner på ulike annonser eller perioder og angir budsjett for dem; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi skal bygge bredere minner, men gjentar bare én situasjon i hele planen.",
+    "example_good": "Første kvartal dekker oppstart; andre kvartal dekker ferieavvikling, med eget budsjett.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      6,
+      7
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk anbefaler å bygge et bredere nettverk av kjøpssituasjoner gjennom kommunikasjon over tid."
+  },
+  {
+    "id": "strategi-kjopbarhet",
+    "subject": "Strategi",
+    "name": "Kontroller at merket er lett å kjøpe",
+    "principle": "Å bli husket er bare én del av vekstgrunnlaget. Kjøperen må også kunne finne og kjøpe tilbudet i den valgte situasjonen.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Conclusion, siste avsnitt om Physical Availability"
+      }
+    ],
+    "rule": "Bestått når hver prioritert situasjon har en angitt kjøpskanal og en datert kontroll som bekrefter at tilbudet er tilgjengelig der for valgt marked; ellers ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Vi annonserer helgelevering i et område nettbutikken avviser.",
+    "example_good": "En testordre bekrefter at helgelevering kan bestilles til postnumrene i kampanjen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk understreker at mental tilgjengelighet må støttes av fysisk tilgjengelighet."
+  },
+  {
+    "id": "strategi-mal-mentale-koblinger",
+    "subject": "Strategi",
+    "name": "Mål koblingene til kjøpssituasjoner",
+    "principle": "Mental tilgjengelighet handler om hvilke situasjoner som får kjøpere til å tenke på merket. Målingen må derfor fange disse koblingene.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass / Romaniuk — Category Entry Points in B2B",
+        "url": "https://marketingscience.info/news-and-insights/category-entry-points-in-a-business-to-business-b2b-world",
+        "locator": "Step 4 – Measuring The Effectiveness Of Building CEPs, de tre målene Mental Market Share, Mental Penetration og Network Size"
+      }
+    ],
+    "rule": "Ved mål om økt mental tilgjengelighet: bestått når måleplanen navngir minst ett av de tre målene i kilden og angir teller, nevner, utvalg og måledatoer; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi måler mental tilgjengelighet med antall likerklikk.",
+    "example_good": "Mental penetrasjon måles som andelen kategorikjøpere som knytter merket til minst én undersøkt situasjon, før og etter kampanjen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Romaniuk beskriver tre mål for merkets koblinger til kjøpssituasjoner: mental markedsandel, mental penetrasjon og nettverksstørrelse."
+  },
+  {
+    "id": "strategi-sov-sammenligningsgrunnlag",
+    "subject": "Strategi",
+    "name": "Bruk sammenlignbare markedsandeler",
+    "principle": "Reklameandel og markedsandel må gjelde samme konkurransearena for å gi en meningsfull sammenligning. En høyere reklameandel er et planleggingsgrunnlag, ikke en vekstgaranti.",
+    "sources": [
+      {
+        "source": "Binet & Field — 5 Principles of Growth in B2B Marketing",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/marketing-as-growth",
+        "locator": "The 5 Principles Of Growth In B2B, Invest In Share Of Voice"
+      }
+    ],
+    "rule": "Når budsjettet begrunnes med reklameandel mot markedsandel: bestått når begge tall har oppgitt kategori, marked, periode, datakilde og måleenhet, og beregningen gjelder samme kategori og marked; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Global reklameandel sammenlignes med norsk markedsandel uten forklaring.",
+    "example_good": "Norsk reklameandel og norsk omsetningsandel for samme kategori og år oppgis med kilder.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Binet og Field knytter investering i reklameandel til vekstmuligheter i B2B-markeder."
+  },
+  {
+    "id": "strategi-begrunn-budsjettbalansen",
+    "subject": "Strategi",
+    "name": "Begrunn fordelingen av budsjettet",
+    "principle": "Merkevarebygging og salgsutløsende aktivitet har ulike roller. En forskningsbasert fordeling er et utgangspunkt som må vurderes for den aktuelle virksomheten.",
+    "sources": [
+      {
+        "source": "LinkedIn — How B2B marketing really drives growth",
+        "url": "https://www.linkedin.com/business/marketing/blog/linkedin-ads/how-b2b-marketing-really-drives-growth",
+        "locator": "Principle 2: Aim to balance your budget evenly between brand and activation marketing"
+      }
+    ],
+    "rule": "Bestått når budsjettet oppgir beløp til merkevarebygging og salgsutløsende aktivitet, summerer til totalbudsjettet og begrunner fordelingen med mål og tidshorisont; ellers ikke bestått.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle må bruke nøyaktig 46 prosent på merkevarebygging.",
+    "example_good": "Av én million går 400 000 til merkevarebygging og 600 000 til salg; fordelingen begrunnes med årets vekstmål og finansiering.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "LinkedIns omtale av Binet og Field anbefaler omtrent jevn fordeling mellom merkevarebygging og aktivering som utgangspunkt i B2B."
+  },
+  {
+    "id": "strategi-nye-kjopere",
+    "subject": "Strategi",
+    "name": "Gi nye kjøpere en plass i vekstplanen",
+    "principle": "En vekstplan kan ikke bygge på eksisterende kunder alene uten å undersøke tilgangen på nye. Tiltak for nye kjøpere må få en synlig rolle.",
+    "sources": [
+      {
+        "source": "Binet & Field — 5 Principles of Growth in B2B Marketing",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/marketing-as-growth",
+        "locator": "The 5 Principles Of Growth In B2B, Expand Your Customer Base"
+      }
+    ],
+    "rule": "Ved mål om vekst i antall kunder: bestått når planen har minst ett budsjettert tiltak rettet mot personer eller virksomheter som ennå ikke er kunder, med definert kundemål; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi skal øke kundetallet ved bare å sende tilbud til eksisterende kunder.",
+    "example_good": "Planen setter av budsjett til nye kategorikjøpere og følger antall nye betalende kunder.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Binet og Field fremhever utvidelse av kundebasen som en vekstdriver."
+  },
+  {
+    "id": "strategi-fremtidige-kjopere",
+    "subject": "Strategi",
+    "name": "Ta med dem som kan kjøpe senere",
+    "principle": "Merkevarebygging kan gjøre merket kjent før et behov oppstår. Bare å nå dem som søker nå, dekker ikke fremtidig etterspørsel.",
+    "sources": [
+      {
+        "source": "LinkedIn — How B2B marketing really drives growth",
+        "url": "https://www.linkedin.com/business/marketing/blog/linkedin-ads/how-b2b-marketing-really-drives-growth",
+        "locator": "Principle 3: You need parallel targeting strategies"
+      }
+    ],
+    "rule": "For en langsiktig B2B-vekstplan: bestått når minst ett budsjettert merkevaretiltak kan nå relevante kategorikjøpere uten krav om nylig søk, besøk eller kjøpssignal; ellers ikke bestått. Ved spenning med copy-overskrift-viser-relevans har kategoriens dekning i medieplanen prioritet: varier annonser over flere kjøpssituasjoner; en relevant overskrift krever ikke snever målretting. strategi-salgsutlosende-informasjon gjelder bare valgt aktivering; et separat langsiktig budsjett og dekning av fremtidige kjøpere skal bestå.",
+    "check": "kritiker",
+    "example_bad": "Hele årsplanen består av annonser til dem som besøkte prissiden siste uke.",
+    "example_good": "En del av planen når relevante bedrifter uavhengig av nylig besøk; egne tiltak følger opp dem som ber om pris.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [
+      "copy-overskrift-viser-relevans",
+      "strategi-salgsutlosende-informasjon"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "LinkedIns omtale av Binet og Field anbefaler parallelle strategier for kjøpere som er og ikke er i markedet nå."
+  },
+  {
+    "id": "strategi-folelsens-rolle",
+    "subject": "Strategi",
+    "name": "Beskriv følelsens rolle i merkevarearbeidet",
+    "principle": "Også bedriftskjøpere har følelser. Et langsiktig merkevarekonsept bør angi hvilken følelse som knyttes til merket og hvordan konseptet uttrykker den.",
+    "sources": [
+      {
+        "source": "Binet & Field — 5 Principles of Growth in B2B Marketing",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/marketing-as-growth",
+        "locator": "The 5 Principles Of Growth In B2B, Harness The Power Of Emotion"
+      }
+    ],
+    "rule": "For et langsiktig B2B-merkevarekonsept: bestått når briefen navngir en ønsket følelse og utkastet inneholder en konkret scene, formulering eller lyd som uttrykker denne i forbindelse med merket; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Briefen sier emosjonell, mens utkastet bare lister tekniske spesifikasjoner.",
+    "example_good": "Briefen velger lettelse; filmen viser at økonomiansvarlig får kontroll før fristen, med merket synlig.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Binet og Field fremhever følelsers betydning for langsiktig merkevarebygging også i B2B."
+  },
+  {
+    "id": "strategi-salgsutlosende-informasjon",
+    "subject": "Strategi",
+    "name": "Gi kjøpsklar målgruppe nødvendig informasjon",
+    "principle": "Salgsutløsende kommunikasjon må hjelpe mottakeren å vurdere tilbudet. Produktdetaljer bør svare på det kjøperen trenger for å ta neste steg.",
+    "sources": [
+      {
+        "source": "LinkedIn — How B2B marketing really drives growth",
+        "url": "https://www.linkedin.com/business/marketing/blog/linkedin-ads/how-b2b-marketing-really-drives-growth",
+        "locator": "5. Get emotional for long-term impact; The Long and Short of It: Brand and Activation both matter – so don’t just spend on one"
+      }
+    ],
+    "rule": "For en annonse med mål om umiddelbar forespørsel eller kjøp: bestått når annonsen eller den direkte lenkede landingssiden identifiserer tilbudet, gir minst én konkret egenskap relevant for valgt behov og viser neste handling; ellers ikke bestått. Brukes bare når aktivering er eksplisitt valgt og logget, ikke som krav til alle merkevareannonser. Ved spenning med strategi-fremtidige-kjopere og strategi-kortsiktig-og-langsiktig-maling beholdes separat langsiktig budsjett, bred dekning og egne målinger.",
+    "check": "kritiker",
+    "example_bad": "Be om tilbud, uten informasjon om hva tjenesten dekker.",
+    "example_good": "Landingssiden beskriver lønnskjøring for inntil 50 ansatte og har en knapp for å be om pris.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [
+      "strategi-fremtidige-kjopere",
+      "strategi-kortsiktig-og-langsiktig-maling"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "LinkedIns omtale av Binet og Field skiller mellom langsiktig følelsesbasert merkevarebygging og mer produktorientert aktivering."
+  },
+  {
+    "id": "strategi-kortsiktig-og-langsiktig-maling",
+    "subject": "Strategi",
+    "name": "Mål effekter over riktig tid",
+    "principle": "Kortsiktig respons og langsiktig merkevareeffekt oppstår over ulike tidsrom. En plan med begge mål trenger egne målepunkter for begge.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+        "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+        "locator": "10 Key principles for success, punkt 10: Measure short and long-term effects"
+      }
+    ],
+    "rule": "Når planen har både kortsiktige og langsiktige mål: bestått når hver måltype har en navngitt målevariabel, datakilde, startmåling og sluttdato, og den langsiktige målingen dekker et lengre tidsrom; ellers ikke bestått. Ved spenning med strategi-salgsutlosende-informasjon må begge horisonters egne mål og måleperioder beholdes; umiddelbar respons avgjør ikke langsiktig effekt.",
+    "check": "kritiker",
+    "example_bad": "Årets merkevareeffekt avgjøres av klikk første uke.",
+    "example_good": "Salg følges ukentlig; merkeeffekt undersøkes ved oppstart og etter tolv måneder.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [
+      "strategi-salgsutlosende-informasjon"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "IPAs oppsummering anbefaler å måle både kortsiktige og langsiktige virkninger."
+  },
+  {
+    "id": "strategi-pris-og-volum",
+    "subject": "Strategi",
+    "name": "Skill prisbidrag fra volumbidrag",
+    "principle": "Omsetning kan endres fordi antallet solgte enheter endres eller fordi oppnådd pris endres. Vekstplanen bør vise hvilken virkning den søker.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+        "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+        "locator": "10 Key principles for success, punkt 1: Support volume and price"
+      }
+    ],
+    "rule": "Ved omsetningsmål: bestått når planen angir om veksten skal komme fra volum, oppnådd pris eller begge, med separat målevariabel for hvert valgt bidrag; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi skal øke omsetningen uten å angi om flere enheter eller høyere pris skal gi veksten.",
+    "example_good": "Vi måler solgte enheter og gjennomsnittlig nettopris hver for seg.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "IPAs oppsummering anbefaler å støtte både salgsvolum og oppnådd pris."
+  },
+  {
+    "id": "strategi-samspill-merke-og-salg",
+    "subject": "Strategi",
+    "name": "Koble merkevarearbeid og salgsaktivitet",
+    "principle": "Merkevarebygging og salgsutløsende aktivitet bør støtte samme tilbud. Gjenkjennelige koblinger gjør at aktivitetene kan virke sammen.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+        "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+        "locator": "10 Key principles for success, punkt 8: Integrate brand and activation"
+      }
+    ],
+    "rule": "Når planen har både merkevarebygging og salgsutløsende aktivitet: bestått når den navngir minst ett felles merkeelement og ett felles tilbud eller behov, og begge finnes i utkastene til begge aktivitetstyper; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Merkevarefilmen og salgsannonsen fremstår som to forskjellige avsendere med ulike tilbud.",
+    "example_good": "Begge bruker samme logo og knytter tjenesten til trygg lønnskjøring før fristen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "IPAs oppsummering anbefaler at merkevarebygging og aktivering integreres."
+  },
+  {
+    "id": "strategi-prospektdekning",
+    "subject": "Strategi",
+    "name": "Begrunn hvem vekstplanen utelater",
+    "principle": "En vekstplan bør vurdere alle potensielle kjøpere i den definerte kategorien. Snevre utvalg trenger en begrunnelse som kan vurderes.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+        "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+        "locator": "10 Key principles for success, punkt 3: Talk to all your prospects"
+      }
+    ],
+    "rule": "Planen skal definere kategorikjøperne og hvilke av dem medieplanen kan nå. Hver bevisst utelatt gruppe må ha dokumentert kommersiell eller juridisk begrensning med kilde, eller en uttrykkelig merket antakelse. En uavhengig kritiker skal vurdere om begrensningen faktisk begrunner utelatelsen; udokumenterte eller omstridte utelatelser sendes til ansvarlig menneske og består ikke uten en begrunnet beslutning om avgrensning og usikkerhet. Bruk strategi-rekkevidde-frekvens-og-leveranse når betalt mediedekning planlegges. Ved spenning med copy-overskrift-viser-relevans har kategoriens dekning i medieplanen prioritet: varier annonser over flere kjøpssituasjoner; en relevant overskrift krever ikke snever målretting.",
+    "check": "kritiker",
+    "example_bad": "Vi velger bare unge kjøpere fordi teamet liker formatet deres.",
+    "example_good": "Vi viser hvilke kategorikjøpere kanalene dekker; grupper uten leveringsmulighet er utelatt med begrunnelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [
+      "copy-overskrift-viser-relevans"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "IPAs oppsummering anbefaler kommunikasjon til alle potensielle kjøpere."
+  },
+  {
+    "id": "strategi-effektniva",
+    "subject": "Strategi",
+    "name": "Velg hvilken effekt B2B-kampanjen skal skape",
+    "principle": "Respons, salgsmuligheter og salg er ulike resultater. Et tydelig valgt effektnivå gjør at målingen kan svare på kampanjens faktiske oppgave.",
+    "sources": [
+      {
+        "source": "LinkedIn / WARC / LIONS — The B2B Effectiveness Code",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/the-b2b-effectiveness-code-27-october.pdf",
+        "locator": "Introduction to the B2B Effectiveness Ladder, sidene 16–17"
+      }
+    ],
+    "rule": "Bestått når B2B-briefen velger ett primært resultat blant respons, kvalifiserte salgsmuligheter, salg, omtale og kjennskap, merkevarehelse eller langsiktig forretningsvekst, og knytter en målevariabel og frist til det; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Målet er effekt, uten definisjon.",
+    "example_good": "Primærmålet er kvalifiserte salgsmuligheter: 40 forespørsler som oppfyller de avtalte kriteriene innen kvartalsslutt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "B2B Effectiveness Code skiller mellom ulike nivåer av kommunikasjonseffekt fra respons til langsiktig forretningsvekst."
+  },
+  {
+    "id": "strategi-respons-er-ikke-salg",
+    "subject": "Strategi",
+    "name": "Skill respons fra kommersielle resultater",
+    "principle": "En interaksjon viser at noen har reagert. Den dokumenterer ikke i seg selv at kampanjen skapte inntekter.",
+    "sources": [
+      {
+        "source": "LinkedIn / WARC / LIONS — The B2B Effectiveness Code",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/the-b2b-effectiveness-code-27-october.pdf",
+        "locator": "Introduction to the B2B Effectiveness Ladder, side 16, Driving response og Closing the sale"
+      }
+    ],
+    "rule": "Bestått når enhver rapportert salgs- eller inntektseffekt viser salgsdata med periode og koblingsmetode; klikk og nedlastinger kan bare rapporteres som respons når slike salgsdata mangler; ellers ikke bestått. Gjenbruk samme salgsgrunnlag og avviks-ID i strategi-kundeverdi-fremfor-svar; sistnevnte vurderer særskilt økonomisk verdi ved valg av vinner.",
+    "check": "kritiker",
+    "example_bad": "500 nedlastinger oppgis som 500 nye kunder.",
+    "example_good": "Rapporten viser 500 nedlastinger; salgseffekt er foreløpig ukjent.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "B2B Effectiveness Code behandler respons og gjennomført salg som forskjellige effektnivåer."
+  },
+  {
+    "id": "strategi-kampanjens-rammer",
+    "subject": "Strategi",
+    "name": "Registrer budsjett, varighet og kanaler",
+    "principle": "Budsjett, varighet og antall kanaler inngår i rapportens vurdering av langsiktig satsing. De bør være synlige når kampanjer planlegges og sammenlignes.",
+    "sources": [
+      {
+        "source": "LinkedIn / WARC / LIONS — The B2B Effectiveness Code",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/the-b2b-effectiveness-code-27-october.pdf",
+        "locator": "Introduction, delavsnitt 2: The principle of Creative Commitment"
+      }
+    ],
+    "rule": "Bestått når kampanjeplanen oppgir mediebudsjett, startdato, sluttdato og en navngitt liste over mediekanaler; ellers ikke bestått.",
+    "check": "kode",
+    "example_bad": "Vi skal satse stort over tid i flere kanaler.",
+    "example_good": "Mediebudsjettet er 800 000 kroner fra januar til desember, fordelt på radio, nettvideo og søk.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "B2B Effectiveness Code beskriver kreativ forpliktelse gjennom blant annet budsjett, varighet og kanalbredde."
+  },
+  {
+    "id": "strategi-konkurrentgrunnlag-for-loftet",
+    "subject": "Strategi",
+    "name": "Undersøk konkurrentene før løftet velges",
+    "principle": "Et løfte må vurderes opp mot det kjøperen allerede kan få. Konkurrentenes pris, kvalitet og påstander er en del av dette grunnlaget.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Lokalt: sources/scientific-advertising.txt, kapittel 12, Strategy, avsnittet Competition must be considered"
+      }
+    ],
+    "rule": "Bestått når valgt løfte har en datert sammenligning med minst én relevant konkurrent, med kilder til konkurrentens pris, kvalitet eller påstand og en forklaring på hvordan eget tilbud står seg; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Raskest i markedet, uten noen konkurrentundersøkelse.",
+    "example_good": "Konkurrenten oppgir levering på fem dager; vår dokumenterte levering på to dager begrunner et løfte om kortere ventetid.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      4
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å ta hensyn til konkurrentenes tilbud og argumenter når annonseringsstrategien utformes."
+  },
+  {
+    "id": "strategi-test-for-oppskalering",
+    "subject": "Strategi",
+    "name": "Sett kriterier før en salgstest skaleres",
+    "principle": "En avgrenset test kan undersøke kostnader og salg før en større investering. Resultatet må vurderes mot avtalte kriterier, og videre vekst må fortsatt behandles som usikker.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Lokalt: sources/scientific-advertising.txt, kapittel 15, Test Campaigns, avsnittene om small venture og cost and result"
+      }
+    ],
+    "rule": "Ved planlagt oppskalering av et nytt salgsopplegg: bestått når testen før oppstart har budsjettgrense, sluttdato, definert salgsresultat og en tallfestet grense for kostnad per kunde som avgjør om oppskalering kan vurderes; ellers ikke bestått.",
+    "check": "kode+kritiker",
+    "example_bad": "Vi øker budsjettet når teamet føler at testen gikk bra.",
+    "example_good": "Testen avsluttes etter fire uker; videre investering vurderes bare hvis kostnad per betalende kunde er høyst 1 200 kroner.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins beskriver små testkampanjer som en måte å undersøke kostnader og resultater før større investeringer."
+  },
+  {
+    "id": "strategi-kundeverdi-fremfor-svar",
+    "subject": "Strategi",
+    "name": "Vurder kundekostnad fremfor bare svarkostnad",
+    "principle": "Billige svar kan komme fra personer som aldri kjøper. Vurderingen av salgsutløsende aktivitet bør derfor følge svarene videre til kunder eller salg.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "Lokalt: sources/scientific-advertising.txt, kapittel 1, How Advertising Laws Are Established, avsnittet But those figures are not final"
+      }
+    ],
+    "rule": "Når en salgsrettet variant kåres som vinner: bestått når vurderingen viser kostnad per betalende kunde eller annonsekostnad per omsetningskrone med måleperiode; finnes bare svardata, skal resultatet stå som foreløpig uten en endelig salgsvinner; ellers ikke bestått. Bygger på skillet i strategi-respons-er-ikke-salg; manglende salgsdata registreres bare én gang, mens manglende kostnads- eller verdiberegning er et eget avvik.",
+    "check": "kritiker",
+    "example_bad": "A vinner fordi hvert skjema koster mindre, selv om ingen har kjøpt.",
+    "example_good": "A har lavest skjemakostnad; salgsvinner kåres først etter den avtalte perioden for oppfølging av kjøp.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins påpeker at kostnad per svar ikke er endelig resultat fordi svar må vurderes ut fra senere kjøp."
+  },
+  {
+    "id": "strategi-rekkevidde-frekvens-og-leveranse",
+    "subject": "Strategi",
+    "name": "Planlegg og etterprøv mediedekningen",
+    "principle": "En medieplan trenger en definert kjøpergruppe og etterprøvbar dekning. Tallfesting og sammenligning med faktisk levering er foreslått Fume-praksis.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+        "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+        "locator": "10 Key principles for success, punkt 3 og 10; åpen oppsummeringsside lest 2026-11-13. Tallfesting, overlappskontroll og arbeidsporter nedenfor er Fumes foreslåtte operasjonalisering, ikke terskler fra IPA."
+      },
+      {
+        "source": "Ehrenberg-Bass / Byron Sharp — Laws of Growth",
+        "url": "https://marketingscience.info/learn-with-us/commercial-research/laws-of-growth-analysis",
+        "locator": "Are you growing your brand with best-practice marketing? og Identify how your brand competes; lest 2026-11-13. Åpen tjenestebeskrivelse om kategoridata og penetrasjon, ikke en lest betalt analyserapport."
+      }
+    ],
+    "rule": "Ved planlagt betalt mediedekning kreves publikumets definisjon, størrelse og datakilde med dato, geografi og periode; mål for unik rekkevidde, andel og frekvens; budsjett og kanalbegrensninger; samt metode for overlapp og usikkerhet. Oppgi måleenhet, også om enheten er personer eller bedrifter. Kanalrekkevidder må ikke summeres som unike uten dokumentert deduplisering; ukjent overlapp må få begrunnet intervall. Planen skal navngi eier, leveringskilder og frist for etterkontroll i rekkevidde-og-medieplan. Etter gjennomføring skal faktisk rekkevidde, frekvens og avvik sammenlignes med samme planversjon, publikum og periode; manglende tall merkes ukjent og gir uavklart måleresultat, aldri oppdiktet oppnåelse. En kritiker vurderer antakelsene, og menneske beslutter tiltak.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "To kanaler med 60 000 nådde hver rapporteres som 120 000 unike uten overlappstall.",
+    "example_good": "Plan: 100 000 mulige kjøpere, mål 50 000 unike. Etterkontroll: 46 000 dedupliserte nådde, 138 000 visninger og frekvens 3; metode og avvik logges.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "media_class": "betalt",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6,
+      10
+    ],
+    "tier": "fume",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "IPA anbefaler bred prospektdekning og måling over flere tidshorisonter, mens Ehrenberg-Bass fremhever kategoridata og penetrasjon."
+  }
+]

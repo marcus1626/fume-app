@@ -1,0 +1,51 @@
+{
+  "id": "field-type",
+  "label_nb": "Felttype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "string",
+      "label_nb": "String",
+      "definition": "Tillatt type i feltregister: string."
+    },
+    {
+      "id": "integer",
+      "label_nb": "Integer",
+      "definition": "Tillatt type i feltregister: integer."
+    },
+    {
+      "id": "number",
+      "label_nb": "Number",
+      "definition": "Tillatt type i feltregister: number."
+    },
+    {
+      "id": "boolean",
+      "label_nb": "Boolean",
+      "definition": "Tillatt type i feltregister: boolean."
+    },
+    {
+      "id": "object",
+      "label_nb": "Object",
+      "definition": "Tillatt type i feltregister: object."
+    },
+    {
+      "id": "array",
+      "label_nb": "Array",
+      "definition": "Tillatt type i feltregister: array."
+    },
+    {
+      "id": "integer|string",
+      "label_nb": "Integer|string",
+      "definition": "Tillatt type i feltregister: integer|string."
+    }
+  ]
+}

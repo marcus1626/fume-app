@@ -1,0 +1,1785 @@
+{
+  "name": "Fumes kampanjekort, ni kjerneflyter og sju tilleggsflyter",
+  "state": "PROPOSED",
+  "purpose": "Starte med godkjent kampanjekort før skriving og koble de øvrige flytene med versjonsbundne rammer, kontrollerte artefakter og eksplisitte bindinger.",
+  "path_rule": "Artefaktstier er maler. Orkestreringen erstatter {oppdrag_id} med én stabil oppdrags-ID før kjøring. Hver sti peker til ett lagret JSON-objekt; nye versjoner beholdes i artefaktlagerets versjonshistorikk uten ekstra utdata fra steget.",
+  "entry_artifact": {
+    "path": "artefakter/{oppdrag_id}/oppdrag.json",
+    "producer": "Kunden eller oppdragsansvarlig lagrer oppdraget før den første flyten starter; dette er eksternt inngangsgrunnlag og ingen ekstra flyt.",
+    "required": [
+      "oppdrag_id",
+      "artefakt_id",
+      "versjon",
+      "grunnlag",
+      "innhold",
+      "modellspor",
+      "validering"
+    ],
+    "content_contract": "Innhold må identifisere kunde, ansvarlig og oppgavetekst. Grunnlag inneholder tilgjengelige produktfakta, vedlegg, kilde-ID-er, tilgang og opphav. Mål, målgruppe, tilbud, land, språk, kanaler, budsjett og frister oppgis eller merkes ukjent slik at briefens spørsmålssteg kan avklare dem. Modellspor er tomt når oppdraget ikke har modellbidrag; ellers registreres faktiske modell-ID-er. Vedlegg og kilder ligger i tilgangsstyrt manifest etter handoff_rule; personopplysninger minimeres. Modellbidrag krever betrodd kjørelagsattest. Kampanjekortets grunnlagssteg registrerer mangler; kritiske avklaringer gjøres av kunden i kampanjekortets steg 2 før et kortutkast kan godkjennes. Ingen tekstproduksjon skjer før kampanjekortet har bestått.",
+    "validation": "Oppdragsansvarlig bekrefter kildeopphav og tilgang, og kode kontrollerer kontrakten og SHA-256. Resultatet lagres i samme objekt med validering.status bestått. Ugyldig eller manglende oppdragsartefakt stopper før første steg og returneres med grunn; andre mislykkede forsøk går til menneske.",
+    "schema": "schemas/oppdrag.json"
+  },
+  "checkpoints": [
+    {
+      "n": 1,
+      "name": "Briefen forstått"
+    },
+    {
+      "n": 2,
+      "name": "Leseren"
+    },
+    {
+      "n": 3,
+      "name": "Innsikten"
+    },
+    {
+      "n": 4,
+      "name": "Løftet og USP-en"
+    },
+    {
+      "n": 5,
+      "name": "Logikkjeden"
+    },
+    {
+      "n": 6,
+      "name": "Salgsmålet"
+    },
+    {
+      "n": 7,
+      "name": "Bredde så valg"
+    },
+    {
+      "n": 8,
+      "name": "Kunden velger"
+    },
+    {
+      "n": 9,
+      "name": "Utførelse"
+    },
+    {
+      "n": 10,
+      "name": "Sjekket og godkjent"
+    }
+  ],
+  "handoff_rule": "Bare beståtte artefaktversjoner kan leses. Hvert steg leser sitt navngitte inndataartefakt og skriver nøyaktig ett eget artefakt med videreført grunnlag. Innen en flyt leser neste steg bare forgjengerens beståtte utdata. Valideringsresultatet ligger i samme utdataartefakt. Mellom flyter brukes standardkjeden eller de eksplisitte inngangsbindingene under optional_routes. Ved retting ugyldiggjøres alle berørte etterfølgere, også i senere flyter. Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt. Før intervjuer, forståelsestester eller innhenting av utfallsdata skal ansvarlig dokumentere samtykke eller annet anvendelig behandlingsgrunnlag, formål, nødvendige felt, tilgangsroller og slettedato. Bruk aggregerte eller minimerte avidentifiserte data; rå identifiserbare svar og sensitive opplysninger skal ikke videreføres i kjeden. Pseudonyme data er fortsatt tilgangsstyrte. Manglende behandlingsgrunnlag eller uklart behov stopper innhenting og går til menneske. Kampanjekortet og ferdighetsbibliotekets versjon/hash videreføres i alle kjedeartefakters grunnlag; mottaker kontrollerer input_fields.kampanjekort før skriving. Ingen valgfri rute kan starte før kampanjekortet har bestått.",
+  "model_rule": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+  "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+  "failure_rule": "Send tilbake til feilens produsent med kontroll-ID og konkret grunn. Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første feil gir ett rettingsforsøk; etter andre mislykkede forsøk stopper automatikk og menneske overtar. Modellbytte, ny versjon, ny feilbegrunnelse eller flytgrense nullstiller ikke telleren.",
+  "flows": [
+    {
+      "order": 1,
+      "id": "kampanjekort",
+      "file": "flows/kampanjekort.json",
+      "name": "Kampanjekort før skriving",
+      "checkpoints": [
+        1,
+        2,
+        6,
+        10
+      ],
+      "depends_on": [],
+      "input": "artefakter/{oppdrag_id}/oppdrag.json",
+      "input_fields": {
+        "oppdrag": {
+          "path": "artefakter/{oppdrag_id}/oppdrag.json",
+          "required": [
+            "kunde",
+            "ansvarlig",
+            "oppgavetekst",
+            "produktfakta og kildegrunnlag",
+            "mål og tidshorisont",
+            "målgruppe og kundestatus",
+            "land, marked og kanal",
+            "tilbud, priser og eventuell salgsperiode"
+          ],
+          "missing": "Ukjente felt tillates bare i grunnlagssteget. Steg 2 innhenter kundesvar; manglende avgjørende svar blokkerer før modellutkast. Ingen tidligere brief eller leserkort kreves som inngang.",
+          "schema": "schemas/oppdrag.json"
+        }
+      },
+      "output_artifact": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/oppdrag.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-grunnlag.json",
+          "validation": "flows/kampanjekort.json#/steps/0/validation",
+          "reads_schema": "schemas/oppdrag.json",
+          "writes_schema": "schemas/00-kampanjekort-grunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-grunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-avklart.json",
+          "validation": "flows/kampanjekort.json#/steps/1/validation",
+          "reads_schema": "schemas/00-kampanjekort-grunnlag.json",
+          "writes_schema": "schemas/00-kampanjekort-avklart.json"
+        },
+        {
+          "n": 3,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-avklart.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json",
+          "validation": "flows/kampanjekort.json#/steps/2/validation",
+          "reads_schema": "schemas/00-kampanjekort-avklart.json",
+          "writes_schema": "schemas/00-kampanjekort-utkast.json"
+        },
+        {
+          "n": 4,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-filtrert.json",
+          "validation": "flows/kampanjekort.json#/steps/3/validation",
+          "reads_schema": "schemas/00-kampanjekort-utkast.json",
+          "writes_schema": "schemas/00-kampanjekort-filtrert.json"
+        },
+        {
+          "n": 5,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-filtrert.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-kritikk.json",
+          "validation": "flows/kampanjekort.json#/steps/4/validation",
+          "reads_schema": "schemas/00-kampanjekort-filtrert.json",
+          "writes_schema": "schemas/00-kampanjekort-kritikk.json"
+        },
+        {
+          "n": 6,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "validation": "flows/kampanjekort.json#/steps/5/validation",
+          "reads_schema": "schemas/00-kampanjekort-kritikk.json",
+          "writes_schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      ],
+      "validation": "flows/kampanjekort.json#/validation",
+      "input_schema": "schemas/oppdrag.json",
+      "output_artifact_schema": "schemas/00-kampanjekort-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/kategori.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/skill-filter.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 2,
+      "id": "brief-en-setning",
+      "file": "flows/brief-en-setning.json",
+      "name": "Briefen i én setning og spørsmål til kunden",
+      "checkpoints": [
+        1
+      ],
+      "depends_on": [
+        "kampanjekort"
+      ],
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/01-oppdragsgrunnlag.json",
+          "validation": "flows/brief-en-setning.json#/steps/0/validation",
+          "reads_schema": "schemas/00-kampanjekort-godkjent.json",
+          "writes_schema": "schemas/01-oppdragsgrunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/01-oppdragsgrunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/01-briefutkast.json",
+          "validation": "flows/brief-en-setning.json#/steps/1/validation",
+          "reads_schema": "schemas/01-oppdragsgrunnlag.json",
+          "writes_schema": "schemas/01-briefutkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/01-briefutkast.json",
+          "writes": "artefakter/{oppdrag_id}/01-briefkritikk.json",
+          "validation": "flows/brief-en-setning.json#/steps/2/validation",
+          "reads_schema": "schemas/01-briefutkast.json",
+          "writes_schema": "schemas/01-briefkritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/01-briefkritikk.json",
+          "writes": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+          "validation": "flows/brief-en-setning.json#/steps/3/validation",
+          "reads_schema": "schemas/01-briefkritikk.json",
+          "writes_schema": "schemas/01-brief-godkjent.json"
+        }
+      ],
+      "validation": "flows/brief-en-setning.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/00-kampanjekort-godkjent.json",
+      "output_artifact_schema": "schemas/01-brief-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 3,
+      "id": "leserkort",
+      "file": "flows/leserkort.json",
+      "name": "Leserkort med kunnskapsnivå, kjøpssituasjoner og jobb",
+      "checkpoints": [
+        2
+      ],
+      "depends_on": [
+        "brief-en-setning"
+      ],
+      "input": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/02-lesergrunnlag.json",
+          "validation": "flows/leserkort.json#/steps/0/validation",
+          "reads_schema": "schemas/01-brief-godkjent.json",
+          "writes_schema": "schemas/02-lesergrunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/02-lesergrunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/02-leserkortutkast.json",
+          "validation": "flows/leserkort.json#/steps/1/validation",
+          "reads_schema": "schemas/02-lesergrunnlag.json",
+          "writes_schema": "schemas/02-leserkortutkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/02-leserkortutkast.json",
+          "writes": "artefakter/{oppdrag_id}/02-leserkortkritikk.json",
+          "validation": "flows/leserkort.json#/steps/2/validation",
+          "reads_schema": "schemas/02-leserkortutkast.json",
+          "writes_schema": "schemas/02-leserkortkritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/02-leserkortkritikk.json",
+          "writes": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+          "validation": "flows/leserkort.json#/steps/3/validation",
+          "reads_schema": "schemas/02-leserkortkritikk.json",
+          "writes_schema": "schemas/02-leserkort-godkjent.json"
+        }
+      ],
+      "validation": "flows/leserkort.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/01-brief-godkjent.json",
+      "output_artifact_schema": "schemas/02-leserkort-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 4,
+      "id": "innsiktsjakt",
+      "file": "flows/innsiktsjakt.json",
+      "name": "Innsiktsjakt med menneskelig valg",
+      "checkpoints": [
+        3
+      ],
+      "depends_on": [
+        "leserkort"
+      ],
+      "input": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/03-innsiktskilder.json",
+          "validation": "flows/innsiktsjakt.json#/steps/0/validation",
+          "reads_schema": "schemas/02-leserkort-godkjent.json",
+          "writes_schema": "schemas/03-innsiktskilder.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/03-innsiktskilder.json",
+          "writes": "artefakter/{oppdrag_id}/03-innsiktsforslag.json",
+          "validation": "flows/innsiktsjakt.json#/steps/1/validation",
+          "reads_schema": "schemas/03-innsiktskilder.json",
+          "writes_schema": "schemas/03-innsiktsforslag.json"
+        },
+        {
+          "n": 3,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/03-innsiktsforslag.json",
+          "writes": "artefakter/{oppdrag_id}/03-innsikter-kildekontrollert.json",
+          "validation": "flows/innsiktsjakt.json#/steps/2/validation",
+          "reads_schema": "schemas/03-innsiktsforslag.json",
+          "writes_schema": "schemas/03-innsikter-kildekontrollert.json"
+        },
+        {
+          "n": 4,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/03-innsikter-kildekontrollert.json",
+          "writes": "artefakter/{oppdrag_id}/03-innsiktskritikk.json",
+          "validation": "flows/innsiktsjakt.json#/steps/3/validation",
+          "reads_schema": "schemas/03-innsikter-kildekontrollert.json",
+          "writes_schema": "schemas/03-innsiktskritikk.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/03-innsiktskritikk.json",
+          "writes": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+          "validation": "flows/innsiktsjakt.json#/steps/4/validation",
+          "reads_schema": "schemas/03-innsiktskritikk.json",
+          "writes_schema": "schemas/03-innsikt-valgt.json"
+        }
+      ],
+      "validation": "flows/innsiktsjakt.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/02-leserkort-godkjent.json",
+      "output_artifact_schema": "schemas/03-innsikt-valgt.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 5,
+      "id": "konkurrenter-for-loftet",
+      "file": "flows/konkurrenter-for-loftet.json",
+      "name": "Les konkurrentene før løftet velges",
+      "checkpoints": [
+        3,
+        4
+      ],
+      "depends_on": [
+        "innsiktsjakt"
+      ],
+      "input": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+      "output_artifact": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+          "writes": "artefakter/{oppdrag_id}/04-konkurrentkilder.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/0/validation",
+          "reads_schema": "schemas/03-innsikt-valgt.json",
+          "writes_schema": "schemas/04-konkurrentkilder.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/04-konkurrentkilder.json",
+          "writes": "artefakter/{oppdrag_id}/04-konkurrentlesning.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/1/validation",
+          "reads_schema": "schemas/04-konkurrentkilder.json",
+          "writes_schema": "schemas/04-konkurrentlesning.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/04-konkurrentlesning.json",
+          "writes": "artefakter/{oppdrag_id}/04-konkurrentlesning-godkjent.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/2/validation",
+          "reads_schema": "schemas/04-konkurrentlesning.json",
+          "writes_schema": "schemas/04-konkurrentlesning-godkjent.json"
+        },
+        {
+          "n": 4,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/04-konkurrentlesning-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/04-lofteforslag.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/3/validation",
+          "reads_schema": "schemas/04-konkurrentlesning-godkjent.json",
+          "writes_schema": "schemas/04-lofteforslag.json"
+        },
+        {
+          "n": 5,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/04-lofteforslag.json",
+          "writes": "artefakter/{oppdrag_id}/04-loftekritikk.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/4/validation",
+          "reads_schema": "schemas/04-lofteforslag.json",
+          "writes_schema": "schemas/04-loftekritikk.json"
+        },
+        {
+          "n": 6,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/04-loftekritikk.json",
+          "writes": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+          "validation": "flows/konkurrenter-for-loftet.json#/steps/5/validation",
+          "reads_schema": "schemas/04-loftekritikk.json",
+          "writes_schema": "schemas/04-lofte-godkjent.json"
+        }
+      ],
+      "validation": "flows/konkurrenter-for-loftet.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/03-innsikt-valgt.json",
+      "output_artifact_schema": "schemas/04-lofte-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 6,
+      "id": "logikkjede",
+      "file": "flows/logikkjede.json",
+      "name": "Problem, løfte, bevis og handling",
+      "checkpoints": [
+        5,
+        6
+      ],
+      "depends_on": [
+        "konkurrenter-for-loftet"
+      ],
+      "input": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/05-logikkjedeutkast.json",
+          "validation": "flows/logikkjede.json#/steps/0/validation",
+          "reads_schema": "schemas/04-lofte-godkjent.json",
+          "writes_schema": "schemas/05-logikkjedeutkast.json"
+        },
+        {
+          "n": 2,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjedeutkast.json",
+          "writes": "artefakter/{oppdrag_id}/05-logikkjede-kontrollert.json",
+          "validation": "flows/logikkjede.json#/steps/1/validation",
+          "reads_schema": "schemas/05-logikkjedeutkast.json",
+          "writes_schema": "schemas/05-logikkjede-kontrollert.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjede-kontrollert.json",
+          "writes": "artefakter/{oppdrag_id}/05-logikkjedekritikk.json",
+          "validation": "flows/logikkjede.json#/steps/2/validation",
+          "reads_schema": "schemas/05-logikkjede-kontrollert.json",
+          "writes_schema": "schemas/05-logikkjedekritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjedekritikk.json",
+          "writes": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+          "validation": "flows/logikkjede.json#/steps/3/validation",
+          "reads_schema": "schemas/05-logikkjedekritikk.json",
+          "writes_schema": "schemas/05-logikkjede-godkjent.json"
+        }
+      ],
+      "validation": "flows/logikkjede.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/04-lofte-godkjent.json",
+      "output_artifact_schema": "schemas/05-logikkjede-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 7,
+      "id": "linjebredde-og-valg",
+      "file": "flows/linjebredde-og-valg.json",
+      "name": "Mange linjer, kodeluking og høyst tre til kunden",
+      "checkpoints": [
+        7,
+        8
+      ],
+      "depends_on": [
+        "logikkjede"
+      ],
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/08-kundevalg.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/07-linjebank.json",
+          "validation": "flows/linjebredde-og-valg.json#/steps/0/validation",
+          "reads_schema": "schemas/05-logikkjede-godkjent.json",
+          "writes_schema": "schemas/07-linjebank.json"
+        },
+        {
+          "n": 2,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/07-linjebank.json",
+          "writes": "artefakter/{oppdrag_id}/07-linjer-luket.json",
+          "validation": "flows/linjebredde-og-valg.json#/steps/1/validation",
+          "reads_schema": "schemas/07-linjebank.json",
+          "writes_schema": "schemas/07-linjer-luket.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/07-linjer-luket.json",
+          "writes": "artefakter/{oppdrag_id}/07-linjer-rangert.json",
+          "validation": "flows/linjebredde-og-valg.json#/steps/2/validation",
+          "reads_schema": "schemas/07-linjer-luket.json",
+          "writes_schema": "schemas/07-linjer-rangert.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/07-linjer-rangert.json",
+          "writes": "artefakter/{oppdrag_id}/08-kundekandidater.json",
+          "validation": "flows/linjebredde-og-valg.json#/steps/3/validation",
+          "reads_schema": "schemas/07-linjer-rangert.json",
+          "writes_schema": "schemas/08-kundekandidater.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/08-kundekandidater.json",
+          "writes": "artefakter/{oppdrag_id}/08-kundevalg.json",
+          "validation": "flows/linjebredde-og-valg.json#/steps/4/validation",
+          "reads_schema": "schemas/08-kundekandidater.json",
+          "writes_schema": "schemas/08-kundevalg.json"
+        }
+      ],
+      "validation": "flows/linjebredde-og-valg.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact_schema": "schemas/08-kundevalg.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 8,
+      "id": "bilde-som-tredje-tanke",
+      "file": "flows/bilde-som-tredje-tanke.json",
+      "name": "Bildet som en tredje tanke",
+      "checkpoints": [
+        9
+      ],
+      "depends_on": [
+        "linjebredde-og-valg"
+      ],
+      "input": "artefakter/{oppdrag_id}/08-kundevalg.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/08-kundevalg.json",
+          "writes": "artefakter/{oppdrag_id}/09-bildekonsepter.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/0/validation",
+          "reads_schema": "schemas/08-kundevalg.json",
+          "writes_schema": "schemas/09-bildekonsepter.json"
+        },
+        {
+          "n": 2,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/09-bildekonsepter.json",
+          "writes": "artefakter/{oppdrag_id}/09-bildekonseptkritikk.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/1/validation",
+          "reads_schema": "schemas/09-bildekonsepter.json",
+          "writes_schema": "schemas/09-bildekonseptkritikk.json"
+        },
+        {
+          "n": 3,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-bildekonseptkritikk.json",
+          "writes": "artefakter/{oppdrag_id}/09-annonseutkast.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/2/validation",
+          "reads_schema": "schemas/09-bildekonseptkritikk.json",
+          "writes_schema": "schemas/09-annonseutkast.json"
+        },
+        {
+          "n": 4,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutkast.json",
+          "writes": "artefakter/{oppdrag_id}/09-annonseformat-kontrollert.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/3/validation",
+          "reads_schema": "schemas/09-annonseutkast.json",
+          "writes_schema": "schemas/09-annonseformat-kontrollert.json"
+        },
+        {
+          "n": 5,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/09-annonseformat-kontrollert.json",
+          "writes": "artefakter/{oppdrag_id}/09-annonseutkast-kritikk.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/4/validation",
+          "reads_schema": "schemas/09-annonseformat-kontrollert.json",
+          "writes_schema": "schemas/09-annonseutkast-kritikk.json"
+        },
+        {
+          "n": 6,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutkast-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+          "validation": "flows/bilde-som-tredje-tanke.json#/steps/5/validation",
+          "reads_schema": "schemas/09-annonseutkast-kritikk.json",
+          "writes_schema": "schemas/09-annonseutforelse-godkjent.json"
+        }
+      ],
+      "validation": "flows/bilde-som-tredje-tanke.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/08-kundevalg.json",
+      "output_artifact_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 9,
+      "id": "lovsjekk-per-land",
+      "file": "flows/lovsjekk-per-land.json",
+      "name": "Lovsjekk for hvert land",
+      "checkpoints": [
+        10
+      ],
+      "depends_on": [
+        "bilde-som-tredje-tanke"
+      ],
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/10-land-og-regelgrunnlag.json",
+          "validation": "flows/lovsjekk-per-land.json#/steps/0/validation",
+          "reads_schema": "schemas/09-annonseutforelse-godkjent.json",
+          "writes_schema": "schemas/10-land-og-regelgrunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/10-land-og-regelgrunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/10-lovkontrollutkast.json",
+          "validation": "flows/lovsjekk-per-land.json#/steps/1/validation",
+          "reads_schema": "schemas/10-land-og-regelgrunnlag.json",
+          "writes_schema": "schemas/10-lovkontrollutkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/10-lovkontrollutkast.json",
+          "writes": "artefakter/{oppdrag_id}/10-lovkritikk.json",
+          "validation": "flows/lovsjekk-per-land.json#/steps/2/validation",
+          "reads_schema": "schemas/10-lovkontrollutkast.json",
+          "writes_schema": "schemas/10-lovkritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/10-lovkritikk.json",
+          "writes": "artefakter/{oppdrag_id}/10-landgodkjenninger.json",
+          "validation": "flows/lovsjekk-per-land.json#/steps/3/validation",
+          "reads_schema": "schemas/10-lovkritikk.json",
+          "writes_schema": "schemas/10-landgodkjenninger.json"
+        },
+        {
+          "n": 5,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/10-landgodkjenninger.json",
+          "writes": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+          "validation": "flows/lovsjekk-per-land.json#/steps/4/validation",
+          "reads_schema": "schemas/10-landgodkjenninger.json",
+          "writes_schema": "schemas/10-annonser-lovsjekket.json"
+        }
+      ],
+      "validation": "flows/lovsjekk-per-land.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact_schema": "schemas/10-annonser-lovsjekket.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/kategori.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 10,
+      "id": "testplan-ekte-annonser",
+      "file": "flows/testplan-ekte-annonser.json",
+      "name": "Testplan for ekte annonser",
+      "checkpoints": [
+        6,
+        10
+      ],
+      "depends_on": [
+        "lovsjekk-per-land"
+      ],
+      "input": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "output_artifact": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+          "writes": "artefakter/{oppdrag_id}/10-testgrunnlag.json",
+          "validation": "flows/testplan-ekte-annonser.json#/steps/0/validation",
+          "reads_schema": "schemas/10-annonser-lovsjekket.json",
+          "writes_schema": "schemas/10-testgrunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/10-testgrunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/10-testplanutkast.json",
+          "validation": "flows/testplan-ekte-annonser.json#/steps/1/validation",
+          "reads_schema": "schemas/10-testgrunnlag.json",
+          "writes_schema": "schemas/10-testplanutkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/10-testplanutkast.json",
+          "writes": "artefakter/{oppdrag_id}/10-testplan-beregnet.json",
+          "validation": "flows/testplan-ekte-annonser.json#/steps/2/validation",
+          "reads_schema": "schemas/10-testplanutkast.json",
+          "writes_schema": "schemas/10-testplan-beregnet.json"
+        },
+        {
+          "n": 4,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/10-testplan-beregnet.json",
+          "writes": "artefakter/{oppdrag_id}/10-testplankritikk.json",
+          "validation": "flows/testplan-ekte-annonser.json#/steps/3/validation",
+          "reads_schema": "schemas/10-testplan-beregnet.json",
+          "writes_schema": "schemas/10-testplankritikk.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/10-testplankritikk.json",
+          "writes": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+          "validation": "flows/testplan-ekte-annonser.json#/steps/4/validation",
+          "reads_schema": "schemas/10-testplankritikk.json",
+          "writes_schema": "schemas/10-testplan-godkjent.json"
+        }
+      ],
+      "validation": "flows/testplan-ekte-annonser.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/10-annonser-lovsjekket.json",
+      "output_artifact_schema": "schemas/10-testplan-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 11,
+      "id": "merkeelement-revisjon",
+      "file": "flows/merkeelement-revisjon.json",
+      "name": "Gjennomgang av merkeelementer",
+      "checkpoints": [
+        1,
+        7,
+        9
+      ],
+      "depends_on": [
+        "brief-en-setning"
+      ],
+      "input": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/01-merkeelement-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/01-merkeelement-register.json",
+          "validation": "flows/merkeelement-revisjon.json#/steps/0/validation",
+          "reads_schema": "schemas/01-brief-godkjent.json",
+          "writes_schema": "schemas/01-merkeelement-register.json"
+        },
+        {
+          "n": 2,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/01-merkeelement-register.json",
+          "writes": "artefakter/{oppdrag_id}/01-merkeelement-maaling.json",
+          "validation": "flows/merkeelement-revisjon.json#/steps/1/validation",
+          "reads_schema": "schemas/01-merkeelement-register.json",
+          "writes_schema": "schemas/01-merkeelement-maaling.json"
+        },
+        {
+          "n": 3,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/01-merkeelement-maaling.json",
+          "writes": "artefakter/{oppdrag_id}/01-merkeelement-vurdering.json",
+          "validation": "flows/merkeelement-revisjon.json#/steps/2/validation",
+          "reads_schema": "schemas/01-merkeelement-maaling.json",
+          "writes_schema": "schemas/01-merkeelement-vurdering.json"
+        },
+        {
+          "n": 4,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/01-merkeelement-vurdering.json",
+          "writes": "artefakter/{oppdrag_id}/01-merkeelement-kritikk.json",
+          "validation": "flows/merkeelement-revisjon.json#/steps/3/validation",
+          "reads_schema": "schemas/01-merkeelement-vurdering.json",
+          "writes_schema": "schemas/01-merkeelement-kritikk.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/01-merkeelement-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/01-merkeelement-godkjent.json",
+          "validation": "flows/merkeelement-revisjon.json#/steps/4/validation",
+          "reads_schema": "schemas/01-merkeelement-kritikk.json",
+          "writes_schema": "schemas/01-merkeelement-godkjent.json"
+        }
+      ],
+      "validation": "flows/merkeelement-revisjon.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/01-brief-godkjent.json",
+      "output_artifact_schema": "schemas/01-merkeelement-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 12,
+      "id": "merkevare-og-salgsaktivering",
+      "file": "flows/merkevare-og-salgsaktivering.json",
+      "name": "Fordel mellom merkevarebygging og salgsaktivering",
+      "checkpoints": [
+        6,
+        7,
+        10
+      ],
+      "depends_on": [
+        "logikkjede"
+      ],
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/06-kampanjefordeling-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/06-kampanjerammer.json",
+          "validation": "flows/merkevare-og-salgsaktivering.json#/steps/0/validation",
+          "reads_schema": "schemas/05-logikkjede-godkjent.json",
+          "writes_schema": "schemas/06-kampanjerammer.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/06-kampanjerammer.json",
+          "writes": "artefakter/{oppdrag_id}/06-kampanjefordeling-utkast.json",
+          "validation": "flows/merkevare-og-salgsaktivering.json#/steps/1/validation",
+          "reads_schema": "schemas/06-kampanjerammer.json",
+          "writes_schema": "schemas/06-kampanjefordeling-utkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/06-kampanjefordeling-utkast.json",
+          "writes": "artefakter/{oppdrag_id}/06-kampanjefordeling-beregnet.json",
+          "validation": "flows/merkevare-og-salgsaktivering.json#/steps/2/validation",
+          "reads_schema": "schemas/06-kampanjefordeling-utkast.json",
+          "writes_schema": "schemas/06-kampanjefordeling-beregnet.json"
+        },
+        {
+          "n": 4,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/06-kampanjefordeling-beregnet.json",
+          "writes": "artefakter/{oppdrag_id}/06-kampanjefordeling-kritikk.json",
+          "validation": "flows/merkevare-og-salgsaktivering.json#/steps/3/validation",
+          "reads_schema": "schemas/06-kampanjefordeling-beregnet.json",
+          "writes_schema": "schemas/06-kampanjefordeling-kritikk.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/06-kampanjefordeling-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/06-kampanjefordeling-godkjent.json",
+          "validation": "flows/merkevare-og-salgsaktivering.json#/steps/4/validation",
+          "reads_schema": "schemas/06-kampanjefordeling-kritikk.json",
+          "writes_schema": "schemas/06-kampanjefordeling-godkjent.json"
+        }
+      ],
+      "validation": "flows/merkevare-og-salgsaktivering.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact_schema": "schemas/06-kampanjefordeling-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 13,
+      "id": "klarsprak-revisjon",
+      "file": "flows/klarsprak-revisjon.json",
+      "name": "Revider teksten med klarspråk og forståelsestest",
+      "checkpoints": [
+        9,
+        10
+      ],
+      "depends_on": [
+        "bilde-som-tredje-tanke"
+      ],
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/09-klarsprak-grunnlag.json",
+          "validation": "flows/klarsprak-revisjon.json#/steps/0/validation",
+          "reads_schema": "schemas/09-annonseutforelse-godkjent.json",
+          "writes_schema": "schemas/09-klarsprak-grunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/09-klarsprak-grunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/09-klarsprak-utkast.json",
+          "validation": "flows/klarsprak-revisjon.json#/steps/1/validation",
+          "reads_schema": "schemas/09-klarsprak-grunnlag.json",
+          "writes_schema": "schemas/09-klarsprak-utkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/09-klarsprak-utkast.json",
+          "writes": "artefakter/{oppdrag_id}/09-klarsprak-kritikk.json",
+          "validation": "flows/klarsprak-revisjon.json#/steps/2/validation",
+          "reads_schema": "schemas/09-klarsprak-utkast.json",
+          "writes_schema": "schemas/09-klarsprak-kritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-klarsprak-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/09-klarsprak-forstaelsestest.json",
+          "validation": "flows/klarsprak-revisjon.json#/steps/3/validation",
+          "reads_schema": "schemas/09-klarsprak-kritikk.json",
+          "writes_schema": "schemas/09-klarsprak-forstaelsestest.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-klarsprak-forstaelsestest.json",
+          "writes": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+          "validation": "flows/klarsprak-revisjon.json#/steps/4/validation",
+          "reads_schema": "schemas/09-klarsprak-forstaelsestest.json",
+          "writes_schema": "schemas/09-klarsprak-godkjent.json"
+        }
+      ],
+      "validation": "flows/klarsprak-revisjon.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact_schema": "schemas/09-klarsprak-godkjent.json",
+      "schema_reads": [
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 14,
+      "id": "kanalformat-tilpasning",
+      "file": "flows/kanalformat-tilpasning.json",
+      "name": "Tilpass godkjent idé til kanalformatene",
+      "checkpoints": [
+        9,
+        10
+      ],
+      "depends_on": [
+        "bilde-som-tredje-tanke"
+      ],
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-kanalformat-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-krav.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/0/validation",
+          "reads_schema": "schemas/09-annonseutforelse-godkjent.json",
+          "writes_schema": "schemas/09-kanalformat-krav.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/09-kanalformat-krav.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-plan.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/1/validation",
+          "reads_schema": "schemas/09-kanalformat-krav.json",
+          "writes_schema": "schemas/09-kanalformat-plan.json"
+        },
+        {
+          "n": 3,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-kanalformat-plan.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-varianter.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/2/validation",
+          "reads_schema": "schemas/09-kanalformat-plan.json",
+          "writes_schema": "schemas/09-kanalformat-varianter.json"
+        },
+        {
+          "n": 4,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/09-kanalformat-varianter.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-kontrollert.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/3/validation",
+          "reads_schema": "schemas/09-kanalformat-varianter.json",
+          "writes_schema": "schemas/09-kanalformat-kontrollert.json"
+        },
+        {
+          "n": 5,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/09-kanalformat-kontrollert.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-kritikk.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/4/validation",
+          "reads_schema": "schemas/09-kanalformat-kontrollert.json",
+          "writes_schema": "schemas/09-kanalformat-kritikk.json"
+        },
+        {
+          "n": 6,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-kanalformat-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/09-kanalformat-godkjent.json",
+          "validation": "flows/kanalformat-tilpasning.json#/steps/5/validation",
+          "reads_schema": "schemas/09-kanalformat-kritikk.json",
+          "writes_schema": "schemas/09-kanalformat-godkjent.json"
+        }
+      ],
+      "validation": "flows/kanalformat-tilpasning.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact_schema": "schemas/09-kanalformat-godkjent.json",
+      "schema_reads": [
+        "schemas/kanal-format.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 15,
+      "id": "rekkevidde-og-medieplan",
+      "file": "flows/rekkevidde-og-medieplan.json",
+      "name": "Planlegg rekkevidde og etterprøv levering",
+      "checkpoints": [
+        2,
+        6,
+        10
+      ],
+      "depends_on": [
+        "logikkjede"
+      ],
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/06-mediedekning-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/06-mediedekning-grunnlag.json",
+          "validation": "flows/rekkevidde-og-medieplan.json#/steps/0/validation",
+          "reads_schema": "schemas/05-logikkjede-godkjent.json",
+          "writes_schema": "schemas/06-mediedekning-grunnlag.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/06-mediedekning-grunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/06-mediedekning-utkast.json",
+          "validation": "flows/rekkevidde-og-medieplan.json#/steps/1/validation",
+          "reads_schema": "schemas/06-mediedekning-grunnlag.json",
+          "writes_schema": "schemas/06-mediedekning-utkast.json"
+        },
+        {
+          "n": 3,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/06-mediedekning-utkast.json",
+          "writes": "artefakter/{oppdrag_id}/06-mediedekning-beregnet.json",
+          "validation": "flows/rekkevidde-og-medieplan.json#/steps/2/validation",
+          "reads_schema": "schemas/06-mediedekning-utkast.json",
+          "writes_schema": "schemas/06-mediedekning-beregnet.json"
+        },
+        {
+          "n": 4,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/06-mediedekning-beregnet.json",
+          "writes": "artefakter/{oppdrag_id}/06-mediedekning-kritikk.json",
+          "validation": "flows/rekkevidde-og-medieplan.json#/steps/3/validation",
+          "reads_schema": "schemas/06-mediedekning-beregnet.json",
+          "writes_schema": "schemas/06-mediedekning-kritikk.json"
+        },
+        {
+          "n": 5,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/06-mediedekning-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/06-mediedekning-godkjent.json",
+          "validation": "flows/rekkevidde-og-medieplan.json#/steps/4/validation",
+          "reads_schema": "schemas/06-mediedekning-kritikk.json",
+          "writes_schema": "schemas/06-mediedekning-godkjent.json"
+        }
+      ],
+      "validation": "flows/rekkevidde-og-medieplan.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact_schema": "schemas/06-mediedekning-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 16,
+      "id": "resultater-og-laering",
+      "file": "flows/resultater-og-laering.json",
+      "name": "Hent resultater og lag en læringsbeslutning",
+      "checkpoints": [
+        6,
+        10
+      ],
+      "depends_on": [
+        "testplan-ekte-annonser"
+      ],
+      "input": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/11-resultater-beslutning.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-start.json",
+          "validation": "flows/resultater-og-laering.json#/steps/0/validation",
+          "reads_schema": "schemas/10-testplan-godkjent.json",
+          "writes_schema": "schemas/11-resultater-start.json"
+        },
+        {
+          "n": 2,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/11-resultater-start.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-data.json",
+          "validation": "flows/resultater-og-laering.json#/steps/1/validation",
+          "reads_schema": "schemas/11-resultater-start.json",
+          "writes_schema": "schemas/11-resultater-data.json"
+        },
+        {
+          "n": 3,
+          "who": "kode",
+          "reads": "artefakter/{oppdrag_id}/11-resultater-data.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-analysegrunnlag.json",
+          "validation": "flows/resultater-og-laering.json#/steps/2/validation",
+          "reads_schema": "schemas/11-resultater-data.json",
+          "writes_schema": "schemas/11-resultater-analysegrunnlag.json"
+        },
+        {
+          "n": 4,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/11-resultater-analysegrunnlag.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-tolkning.json",
+          "validation": "flows/resultater-og-laering.json#/steps/3/validation",
+          "reads_schema": "schemas/11-resultater-analysegrunnlag.json",
+          "writes_schema": "schemas/11-resultater-tolkning.json"
+        },
+        {
+          "n": 5,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/11-resultater-tolkning.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-kritikk.json",
+          "validation": "flows/resultater-og-laering.json#/steps/4/validation",
+          "reads_schema": "schemas/11-resultater-tolkning.json",
+          "writes_schema": "schemas/11-resultater-kritikk.json"
+        },
+        {
+          "n": 6,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/11-resultater-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/11-resultater-beslutning.json",
+          "validation": "flows/resultater-og-laering.json#/steps/5/validation",
+          "reads_schema": "schemas/11-resultater-kritikk.json",
+          "writes_schema": "schemas/11-resultater-beslutning.json"
+        }
+      ],
+      "validation": "flows/resultater-og-laering.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/10-testplan-godkjent.json",
+      "output_artifact_schema": "schemas/11-resultater-beslutning.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "order": 17,
+      "id": "east-tiltak-og-test",
+      "file": "flows/east-tiltak-og-test.json",
+      "name": "Prøv relevante EAST-tiltak mot observerte barrierer",
+      "checkpoints": [
+        2,
+        6,
+        9,
+        10
+      ],
+      "depends_on": [
+        "bilde-som-tredje-tanke"
+      ],
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-east-godkjent.json",
+      "steps": [
+        {
+          "n": 1,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+          "writes": "artefakter/{oppdrag_id}/09-east-barrierer.json",
+          "validation": "flows/east-tiltak-og-test.json#/steps/0/validation",
+          "reads_schema": "schemas/09-annonseutforelse-godkjent.json",
+          "writes_schema": "schemas/09-east-barrierer.json"
+        },
+        {
+          "n": 2,
+          "who": "modell",
+          "reads": "artefakter/{oppdrag_id}/09-east-barrierer.json",
+          "writes": "artefakter/{oppdrag_id}/09-east-tiltak.json",
+          "validation": "flows/east-tiltak-og-test.json#/steps/1/validation",
+          "reads_schema": "schemas/09-east-barrierer.json",
+          "writes_schema": "schemas/09-east-tiltak.json"
+        },
+        {
+          "n": 3,
+          "who": "kritiker",
+          "reads": "artefakter/{oppdrag_id}/09-east-tiltak.json",
+          "writes": "artefakter/{oppdrag_id}/09-east-kritikk.json",
+          "validation": "flows/east-tiltak-og-test.json#/steps/2/validation",
+          "reads_schema": "schemas/09-east-tiltak.json",
+          "writes_schema": "schemas/09-east-kritikk.json"
+        },
+        {
+          "n": 4,
+          "who": "menneske",
+          "reads": "artefakter/{oppdrag_id}/09-east-kritikk.json",
+          "writes": "artefakter/{oppdrag_id}/09-east-godkjent.json",
+          "validation": "flows/east-tiltak-og-test.json#/steps/3/validation",
+          "reads_schema": "schemas/09-east-kritikk.json",
+          "writes_schema": "schemas/09-east-godkjent.json"
+        }
+      ],
+      "validation": "flows/east-tiltak-og-test.json#/validation",
+      "input_fields": {
+        "kampanjekort": {
+          "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+          "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+          "required": [
+            "kort_id",
+            "versjon",
+            "SHA-256",
+            "validering.status bestått",
+            "aktiv del_id",
+            "funnel.stage og funnel.mode",
+            "kundestatus",
+            "salgsrunde",
+            "schwartz.level med belegg",
+            "foresporsel",
+            "maling",
+            "ferdighetsvalg og konfliktlosninger",
+            "ferdighetsbibliotek med versjon og hash"
+          ],
+          "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+          "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+          "schema": "schemas/00-kampanjekort-godkjent.json"
+        }
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact_schema": "schemas/09-east-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    }
+  ],
+  "final_artifact": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+  "scope": "Ti obligatoriske flyter: kampanjekort først, så de tidligere ni kjerneflytene, samt sju valgfrie tilleggsflyter. Alle definisjoner er PROPOSED. Kjerneleveransen er godkjent testplan; etterfase krever menneskestyrt start og gyldig behandling. Ingen annonsering utføres av disse definisjonene.",
+  "optional_routes": [
+    {
+      "id": "merkeelement-revisjon",
+      "after": "brief-en-setning",
+      "before": "leserkort",
+      "trigger": "Når merkeelementer skal brukes, endres eller tas inn i nytt marked.",
+      "input_binding": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/01-merkeelement-godkjent.json",
+      "input_binding_schema": "schemas/01-brief-godkjent.json",
+      "next_input_binding_schema": "schemas/01-merkeelement-godkjent.json"
+    },
+    {
+      "id": "merkevare-og-salgsaktivering",
+      "after": "logikkjede",
+      "before": "linjebredde-og-valg",
+      "trigger": "Når oppgaven krever en fordeling mellom merkevarebygging og salgsaktivering med ulike tidshorisonter. Oppdragsansvarlig må alltid logge om flyten gjelder, særlig når begge tidshorisonter inngår; ingen universell budsjettandel pålegges.",
+      "input_binding": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/06-kampanjefordeling-godkjent.json",
+      "input_binding_schema": "schemas/05-logikkjede-godkjent.json",
+      "next_input_binding_schema": "schemas/06-kampanjefordeling-godkjent.json"
+    },
+    {
+      "id": "klarsprak-revisjon",
+      "after": "bilde-som-tredje-tanke",
+      "before": "lovsjekk-per-land",
+      "trigger": "Når valgt tekst skal revideres og forståelsen undersøkes før endelig godkjenning. Inndata er bare foreløpig kreativ utførelsesgodkjenning. Etter enhver revisjon er ny lovsjekk og endelig menneskelig frigivelsesgodkjenning for den reviderte versjonen obligatorisk.",
+      "input_binding": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+      "input_binding_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "next_input_binding_schema": "schemas/09-klarsprak-godkjent.json"
+    },
+    {
+      "id": "kanalformat-tilpasning",
+      "after": "bilde-som-tredje-tanke",
+      "before": "lovsjekk-per-land",
+      "trigger": "Når godkjent utførelse skal leveres i konkrete kanalformater og plasseringer.",
+      "input_binding": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/09-kanalformat-godkjent.json",
+      "input_binding_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "next_input_binding_schema": "schemas/09-kanalformat-godkjent.json"
+    },
+    {
+      "id": "rekkevidde-og-medieplan",
+      "after": "logikkjede",
+      "before": "linjebredde-og-valg",
+      "trigger": "Når betalt mediedekning planlegges. Etter eventuell merkevare-og-salgsaktivering brukes dens output som input; medieplanens output bindes til linjebredde-og-valg. Faktisk levering står avventer i planmodus.",
+      "input_binding": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/06-mediedekning-godkjent.json",
+      "input_binding_schema": "schemas/05-logikkjede-godkjent.json",
+      "next_input_binding_schema": "schemas/06-mediedekning-godkjent.json"
+    },
+    {
+      "id": "east-tiltak-og-test",
+      "after": "bilde-som-tredje-tanke",
+      "before": "lovsjekk-per-land",
+      "trigger": "Valgfritt når en kildebelagt barriere bør prøves med et relevant EAST-grep. Etter eventuell klarspråk- og kanaltilpasning; ny lovsjekk, testplan og endelig frigivelse er obligatorisk.",
+      "input_binding": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "next_input_binding": "artefakter/{oppdrag_id}/09-east-godkjent.json",
+      "input_binding_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "next_input_binding_schema": "schemas/09-east-godkjent.json"
+    },
+    {
+      "id": "resultater-og-laering",
+      "after": "testplan-ekte-annonser",
+      "before": null,
+      "trigger": "Bare når ansvarlig velger virkelig annonsering eller dokumentert oppfølging av allerede startet test. Krever menneskestyrt start og gyldig frigivelse; dette er en etterfase og ingen rebinding av kjerneflytene.",
+      "input_binding": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "next_input_binding": null,
+      "input_binding_schema": "schemas/10-testplan-godkjent.json",
+      "next_input_binding_schema": null
+    },
+    {
+      "id": "rekkevidde-og-medieplan",
+      "after": "resultater-og-laering",
+      "before": null,
+      "trigger": "Etterkontroll er obligatorisk oppfølging når en medieplan ble godkjent og annonsering er gjennomført. Bind input og første steg til resultatpakken, sett modus etterkontroll og les tidligere planversjon via manifestets hash. Ikke bind etterkontrollens output tilbake til idéproduksjon.",
+      "input_binding": "artefakter/{oppdrag_id}/11-resultater-beslutning.json",
+      "next_input_binding": null,
+      "input_binding_schema": "schemas/11-resultater-beslutning.json",
+      "next_input_binding_schema": null
+    }
+  ],
+  "routing_rule": "order angir katalogrekkefølge for tilleggene; det betyr ikke at alle 17 kjøres etter hverandre. Kampanjekort er obligatorisk først; de tidligere kjerneflytene følger i opprinnelig rekkefølge som order 2–10. Oppdragsansvarlig registrerer før kjøring hvilke tillegg som gjelder og hvorfor. Et valgt tillegg settes inn etter after og før before. Orkestreringen binder neste flyts input og første stegs input til tilleggets output_artifact; standardstien i flytfilen erstattes bare for denne kjøringen. Binding, kildeflyt, sti, versjon og SHA-256 lagres i det ene inndataartefaktets videreførte grunnlag og kontrolleres før lesing. Tillegget viderefører inngangens innholdskontrakt, slik at neste kjerneflyt fortsatt får sitt påkrevde grunnlag. Et valgt tillegg kan ikke hoppes over ved feil. Ingen uvaliderte sidefiler leses. For merkevare-og-salgsaktivering kreves alltid datert anvendelsesbeslutning med grunn, også ved fravalg. Der både denne og rekkevidde-og-medieplan velges, kjøres kampanjefordeling før medieplan og deretter linjebredde-og-valg. EAST-tillegget endrer testopplegget før lovsjekk; nye påstander eller løfter returneres til opprinnelig produsent. Ruter med before lik null er etterfaser og binder ingen neste kjerneflyt. Den andre ruten for rekkevidde-og-medieplan identifiseres ved after lik resultater-og-laering og modus etterkontroll; den er en separat kjøring med nye artefaktversjoner, aldri en retur til produksjonskjeden.",
+  "combined_execution_rule": "Når både klarsprak-revisjon og kanalformat-tilpasning er valgt, er rekkefølgen bilde-som-tredje-tanke → klarsprak-revisjon → kanalformat-tilpasning → lovsjekk-per-land. Da bindes kanalformat-tilpasning sitt input og første stegs input til artefakter/{oppdrag_id}/09-klarsprak-godkjent.json, og lovsjekkens tilsvarende input bindes til artefakter/{oppdrag_id}/09-kanalformat-godkjent.json. Ved bare ett av disse tilleggene går det direkte til lovsjekken. Alle bindinger må være registrert og valideres før lesing. Når EAST også velges, blir utførelsesrekkefølgen bilde-som-tredje-tanke → eventuelt klarsprak-revisjon → eventuelt kanalformat-tilpasning → east-tiltak-og-test → lovsjekk-per-land → testplan-ekte-annonser. Første steg og input i hvert valgt tillegg bindes til forrige valgte output_artifact; hver binding lagres med versjon og hash. Revidert materiell krever alltid ny lovsjekk og endelig menneskelig frigivelsesgodkjenning.",
+  "campaign_card_rule": {
+    "first_flow": "kampanjekort",
+    "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+    "before_writing": "Ingen briefsetning, løfte, logikkjede, idélinje, bildekonsept eller annonsetekst produseres før kortet har bestått. Kortets eget planutkast er tillatt i førsteflyten.",
+    "per_part": "Velg én aktiv del_id. Kjør en komplett versjonsbundet kjede per del; ved flere deler beholdes separate artefaktversjoner i lagerets historikk med del_id i artefaktidentiteten. Ingen lesing på tvers av deler uten eksplisitt manifestbinding. Stabile oppdrag_id og stimaler beholdes; aldri bruk siste versjon uten del-, versjons- og hashkontroll.",
+    "late_findings": "Brief, leserkort eller senere kilder kan gi nye fakta. Endrer de kortet, returner til kampanjekortets produsent, kjør filtrering, uavhengig kritikk og menneskegodkjenning igjen, og ugyldiggjør alle berørte etterfølgere. Ingen sirkulær startavhengighet: første kort bygger på oppdrag og kundens avklaringer.",
+    "filter": "flows/kampanjekort.json#/skill_filter",
+    "contract": "flows/kampanjekort.json#/campaign_card_contract",
+    "schema": "schemas/00-kampanjekort-godkjent.json"
+  },
+  "final_artifact_schema": "schemas/10-testplan-godkjent.json",
+  "schema_registry": "schemas/_index.json",
+  "schema_rebinding_rule": "Ved valgfri rute bindes både sti og input_schema/første stegs input_schema til faktisk produsents output_schema. Originalt innhold videreføres under grunnlag; sjekk downstream required_imports og hasher før lesing, ikke bare filnavnet."
+}

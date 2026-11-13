@@ -1,0 +1,85 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stabil kampanjeidentitet som binder alle deler og valg.",
+      "x-field": "kampanje.id",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "description": "Velger oppgave og testens primære utfall.",
+      "x-field": "kampanje.goal",
+      "$ref": "_defs/campaign-goal.schema.json"
+    },
+    "funnel": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8fc72e43380d47bb"
+    },
+    "market": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6da9d9760e9ed7b0"
+    },
+    "audience": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-248a78b3accdb2de"
+    },
+    "offer_id": {
+      "type": "string",
+      "description": "Velger konkret versjon av tilbudet før løfte og tekst.",
+      "x-field": "kampanje.offer_id",
+      "minLength": 1
+    },
+    "category_id": {
+      "type": "string",
+      "description": "Velger kategorigrunnlag for involvering, frekvens og regulering.",
+      "x-field": "kampanje.category_id",
+      "minLength": 1
+    },
+    "timing": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-14bb6e9d9666b180"
+    },
+    "channels": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-7f093884d6bfcbf4"
+    },
+    "customer_status": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e0f55f205f81f905"
+    },
+    "sales_round": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-11e679c04a1910d7"
+    },
+    "kpi": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-fb48a861d29aecb0"
+    },
+    "budget": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-16ca9dc16bb6d244"
+    },
+    "evidence": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3dc3f49d06711ec9"
+    },
+    "countries": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-7a4d666b01ec51b3"
+    }
+  },
+  "required": [
+    "id",
+    "goal",
+    "funnel",
+    "market",
+    "audience",
+    "offer_id",
+    "category_id",
+    "timing",
+    "channels",
+    "customer_status",
+    "sales_round",
+    "kpi",
+    "budget",
+    "evidence",
+    "countries"
+  ],
+  "additionalProperties": false,
+  "x-registry": "../kampanje.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/kampanje.schema.json",
+  "title": "kampanje"
+}

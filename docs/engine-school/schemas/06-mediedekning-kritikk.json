@@ -1,0 +1,203 @@
+{
+  "id": "06-mediedekning-kritikk",
+  "label_nb": "Planlegg rekkevidde og etterprøv levering — steg 4",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kategori"
+  ],
+  "read_by": [
+    "rekkevidde-og-medieplan"
+  ],
+  "fields": [
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan",
+      "path": "innhold.medieplan",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet medieplan for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Samlet medieplan for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan.rammer",
+      "path": "innhold.medieplan.rammer",
+      "group": "innhold",
+      "label_nb": "Publikumsgrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Kategori, publikum, enhet personer/bedrifter, geografi, periode, størrelse/kilde/dato, budsjett og mangler.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Kategori, publikum, enhet personer/bedrifter, geografi, periode, størrelse/kilde/dato, budsjett og mangler."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan.plan",
+      "path": "innhold.medieplan.plan",
+      "group": "innhold",
+      "label_nb": "Dekningsplan",
+      "type": "object",
+      "values": [],
+      "definition": "Mål for unik dekning i antall/andel, frekvens, kanalfordeling, overlappsmetode/intervall, måleeier og frist.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Mål for unik dekning i antall/andel, frekvens, kanalfordeling, overlappsmetode/intervall, måleeier og frist."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan.beregninger",
+      "path": "innhold.medieplan.beregninger",
+      "group": "innhold",
+      "label_nb": "Dedupliserte beregninger",
+      "type": "object",
+      "values": [],
+      "definition": "Samme nevner, periode og enhet; visninger/nådde når mulig; null nevner eller manglende overlapp gir ukjent/intervall.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Samme nevner, periode og enhet; visninger/nådde når mulig; null nevner eller manglende overlapp gir ukjent/intervall."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan.beslutning",
+      "path": "innhold.medieplan.beslutning",
+      "group": "innhold",
+      "label_nb": "Plan- eller etterkontrollvedtak",
+      "type": "object",
+      "values": [],
+      "definition": "Signert plan med antakelser og etterkontrollfrist; ved etterkontroll: uendrede mål, faktisk levering, avvik og tiltak.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Signert plan med antakelser og etterkontrollfrist; ved etterkontroll: uendrede mål, faktisk levering, avvik og tiltak."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-mediedekning-kritikk.innhold.medieplan.modus",
+      "path": "innhold.medieplan.modus",
+      "group": "innhold",
+      "label_nb": "Medieplanmodus",
+      "type": "string",
+      "values": [
+        {
+          "value": "plan",
+          "definition": "Plan før gjennomføring; faktisk levering avventer."
+        },
+        {
+          "value": "etterkontroll",
+          "definition": "Kontroll av dokumentert levering mot tidligere plan."
+        }
+      ],
+      "definition": "Planlegger før start eller etterkontrollerer mot uendrede mål.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Planlegger før start eller etterkontrollerer mot uendrede mål."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/06-mediedekning-kritikk.json",
+  "artifact_family": "medieplan",
+  "producer": {
+    "flow": "rekkevidde-og-medieplan",
+    "step": 4,
+    "who": "kritiker"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.medieplan.",
+  "validation_profile": {
+    "step_validation": "flows/rekkevidde-og-medieplan.json#/steps/3/validation",
+    "required_from_steps": {
+      "rammer": 1,
+      "plan": 2,
+      "beregninger": 3,
+      "beslutning": 5
+    },
+    "critic_required": true,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

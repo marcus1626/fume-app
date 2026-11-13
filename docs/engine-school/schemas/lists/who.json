@@ -1,0 +1,51 @@
+{
+  "id": "who",
+  "label_nb": "Utførende rolle",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "modell",
+      "label_nb": "Modell",
+      "definition": "Utførende rolle eller valideringskombinasjon: modell."
+    },
+    {
+      "id": "kode",
+      "label_nb": "Kode",
+      "definition": "Utførende rolle eller valideringskombinasjon: kode."
+    },
+    {
+      "id": "kritiker",
+      "label_nb": "Kritiker",
+      "definition": "Utførende rolle eller valideringskombinasjon: kritiker."
+    },
+    {
+      "id": "kode+kritiker",
+      "label_nb": "Kode+kritiker",
+      "definition": "Utførende rolle eller valideringskombinasjon: kode+kritiker."
+    },
+    {
+      "id": "menneske",
+      "label_nb": "Menneske",
+      "definition": "Utførende rolle eller valideringskombinasjon: menneske."
+    },
+    {
+      "id": "kode+menneske",
+      "label_nb": "Kode+menneske",
+      "definition": "Utførende rolle eller valideringskombinasjon: kode+menneske."
+    },
+    {
+      "id": "kode+modell",
+      "label_nb": "Kode+modell",
+      "definition": "Utførende rolle eller valideringskombinasjon: kode+modell."
+    }
+  ]
+}

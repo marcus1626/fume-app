@@ -1,0 +1,151 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Binder tilbudets versjon til pris, vilkår og annonse.",
+      "x-field": "tilbud.id",
+      "minLength": 1
+    },
+    "product_id": {
+      "type": "string",
+      "description": "Stabil produktidentitet; endret produkt krever ny dokumentasjonsvurdering.",
+      "x-field": "tilbud.product_id",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Avsenderens faktiske produkt- eller tilbudsnavn.",
+      "x-field": "tilbud.name"
+    },
+    "type": {
+      "type": "string",
+      "description": "Utløser riktig pris- og tilbudskontroll.",
+      "x-field": "tilbud.type",
+      "$ref": "_defs/offer-type.schema.json"
+    },
+    "deliverable": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ebc45ad6c46bf68b"
+    },
+    "benefit": {
+      "type": "string",
+      "description": "Hvilken nytte tilbudet kan gi i valgt situasjon, før løftet formuleres.",
+      "x-field": "tilbud.benefit"
+    },
+    "price": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-f7f22458bf9add0e"
+    },
+    "terms": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5937dedeb16b43e0"
+    },
+    "availability": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-d801223fbb8970b6"
+    },
+    "claims": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-cf9c4117313e8437"
+    },
+    "destination": {
+      "type": "string",
+      "description": "Direkte mål-URL eller annen gjennomførbar handling, med kontrolltidspunkt.",
+      "x-field": "tilbud.destination"
+    }
+  },
+  "required": [
+    "id",
+    "product_id",
+    "name",
+    "type",
+    "deliverable",
+    "benefit",
+    "terms",
+    "availability",
+    "claims",
+    "destination"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "ordinaer-pris",
+                  "prisnedsettelse",
+                  "betinget-tilbud",
+                  "kombinasjon"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "price"
+        ],
+        "properties": {
+          "price": {
+            "type": "object",
+            "required": [
+              "amount"
+            ],
+            "properties": {
+              "amount": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "ordinaer-pris",
+                  "prisnedsettelse",
+                  "betinget-tilbud",
+                  "kombinasjon"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "price"
+        ],
+        "properties": {
+          "price": {
+            "type": "object",
+            "required": [
+              "currency"
+            ],
+            "properties": {
+              "currency": {}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "x-registry": "../tilbud.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/tilbud.schema.json",
+  "title": "tilbud"
+}

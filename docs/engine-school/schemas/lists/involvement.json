@@ -1,0 +1,36 @@
+{
+  "id": "involvement",
+  "label_nb": "Involvering",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "lav",
+      "label_nb": "Lav",
+      "definition": "Lite personlig relevans i dokumentert situasjon."
+    },
+    {
+      "id": "hoy",
+      "label_nb": "Høy",
+      "definition": "Stor personlig relevans i dokumentert situasjon."
+    },
+    {
+      "id": "varierer",
+      "label_nb": "Varierer",
+      "definition": "Forskjeller mellom situasjoner eller grupper krever egne deler."
+    },
+    {
+      "id": "ukjent",
+      "label_nb": "Ukjent",
+      "definition": "Relevans er ikke undersøkt."
+    }
+  ]
+}

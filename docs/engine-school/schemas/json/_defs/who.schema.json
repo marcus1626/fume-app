@@ -1,0 +1,26 @@
+{
+  "enum": [
+    "modell",
+    "kode",
+    "kritiker",
+    "kode+kritiker",
+    "menneske",
+    "kode+menneske",
+    "kode+modell"
+  ],
+  "x-list": "../../lists/who.json",
+  "$defs": {
+    "subset-f747005d297bef3b": {
+      "enum": [
+        "modell",
+        "kode",
+        "kritiker",
+        "menneske"
+      ],
+      "x-list": "../../lists/who.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/who.schema.json",
+  "title": "who"
+}

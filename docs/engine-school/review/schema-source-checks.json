@@ -1,0 +1,190 @@
+{
+  "date": "2026-11-13",
+  "state": "PROPOSED",
+  "added_source_count": 22,
+  "source_total": 115,
+  "checks": [
+    {
+      "topic": "Plattformplasseringer og format",
+      "sources": [
+        "https://www.facebook.com/business/help/407108559393196",
+        "https://www.facebook.com/business/help/279271845888065",
+        "https://support.google.com/google-ads/answer/1722124",
+        "https://support.google.com/google-ads/answer/2375464?hl=en",
+        "https://support.google.com/google-ads/answer/13676244?hl=en",
+        "https://support.google.com/google-ads/answer/17141078?hl=en",
+        "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+        "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+        "https://ads.tiktok.com/resources/help/article/tiktok-ads-policy-ad-format-and-functionality",
+        "https://www.linkedin.com/help/lms/answer/a422880",
+        "https://business.linkedin.com/advertise/ads/ads-guide",
+        "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign"
+      ],
+      "result": "Offisielle lister lest; kjent plassering er ikke garanti for tilgang eller støtte i alle kampanjer. Konkret binding krever ny kontroll."
+    },
+    {
+      "topic": "ISO-land",
+      "sources": [
+        "https://www.iso.org/iso-3166-country-codes.html",
+        "https://unstats.un.org/unsd/methodology/m49/overview/",
+        "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/irs/documents/tabela_paises_cod_norma_iso_3166.pdf"
+      ],
+      "result": "249 alpha-2-koder; 248 fra UN M49, TW kontrollert separat. EU og CAP er juridiske områder. GB brukes, ikke UK."
+    },
+    {
+      "topic": "Involvering og frekvens",
+      "sources": [
+        "https://www.sfu.ca/~zaichkow/JCR%2085.pdf",
+        "https://feimingchen.r-universe.dev/NBDdirichlet/doc/manual.html"
+      ],
+      "result": "Konstrukt og periode/nevner er kildebelagt. Fumes arbeidsklasser er eksplisitt merket som egne operasjonaliseringer; ingen PII-skår eller universell kjøpsfrekvens utledes."
+    },
+    {
+      "topic": "CEPs, JTBD og Schwartz",
+      "sources": [
+        "https://s3-ap-southeast-2.amazonaws.com/assets.marketingscience.info/categoryentrypoints.pdf",
+        "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "https://www.christenseninstitute.org/theory/jobs-to-be-done/"
+      ],
+      "result": "Eksisterende pensumkilder hentet på nytt. CEPs er situasjonssignaler, ikke en universell personatype. JTBD skiller funksjonell, emosjonell og sosial fremgang. Schwartz har fem nivåer; fri forklaring, originalboken er ikke kopiert."
+    },
+    {
+      "topic": "Kjøpsroller",
+      "sources": [
+        "https://openstax.org/books/principles-marketing/pages/4-2-buyers-and-buying-situations-in-a-b2b-market",
+        "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/the-hidden-buyer-gap"
+      ],
+      "result": "Seks B2B-roller og overlapp mellom roller; produkt-/prosessekspertise og funksjoner holdes separat. B2C-listen er Fumes praktiske inndeling."
+    },
+    {
+      "topic": "Regulering",
+      "sources": [
+        "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32006R1924",
+        "https://www.helsedirektoratet.no/rundskriv/alkoholloven/kapittel-9-reklameforbud/-9-2.reklame-for-alkoholholdig-drikk",
+        "https://www.fca.org.uk/firms/financial-promotions-adverts"
+      ],
+      "result": "Helse, finans og alkohol er kontrollutløsere. Norsk alkoholforbud og britiske finansregler avgrenses til sine lokale kilder; kategorimerkingen gir ingen tillatelse."
+    }
+  ],
+  "retrieval_notes": [
+    "Meta Help 407108559393196 og 175741192481247: web.open viste login/temporær blokkering; Firecrawl maxAge=0 ga HTTP 200 og relevant hjelpetekst. Formatmatrisen 279271845888065 ble også lest via Firecrawl HTTP 200.",
+    "Google Demand Gen 17141078?hl=en: web.open utilgjengelig; Firecrawl maxAge=0 HTTP 200 med Asset specifications og Ad format eligibility.",
+    "TikTok Auction In-Feed Ads ble lest først i offisielle søketreff og deretter i engelsk hovedinnhold via Firecrawl HTTP 200. Policy 5–60 sekunder og Non-Spark-spesifikasjon opptil 10 minutter lagres som en konflikt som krever lokal avklaring.",
+    "LinkedIn help a424372 via Firecrawl mislyktes (SCRAPE_ALL_ENGINES_FAILED); offisielle Ads Guide og Create your first campaign ble brukt som alternativ. Feilen er ikke registrert som vellykket kilde.",
+    "Ehrenberg-Bass B2B-nyhetssiden ga timeout i web.open; den offisielle CEP-PDF-en og instituttets andre CEP-forklaring ble lest.",
+    "ISO OBP er JavaScript-basert og ga ingen lesbar kodetabell. ISO-siden forklarer standarden; konkret kodekontroll bruker UN-tabellen og offentlig ISO-tabell fra portugisisk skattemyndighet.",
+    "Ingen nye opphavsrettsbeskyttede fulltekster er lagret i prosjektet. Kildene i pensum beskriver egne prinsipper og tilgangsstatus."
+  ],
+  "new_sources": [
+    {
+      "source": "ISO — ISO 3166 Country Codes",
+      "url": "https://www.iso.org/iso-3166-country-codes.html",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "UN Statistics Division — M49 country or area codes",
+      "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Meta — About ad placements across Meta technologies",
+      "url": "https://www.facebook.com/business/help/407108559393196",
+      "url_status": "ok (2026-11-13; web.open ga login/blokkering; Firecrawl scrape maxAge=0 HTTP 200, hovedinnhold lest)"
+    },
+    {
+      "source": "Meta — Available ad placements and ad formats by ad objectives",
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "url_status": "ok (2026-11-13; Firecrawl scrape maxAge=0 HTTP 200, format- og plasseringstabeller lest)"
+    },
+    {
+      "source": "Google Ads — About ad formats available in different campaign types",
+      "url": "https://support.google.com/google-ads/answer/1722124",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Google Ads — About video ad formats",
+      "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Google Ads — Specs: ad formats, sizes and best practices",
+      "url": "https://support.google.com/google-ads/answer/13676244?hl=en",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Google Ads — Video assets specifications for Demand Gen",
+      "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+      "url_status": "ok (2026-11-13; web.open utilgjengelig; Firecrawl maxAge=0 HTTP 200, Ad format eligibility lest)"
+    },
+    {
+      "source": "TikTok — About TikTok Placement",
+      "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "TikTok — Auction In-Feed Ads specifications",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+      "url_status": "ok (2026-11-13; web.search og Firecrawl maxAge=0 HTTP 200, engelsk Non-Spark-tabell lest)"
+    },
+    {
+      "source": "TikTok — Ad Format and Functionality policy",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-ads-policy-ad-format-and-functionality",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "LinkedIn Help — Ad formats for objective-based advertising",
+      "url": "https://www.linkedin.com/help/lms/answer/a422880",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "LinkedIn — Ads Guide",
+      "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "LinkedIn — Create your first campaign",
+      "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Zaichkowsky (1985) — Measuring the Involvement Construct",
+      "url": "https://www.sfu.ca/~zaichkow/JCR%2085.pdf",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Feiming Chen — NBDdirichlet reference manual",
+      "url": "https://feimingchen.r-universe.dev/NBDdirichlet/doc/manual.html",
+      "url_status": "ok (2026-11-13; offisiell forfatter-/pakkemanual hentet med web.search)"
+    },
+    {
+      "source": "OpenStax — Buyers and Buying Situations in a B2B Market",
+      "url": "https://openstax.org/books/principles-marketing/pages/4-2-buyers-and-buying-situations-in-a-b2b-market",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "LinkedIn B2B Institute — The Hidden Buyer Gap",
+      "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/the-hidden-buyer-gap",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "OpenStax — Products, Services, and Experiences",
+      "url": "https://openstax.org/books/principles-marketing/pages/9-1-products-services-and-experiences",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Helsedirektoratet — Alkoholloven § 9-2",
+      "url": "https://www.helsedirektoratet.no/rundskriv/alkoholloven/kapittel-9-reklameforbud/-9-2.reklame-for-alkoholholdig-drikk",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "FCA — Financial promotions and adverts",
+      "url": "https://www.fca.org.uk/firms/financial-promotions-adverts",
+      "url_status": "ok (2026-11-13; relevant innhold hentet og lest med web.open/web.search)"
+    },
+    {
+      "source": "Portugal Autoridade Tributária — ISO 3166 country table",
+      "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/irs/documents/tabela_paises_cod_norma_iso_3166.pdf",
+      "url_status": "ok (2026-11-13; Firecrawl maxAge=0 HTTP 200, ISO-tabell lest)"
+    }
+  ]
+}

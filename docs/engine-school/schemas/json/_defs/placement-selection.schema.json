@@ -1,0 +1,10 @@
+{
+  "enum": [
+    "krever-kontokontroll",
+    "ikke-selvstendig"
+  ],
+  "x-list": "../../lists/placement-selection.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/placement-selection.schema.json",
+  "title": "placement-selection"
+}

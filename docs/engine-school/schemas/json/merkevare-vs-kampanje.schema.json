@@ -1,0 +1,1064 @@
+{
+  "type": "object",
+  "properties": {
+    "brand_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-9c98458c31efcea4"
+    },
+    "identity": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-fcf2faeb980645eb"
+    },
+    "ethics": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e4c74513ef1039ac"
+    },
+    "taste": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-98772a132e80394f"
+    },
+    "override": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-7abcf440375a25b8"
+    }
+  },
+  "required": [
+    "brand_id",
+    "identity",
+    "ethics",
+    "taste"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "taste"
+            ],
+            "properties": {
+              "taste": {
+                "type": "object",
+                "required": [
+                  "available"
+                ],
+                "properties": {
+                  "available": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "schema_version"
+            ],
+            "properties": {
+              "schema_version": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "taste"
+            ],
+            "properties": {
+              "taste": {
+                "type": "object",
+                "required": [
+                  "available"
+                ],
+                "properties": {
+                  "available": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "profile_ref"
+            ],
+            "properties": {
+              "profile_ref": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "taste"
+            ],
+            "properties": {
+              "taste": {
+                "type": "object",
+                "required": [
+                  "available"
+                ],
+                "properties": {
+                  "available": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "standing"
+            ],
+            "properties": {
+              "standing": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "taste"
+            ],
+            "properties": {
+              "taste": {
+                "type": "object",
+                "required": [
+                  "available"
+                ],
+                "properties": {
+                  "available": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "sample"
+            ],
+            "properties": {
+              "sample": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "field_ref"
+            ],
+            "properties": {
+              "field_ref": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "old_value"
+            ],
+            "properties": {
+              "old_value": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "new_value"
+            ],
+            "properties": {
+              "new_value": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "reason"
+            ],
+            "properties": {
+              "reason": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "approval"
+            ],
+            "properties": {
+              "approval": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "invalidates"
+            ],
+            "properties": {
+              "invalidates": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-d3f95a9d22dde929"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bc2a548e8f9ea386"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8bb393934d4d1bd2"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-a565fdf21073754d"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "signature"
+            ],
+            "properties": {
+              "signature": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "decision_id"
+            ],
+            "properties": {
+              "decision_id": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "version"
+            ],
+            "properties": {
+              "version": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "scope"
+            ],
+            "properties": {
+              "scope": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-63ea26852fb8542e"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6774421d0d3cce09"
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "approval"
+            ],
+            "properties": {
+              "approval": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "approved_by"
+            ],
+            "properties": {
+              "approved_by": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-14503caeeb3b171b"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "approved_at"
+            ],
+            "properties": {
+              "approved_at": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "expires_at"
+            ],
+            "properties": {
+              "expires_at": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0660bd60239b85ac"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6d30831402dd09e3"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "$ref": "_defs/artifact-parts.schema.json#/$defs/part-59d94213329d48ce"
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "override"
+            ],
+            "properties": {
+              "override": {
+                "type": "object",
+                "required": [
+                  "field_ref"
+                ],
+                "properties": {
+                  "field_ref": {}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "override"
+        ],
+        "properties": {
+          "override": {
+            "type": "object",
+            "required": [
+              "after_sha256"
+            ],
+            "properties": {
+              "after_sha256": {}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "allOf": [
+          {
+            "type": "object",
+            "required": [
+              "taste"
+            ],
+            "properties": {
+              "taste": {
+                "type": "object",
+                "required": [
+                  "available"
+                ],
+                "properties": {
+                  "available": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "taste"
+        ],
+        "properties": {
+          "taste": {
+            "type": "object",
+            "required": [
+              "kind"
+            ],
+            "properties": {
+              "kind": {}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "x-registry": "../merkevare-vs-kampanje.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/merkevare-vs-kampanje.schema.json",
+  "title": "merkevare-vs-kampanje"
+}

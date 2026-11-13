@@ -1,0 +1,31 @@
+{
+  "id": "taste-kind",
+  "label_nb": "Bildetype for smak",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "product_alone",
+      "label_nb": "Produkt uten personer",
+      "definition": "Produkt uten personer."
+    },
+    {
+      "id": "people",
+      "label_nb": "Personer",
+      "definition": "Bilde med personer."
+    },
+    {
+      "id": "whole",
+      "label_nb": "Helhet",
+      "definition": "Ingen av de to typene eller utilstrekkelig typegrunnlag."
+    }
+  ]
+}

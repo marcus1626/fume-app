@@ -1,0 +1,338 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "principle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_says": {
+      "type": "string",
+      "minLength": 1
+    },
+    "rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "example_bad": {
+      "type": "string",
+      "minLength": 1
+    },
+    "example_good": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "subject": {
+      "$ref": "_defs/subject.schema.json"
+    },
+    "sources": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c5a54073a166cc63"
+    },
+    "house_rule": {
+      "type": "boolean"
+    },
+    "check": {
+      "$ref": "_defs/check-type.schema.json"
+    },
+    "applies_when": {
+      "type": "object",
+      "properties": {
+        "channel": {
+          "anyOf": [
+            {
+              "$ref": "_defs/channel-filter.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/channel-filter.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "awareness_level": {
+          "anyOf": [
+            {
+              "$ref": "_defs/awareness-level.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/awareness-level.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "market": {
+          "anyOf": [
+            {
+              "$ref": "_defs/market.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/market.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "country": {
+          "anyOf": [
+            {
+              "$ref": "_defs/country.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/country.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "format": {
+          "anyOf": [
+            {
+              "$ref": "_defs/format.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/format.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "placement": {
+          "anyOf": [
+            {
+              "$ref": "_defs/placement.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/placement.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "aspect_ratio": {
+          "anyOf": [
+            {
+              "$ref": "_defs/aspect-ratio.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/aspect-ratio.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "regulation": {
+          "anyOf": [
+            {
+              "$ref": "_defs/regulation.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/regulation.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "legal_area": {
+          "anyOf": [
+            {
+              "$ref": "_defs/legal-area.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/legal-area.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "media_class": {
+          "anyOf": [
+            {
+              "$ref": "_defs/media-class.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/media-class.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "trigger": {
+          "anyOf": [
+            {
+              "$ref": "_defs/trigger.schema.json"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "_defs/trigger.schema.json"
+              },
+              "minItems": 1,
+              "uniqueItems": true
+            }
+          ]
+        },
+        "funnel": {
+          "type": "object",
+          "properties": {
+            "stage": {
+              "anyOf": [
+                {
+                  "$ref": "_defs/funnel-stage.schema.json"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "_defs/funnel-stage.schema.json"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              ]
+            },
+            "mode": {
+              "anyOf": [
+                {
+                  "$ref": "_defs/funnel-mode.schema.json"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "_defs/funnel-mode.schema.json"
+                  },
+                  "minItems": 1,
+                  "uniqueItems": true
+                }
+              ]
+            }
+          },
+          "required": [
+            "stage",
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "channel",
+        "awareness_level",
+        "market",
+        "country",
+        "funnel"
+      ],
+      "additionalProperties": false
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "_defs/checkpoint.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "tier": {
+      "$ref": "_defs/tier.schema.json"
+    },
+    "conflicts_with": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "minItems": 0,
+      "uniqueItems": true
+    },
+    "state": {
+      "$ref": "_defs/state.schema.json"
+    },
+    "lang": {
+      "$ref": "_defs/language.schema.json"
+    },
+    "read_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "verified": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "name",
+    "principle",
+    "source_says",
+    "rule",
+    "example_bad",
+    "example_good",
+    "id",
+    "subject",
+    "sources",
+    "house_rule",
+    "check",
+    "applies_when",
+    "checkpoints",
+    "tier",
+    "conflicts_with",
+    "state",
+    "lang"
+  ],
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "tier": {
+            "const": "plattform"
+          }
+        },
+        "required": [
+          "tier"
+        ]
+      },
+      "then": {
+        "required": [
+          "read_on"
+        ]
+      }
+    }
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/skill.schema.json",
+  "title": "skill"
+}

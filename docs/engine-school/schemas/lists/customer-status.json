@@ -1,0 +1,31 @@
+{
+  "id": "customer-status",
+  "label_nb": "Kundestatus",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "nye",
+      "label_nb": "Nye",
+      "definition": "Ingen kjøp etter avtalt produkt- og periodedefinisjon."
+    },
+    {
+      "id": "eksisterende",
+      "label_nb": "Eksisterende",
+      "definition": "Har kjøpt etter avtalt definisjon."
+    },
+    {
+      "id": "begge",
+      "label_nb": "Begge",
+      "definition": "Felles oppgave og nivå er begrunnet; ellers del kampanjen."
+    }
+  ]
+}

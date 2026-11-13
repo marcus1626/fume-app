@@ -1,0 +1,36 @@
+{
+  "id": "asset-feature",
+  "label_nb": "Tilleggsressurs",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "lead-gen-form",
+      "label_nb": "Lead gen form",
+      "definition": "Skjema for kontaktinnhenting."
+    },
+    {
+      "id": "undertekst",
+      "label_nb": "Undertekst",
+      "definition": "Tekstet tale."
+    },
+    {
+      "id": "lyd",
+      "label_nb": "Lyd",
+      "definition": "Musikk eller tale med rettigheter."
+    },
+    {
+      "id": "produktkatalog",
+      "label_nb": "Produktkatalog",
+      "definition": "Katalogdata med godkjent kilde."
+    }
+  ]
+}

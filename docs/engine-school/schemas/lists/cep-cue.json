@@ -1,0 +1,51 @@
+{
+  "id": "cep-cue",
+  "label_nb": "Signal i kjøpssituasjon",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "motiv",
+      "label_nb": "Motiv",
+      "definition": "Behov eller begrunnelse."
+    },
+    {
+      "id": "folelse",
+      "label_nb": "Folelse",
+      "definition": "Følelse i situasjonen."
+    },
+    {
+      "id": "tid",
+      "label_nb": "Tid",
+      "definition": "Tidspunkt eller hendelse."
+    },
+    {
+      "id": "sted",
+      "label_nb": "Sted",
+      "definition": "Hvor kjøpsbehovet oppstår."
+    },
+    {
+      "id": "sammen-med",
+      "label_nb": "Sammen med",
+      "definition": "Andre personer eller produkter i situasjonen."
+    },
+    {
+      "id": "aktivitet",
+      "label_nb": "Aktivitet",
+      "definition": "Hva leseren gjør."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Kildebelagt signal utenfor disse kodene."
+    }
+  ]
+}

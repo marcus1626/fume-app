@@ -1,0 +1,36 @@
+{
+  "id": "filled-by",
+  "label_nb": "Utfylt av",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "menneske",
+      "label_nb": "Menneske",
+      "definition": "Ansvarlig for utfylling: menneske."
+    },
+    {
+      "id": "kunde",
+      "label_nb": "Kunde",
+      "definition": "Ansvarlig for utfylling: kunde."
+    },
+    {
+      "id": "modell",
+      "label_nb": "Modell",
+      "definition": "Ansvarlig for utfylling: modell."
+    },
+    {
+      "id": "kode",
+      "label_nb": "Kode",
+      "definition": "Ansvarlig for utfylling: kode."
+    }
+  ]
+}

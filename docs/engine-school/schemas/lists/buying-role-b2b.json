@@ -1,0 +1,46 @@
+{
+  "id": "buying-role-b2b",
+  "label_nb": "Kjøpsrolle i virksomhet",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "initiativtaker",
+      "label_nb": "Initiativtaker",
+      "definition": "Starter kjøpsprosessen."
+    },
+    {
+      "id": "pavirker",
+      "label_nb": "Pavirker",
+      "definition": "Bidrar med kriterier eller råd."
+    },
+    {
+      "id": "portvakt",
+      "label_nb": "Portvakt",
+      "definition": "Filtrerer tilgang eller informasjon."
+    },
+    {
+      "id": "innkjoper",
+      "label_nb": "Innkjoper",
+      "definition": "Forhandler og gjennomfører innkjøp."
+    },
+    {
+      "id": "beslutter",
+      "label_nb": "Beslutter",
+      "definition": "Har myndighet til endelig valg."
+    },
+    {
+      "id": "bruker",
+      "label_nb": "Bruker",
+      "definition": "Bruker leveransen."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "stottet",
+    "ikke-stottet",
+    "uavklart"
+  ],
+  "x-list": "../../lists/hypothesis-status.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/hypothesis-status.schema.json",
+  "title": "hypothesis-status"
+}

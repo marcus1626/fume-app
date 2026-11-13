@@ -1,0 +1,169 @@
+{
+  "id": "06-kampanjefordeling-utkast",
+  "label_nb": "Fordel mellom merkevarebygging og salgsaktivering — steg 2",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kategori"
+  ],
+  "read_by": [
+    "merkevare-og-salgsaktivering"
+  ],
+  "fields": [
+    {
+      "id": "06-kampanjefordeling-utkast.innhold.kampanjefordeling",
+      "path": "innhold.kampanjefordeling",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet kampanjefordeling for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Samlet kampanjefordeling for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-kampanjefordeling-utkast.innhold.kampanjefordeling.rammer",
+      "path": "innhold.kampanjefordeling.rammer",
+      "group": "innhold",
+      "label_nb": "Kampanjerammer",
+      "type": "object",
+      "values": [],
+      "definition": "Totalbeløp, valuta, periode, salgsmål, kategorikjøpere og målekilder.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Totalbeløp, valuta, periode, salgsmål, kategorikjøpere og målekilder."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-kampanjefordeling-utkast.innhold.kampanjefordeling.fordeling",
+      "path": "innhold.kampanjefordeling.fordeling",
+      "group": "innhold",
+      "label_nb": "Fordeling per aktivitet",
+      "type": "array",
+      "values": [],
+      "definition": "Merkebygging og høsting hver med tiltak, beløp, publikum, tidshorisont, felles merkeelement og lokal begrunnelse.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Merkebygging og høsting hver med tiltak, beløp, publikum, tidshorisont, felles merkeelement og lokal begrunnelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-kampanjefordeling-utkast.innhold.kampanjefordeling.beregninger",
+      "path": "innhold.kampanjefordeling.beregninger",
+      "group": "innhold",
+      "label_nb": "Andeler og frister",
+      "type": "object",
+      "values": [],
+      "definition": "Sum beløp/andeler, valuta og måleperioder avstemt mot rammer; ingen universell budsjettandel.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Sum beløp/andeler, valuta og måleperioder avstemt mot rammer; ingen universell budsjettandel."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "06-kampanjefordeling-utkast.innhold.kampanjefordeling.bindende_ramme",
+      "path": "innhold.kampanjefordeling.bindende_ramme",
+      "group": "innhold",
+      "label_nb": "Godkjent ramme",
+      "type": "object",
+      "values": [],
+      "definition": "Budsjettansvarlig har signert samme plan og målefrister som ble kritisert.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Budsjettansvarlig har signert samme plan og målefrister som ble kritisert."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/06-kampanjefordeling-utkast.json",
+  "artifact_family": "kampanjefordeling",
+  "producer": {
+    "flow": "merkevare-og-salgsaktivering",
+    "step": 2,
+    "who": "modell"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.kampanjefordeling.",
+  "validation_profile": {
+    "step_validation": "flows/merkevare-og-salgsaktivering.json#/steps/1/validation",
+    "required_from_steps": {
+      "rammer": 1,
+      "fordeling": 2,
+      "beregninger": 3,
+      "bindende_ramme": 5
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

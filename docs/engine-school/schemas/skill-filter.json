@@ -1,0 +1,4146 @@
+{
+  "id": "skill-filter",
+  "label_nb": "Lukkede verdier i ferdighetsfilteret",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "kampanjekort"
+  ],
+  "fields": [
+    {
+      "id": "skill-filter.channel",
+      "path": "channel",
+      "group": "channel",
+      "label_nb": "Kanalfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "meta",
+          "definition": "Meta-distribusjon; plattform/flate bestemmes av plassering."
+        },
+        {
+          "value": "google-ads-other",
+          "definition": "Google Ads uten Demand Gen og uten YouTube-levering."
+        },
+        {
+          "value": "google-demand-gen",
+          "definition": "Demand Gen, også når valgt flate er YouTube; velges først."
+        },
+        {
+          "value": "youtube",
+          "definition": "YouTube-levering uten Demand Gen; betalt/egen/fortjent er egen akse."
+        },
+        {
+          "value": "tiktok",
+          "definition": "TikTok-distribusjon."
+        },
+        {
+          "value": "linkedin",
+          "definition": "LinkedIn-distribusjon."
+        },
+        {
+          "value": "e-post",
+          "definition": "E-post, også digitale kundebrev sendt som e-post."
+        },
+        {
+          "value": "sms",
+          "definition": "SMS."
+        },
+        {
+          "value": "nettside",
+          "definition": "Eget nettsted, også digitalt brev eller skjema på nettstedet."
+        },
+        {
+          "value": "brev",
+          "definition": "Bare fysisk postlagt brev."
+        },
+        {
+          "value": "telefon",
+          "definition": "Telefon."
+        },
+        {
+          "value": "produktsok",
+          "definition": "Produktsøk utenfor de navngitte systemene."
+        },
+        {
+          "value": "markedsplass",
+          "definition": "Markedsplass utenfor de navngitte systemene."
+        },
+        {
+          "value": "annet-sosialt",
+          "definition": "Annen navngitt sosial plattform; binding må oppgi hvilken."
+        },
+        {
+          "value": "annen",
+          "definition": "Annen dokumentert distribusjon; binding kreves, ingen ukjent restklasse."
+        },
+        {
+          "value": "google-ads",
+          "definition": "Filterfamilie: betalt YouTube, Demand Gen og andre Google Ads."
+        },
+        {
+          "value": "sosiale-medier",
+          "definition": "Filterfamilie: Meta, TikTok, LinkedIn, YouTube og annet-sosialt."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.awareness_level",
+      "path": "awareness_level",
+      "group": "awareness_level",
+      "label_nb": "Nivåfilter",
+      "type": "integer|string",
+      "values": [
+        {
+          "value": 1,
+          "definition": "Kjenner ikke problemet."
+        },
+        {
+          "value": 2,
+          "definition": "Kjenner problemet."
+        },
+        {
+          "value": 3,
+          "definition": "Kjenner løsningstypen."
+        },
+        {
+          "value": 4,
+          "definition": "Kjenner det konkrete produktet."
+        },
+        {
+          "value": 5,
+          "definition": "Kjenner og ønsker produktet; trenger kjøpsinformasjon."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "De fem nivåene: Unaware; Problem Aware; Solution Aware; Product Aware; Most Aware; fri forklaring, ikke originalboken"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.market",
+      "path": "market",
+      "group": "market",
+      "label_nb": "Markedsfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "B2B",
+          "definition": "Kjøp på vegne av en virksomhet."
+        },
+        {
+          "value": "B2C",
+          "definition": "Kjøp som privatperson eller husholdning."
+        },
+        {
+          "value": "begge",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. begge er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. begge er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.country",
+      "path": "country",
+      "group": "country",
+      "label_nb": "Landfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "AD",
+          "definition": "Andorra"
+        },
+        {
+          "value": "AE",
+          "definition": "United Arab Emirates"
+        },
+        {
+          "value": "AF",
+          "definition": "Afghanistan"
+        },
+        {
+          "value": "AG",
+          "definition": "Antigua and Barbuda"
+        },
+        {
+          "value": "AI",
+          "definition": "Anguilla"
+        },
+        {
+          "value": "AL",
+          "definition": "Albania"
+        },
+        {
+          "value": "AM",
+          "definition": "Armenia"
+        },
+        {
+          "value": "AO",
+          "definition": "Angola"
+        },
+        {
+          "value": "AQ",
+          "definition": "Antarctica"
+        },
+        {
+          "value": "AR",
+          "definition": "Argentina"
+        },
+        {
+          "value": "AS",
+          "definition": "American Samoa"
+        },
+        {
+          "value": "AT",
+          "definition": "Austria"
+        },
+        {
+          "value": "AU",
+          "definition": "Australia"
+        },
+        {
+          "value": "AW",
+          "definition": "Aruba"
+        },
+        {
+          "value": "AX",
+          "definition": "Åland Islands"
+        },
+        {
+          "value": "AZ",
+          "definition": "Azerbaijan"
+        },
+        {
+          "value": "BA",
+          "definition": "Bosnia and Herzegovina"
+        },
+        {
+          "value": "BB",
+          "definition": "Barbados"
+        },
+        {
+          "value": "BD",
+          "definition": "Bangladesh"
+        },
+        {
+          "value": "BE",
+          "definition": "Belgium"
+        },
+        {
+          "value": "BF",
+          "definition": "Burkina Faso"
+        },
+        {
+          "value": "BG",
+          "definition": "Bulgaria"
+        },
+        {
+          "value": "BH",
+          "definition": "Bahrain"
+        },
+        {
+          "value": "BI",
+          "definition": "Burundi"
+        },
+        {
+          "value": "BJ",
+          "definition": "Benin"
+        },
+        {
+          "value": "BL",
+          "definition": "Saint Barthélemy"
+        },
+        {
+          "value": "BM",
+          "definition": "Bermuda"
+        },
+        {
+          "value": "BN",
+          "definition": "Brunei Darussalam"
+        },
+        {
+          "value": "BO",
+          "definition": "Bolivia (Plurinational State of)"
+        },
+        {
+          "value": "BQ",
+          "definition": "Bonaire, Sint Eustatius and Saba"
+        },
+        {
+          "value": "BR",
+          "definition": "Brazil"
+        },
+        {
+          "value": "BS",
+          "definition": "Bahamas"
+        },
+        {
+          "value": "BT",
+          "definition": "Bhutan"
+        },
+        {
+          "value": "BV",
+          "definition": "Bouvet Island"
+        },
+        {
+          "value": "BW",
+          "definition": "Botswana"
+        },
+        {
+          "value": "BY",
+          "definition": "Belarus"
+        },
+        {
+          "value": "BZ",
+          "definition": "Belize"
+        },
+        {
+          "value": "CA",
+          "definition": "Canada"
+        },
+        {
+          "value": "CC",
+          "definition": "Cocos (Keeling) Islands"
+        },
+        {
+          "value": "CD",
+          "definition": "Democratic Republic of the Congo"
+        },
+        {
+          "value": "CF",
+          "definition": "Central African Republic"
+        },
+        {
+          "value": "CG",
+          "definition": "Congo"
+        },
+        {
+          "value": "CH",
+          "definition": "Switzerland"
+        },
+        {
+          "value": "CI",
+          "definition": "Côte d’Ivoire"
+        },
+        {
+          "value": "CK",
+          "definition": "Cook Islands"
+        },
+        {
+          "value": "CL",
+          "definition": "Chile"
+        },
+        {
+          "value": "CM",
+          "definition": "Cameroon"
+        },
+        {
+          "value": "CN",
+          "definition": "China"
+        },
+        {
+          "value": "CO",
+          "definition": "Colombia"
+        },
+        {
+          "value": "CR",
+          "definition": "Costa Rica"
+        },
+        {
+          "value": "CU",
+          "definition": "Cuba"
+        },
+        {
+          "value": "CV",
+          "definition": "Cabo Verde"
+        },
+        {
+          "value": "CW",
+          "definition": "Curaçao"
+        },
+        {
+          "value": "CX",
+          "definition": "Christmas Island"
+        },
+        {
+          "value": "CY",
+          "definition": "Cyprus"
+        },
+        {
+          "value": "CZ",
+          "definition": "Czechia"
+        },
+        {
+          "value": "DE",
+          "definition": "Germany"
+        },
+        {
+          "value": "DJ",
+          "definition": "Djibouti"
+        },
+        {
+          "value": "DK",
+          "definition": "Denmark"
+        },
+        {
+          "value": "DM",
+          "definition": "Dominica"
+        },
+        {
+          "value": "DO",
+          "definition": "Dominican Republic"
+        },
+        {
+          "value": "DZ",
+          "definition": "Algeria"
+        },
+        {
+          "value": "EC",
+          "definition": "Ecuador"
+        },
+        {
+          "value": "EE",
+          "definition": "Estonia"
+        },
+        {
+          "value": "EG",
+          "definition": "Egypt"
+        },
+        {
+          "value": "EH",
+          "definition": "Western Sahara"
+        },
+        {
+          "value": "ER",
+          "definition": "Eritrea"
+        },
+        {
+          "value": "ES",
+          "definition": "Spain"
+        },
+        {
+          "value": "ET",
+          "definition": "Ethiopia"
+        },
+        {
+          "value": "FI",
+          "definition": "Finland"
+        },
+        {
+          "value": "FJ",
+          "definition": "Fiji"
+        },
+        {
+          "value": "FK",
+          "definition": "Falkland Islands (Malvinas)"
+        },
+        {
+          "value": "FM",
+          "definition": "Micronesia (Federated States of)"
+        },
+        {
+          "value": "FO",
+          "definition": "Faroe Islands"
+        },
+        {
+          "value": "FR",
+          "definition": "France"
+        },
+        {
+          "value": "GA",
+          "definition": "Gabon"
+        },
+        {
+          "value": "GB",
+          "definition": "United Kingdom of Great Britain and Northern Ireland"
+        },
+        {
+          "value": "GD",
+          "definition": "Grenada"
+        },
+        {
+          "value": "GE",
+          "definition": "Georgia"
+        },
+        {
+          "value": "GF",
+          "definition": "French Guiana"
+        },
+        {
+          "value": "GG",
+          "definition": "Guernsey"
+        },
+        {
+          "value": "GH",
+          "definition": "Ghana"
+        },
+        {
+          "value": "GI",
+          "definition": "Gibraltar"
+        },
+        {
+          "value": "GL",
+          "definition": "Greenland"
+        },
+        {
+          "value": "GM",
+          "definition": "Gambia"
+        },
+        {
+          "value": "GN",
+          "definition": "Guinea"
+        },
+        {
+          "value": "GP",
+          "definition": "Guadeloupe"
+        },
+        {
+          "value": "GQ",
+          "definition": "Equatorial Guinea"
+        },
+        {
+          "value": "GR",
+          "definition": "Greece"
+        },
+        {
+          "value": "GS",
+          "definition": "South Georgia and the South Sandwich Islands"
+        },
+        {
+          "value": "GT",
+          "definition": "Guatemala"
+        },
+        {
+          "value": "GU",
+          "definition": "Guam"
+        },
+        {
+          "value": "GW",
+          "definition": "Guinea-Bissau"
+        },
+        {
+          "value": "GY",
+          "definition": "Guyana"
+        },
+        {
+          "value": "HK",
+          "definition": "China, Hong Kong Special Administrative Region"
+        },
+        {
+          "value": "HM",
+          "definition": "Heard Island and McDonald Islands"
+        },
+        {
+          "value": "HN",
+          "definition": "Honduras"
+        },
+        {
+          "value": "HR",
+          "definition": "Croatia"
+        },
+        {
+          "value": "HT",
+          "definition": "Haiti"
+        },
+        {
+          "value": "HU",
+          "definition": "Hungary"
+        },
+        {
+          "value": "ID",
+          "definition": "Indonesia"
+        },
+        {
+          "value": "IE",
+          "definition": "Ireland"
+        },
+        {
+          "value": "IL",
+          "definition": "Israel"
+        },
+        {
+          "value": "IM",
+          "definition": "Isle of Man"
+        },
+        {
+          "value": "IN",
+          "definition": "India"
+        },
+        {
+          "value": "IO",
+          "definition": "British Indian Ocean Territory"
+        },
+        {
+          "value": "IQ",
+          "definition": "Iraq"
+        },
+        {
+          "value": "IR",
+          "definition": "Iran (Islamic Republic of)"
+        },
+        {
+          "value": "IS",
+          "definition": "Iceland"
+        },
+        {
+          "value": "IT",
+          "definition": "Italy"
+        },
+        {
+          "value": "JE",
+          "definition": "Jersey"
+        },
+        {
+          "value": "JM",
+          "definition": "Jamaica"
+        },
+        {
+          "value": "JO",
+          "definition": "Jordan"
+        },
+        {
+          "value": "JP",
+          "definition": "Japan"
+        },
+        {
+          "value": "KE",
+          "definition": "Kenya"
+        },
+        {
+          "value": "KG",
+          "definition": "Kyrgyzstan"
+        },
+        {
+          "value": "KH",
+          "definition": "Cambodia"
+        },
+        {
+          "value": "KI",
+          "definition": "Kiribati"
+        },
+        {
+          "value": "KM",
+          "definition": "Comoros"
+        },
+        {
+          "value": "KN",
+          "definition": "Saint Kitts and Nevis"
+        },
+        {
+          "value": "KP",
+          "definition": "Democratic People's Republic of Korea"
+        },
+        {
+          "value": "KR",
+          "definition": "Republic of Korea"
+        },
+        {
+          "value": "KW",
+          "definition": "Kuwait"
+        },
+        {
+          "value": "KY",
+          "definition": "Cayman Islands"
+        },
+        {
+          "value": "KZ",
+          "definition": "Kazakhstan"
+        },
+        {
+          "value": "LA",
+          "definition": "Lao People's Democratic Republic"
+        },
+        {
+          "value": "LB",
+          "definition": "Lebanon"
+        },
+        {
+          "value": "LC",
+          "definition": "Saint Lucia"
+        },
+        {
+          "value": "LI",
+          "definition": "Liechtenstein"
+        },
+        {
+          "value": "LK",
+          "definition": "Sri Lanka"
+        },
+        {
+          "value": "LR",
+          "definition": "Liberia"
+        },
+        {
+          "value": "LS",
+          "definition": "Lesotho"
+        },
+        {
+          "value": "LT",
+          "definition": "Lithuania"
+        },
+        {
+          "value": "LU",
+          "definition": "Luxembourg"
+        },
+        {
+          "value": "LV",
+          "definition": "Latvia"
+        },
+        {
+          "value": "LY",
+          "definition": "Libya"
+        },
+        {
+          "value": "MA",
+          "definition": "Morocco"
+        },
+        {
+          "value": "MC",
+          "definition": "Monaco"
+        },
+        {
+          "value": "MD",
+          "definition": "Republic of Moldova"
+        },
+        {
+          "value": "ME",
+          "definition": "Montenegro"
+        },
+        {
+          "value": "MF",
+          "definition": "Saint Martin (French Part)"
+        },
+        {
+          "value": "MG",
+          "definition": "Madagascar"
+        },
+        {
+          "value": "MH",
+          "definition": "Marshall Islands"
+        },
+        {
+          "value": "MK",
+          "definition": "North Macedonia"
+        },
+        {
+          "value": "ML",
+          "definition": "Mali"
+        },
+        {
+          "value": "MM",
+          "definition": "Myanmar"
+        },
+        {
+          "value": "MN",
+          "definition": "Mongolia"
+        },
+        {
+          "value": "MO",
+          "definition": "China, Macao Special Administrative Region"
+        },
+        {
+          "value": "MP",
+          "definition": "Northern Mariana Islands"
+        },
+        {
+          "value": "MQ",
+          "definition": "Martinique"
+        },
+        {
+          "value": "MR",
+          "definition": "Mauritania"
+        },
+        {
+          "value": "MS",
+          "definition": "Montserrat"
+        },
+        {
+          "value": "MT",
+          "definition": "Malta"
+        },
+        {
+          "value": "MU",
+          "definition": "Mauritius"
+        },
+        {
+          "value": "MV",
+          "definition": "Maldives"
+        },
+        {
+          "value": "MW",
+          "definition": "Malawi"
+        },
+        {
+          "value": "MX",
+          "definition": "Mexico"
+        },
+        {
+          "value": "MY",
+          "definition": "Malaysia"
+        },
+        {
+          "value": "MZ",
+          "definition": "Mozambique"
+        },
+        {
+          "value": "NA",
+          "definition": "Namibia"
+        },
+        {
+          "value": "NC",
+          "definition": "New Caledonia"
+        },
+        {
+          "value": "NE",
+          "definition": "Niger"
+        },
+        {
+          "value": "NF",
+          "definition": "Norfolk Island"
+        },
+        {
+          "value": "NG",
+          "definition": "Nigeria"
+        },
+        {
+          "value": "NI",
+          "definition": "Nicaragua"
+        },
+        {
+          "value": "NL",
+          "definition": "Netherlands (Kingdom of the)"
+        },
+        {
+          "value": "NO",
+          "definition": "Norway"
+        },
+        {
+          "value": "NP",
+          "definition": "Nepal"
+        },
+        {
+          "value": "NR",
+          "definition": "Naoero"
+        },
+        {
+          "value": "NU",
+          "definition": "Niue"
+        },
+        {
+          "value": "NZ",
+          "definition": "New Zealand"
+        },
+        {
+          "value": "OM",
+          "definition": "Oman"
+        },
+        {
+          "value": "PA",
+          "definition": "Panama"
+        },
+        {
+          "value": "PE",
+          "definition": "Peru"
+        },
+        {
+          "value": "PF",
+          "definition": "French Polynesia"
+        },
+        {
+          "value": "PG",
+          "definition": "Papua New Guinea"
+        },
+        {
+          "value": "PH",
+          "definition": "Philippines"
+        },
+        {
+          "value": "PK",
+          "definition": "Pakistan"
+        },
+        {
+          "value": "PL",
+          "definition": "Poland"
+        },
+        {
+          "value": "PM",
+          "definition": "Saint Pierre and Miquelon"
+        },
+        {
+          "value": "PN",
+          "definition": "Pitcairn"
+        },
+        {
+          "value": "PR",
+          "definition": "Puerto Rico"
+        },
+        {
+          "value": "PS",
+          "definition": "State of Palestine"
+        },
+        {
+          "value": "PT",
+          "definition": "Portugal"
+        },
+        {
+          "value": "PW",
+          "definition": "Palau"
+        },
+        {
+          "value": "PY",
+          "definition": "Paraguay"
+        },
+        {
+          "value": "QA",
+          "definition": "Qatar"
+        },
+        {
+          "value": "RE",
+          "definition": "Réunion"
+        },
+        {
+          "value": "RO",
+          "definition": "Romania"
+        },
+        {
+          "value": "RS",
+          "definition": "Serbia"
+        },
+        {
+          "value": "RU",
+          "definition": "Russian Federation"
+        },
+        {
+          "value": "RW",
+          "definition": "Rwanda"
+        },
+        {
+          "value": "SA",
+          "definition": "Saudi Arabia"
+        },
+        {
+          "value": "SB",
+          "definition": "Solomon Islands"
+        },
+        {
+          "value": "SC",
+          "definition": "Seychelles"
+        },
+        {
+          "value": "SD",
+          "definition": "Sudan"
+        },
+        {
+          "value": "SE",
+          "definition": "Sweden"
+        },
+        {
+          "value": "SG",
+          "definition": "Singapore"
+        },
+        {
+          "value": "SH",
+          "definition": "Saint Helena"
+        },
+        {
+          "value": "SI",
+          "definition": "Slovenia"
+        },
+        {
+          "value": "SJ",
+          "definition": "Svalbard and Jan Mayen Islands"
+        },
+        {
+          "value": "SK",
+          "definition": "Slovakia"
+        },
+        {
+          "value": "SL",
+          "definition": "Sierra Leone"
+        },
+        {
+          "value": "SM",
+          "definition": "San Marino"
+        },
+        {
+          "value": "SN",
+          "definition": "Senegal"
+        },
+        {
+          "value": "SO",
+          "definition": "Somalia"
+        },
+        {
+          "value": "SR",
+          "definition": "Suriname"
+        },
+        {
+          "value": "SS",
+          "definition": "South Sudan"
+        },
+        {
+          "value": "ST",
+          "definition": "Sao Tome and Principe"
+        },
+        {
+          "value": "SV",
+          "definition": "El Salvador"
+        },
+        {
+          "value": "SX",
+          "definition": "Sint Maarten (Dutch part)"
+        },
+        {
+          "value": "SY",
+          "definition": "Syrian Arab Republic"
+        },
+        {
+          "value": "SZ",
+          "definition": "Eswatini"
+        },
+        {
+          "value": "TC",
+          "definition": "Turks and Caicos Islands"
+        },
+        {
+          "value": "TD",
+          "definition": "Chad"
+        },
+        {
+          "value": "TF",
+          "definition": "French Southern Territories"
+        },
+        {
+          "value": "TG",
+          "definition": "Togo"
+        },
+        {
+          "value": "TH",
+          "definition": "Thailand"
+        },
+        {
+          "value": "TJ",
+          "definition": "Tajikistan"
+        },
+        {
+          "value": "TK",
+          "definition": "Tokelau"
+        },
+        {
+          "value": "TL",
+          "definition": "Timor-Leste"
+        },
+        {
+          "value": "TM",
+          "definition": "Turkmenistan"
+        },
+        {
+          "value": "TN",
+          "definition": "Tunisia"
+        },
+        {
+          "value": "TO",
+          "definition": "Tonga"
+        },
+        {
+          "value": "TR",
+          "definition": "Türkiye"
+        },
+        {
+          "value": "TT",
+          "definition": "Trinidad and Tobago"
+        },
+        {
+          "value": "TV",
+          "definition": "Tuvalu"
+        },
+        {
+          "value": "TW",
+          "definition": "Taiwan"
+        },
+        {
+          "value": "TZ",
+          "definition": "United Republic of Tanzania"
+        },
+        {
+          "value": "UA",
+          "definition": "Ukraine"
+        },
+        {
+          "value": "UG",
+          "definition": "Uganda"
+        },
+        {
+          "value": "UM",
+          "definition": "United States Minor Outlying Islands"
+        },
+        {
+          "value": "US",
+          "definition": "United States of America"
+        },
+        {
+          "value": "UY",
+          "definition": "Uruguay"
+        },
+        {
+          "value": "UZ",
+          "definition": "Uzbekistan"
+        },
+        {
+          "value": "VA",
+          "definition": "Holy See"
+        },
+        {
+          "value": "VC",
+          "definition": "Saint Vincent and the Grenadines"
+        },
+        {
+          "value": "VE",
+          "definition": "Venezuela (Bolivarian Republic of)"
+        },
+        {
+          "value": "VG",
+          "definition": "British Virgin Islands"
+        },
+        {
+          "value": "VI",
+          "definition": "United States Virgin Islands"
+        },
+        {
+          "value": "VN",
+          "definition": "Viet Nam"
+        },
+        {
+          "value": "VU",
+          "definition": "Vanuatu"
+        },
+        {
+          "value": "WF",
+          "definition": "Wallis and Futuna Islands"
+        },
+        {
+          "value": "WS",
+          "definition": "Samoa"
+        },
+        {
+          "value": "YE",
+          "definition": "Yemen"
+        },
+        {
+          "value": "YT",
+          "definition": "Mayotte"
+        },
+        {
+          "value": "ZA",
+          "definition": "South Africa"
+        },
+        {
+          "value": "ZM",
+          "definition": "Zambia"
+        },
+        {
+          "value": "ZW",
+          "definition": "Zimbabwe"
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "ISO — ISO 3166 Country Codes",
+          "url": "https://www.iso.org/iso-3166-country-codes.html",
+          "locator": "What is included in ISO 3166?; alpha-2"
+        },
+        {
+          "source": "UN Statistics Division — M49 country or area codes",
+          "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+          "locator": "Geographic Regions; Country or Area; ISO-alpha2 Code"
+        },
+        {
+          "source": "Portugal Autoridade Tributária — ISO 3166 country table",
+          "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/irs/documents/tabela_paises_cod_norma_iso_3166.pdf",
+          "locator": "Tabellrad 158 / TW / TWN"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.funnel.stage",
+      "path": "funnel.stage",
+      "group": "funnel",
+      "label_nb": "Trinnfilter",
+      "type": "array",
+      "values": [
+        {
+          "value": "topp",
+          "definition": "Bygge tilgjengelighet og første relevans."
+        },
+        {
+          "value": "midt",
+          "definition": "Hjelpe utforskning eller vurdering."
+        },
+        {
+          "value": "bunn",
+          "definition": "Gjøre ønsket kjøp eller bestilling gjennomførbar."
+        },
+        {
+          "value": "lojalitet",
+          "definition": "Hjelpe bruk, gjenkjøp eller fornyelse."
+        },
+        {
+          "value": "salgsrunde",
+          "definition": "Tillegg for avgrenset salgsaktivitet; aldri eneste hovedtrinn."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.funnel.mode",
+      "path": "funnel.mode",
+      "group": "funnel",
+      "label_nb": "Modusfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "merkebygging",
+          "definition": "Bygge merkeminner med begrunnet tidshorisont."
+        },
+        {
+          "value": "hosting",
+          "definition": "Høsting/salgsaktivering som fjerner et konkret kjøpshinder."
+        },
+        {
+          "value": "begge",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. begge er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. begge er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-annen-leser-kontrollerer",
+        "copy-avgrens-superlativer",
+        "copy-be-om-en-handling",
+        "copy-beskriv-den-faktiske-prosessen",
+        "copy-bestill-proeven-tydelig",
+        "copy-bevis-for-hovedloeftet",
+        "copy-bruk-verb-for-handlinger",
+        "copy-ett-tema-per-avsnitt",
+        "copy-foelg-opp-samme-interesse",
+        "copy-fordel-for-leseren",
+        "copy-forklar-ukjent-produktnavn",
+        "copy-ikke-forklar-fasiten-i-testen",
+        "copy-konkret-produktegenskap",
+        "copy-kontroller-sitater",
+        "copy-kontroller-tekst-paa-mobil",
+        "copy-lenk-til-faglig-grunnlag",
+        "copy-les-hoeyt-og-rett",
+        "copy-leseren-forklarer-med-egne-ord",
+        "copy-mellomtittel-navngir-innhold",
+        "copy-menneskelig-korrektur",
+        "copy-mottakeren-vet-neste-steg",
+        "copy-navngi-den-som-handler",
+        "copy-navngi-den-virkelige-opphavspersonen",
+        "copy-oppregning-som-liste",
+        "copy-overskrift-holder-loeftet",
+        "copy-overskrift-viser-relevans",
+        "copy-overskriftsalternativer",
+        "copy-overskriftsnivaa-viser-struktur",
+        "copy-proeven-lar-leseren-proeve",
+        "copy-proevetilbudets-vilkaar",
+        "copy-riktig-tid-i-produktbeskrivelsen",
+        "copy-samme-avsenderstemme",
+        "copy-sammendrag-i-lange-brev",
+        "copy-selvforklarende-skjemafelt",
+        "copy-spor-overskriftstesten",
+        "copy-svar-paa-kjoepsspoersmaal",
+        "copy-tall-med-grunnlag",
+        "copy-temaord-tidlig-i-titler",
+        "copy-test-med-relevante-lesere",
+        "copy-test-rettingen",
+        "copy-test-tekstutkastet-tidlig",
+        "copy-uavhengig-av-forrige-annonse",
+        "copy-unngaa-hele-setninger-med-versaler",
+        "copy-vanlig-prosess-er-ikke-enerett",
+        "copy-vis-sammenhengen",
+        "ide-avsender-i-test",
+        "ide-begrunn-endringer",
+        "ide-bevar-baerende-grep",
+        "ide-bevar-kjernen",
+        "ide-bilde-med-oppgave",
+        "ide-bildets-bidrag",
+        "ide-case-riktig-merke",
+        "ide-felles-utvikling",
+        "ide-figur-med-handling",
+        "ide-folelsestest",
+        "ide-grunn-til-a-bytte",
+        "ide-handling-for-saken",
+        "ide-handling-med-utvikling",
+        "ide-innsikt-som-har-endret-seg",
+        "ide-konkret-hverdagsproblem",
+        "ide-metafor-med-forbindelse",
+        "ide-noytral-reaksjon",
+        "ide-ny-hypotese-etter-avslag",
+        "ide-praktisk-losning",
+        "ide-rapportert-ikke-bevist",
+        "ide-samlet-skisse",
+        "ide-samme-ide-i-kanaler",
+        "ide-sammenlign-ideer",
+        "ide-sted-i-fortelling",
+        "ide-studentcase-status",
+        "ide-symbol-med-betydning",
+        "ide-test-med-berorte",
+        "ide-test-visuelt-valg",
+        "ide-tiltak-bak-saken",
+        "ide-typografi-baerer-mening",
+        "kampanjekort",
+        "leseren-aapne-intervjuspoersmaal",
+        "leseren-allerede-kunde",
+        "leseren-alternativet-i-hverdagen",
+        "leseren-begrunn-kunnskapsnivaa",
+        "leseren-begrunn-tidspunkt",
+        "leseren-ekte-knapphet",
+        "leseren-fire-byttekrefter",
+        "leseren-forkunnskap-foer-faguttrykk",
+        "leseren-frivillig-forpliktelse",
+        "leseren-gi-foer-du-ber",
+        "leseren-innsats-naa",
+        "leseren-kartlegg-friksjon",
+        "leseren-kjent-loesning",
+        "leseren-kjent-problem",
+        "leseren-kjent-produkt",
+        "leseren-klar-for-kjoep",
+        "leseren-lenken-holder-loeftet",
+        "leseren-lenkeomtale-gir-detaljer",
+        "leseren-lettlest-er-ikke-bevis",
+        "leseren-maal-handling",
+        "leseren-majoritet-med-grunnlag",
+        "leseren-navngi-leseoppgaven",
+        "leseren-observasjon-og-tolkning",
+        "leseren-overskrifter-for-skumming",
+        "leseren-planlegg-handlingen",
+        "leseren-presis-handling",
+        "leseren-rekonstruer-bytte",
+        "leseren-relevant-autoritet",
+        "leseren-rettferdig-sammenligning",
+        "leseren-sammenlignbare-andre",
+        "leseren-situasjon-og-fremgang",
+        "leseren-svar-foerst",
+        "leseren-tre-sider-av-jobben",
+        "leseren-ukjent-problem",
+        "leseren-uro-ved-bytte",
+        "lov-de-epost-grunnlag",
+        "lov-de-etterprovbar-sammenligning",
+        "lov-de-forklar-omtaler",
+        "lov-de-forklar-rangering",
+        "lov-de-oppbevar-telefonsamtykke",
+        "lov-de-samme-behov",
+        "lov-de-telefon-samtykke",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-google-ekte-grensesnitt",
+        "lov-google-finnbart-tilbud",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-no-b2b-faktasjekk",
+        "lov-no-barn-kjopspress",
+        "lov-no-barn-sosialt-press",
+        "lov-no-dokumentasjon-for-publisering",
+        "lov-no-egenskaper-stemmer",
+        "lov-no-forklar-omtaleverifisering",
+        "lov-no-forvekslende-etterligning",
+        "lov-no-garantivilkar",
+        "lov-no-gratis-avmelding",
+        "lov-no-kundeunntak",
+        "lov-no-opplys-angrerett",
+        "lov-no-pris-med-tillegg",
+        "lov-no-samtykke-elektronisk",
+        "lov-no-selgerens-identitet",
+        "lov-no-synlig-reklame",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse",
+        "plattform-google-ingen-falske-knapper",
+        "plattform-google-lever-flere-sideforhold",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-tilbud-finnes-paa-maalsiden",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-ingen-ki-ugc-eller-falske-kunder",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-plassering-stoetter-format",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-test-ulike-metaformater",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-plan-for-utskifting",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-sporbart-materiell",
+        "plattform-tiktok-staaende-video",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk",
+        "strategi-avklar-uenighet",
+        "strategi-begrunn-budsjettbalansen",
+        "strategi-bredere-situasjonsnettverk",
+        "strategi-effektniva",
+        "strategi-ett-budskap-per-annonse",
+        "strategi-felles-brief",
+        "strategi-folelsens-rolle",
+        "strategi-fremtidige-kjopere",
+        "strategi-kampanjens-rammer",
+        "strategi-kartlegg-merkeelementer",
+        "strategi-kjopbarhet",
+        "strategi-kjoperskapte-situasjoner",
+        "strategi-kommersiell-situasjonsverdi",
+        "strategi-konkret-kjopssituasjon",
+        "strategi-konkurranse-per-situasjon",
+        "strategi-konkurrentgrunnlag-for-loftet",
+        "strategi-kortsiktig-og-langsiktig-maling",
+        "strategi-kundeverdi-fremfor-svar",
+        "strategi-lette-kjopere",
+        "strategi-lokal-vekstevidens",
+        "strategi-mal-for-merkeendring",
+        "strategi-mal-mentale-koblinger",
+        "strategi-merke-og-situasjon-sammen",
+        "strategi-merkeelement-nytt-marked",
+        "strategi-nye-kjopere",
+        "strategi-penetrasjonshinder",
+        "strategi-pris-og-volum",
+        "strategi-prospektdekning",
+        "strategi-rekkevidde-frekvens-og-leveranse",
+        "strategi-respons-er-ikke-salg",
+        "strategi-salgsutlosende-informasjon",
+        "strategi-sammenlign-kjoperprofiler",
+        "strategi-samspill-merke-og-salg",
+        "strategi-sov-sammenligningsgrunnlag",
+        "strategi-test-for-oppskalering",
+        "strategi-troverdig-kjopssituasjon",
+        "trakt-balanse-er-lokal",
+        "trakt-betingelser-for-fordelen",
+        "trakt-bunn-har-gjennomforbart-kjop",
+        "trakt-filtrer-ferdigheter",
+        "trakt-flere-nivaer-flere-deler",
+        "trakt-foresporsel-har-kostnad",
+        "trakt-forpris-med-historikk",
+        "trakt-frist-har-kilde",
+        "trakt-hosting-har-kjopshinder",
+        "trakt-ikke-fast-nittifem",
+        "trakt-ingen-tvungen-reise",
+        "trakt-kjopsberedskap-med-belegg",
+        "trakt-klassifiser-pristilbudet",
+        "trakt-kort-for-tekst",
+        "trakt-kundestatus-er-egen-akse",
+        "trakt-lojalitet-er-ikke-hele-veksten",
+        "trakt-lojalitet-gir-bruksverdi",
+        "trakt-lojalitet-med-riktig-nevner",
+        "trakt-mal-over-riktig-tid",
+        "trakt-merkebygging-med-minne",
+        "trakt-midt-svarer-pa-valget",
+        "trakt-na-fremtidige-kjopere",
+        "trakt-navngi-oppgaven",
+        "trakt-penetrasjon-egen-maling",
+        "trakt-reell-prisfordel",
+        "trakt-salgsrunde-er-eget-valg",
+        "trakt-samme-merke-i-begge",
+        "trakt-schwartz-fra-kunnskap",
+        "trakt-topp-har-liten-foresporsel",
+        "trakt-utforskning-og-vurdering",
+        "trakt-verdi-for-rabatt"
+      ]
+    },
+    {
+      "id": "skill-filter.format",
+      "path": "format",
+      "group": "format",
+      "label_nb": "Formatfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "tekst",
+          "definition": "Tekstannonse eller tekstleveranse."
+        },
+        {
+          "value": "bilde",
+          "definition": "Ett stillbilde."
+        },
+        {
+          "value": "video",
+          "definition": "Én videoressurs."
+        },
+        {
+          "value": "karusell",
+          "definition": "Flere kort som kan blas."
+        },
+        {
+          "value": "samling",
+          "definition": "Produktsamling med hovedressurs."
+        },
+        {
+          "value": "fleksibel",
+          "definition": "Meta setter sammen ressurser i støttet oppsett."
+        },
+        {
+          "value": "responsiv-display",
+          "definition": "Google kombinerer ressurser til display."
+        },
+        {
+          "value": "shopping",
+          "definition": "Google-produktoppføring fra produktdata."
+        },
+        {
+          "value": "app",
+          "definition": "Google-annonse for appinstallasjon eller bruk."
+        },
+        {
+          "value": "yt-skippable",
+          "definition": "Video som kan hoppes over."
+        },
+        {
+          "value": "yt-non-skippable",
+          "definition": "Video uten hopp over, etter kampanjetype."
+        },
+        {
+          "value": "yt-in-feed",
+          "definition": "Videoannonse valgt fra YouTube-feed eller søk."
+        },
+        {
+          "value": "yt-bumper",
+          "definition": "Kort YouTube-video med egen lengdegrense."
+        },
+        {
+          "value": "yt-masthead",
+          "definition": "Reservasjonsformat på YouTube-forsiden."
+        },
+        {
+          "value": "yt-shorts",
+          "definition": "Video i YouTube Shorts."
+        },
+        {
+          "value": "tt-spark",
+          "definition": "Annonse fra autorisert organisk TikTok-innlegg."
+        },
+        {
+          "value": "tt-non-spark",
+          "definition": "Separat opplastet TikTok in-feed-annonse."
+        },
+        {
+          "value": "li-dokument",
+          "definition": "Dokumentannonse i LinkedIn."
+        },
+        {
+          "value": "li-event",
+          "definition": "Annonse for LinkedIn-arrangement."
+        },
+        {
+          "value": "li-melding",
+          "definition": "Direkte sponsormelding der tilgjengelig."
+        },
+        {
+          "value": "li-samtale",
+          "definition": "Sponset meldingsforløp med svarvalg."
+        },
+        {
+          "value": "li-follower",
+          "definition": "Dynamisk LinkedIn-annonse for følgere."
+        },
+        {
+          "value": "li-spotlight",
+          "definition": "Dynamisk LinkedIn-annonse for tilbud."
+        },
+        {
+          "value": "li-jobb",
+          "definition": "LinkedIn jobbannonse."
+        },
+        {
+          "value": "li-artikkel-nyhetsbrev",
+          "definition": "Sponset LinkedIn-artikkel eller nyhetsbrev."
+        },
+        {
+          "value": "li-thought-leader",
+          "definition": "Sponset innlegg fra autorisert person."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "ide-figur-med-handling",
+        "ide-handling-med-utvikling",
+        "ide-sted-i-fortelling",
+        "kampanjekort",
+        "plattform-karusell-maks-ti-kort",
+        "plattform-meta-budskap-tre-sekunder",
+        "plattform-samling-koblet-til-katalog",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-tiktok-aapning-budskap-handling",
+        "plattform-tiktok-aapningsgrep-seks-sekunder",
+        "plattform-tiktok-frie-grensesnittsoner",
+        "plattform-tiktok-fungerende-lyd",
+        "plattform-tiktok-innholdslovfte-tre-sekunder",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-minst-720p",
+        "plattform-tiktok-staaende-video",
+        "plattform-youtube-ett-hovedbudskap",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-handling-synlig-og-hoerbar",
+        "plattform-youtube-merke-foer-fem",
+        "plattform-youtube-vurdering-vis-bruk"
+      ]
+    },
+    {
+      "id": "skill-filter.aspect_ratio",
+      "path": "aspect_ratio",
+      "group": "aspect_ratio",
+      "label_nb": "Sideforholdsfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "9:16",
+          "definition": "Stående fullskjerm."
+        },
+        {
+          "value": "4:5",
+          "definition": "Stående feed."
+        },
+        {
+          "value": "1:1",
+          "definition": "Kvadratisk."
+        },
+        {
+          "value": "1.91:1",
+          "definition": "Bredt bildeformat."
+        },
+        {
+          "value": "16:9",
+          "definition": "Liggende video."
+        },
+        {
+          "value": "annet",
+          "definition": "Eksakt forhold må oppgis og kontrolleres mot valgt plassering."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "plattform-tiktok-minst-720p"
+      ]
+    },
+    {
+      "id": "skill-filter.regulation",
+      "path": "regulation",
+      "group": "regulation",
+      "label_nb": "Reguleringsfilter",
+      "type": "string",
+      "values": [
+        {
+          "value": "generell",
+          "definition": "Allmenn markedsføringskontroll."
+        },
+        {
+          "value": "mat",
+          "definition": "Mat og ernæring; påstander krever egen kontroll."
+        },
+        {
+          "value": "helse",
+          "definition": "Helsepåstander, behandling eller medisinske produkter må avklares."
+        },
+        {
+          "value": "finans",
+          "definition": "Finansielle produkter og tjenester krever lokal kontroll."
+        },
+        {
+          "value": "alkohol",
+          "definition": "Alkohol eller felles merke/kjennetegn krever lokal kontroll."
+        },
+        {
+          "value": "barn",
+          "definition": "Barn kan være mottakere; egen vurdering kreves."
+        },
+        {
+          "value": "personvern",
+          "definition": "Databehandling, sporing eller direkte kontakt må vurderes."
+        },
+        {
+          "value": "annet",
+          "definition": "Navngi ekstra regulering og lokal ansvarlig."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Kan ikke avgjøres; menneskelig avklaring før videreføring."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+        }
+      ],
+      "definition": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Matcher konkret kontekst; liste internt betyr OR, dimensjoner samlet betyr AND. alle er bare bibliotekets jokerverdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense"
+      ]
+    },
+    {
+      "id": "skill-filter.legal_area",
+      "path": "legal_area",
+      "group": "legal_area",
+      "label_nb": "Regelområde",
+      "type": "string",
+      "values": [
+        {
+          "value": "EU",
+          "definition": "EU-regelverk vurderes konkret for markedet; ingen automatisk EØS- eller NO-utvidelse."
+        },
+        {
+          "value": "CAP",
+          "definition": "CAP Code er vurdert relevant for annonsen."
+        },
+        {
+          "value": "alle",
+          "definition": "Ferdigheten avgrenser ikke regelområde."
+        }
+      ],
+      "definition": "EU er regelområde, aldri ISO-land; menneskelig juridisk vurdering må bekrefte anvendelse.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "EU er regelområde, aldri ISO-land; menneskelig juridisk vurdering må bekrefte anvendelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lov-eu-avgrens-miljopastand",
+        "lov-eu-ekte-kundeomtaler",
+        "lov-eu-ekte-tidsfrist",
+        "lov-eu-godkjenning-av-merker",
+        "lov-eu-gratis-uten-skjulte-gebyrer",
+        "lov-eu-ikke-eksklusive-lovrettigheter",
+        "lov-eu-ikke-utgi-selger-for-kunde",
+        "lov-eu-merk-betalt-rangering",
+        "lov-mat-generell-helsefordel",
+        "lov-mat-godkjent-helsepastand",
+        "lov-mat-ikke-vekttapstall",
+        "lov-mat-sukkerfri-grense",
+        "lov-uk-forbehold-uten-motsigelse",
+        "lov-uk-opplys-belonnede-omtaler",
+        "lov-uk-tillatelse-til-kundeuttalelse"
+      ]
+    },
+    {
+      "id": "skill-filter.media_class",
+      "path": "media_class",
+      "group": "media_class",
+      "label_nb": "Medieklasse",
+      "type": "string",
+      "values": [
+        {
+          "value": "betalt",
+          "definition": "Betalt distribusjon."
+        },
+        {
+          "value": "egen",
+          "definition": "Avsenderens egne flater uten mediekjøp."
+        },
+        {
+          "value": "fortjent",
+          "definition": "Redaksjonell eller annen omtale uten mediekjøp."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen avgrensning."
+        }
+      ],
+      "definition": "Tverrkanalbetingelse for betalt distribusjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Tverrkanalbetingelse for betalt distribusjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "strategi-rekkevidde-frekvens-og-leveranse"
+      ]
+    },
+    {
+      "id": "skill-filter.trigger",
+      "path": "trigger",
+      "group": "trigger",
+      "label_nb": "Regelutløser",
+      "type": "string",
+      "values": [
+        {
+          "value": "skjema",
+          "definition": "Innholdet har et skjema som skal leses eller fylles ut."
+        },
+        {
+          "value": "prisbudskap",
+          "definition": "Innholdet oppgir pris eller prisfordel."
+        },
+        {
+          "value": "egenmarkedsforing-google-tjenester",
+          "definition": "Avsender markedsfører egne Google Ads-tjenester."
+        },
+        {
+          "value": "egenmarkedsforing-google-kompetanse",
+          "definition": "Avsender markedsfører egen Google Ads-kompetanse."
+        },
+        {
+          "value": "resultatrapport",
+          "definition": "Resultater rapporteres."
+        },
+        {
+          "value": "trend",
+          "definition": "En aktuell trend brukes."
+        },
+        {
+          "value": "nettstedskonvertering",
+          "definition": "Nettstedskonvertering er målet."
+        },
+        {
+          "value": "kreativtest",
+          "definition": "Kreativer sammenlignes i test."
+        },
+        {
+          "value": "splittest",
+          "definition": "En splittest gjennomføres."
+        },
+        {
+          "value": "tale",
+          "definition": "Videoen inneholder tale."
+        },
+        {
+          "value": "persondemonstrasjon",
+          "definition": "En person viser produkt eller handling."
+        },
+        {
+          "value": "skapersamarbeid",
+          "definition": "En virkelig skaper samarbeider med avsender."
+        },
+        {
+          "value": "handling-som-mal",
+          "definition": "Innholdet skal utløse en bestemt handling."
+        },
+        {
+          "value": "vurdering-som-mal",
+          "definition": "Innholdet hjelper vurdering av alternativer."
+        },
+        {
+          "value": "alle",
+          "definition": "Ingen ekstra utløser."
+        }
+      ],
+      "definition": "Bevarer betingelsen fra en tidligere sammensatt kanalverdi; må avklares i kortkonteksten.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Bevarer betingelsen fra en tidligere sammensatt kanalverdi; må avklares i kortkonteksten."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "copy-selvforklarende-skjemafelt",
+        "kampanjekort",
+        "plattform-google-partner-er-egen-status",
+        "plattform-google-sertifikat-person-og-dato",
+        "plattform-google-vis-betalingsmodellen",
+        "plattform-sammenlign-like-maalegrunnlag",
+        "plattform-shorts-ekte-produktbruk",
+        "plattform-tiktok-dater-trendvalget",
+        "plattform-tiktok-hendelse-svarer-til-handling",
+        "plattform-tiktok-kontroller-undertekster",
+        "plattform-tiktok-registrer-attribusjonsvinduer",
+        "plattform-tiktok-splittest-med-hypotese",
+        "plattform-tiktok-ulike-testvarianter",
+        "plattform-youtube-handling-etter-kontekst",
+        "plattform-youtube-skaper-kategorirelevans",
+        "plattform-youtube-vurdering-vis-bruk"
+      ]
+    },
+    {
+      "id": "skill-filter.placement",
+      "path": "placement",
+      "group": "placement",
+      "label_nb": "Plassering i kontekst",
+      "type": "string",
+      "values": [
+        {
+          "value": "fb-feed",
+          "definition": "Facebook-feed, inkludert Friends etter oppgitt utrulling.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll",
+          "included_surfaces": [
+            "Facebook Friends-fanen fra mars 2026; ikke et separat plasseringsvalg."
+          ]
+        },
+        {
+          "value": "fb-profile-feed",
+          "definition": "Feed på Facebook-profil; avhengig av kontotilgang.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — Available ad placements and ad formats by ad objectives",
+            "url": "https://www.facebook.com/business/help/279271845888065",
+            "locator": "Tabeller per Awareness, Traffic, Engagement, Leads, App promotion og Sales"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "threads-feed",
+          "definition": "Threads-feed.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-feed",
+          "definition": "Instagram-feed.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-profile-feed",
+          "definition": "Feed ved Instagram-profil.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-marketplace",
+          "definition": "Facebook Marketplace.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-right-column",
+          "definition": "Facebooks høyre kolonne.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-notifications",
+          "definition": "Facebook-varsler.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-business-explore",
+          "definition": "Facebook Business Explore.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-explore-home",
+          "definition": "Hjemflaten i Instagram Explore.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-stories",
+          "definition": "Facebook Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-stories",
+          "definition": "Instagram Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "messenger-stories",
+          "definition": "Messenger Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-reels",
+          "definition": "Instagram Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-reels",
+          "definition": "Facebook Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "whatsapp-status",
+          "definition": "WhatsApp Status.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-in-stream-reels",
+          "definition": "Facebook in-stream ved Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-reels-overlay",
+          "definition": "Annonser oppå Facebook Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-search",
+          "definition": "Facebook-søkeresultater.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-search",
+          "definition": "Instagram-søkeresultater.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "audience-network-native-banner-interstitial",
+          "definition": "Native, banner eller mellomannonse i Audience Network.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "audience-network-rewarded",
+          "definition": "Belønnet video i Audience Network.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-search",
+          "definition": "Google-søkeresultater.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-display",
+          "definition": "Nettsteder og apper i Google Display Network.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-shopping",
+          "definition": "Shopping-oppføringer etter oppsett.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-app",
+          "definition": "App-kampanjens kvalifiserte flater.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-in-stream",
+          "definition": "I eller rundt YouTube-video.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-home",
+          "definition": "YouTube-forside.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-search",
+          "definition": "YouTube-søkeresultater.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-watch-next",
+          "definition": "YouTube Watch Next.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-subscriptions",
+          "definition": "YouTube-abonnementsfeed.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-shorts",
+          "definition": "YouTube Shorts-feed.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-video-partners",
+          "definition": "Google video partneres nettsteder eller apper; ikke YouTube-flate.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-discover",
+          "definition": "Discover-feed.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-gmail",
+          "definition": "Gmail-flater.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-feed",
+          "definition": "YouTube-feeder ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-in-stream",
+          "definition": "YouTube in-stream ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-shorts",
+          "definition": "Shorts ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-display",
+          "definition": "Display ved Demand Gen der tilgjengelig.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-for-you",
+          "definition": "TikTok For You-feed; kan inkludere dokumenterte underflater.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-search-feed",
+          "definition": "TikTok-søkefeed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-search-results",
+          "definition": "TikTok-søkeresultatside med målbegrensninger.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-profile-feed",
+          "definition": "Underflate ved profil når For You inkluderer den.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-following-feed",
+          "definition": "Underflate i Following-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-friends-feed",
+          "definition": "Underflate i Friends-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-lite",
+          "definition": "TikTok Lite i tilgjengelige markeder.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-web",
+          "definition": "TikTok for Web i tilgjengelige markeder.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-mini-drama",
+          "definition": "Mini Drama-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-lemon8",
+          "definition": "Lemon8 bare i markedene angitt i aktuell kilde.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-pinedrama",
+          "definition": "PineDrama bare i markedene angitt i aktuell kilde.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "li-feed",
+          "definition": "LinkedIn-feed for støttet sponset innhold.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-messaging",
+          "definition": "LinkedIn-meldinger der format og marked tillater.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-right-rail",
+          "definition": "LinkedIn-sidekolonne for tekst/dynamiske format.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-audience-network",
+          "definition": "LinkedIn Audience Network på partnerflater.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Create your first campaign",
+            "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+            "locator": "8. Choose where your ads appear"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-playables",
+          "definition": "YouTube Playables i mobilappen; skippable, non-skippable og bumper etter faktisk kampanje-/kontostøtte.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "parent": "yt-in-stream",
+          "selection_note": "Dokumentert eksponeringsflate, ikke påstått selvstendig valg.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "egen-flate",
+          "definition": "Eget nettsted, brev, skjema eller direkte kanal; eksakt sted i bindingen.",
+          "channel": [
+            "e-post",
+            "sms",
+            "nettside",
+            "brev",
+            "telefon"
+          ],
+          "source": "Fume",
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        }
+      ],
+      "definition": "Konkret plassering valideres mot valgt kanal; Demand Gen krever dette for riktig flatefamilie.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "Meta — About ad placements across Meta technologies",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+        },
+        {
+          "source": "Meta — Available ad placements and ad formats by ad objectives",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Tabeller per Awareness, Traffic, Engagement, Leads, App promotion og Sales"
+        },
+        {
+          "source": "Google Ads — About ad formats available in different campaign types",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account"
+        },
+        {
+          "source": "Google Ads — About video ad formats",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+        },
+        {
+          "source": "Google Ads — Video assets specifications for Demand Gen",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Eligible ad formats by placement"
+        },
+        {
+          "source": "TikTok — About TikTok Placement",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+        },
+        {
+          "source": "LinkedIn — Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+        },
+        {
+          "source": "LinkedIn — Create your first campaign",
+          "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+          "locator": "8. Choose where your ads appear"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Konkret plassering valideres mot valgt kanal; Demand Gen krever dette for riktig flatefamilie."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ]
+    }
+  ],
+  "predicate_semantics": {
+    "wildcards": [
+      "alle",
+      "begge"
+    ],
+    "within_dimension": "OR; skalar behandles som liste med ett element.",
+    "between_dimensions": "AND; manglende konkret kontekst er uavklart, aldri false eller automatisk pass.",
+    "unconditional_gates": "Struktur, lov og Fume-etikk gjelder uansett ferdighetsfilter.",
+    "rule_trigger": "Treff gir kandidat; regelens egne betingelser skal fortsatt vurderes med begrunnelse.",
+    "country_vs_legal_area": "Land og regelområde evalueres separat; EU eller CAP er ikke land."
+  }
+}

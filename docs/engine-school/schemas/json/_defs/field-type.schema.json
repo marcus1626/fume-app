@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "string",
+    "integer",
+    "number",
+    "boolean",
+    "object",
+    "array",
+    "integer|string"
+  ],
+  "x-list": "../../lists/field-type.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/field-type.schema.json",
+  "title": "field-type"
+}

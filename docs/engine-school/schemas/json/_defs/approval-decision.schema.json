@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "godkjent",
+    "avvist",
+    "avventer"
+  ],
+  "x-list": "../../lists/approval-decision.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/approval-decision.schema.json",
+  "title": "approval-decision"
+}

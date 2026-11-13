@@ -1,0 +1,1555 @@
+{
+  "id": "merkevare-vs-kampanje",
+  "label_nb": "Merkegrunnlag og godkjente kampanjeoverstyringer",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "bilde-som-tredje-tanke",
+    "copy-samme-avsenderstemme",
+    "kampanjekort",
+    "kanalformat-tilpasning",
+    "linjebredde-og-valg",
+    "merkeelement-revisjon"
+  ],
+  "fields": [
+    {
+      "id": "merkevare-vs-kampanje.brand_id",
+      "path": "brand_id",
+      "group": "brand_id",
+      "label_nb": "Merke-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Isolerer profilen til én merkevare/workspace; aldri en annen kundes bilder.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "linjebredde-og-valg",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Isolerer profilen til én merkevare/workspace; aldri en annen kundes bilder."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "linjebredde-og-valg",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.identity",
+      "path": "identity",
+      "group": "identity",
+      "label_nb": "Merkeidentitet",
+      "type": "object",
+      "values": [],
+      "definition": "Godkjent navn, logo, kjernepåstander, rettigheter og språkkrav; kampanjen kan ikke omskrive disse.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "linjebredde-og-valg",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Godkjent navn, logo, kjernepåstander, rettigheter og språkkrav; kampanjen kan ikke omskrive disse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "copy-samme-avsenderstemme",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "linjebredde-og-valg",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.ethics",
+      "path": "ethics",
+      "group": "ethics",
+      "label_nb": "Ufravikelig etikk",
+      "type": "array",
+      "values": [
+        {
+          "value": "ingen-ki-ugc",
+          "definition": "Ingen KI-generert UGC."
+        },
+        {
+          "value": "ingen-falske-kunder",
+          "definition": "Ingen KI-personer fremstilt som virkelige kunder."
+        }
+      ],
+      "definition": "Fume-regler gjelder på tvers av smak og kampanje. Ingen menneskelig smaksoverstyring opphever dem.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "linjebredde-og-valg",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Fume-regler gjelder på tvers av smak og kampanje. Ingen menneskelig smaksoverstyring opphever dem."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "linjebredde-og-valg",
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.schema_version",
+      "path": "taste.schema_version",
+      "group": "taste",
+      "label_nb": "Smaksskjemaets versjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Binder til appens feltregister uten å finne på de 349 feltenes ID-er.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Binder til appens feltregister uten å finne på de 349 feltenes ID-er."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.available",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.profile_ref",
+      "path": "taste.profile_ref",
+      "group": "taste",
+      "label_nb": "Profilreferanse",
+      "type": "object",
+      "values": [],
+      "definition": "workspace_id, schema_version, built_at og versjon/hash; brand- og engine-kort holdes atskilt.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "merkeelement-revisjon"
+        ],
+        "choices": "workspace_id, schema_version, built_at og versjon/hash; brand- og engine-kort holdes atskilt."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.available",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.gender_expression",
+      "path": "taste.gender_expression",
+      "group": "taste",
+      "label_nb": "Visuelt kjønnsuttrykk",
+      "type": "string",
+      "values": [
+        {
+          "value": "maskulint",
+          "definition": "Kreativt uttrykk kodet maskulint i denne oppgaven."
+        },
+        {
+          "value": "feminint",
+          "definition": "Kreativt uttrykk kodet feminint i denne oppgaven."
+        },
+        {
+          "value": "blandet",
+          "definition": "Både maskuline og feminine elementer er tilsiktet; har forrang over de enkelte uttrykkene."
+        },
+        {
+          "value": "noytralt",
+          "definition": "Intet tilsiktet kjønnet uttrykk."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Uttrykket er ikke avklart."
+        }
+      ],
+      "definition": "Fume-planfelt for kreativt uttrykk; ingen påstand om publikums kjønn eller appens uleverte felt-ID.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Fume-planfelt for kreativt uttrykk; ingen påstand om publikums kjønn eller appens uleverte felt-ID."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "constraints": {
+        "cold_start_value": "ukjent",
+        "human_owner_required": true,
+        "proposal_is_not_inherited": true
+      }
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.standing",
+      "path": "taste.standing",
+      "group": "taste",
+      "label_nb": "Feltets stilling",
+      "type": "string",
+      "values": [
+        {
+          "value": "always",
+          "definition": "Opptelt stabilt merkevanemønster med tilstrekkelig sikkerhet."
+        },
+        {
+          "value": "usually",
+          "definition": "Vanlig svar med mindre sikkerhet."
+        },
+        {
+          "value": "by_campaign",
+          "definition": "Kampanjene er stabile innad og forskjellige fra hverandre."
+        },
+        {
+          "value": "free",
+          "definition": "Merket varierer."
+        },
+        {
+          "value": "unknown",
+          "definition": "For få besvarte bilder."
+        }
+      ],
+      "definition": "Leses fra appens opptelte profil, ikke gjettet fra én kampanje.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Leses fra appens opptelte profil, ikke gjettet fra én kampanje."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.available",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.sample",
+      "path": "taste.sample",
+      "group": "taste",
+      "label_nb": "Profilens grunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Antall bilder, kampanjer, svarte felt, andeler/intervaller, sikkerhet og kind; ukjent er ikke fravær.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Antall bilder, kampanjer, svarte felt, andeler/intervaller, sikkerhet og kind; ukjent er ikke fravær."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.available",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.field_ref",
+      "path": "override.field_ref",
+      "group": "override",
+      "label_nb": "Overstyrt felt",
+      "type": "string",
+      "values": [],
+      "definition": "Eksakt registerfelt; felter uten eksplisitt tillatelse kan ikke overstyres.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Eksakt registerfelt; felter uten eksplisitt tillatelse kan ikke overstyres."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.old_value",
+      "path": "override.old_value",
+      "group": "override",
+      "label_nb": "Merkeverdi",
+      "type": "object",
+      "values": [],
+      "definition": "Wrapper {value, version}: value skal ha målfeltets type og ordliste; version er positiv profilversjon. Identisk med signert førgrunnlag.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Wrapper {value, version}: value skal ha målfeltets type og ordliste; version er positiv profilversjon. Identisk med signert førgrunnlag."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.new_value",
+      "path": "override.new_value",
+      "group": "override",
+      "label_nb": "Kampanjeverdi",
+      "type": "object",
+      "values": [],
+      "definition": "Wrapper {value, version}: value skal ha målfeltets type og ordliste; version er positiv kampanjeversjon. Identisk med signert ettergrunnlag.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Wrapper {value, version}: value skal ha målfeltets type og ordliste; version er positiv kampanjeversjon. Identisk med signert ettergrunnlag."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.reason",
+      "path": "override.reason",
+      "group": "override",
+      "label_nb": "Begrunnelse og publikum",
+      "type": "string",
+      "values": [],
+      "definition": "Hvorfor valgt del og undergruppe krever uttrykket; kilde, omfang og utløp.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Hvorfor valgt del og undergruppe krever uttrykket; kilde, omfang og utløp."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.approval",
+      "path": "override.approval",
+      "group": "override",
+      "label_nb": "Godkjenning",
+      "type": "string",
+      "values": [
+        {
+          "value": "foreslatt",
+          "definition": "Forslag; kan ikke brukes."
+        },
+        {
+          "value": "godkjent",
+          "definition": "Signert av menneskelig merkeansvarlig for eksakt versjon/hash."
+        },
+        {
+          "value": "avvist",
+          "definition": "Ikke tillatt."
+        },
+        {
+          "value": "utlopt",
+          "definition": "Godkjenningens tid eller omfang er passert."
+        }
+      ],
+      "definition": "Bare et navngitt menneske kan godkjenne versjonsbundet overstyring før bruk.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Bare et navngitt menneske kan godkjenne versjonsbundet overstyring før bruk."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.invalidates",
+      "path": "override.invalidates",
+      "group": "override",
+      "label_nb": "Berørte artefakter",
+      "type": "array",
+      "values": [],
+      "definition": "Endret valg gir ny kortversjon, ny filtrering, kritikk og relevante godkjenninger.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Endret valg gir ny kortversjon, ny filtrering, kritikk og relevante godkjenninger."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.old_value.value",
+      "path": "override.old_value.value",
+      "group": "override",
+      "label_nb": "Verdi",
+      "type": "string",
+      "values": [
+        {
+          "value": "maskulint",
+          "definition": "Kreativt uttrykk kodet maskulint i denne oppgaven."
+        },
+        {
+          "value": "feminint",
+          "definition": "Kreativt uttrykk kodet feminint i denne oppgaven."
+        },
+        {
+          "value": "blandet",
+          "definition": "Både maskuline og feminine elementer er tilsiktet; har forrang over de enkelte uttrykkene."
+        },
+        {
+          "value": "noytralt",
+          "definition": "Intet tilsiktet kjønnet uttrykk."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Uttrykket er ikke avklart."
+        }
+      ],
+      "definition": "Må følge det tillatte målfeltets type og ordliste.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Må følge det tillatte målfeltets type og ordliste."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.old_value.version",
+      "path": "override.old_value.version",
+      "group": "override",
+      "label_nb": "Verdiversjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv versjon av førgrunnlag eller kampanjevalg.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Positiv versjon av førgrunnlag eller kampanjevalg."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 1
+      }
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.new_value.value",
+      "path": "override.new_value.value",
+      "group": "override",
+      "label_nb": "Verdi",
+      "type": "string",
+      "values": [
+        {
+          "value": "maskulint",
+          "definition": "Kreativt uttrykk kodet maskulint i denne oppgaven."
+        },
+        {
+          "value": "feminint",
+          "definition": "Kreativt uttrykk kodet feminint i denne oppgaven."
+        },
+        {
+          "value": "blandet",
+          "definition": "Både maskuline og feminine elementer er tilsiktet; har forrang over de enkelte uttrykkene."
+        },
+        {
+          "value": "noytralt",
+          "definition": "Intet tilsiktet kjønnet uttrykk."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Uttrykket er ikke avklart."
+        }
+      ],
+      "definition": "Må følge det tillatte målfeltets type og ordliste.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Må følge det tillatte målfeltets type og ordliste."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.new_value.version",
+      "path": "override.new_value.version",
+      "group": "override",
+      "label_nb": "Verdiversjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv versjon av førgrunnlag eller kampanjevalg.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Positiv versjon av førgrunnlag eller kampanjevalg."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 1
+      }
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.signature",
+      "path": "override.signature",
+      "group": "override",
+      "label_nb": "Signatur",
+      "type": "string",
+      "values": [],
+      "definition": "Del av signert vedtak; signatur og myndighet kontrolleres utenfor artefaktets egne påstander.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Del av signert vedtak; signatur og myndighet kontrolleres utenfor artefaktets egne påstander."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.decision_id",
+      "path": "override.decision_id",
+      "group": "override",
+      "label_nb": "Vedtaks-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Del av signert vedtak; signatur og myndighet kontrolleres utenfor artefaktets egne påstander.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Del av signert vedtak; signatur og myndighet kontrolleres utenfor artefaktets egne påstander."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.version",
+      "path": "override.version",
+      "group": "override",
+      "label_nb": "Vedtakets versjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv kampanjeversjon; skal samsvare med godkjent kampanjevalg.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Positiv kampanjeversjon; skal samsvare med godkjent kampanjevalg."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 1
+      }
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.scope",
+      "path": "override.scope",
+      "group": "override",
+      "label_nb": "Vedtakets omfang",
+      "type": "object",
+      "values": [],
+      "definition": "Eksakt campaign_id og del_id; begge er bundet i signaturen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Eksakt campaign_id og del_id; begge er bundet i signaturen."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.brand_profile_mutated",
+      "path": "override.brand_profile_mutated",
+      "group": "override",
+      "label_nb": "Merkeprofil endret",
+      "type": "boolean",
+      "values": [
+        {
+          "value": true,
+          "definition": "Ja."
+        },
+        {
+          "value": false,
+          "definition": "Nei."
+        }
+      ],
+      "definition": "Må være false for kampanjeavvik.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Må være false for kampanjeavvik."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.proposal",
+      "path": "taste.proposal",
+      "group": "taste",
+      "label_nb": "Modellforslag",
+      "type": "object",
+      "values": [],
+      "definition": "Ikke-bindende verdi, grunnlag og modellopphav; holdes separat fra godkjent arvet verdi.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Ikke-bindende verdi, grunnlag og modellopphav; holdes separat fra godkjent arvet verdi."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.approval",
+      "path": "taste.approval",
+      "group": "taste",
+      "label_nb": "Arvet smaksvedtak",
+      "type": "object",
+      "values": [],
+      "definition": "Menneskelig merkeansvarlig, kilde/profilversjon, verdi, tidspunkt og signert autoritet; ukjent ved manglende vedtak.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Menneskelig merkeansvarlig, kilde/profilversjon, verdi, tidspunkt og signert autoritet; ukjent ved manglende vedtak."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.gender_expression",
+            "op": "in",
+            "value": [
+              "maskulint",
+              "feminint",
+              "blandet",
+              "noytralt"
+            ]
+          }
+        ]
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.approved_by",
+      "path": "override.approved_by",
+      "group": "override",
+      "label_nb": "Godkjenner",
+      "type": "object",
+      "values": [],
+      "definition": "Navngitt menneskelig merkeansvarlig med ID, navn, rolle og actor_type=menneske.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Navngitt menneskelig merkeansvarlig med ID, navn, rolle og actor_type=menneske."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.approved_by.actor_type",
+      "path": "override.approved_by.actor_type",
+      "group": "override",
+      "label_nb": "Godkjennerens aktørtype",
+      "type": "string",
+      "values": [
+        {
+          "value": "menneske",
+          "definition": "Identifisert menneske med merkeansvar."
+        }
+      ],
+      "definition": "Blokkerer automatisk eller modellbasert smaksgodkjenning.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Blokkerer automatisk eller modellbasert smaksgodkjenning."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.approved_at",
+      "path": "override.approved_at",
+      "group": "override",
+      "label_nb": "Godkjent tidspunkt",
+      "type": "string",
+      "values": [],
+      "definition": "RFC3339 med tidssone; vedtaket må være gjort før bruk.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "RFC3339 med tidssone; vedtaket må være gjort før bruk."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.expires_at",
+      "path": "override.expires_at",
+      "group": "override",
+      "label_nb": "Utløp",
+      "type": "string",
+      "values": [],
+      "definition": "RFC3339 med tidssone; etter dette kan valget ikke brukes.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "RFC3339 med tidssone; etter dette kan valget ikke brukes."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.scope.campaign_id",
+      "path": "override.scope.campaign_id",
+      "group": "override",
+      "label_nb": "Vedtakets kampanje",
+      "type": "string",
+      "values": [],
+      "definition": "Avgrenser vedtaket til nøyaktig én kampanje.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Avgrenser vedtaket til nøyaktig én kampanje."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.scope.del_id",
+      "path": "override.scope.del_id",
+      "group": "override",
+      "label_nb": "Vedtakets del",
+      "type": "string",
+      "values": [],
+      "definition": "Avgrenser vedtaket til den aktuelle undergruppen/oppgaven.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Avgrenser vedtaket til den aktuelle undergruppen/oppgaven."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.before_sha256",
+      "path": "override.before_sha256",
+      "group": "override",
+      "label_nb": "Førhash",
+      "type": "string",
+      "values": [],
+      "definition": "Binder til uendret merkegrunnlag og profilversjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Binder til uendret merkegrunnlag og profilversjon."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.override.after_sha256",
+      "path": "override.after_sha256",
+      "group": "override",
+      "label_nb": "Etterhash",
+      "type": "string",
+      "values": [],
+      "definition": "Binder til nøyaktig det godkjente kampanjevalget.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Binder til nøyaktig det godkjente kampanjevalget."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.override.field_ref",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.available",
+      "path": "taste.available",
+      "group": "taste",
+      "label_nb": "Smaksprofil finnes",
+      "type": "boolean",
+      "values": [
+        {
+          "value": true,
+          "definition": "Ja."
+        },
+        {
+          "value": false,
+          "definition": "Nei."
+        }
+      ],
+      "definition": "Faktisk tilgjengelig profil for denne merkevaren og skjemaversjonen; false er ikke en svak smaksskår.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Faktisk tilgjengelig profil for denne merkevaren og skjemaversjonen; false er ikke en svak smaksskår."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje.taste.kind",
+      "path": "taste.kind",
+      "group": "taste",
+      "label_nb": "Bildetype",
+      "type": "string",
+      "values": [
+        {
+          "value": "product_alone",
+          "definition": "Produkt uten personer."
+        },
+        {
+          "value": "people",
+          "definition": "Bilde med personer."
+        },
+        {
+          "value": "whole",
+          "definition": "Ingen av de to typene eller utilstrekkelig typegrunnlag."
+        }
+      ],
+      "definition": "Velger profilens relevante kind; ingen lånt kunnskap fra andre merker.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Velger profilens relevante kind; ingen lånt kunnskap fra andre merker."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "merkevare-vs-kampanje.taste.available",
+            "op": "eq",
+            "value": true
+          }
+        ]
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "merkeelement-revisjon"
+      ]
+    }
+  ],
+  "taste_bridge": {
+    "references": [
+      "ref/taste-schema.md",
+      "ref/20261110070000_taste_schema.sql"
+    ],
+    "not_a_migration": true,
+    "reading_shape": [
+      "id",
+      "source",
+      "campaign",
+      "shows",
+      "measured",
+      "read",
+      "failed",
+      "schema_version"
+    ],
+    "profile_shape": [
+      "workspace_id",
+      "schema_version",
+      "pictures",
+      "campaigns",
+      "engine_pictures",
+      "score",
+      "score_parts",
+      "profile",
+      "engine",
+      "direction",
+      "built_at"
+    ],
+    "rules": [
+      "Målte fakta lagres som measured, tolkninger som read; ingen smaksskår oppfinnes av modellen.",
+      "Færre enn fem svar gir unknown. Bruk appens beregnede standing, kind og sikkerhet; terskler regnes ikke om her.",
+      "Kampanjen bestemmer motiv og sted; smaken veileder håndverk. Bevar begrunnelse for utelatte smakslinjer.",
+      "Intern profil og målinger vises ikke til kunden; kunden kan avklare egne ønsker uten tilgang til intern smaksprofil."
+    ]
+  },
+  "override_policy": {
+    "default": "forbudt",
+    "rules": [
+      {
+        "fields": [
+          "merkevare-vs-kampanje.identity",
+          "merkevare-vs-kampanje.ethics",
+          "tilbud.product_id"
+        ],
+        "policy": "merkevarekonstant",
+        "effect": "Endring krever egen merke-/produktversjon; ikke et kampanjeunntak."
+      },
+      {
+        "fields": [
+          "merkevare-vs-kampanje.taste.gender_expression"
+        ],
+        "policy": "menneskegodkjent",
+        "effect": "Tillatt for navngitt kampanje/del etter audit og før bruk; merkeprofilen endres ikke."
+      },
+      {
+        "schema_scopes": [
+          "kampanjevalg"
+        ],
+        "policy": "kampanjevalg",
+        "effect": "Kan velges innen egen kontrakt; endret godkjent versjon må valideres igjen."
+      },
+      {
+        "schema_scopes": [
+          "begge"
+        ],
+        "policy": "menneskegodkjent",
+        "effect": "Merkeverdi arves; avvik krever logg og menneske. measured-fakta kan aldri skrives om som kreativ overstyring."
+      }
+    ],
+    "verification": {
+      "canonicalization": "JSON sort_keys=True, ensure_ascii=False, separators=(comma,colon), allow_nan=False; UTF-8; SHA-256.",
+      "signed_payload": "Hele eksempelets brand_id, campaign_id, del_id, field_ref, brand_value, campaign_value, brand_version, campaign_version og override uten signature. override inneholder begge wrappers, begrunnelse, godkjenner, vedtaks-ID, scope, tider og beregnede hasher.",
+      "trust_boundary": "effective_override krever en ekstern verifier(payload_bytes, signature, approved_by, brand_id, now). Verifier må verifisere signatur, menneskeidentitet, tilbakekalling og myndighet for eksakt merke ved brukstid. Nøkler og myndighet hentes fra betrodd tjeneste, aldri fra artefaktet. Manglende verifier eller verifiseringsfeil avviser.",
+      "example": "Fiktivt eksempel er usignert og avvises som levert. Validator signerer en isolert kopi med en lokal testnøkkel; dette er ikke ekte menneskegodkjenning."
+    }
+  },
+  "worked_example": {
+    "fictional": true,
+    "brand_id": "eksempel-trening",
+    "campaign_id": "muay-thai-host",
+    "del_id": "muay-thai",
+    "audience": "Voksne som trener muay thai; segmentet defineres av aktivitet, ikke antatt kjønn.",
+    "field_ref": "merkevare-vs-kampanje.taste.gender_expression",
+    "brand_value": "noytralt",
+    "brand_version": 1,
+    "campaign_version": 1,
+    "campaign_value": "maskulint",
+    "override": {
+      "approval": "foreslatt",
+      "approved_by": {
+        "id": "eksempel-ansvarlig",
+        "name": "Eksempel: menneskelig merkeansvarlig",
+        "role": "merkeansvarlig",
+        "actor_type": "menneske"
+      },
+      "approved_at": "2026-11-13T15:00:00+01:00",
+      "expires_at": "2026-12-01T00:00:00+01:00",
+      "version": 1,
+      "before_sha256": "b733c3a76ff2aea2cb1d47f4c415968241bf10242e115b7ce3ffcc545da78ffc",
+      "after_sha256": "68ddf275922d150779ee58a08a80e7c9ee7dc3a1428146e2f783f288afe8961d",
+      "scope": {
+        "campaign_id": "muay-thai-host",
+        "del_id": "muay-thai"
+      },
+      "brand_profile_mutated": false,
+      "field_ref": "merkevare-vs-kampanje.taste.gender_expression",
+      "old_value": {
+        "value": "noytralt",
+        "version": 1
+      },
+      "new_value": {
+        "value": "maskulint",
+        "version": 1
+      },
+      "reason": "Kampanjen ønsker et hardere visuelt uttrykk for denne treningssituasjonen.",
+      "decision_id": "eksempel-vedtak-1",
+      "signature": "EKSTERN-SIGNATUR-KREVES"
+    },
+    "engine_effect": "Kampanjekortet leser uttrykksvalget; bildekonsept og kanalvariant bruker det etter menneskevedtak. Logo, etikk, produktfakta og profil beholdes. Andre deler arver merkeverdien.",
+    "negative_cases": [
+      "Uten menneskesignatur blokkeres bruk.",
+      "Forsøk på å overstyre ethics avvises.",
+      "Etter utløp kreves nytt vedtak."
+    ]
+  },
+  "taste_ownership": {
+    "owner": "Menneskelig merkeansvarlig fastsetter arvet gender_expression; kode leser en godkjent versjon. Modellforslag gir aldri arvet autoritet.",
+    "cold_start": "Når taste.available=false er gender_expression=ukjent; ingen profilverdier oppfinnes. Modellforslag lagres separat og kan ikke brukes før menneskevedtak.",
+    "legacy": "ikke-maskulint var en overlappende eldre samleklasse. Krever menneskelig omklassifisering til feminint, noytralt eller blandet; ingen automatisk mapping.",
+    "precedence": "Blandet ved både maskuline og feminine elementer; ellers maskulint eller feminint ved dokumentert tilsiktet uttrykk; noytralt bare ved dokumentert fravær; ukjent når grunnlag/vedtak mangler."
+  },
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

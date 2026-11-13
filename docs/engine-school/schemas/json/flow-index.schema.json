@@ -1,0 +1,354 @@
+{
+  "type": "object",
+  "properties": {
+    "campaign_card_rule": {
+      "type": "object",
+      "properties": {
+        "before_writing": {
+          "type": "string"
+        },
+        "contract": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "first_flow": {
+          "type": "string"
+        },
+        "late_findings": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "per_part": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "before_writing",
+        "contract",
+        "filter",
+        "first_flow",
+        "late_findings",
+        "path",
+        "per_part",
+        "schema"
+      ],
+      "additionalProperties": false
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "n",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "combined_execution_rule": {
+      "type": "string"
+    },
+    "entry_artifact": {
+      "type": "object",
+      "properties": {
+        "content_contract": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "producer": {
+          "type": "string"
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "schema": {
+          "type": "string"
+        },
+        "validation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "content_contract",
+        "path",
+        "producer",
+        "required",
+        "schema",
+        "validation"
+      ],
+      "additionalProperties": false
+    },
+    "ethics": {
+      "type": "string"
+    },
+    "failure_rule": {
+      "type": "string"
+    },
+    "final_artifact": {
+      "type": "string"
+    },
+    "final_artifact_schema": {
+      "type": "string"
+    },
+    "flows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "checkpoints": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 0
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          },
+          "file": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "input": {
+            "type": "string"
+          },
+          "input_fields": {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-61a190c1f09cab02"
+          },
+          "input_schema": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer"
+          },
+          "output_artifact": {
+            "type": "string"
+          },
+          "output_artifact_schema": {
+            "type": "string"
+          },
+          "schema_reads": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 0
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "n": {
+                  "type": "integer"
+                },
+                "reads": {
+                  "type": "string"
+                },
+                "reads_schema": {
+                  "type": "string"
+                },
+                "validation": {
+                  "type": "string"
+                },
+                "who": {
+                  "type": "string"
+                },
+                "writes": {
+                  "type": "string"
+                },
+                "writes_schema": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "n",
+                "reads",
+                "reads_schema",
+                "validation",
+                "who",
+                "writes",
+                "writes_schema"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0
+          },
+          "validation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "checkpoints",
+          "depends_on",
+          "file",
+          "id",
+          "input",
+          "input_fields",
+          "input_schema",
+          "name",
+          "order",
+          "output_artifact",
+          "output_artifact_schema",
+          "schema_reads",
+          "steps",
+          "validation"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "handoff_rule": {
+      "type": "string"
+    },
+    "model_rule": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "optional_routes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "after": {
+            "type": "string"
+          },
+          "before": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "id": {
+            "type": "string"
+          },
+          "input_binding": {
+            "type": "string"
+          },
+          "input_binding_schema": {
+            "type": "string"
+          },
+          "next_input_binding": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "next_input_binding_schema": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "trigger": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "after",
+          "before",
+          "id",
+          "input_binding",
+          "input_binding_schema",
+          "next_input_binding",
+          "next_input_binding_schema",
+          "trigger"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "path_rule": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "routing_rule": {
+      "type": "string"
+    },
+    "schema_rebinding_rule": {
+      "type": "string"
+    },
+    "schema_registry": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "campaign_card_rule",
+    "checkpoints",
+    "combined_execution_rule",
+    "entry_artifact",
+    "ethics",
+    "failure_rule",
+    "final_artifact",
+    "final_artifact_schema",
+    "flows",
+    "handoff_rule",
+    "model_rule",
+    "name",
+    "optional_routes",
+    "path_rule",
+    "purpose",
+    "routing_rule",
+    "schema_rebinding_rule",
+    "schema_registry",
+    "scope",
+    "state"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/flow-index.schema.json",
+  "title": "flow-index"
+}

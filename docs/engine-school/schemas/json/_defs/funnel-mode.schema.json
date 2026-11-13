@@ -1,0 +1,20 @@
+{
+  "enum": [
+    "merkebygging",
+    "hosting",
+    "begge"
+  ],
+  "x-list": "../../lists/funnel-mode.json",
+  "$defs": {
+    "subset-27c662fed7e25d70": {
+      "enum": [
+        "merkebygging",
+        "hosting"
+      ],
+      "x-list": "../../lists/funnel-mode.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/funnel-mode.schema.json",
+  "title": "funnel-mode"
+}

@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "praktiker",
+    "fume",
+    "forskning",
+    "lov",
+    "plattform"
+  ],
+  "x-list": "../../lists/tier.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/tier.schema.json",
+  "title": "tier"
+}

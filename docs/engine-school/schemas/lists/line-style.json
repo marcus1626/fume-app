@@ -1,0 +1,46 @@
+{
+  "id": "line-style",
+  "label_nb": "Linjestil",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "rett-pa-sak",
+      "label_nb": "Rett på sak",
+      "definition": "Direkte formulert fordel."
+    },
+    {
+      "id": "gjenkjennelig-hverdag",
+      "label_nb": "Gjenkjennelig hverdag",
+      "definition": "Situasjon fra leserens hverdag."
+    },
+    {
+      "id": "sporsmal",
+      "label_nb": "Spørsmål",
+      "definition": "Spørsmål som åpner relevant tanke."
+    },
+    {
+      "id": "kontrast",
+      "label_nb": "Kontrast",
+      "definition": "To forhold settes opp mot hverandre."
+    },
+    {
+      "id": "konkret-bevis",
+      "label_nb": "Konkret bevis",
+      "definition": "Et etterprøvbart forhold bærer linjen."
+    },
+    {
+      "id": "torr-humor",
+      "label_nb": "Tørr humor",
+      "definition": "Underspilt humor med dokumentert relevans."
+    }
+  ]
+}

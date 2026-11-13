@@ -1,0 +1,91 @@
+{
+  "id": "trigger",
+  "label_nb": "Regelutløser",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "skjema",
+      "label_nb": "Skjema",
+      "definition": "Innholdet har et skjema som skal leses eller fylles ut."
+    },
+    {
+      "id": "prisbudskap",
+      "label_nb": "Prisbudskap",
+      "definition": "Innholdet oppgir pris eller prisfordel."
+    },
+    {
+      "id": "egenmarkedsforing-google-tjenester",
+      "label_nb": "Egenmarkedsforing google tjenester",
+      "definition": "Avsender markedsfører egne Google Ads-tjenester."
+    },
+    {
+      "id": "egenmarkedsforing-google-kompetanse",
+      "label_nb": "Egenmarkedsforing google kompetanse",
+      "definition": "Avsender markedsfører egen Google Ads-kompetanse."
+    },
+    {
+      "id": "resultatrapport",
+      "label_nb": "Resultatrapport",
+      "definition": "Resultater rapporteres."
+    },
+    {
+      "id": "trend",
+      "label_nb": "Trend",
+      "definition": "En aktuell trend brukes."
+    },
+    {
+      "id": "nettstedskonvertering",
+      "label_nb": "Nettstedskonvertering",
+      "definition": "Nettstedskonvertering er målet."
+    },
+    {
+      "id": "kreativtest",
+      "label_nb": "Kreativtest",
+      "definition": "Kreativer sammenlignes i test."
+    },
+    {
+      "id": "splittest",
+      "label_nb": "Splittest",
+      "definition": "En splittest gjennomføres."
+    },
+    {
+      "id": "tale",
+      "label_nb": "Tale",
+      "definition": "Videoen inneholder tale."
+    },
+    {
+      "id": "persondemonstrasjon",
+      "label_nb": "Persondemonstrasjon",
+      "definition": "En person viser produkt eller handling."
+    },
+    {
+      "id": "skapersamarbeid",
+      "label_nb": "Skapersamarbeid",
+      "definition": "En virkelig skaper samarbeider med avsender."
+    },
+    {
+      "id": "handling-som-mal",
+      "label_nb": "Handling som mal",
+      "definition": "Innholdet skal utløse en bestemt handling."
+    },
+    {
+      "id": "vurdering-som-mal",
+      "label_nb": "Vurdering som mal",
+      "definition": "Innholdet hjelper vurdering av alternativer."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen ekstra utløser."
+    }
+  ]
+}

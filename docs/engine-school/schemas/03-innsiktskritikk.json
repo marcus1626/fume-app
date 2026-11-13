@@ -1,0 +1,196 @@
+{
+  "id": "03-innsiktskritikk",
+  "label_nb": "Innsiktsjakt med menneskelig valg — steg 4",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "leser"
+  ],
+  "read_by": [
+    "innsiktsjakt"
+  ],
+  "fields": [
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt",
+      "path": "innhold.innsikt",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet innsikt for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "Samlet innsikt for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt.kilder",
+      "path": "innhold.innsikt.kilder",
+      "group": "innhold",
+      "label_nb": "Kildepakke",
+      "type": "array",
+      "values": [],
+      "definition": "Kilde-ID, locator, dato, tilgang, utvalg og korte dokumenterte observasjoner.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "Kilde-ID, locator, dato, tilgang, utvalg og korte dokumenterte observasjoner."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt.forslag",
+      "path": "innhold.innsikt.forslag",
+      "group": "innhold",
+      "label_nb": "Innsiktsforslag",
+      "type": "array",
+      "values": [],
+      "definition": "5–10 ulike forslag: ID, observasjon, kilde/locator, tolkning, relevans, to sider av spenningen og usikkerhet.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "5–10 ulike forslag: ID, observasjon, kilde/locator, tolkning, relevans, to sider av spenningen og usikkerhet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt.kildekontroll",
+      "path": "innhold.innsikt.kildekontroll",
+      "group": "innhold",
+      "label_nb": "Strukturell kildekontroll",
+      "type": "array",
+      "values": [],
+      "definition": "Kobling til hentet kildepakke og synlige avvik; strukturkontroll er ikke faglig godkjenning.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "Kobling til hentet kildepakke og synlige avvik; strukturkontroll er ikke faglig godkjenning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt.valgt_id",
+      "path": "innhold.innsikt.valgt_id",
+      "group": "innhold",
+      "label_nb": "Menneskets valgte innsikt",
+      "type": "string",
+      "values": [],
+      "definition": "Nøyaktig én validert forslags-ID, valgt av navngitt menneske.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "Nøyaktig én validert forslags-ID, valgt av navngitt menneske."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "03-innsiktskritikk.innhold.innsikt.valggrunn",
+      "path": "innhold.innsikt.valggrunn",
+      "group": "innhold",
+      "label_nb": "Valg og fravalg",
+      "type": "object",
+      "values": [],
+      "definition": "Begrunnelse, akseptert usikkerhet og hvorfor andre forslag legges til side.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "innsiktsjakt"
+        ],
+        "choices": "Begrunnelse, akseptert usikkerhet og hvorfor andre forslag legges til side."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "innsiktsjakt"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/03-innsiktskritikk.json",
+  "artifact_family": "innsikt",
+  "producer": {
+    "flow": "innsiktsjakt",
+    "step": 4,
+    "who": "kritiker"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.innsikt.",
+  "validation_profile": {
+    "step_validation": "flows/innsiktsjakt.json#/steps/3/validation",
+    "required_from_steps": {
+      "kilder": 1,
+      "forslag": 2,
+      "kildekontroll": 3,
+      "valgt_id": 5,
+      "valggrunn": 5
+    },
+    "critic_required": true,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

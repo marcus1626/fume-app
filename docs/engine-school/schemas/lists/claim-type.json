@@ -1,0 +1,56 @@
+{
+  "id": "claim-type",
+  "label_nb": "Påstandstype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "skills/Lov.json",
+      "locator": "Påstandstyper utledet fra faktiske regeltekster",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Fume-klassifisering fra teksttreff; ikke uttømmende juridisk klassifisering eller godkjenning."
+    }
+  ],
+  "values": [
+    {
+      "id": "helse",
+      "label_nb": "Helse",
+      "definition": "Påstand om sammenheng mellom produkt og helse."
+    },
+    {
+      "id": "ernaering",
+      "label_nb": "Ernæring",
+      "definition": "Påstand om næringsinnhold eller ernæringsmessig egenskap."
+    },
+    {
+      "id": "miljo",
+      "label_nb": "Miljø",
+      "definition": "Påstand om miljøegenskap, miljøvirkning eller bærekraft."
+    },
+    {
+      "id": "pris",
+      "label_nb": "Pris",
+      "definition": "Påstand om pris, prisfordel eller tilbudsvilkår."
+    },
+    {
+      "id": "sammenligning",
+      "label_nb": "Sammenligning",
+      "definition": "Sammenligner produkt, ytelse eller vilkår med et alternativ."
+    },
+    {
+      "id": "effekt",
+      "label_nb": "Effekt",
+      "definition": "Påstand om virkning eller oppnådd resultat."
+    },
+    {
+      "id": "superlativ",
+      "label_nb": "Superlativ",
+      "definition": "Påstand om overlegenhet eller rangering."
+    },
+    {
+      "id": "knapphet",
+      "label_nb": "Knapphet",
+      "definition": "Påstand om begrenset tilgang, antall eller tid."
+    }
+  ]
+}

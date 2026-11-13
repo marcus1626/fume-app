@@ -1,0 +1,136 @@
+{
+  "id": "ad-product",
+  "label_nb": "Annonseprodukt",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "generisk",
+      "label_nb": "Generisk",
+      "definition": "Ingen navngitt annonseprodukttype."
+    },
+    {
+      "id": "karusell",
+      "label_nb": "Karusell",
+      "definition": "Flere kort som kan blas."
+    },
+    {
+      "id": "samling",
+      "label_nb": "Samling",
+      "definition": "Produktsamling med hovedressurs."
+    },
+    {
+      "id": "fleksibel",
+      "label_nb": "Fleksibel",
+      "definition": "Meta setter sammen ressurser i støttet oppsett."
+    },
+    {
+      "id": "responsiv-display",
+      "label_nb": "Responsiv display",
+      "definition": "Google kombinerer ressurser til display."
+    },
+    {
+      "id": "shopping",
+      "label_nb": "Shopping",
+      "definition": "Google-produktoppføring fra produktdata."
+    },
+    {
+      "id": "app",
+      "label_nb": "App",
+      "definition": "Google-annonse for appinstallasjon eller bruk."
+    },
+    {
+      "id": "yt-skippable",
+      "label_nb": "Yt skippable",
+      "definition": "Video som kan hoppes over."
+    },
+    {
+      "id": "yt-non-skippable",
+      "label_nb": "Yt non skippable",
+      "definition": "Video uten hopp over, etter kampanjetype."
+    },
+    {
+      "id": "yt-in-feed",
+      "label_nb": "Yt in feed",
+      "definition": "Videoannonse valgt fra YouTube-feed eller søk."
+    },
+    {
+      "id": "yt-bumper",
+      "label_nb": "Yt bumper",
+      "definition": "Kort YouTube-video med egen lengdegrense."
+    },
+    {
+      "id": "yt-masthead",
+      "label_nb": "Yt masthead",
+      "definition": "Reservasjonsformat på YouTube-forsiden."
+    },
+    {
+      "id": "yt-shorts",
+      "label_nb": "Yt shorts",
+      "definition": "Video i YouTube Shorts."
+    },
+    {
+      "id": "tt-spark",
+      "label_nb": "Tt spark",
+      "definition": "Annonse fra autorisert organisk TikTok-innlegg."
+    },
+    {
+      "id": "tt-non-spark",
+      "label_nb": "Tt non spark",
+      "definition": "Separat opplastet TikTok in-feed-annonse."
+    },
+    {
+      "id": "li-dokument",
+      "label_nb": "Li dokument",
+      "definition": "Dokumentannonse i LinkedIn."
+    },
+    {
+      "id": "li-event",
+      "label_nb": "Li event",
+      "definition": "Annonse for LinkedIn-arrangement."
+    },
+    {
+      "id": "li-melding",
+      "label_nb": "Li melding",
+      "definition": "Direkte sponsormelding der tilgjengelig."
+    },
+    {
+      "id": "li-samtale",
+      "label_nb": "Li samtale",
+      "definition": "Sponset meldingsforløp med svarvalg."
+    },
+    {
+      "id": "li-follower",
+      "label_nb": "Li follower",
+      "definition": "Dynamisk LinkedIn-annonse for følgere."
+    },
+    {
+      "id": "li-spotlight",
+      "label_nb": "Li spotlight",
+      "definition": "Dynamisk LinkedIn-annonse for tilbud."
+    },
+    {
+      "id": "li-jobb",
+      "label_nb": "Li jobb",
+      "definition": "LinkedIn jobbannonse."
+    },
+    {
+      "id": "li-artikkel-nyhetsbrev",
+      "label_nb": "Li artikkel nyhetsbrev",
+      "definition": "Sponset LinkedIn-artikkel eller nyhetsbrev."
+    },
+    {
+      "id": "li-thought-leader",
+      "label_nb": "Li thought leader",
+      "definition": "Sponset innlegg fra autorisert person."
+    }
+  ]
+}

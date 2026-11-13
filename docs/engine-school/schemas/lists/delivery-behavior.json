@@ -1,0 +1,41 @@
+{
+  "id": "delivery-behavior",
+  "label_nb": "Leveringsatferd",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "hoppbar",
+      "label_nb": "Hoppbar",
+      "definition": "Kan hoppes over."
+    },
+    {
+      "id": "ikke-hoppbar",
+      "label_nb": "Ikke hoppbar",
+      "definition": "Kan ikke hoppes over."
+    },
+    {
+      "id": "brukerstartet",
+      "label_nb": "Brukerstartet",
+      "definition": "Brukeren starter avspilling."
+    },
+    {
+      "id": "feed",
+      "label_nb": "Feed",
+      "definition": "Leveres i feed."
+    },
+    {
+      "id": "ikke-relevant",
+      "label_nb": "Ikke relevant",
+      "definition": "Ingen avspillingsatferd for denne leveransen."
+    }
+  ]
+}

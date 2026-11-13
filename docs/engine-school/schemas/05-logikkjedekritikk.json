@@ -1,0 +1,224 @@
+{
+  "id": "05-logikkjedekritikk",
+  "label_nb": "Problem, løfte, bevis og handling — steg 3",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "leser",
+    "tilbud"
+  ],
+  "read_by": [
+    "logikkjede"
+  ],
+  "fields": [
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede",
+      "path": "innhold.logikkjede",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet logikkjede for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Samlet logikkjede for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.problem",
+      "path": "innhold.logikkjede.problem",
+      "group": "innhold",
+      "label_nb": "Problem",
+      "type": "string",
+      "values": [],
+      "definition": "Dokumentert problem fra valgt innsikt.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Dokumentert problem fra valgt innsikt."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.lofte",
+      "path": "innhold.logikkjede.lofte",
+      "group": "innhold",
+      "label_nb": "Løfte",
+      "type": "string",
+      "values": [],
+      "definition": "Godkjent løfte videreført uten meningsendring.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Godkjent løfte videreført uten meningsendring."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.bevis",
+      "path": "innhold.logikkjede.bevis",
+      "group": "innhold",
+      "label_nb": "Bevis",
+      "type": "array",
+      "values": [],
+      "definition": "Dokumentasjon som gjelder samme produkt, egenskap og brukssituasjon.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Dokumentasjon som gjelder samme produkt, egenskap og brukssituasjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.handling",
+      "path": "innhold.logikkjede.handling",
+      "group": "innhold",
+      "label_nb": "Handling",
+      "type": "object",
+      "values": [],
+      "definition": "Én gjennomførbar oppfordring, målsted, salgsdefinisjon og målkilde.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Én gjennomførbar oppfordring, målsted, salgsdefinisjon og målkilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.forbindelser",
+      "path": "innhold.logikkjede.forbindelser",
+      "group": "innhold",
+      "label_nb": "Hvorfor leddene følger",
+      "type": "array",
+      "values": [],
+      "definition": "Begrunn problem→løfte→bevis→handling med konkrete kilde- og beslutnings-ID-er.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Begrunn problem→løfte→bevis→handling med konkrete kilde- og beslutnings-ID-er."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "05-logikkjedekritikk.innhold.logikkjede.malsjekk",
+      "path": "innhold.logikkjede.malsjekk",
+      "group": "innhold",
+      "label_nb": "Kontrollert målsted",
+      "type": "object",
+      "values": [],
+      "definition": "Tilgangstidspunkt, versjon, tilgjengelig tilbud og kilde for salgsregistrering.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "logikkjede"
+        ],
+        "choices": "Tilgangstidspunkt, versjon, tilgjengelig tilbud og kilde for salgsregistrering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/05-logikkjedekritikk.json",
+  "artifact_family": "logikkjede",
+  "producer": {
+    "flow": "logikkjede",
+    "step": 3,
+    "who": "kritiker"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.logikkjede.",
+  "validation_profile": {
+    "step_validation": "flows/logikkjede.json#/steps/2/validation",
+    "required_from_steps": {
+      "problem": 1,
+      "lofte": 1,
+      "bevis": 1,
+      "handling": 1,
+      "forbindelser": 1,
+      "malsjekk": 2
+    },
+    "critic_required": true,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

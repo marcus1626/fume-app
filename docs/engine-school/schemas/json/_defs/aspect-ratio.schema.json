@@ -1,0 +1,28 @@
+{
+  "enum": [
+    "9:16",
+    "4:5",
+    "1:1",
+    "1.91:1",
+    "16:9",
+    "annet",
+    "alle"
+  ],
+  "x-list": "../../lists/aspect-ratio.json",
+  "$defs": {
+    "subset-4ee29867585446de": {
+      "enum": [
+        "9:16",
+        "4:5",
+        "1:1",
+        "1.91:1",
+        "16:9",
+        "annet"
+      ],
+      "x-list": "../../lists/aspect-ratio.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/aspect-ratio.schema.json",
+  "title": "aspect-ratio"
+}

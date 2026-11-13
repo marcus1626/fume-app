@@ -1,0 +1,141 @@
+{
+  "result": "PASS",
+  "unchanged_skill_files": 7,
+  "unchanged_flow_files_including_index": 18,
+  "unchanged_pensum_entries": 115,
+  "registry_count": 95,
+  "field_count": 817,
+  "changed_registry_values": 32,
+  "changes_all_match_mapping_log": true,
+  "registry_index_unchanged": true,
+  "changes": [
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/0/value"
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/1/value"
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/2/value"
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/3/value"
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/4/value"
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/5/value"
+    },
+    {
+      "file": "schemas/kanal-format.json",
+      "pointer": "/fields/1/values/54/channel"
+    },
+    {
+      "file": "schemas/skill-filter.json",
+      "pointer": "/fields/12/values/54/channel"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/0/value"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/1/value"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/2/value"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/3/value"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/4/value"
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/5/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/0/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/1/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/2/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/3/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/4/value"
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/5/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/0/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/1/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/2/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/3/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/4/value"
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/5/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/0/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/1/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/2/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/3/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/4/value"
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/5/value"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "country-group",
+  "label_nb": "Landgruppe",
+  "source": [
+    {
+      "source": "EFTA",
+      "url": "https://www.efta.int/about-efta/legal-documents/eea-legal-texts",
+      "locator": "The EEA Agreement; EEA Status of EU legal acts",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    }
+  ],
+  "values": [
+    {
+      "id": "EU",
+      "label_nb": "EU",
+      "definition": "Overlappende medlemsgruppe, ikke eksklusivt landvalg. EU-land er også i EØS; medlemskap gir ikke automatisk lokal rettsanvendelse."
+    },
+    {
+      "id": "EEA",
+      "label_nb": "EØS",
+      "definition": "Overlappende medlemsgruppe: EU-land samt Norge, Island og Liechtenstein; innlemmelse og nasjonal gjennomføring må kontrolleres."
+    }
+  ]
+}

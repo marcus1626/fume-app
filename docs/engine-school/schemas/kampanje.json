@@ -1,0 +1,2143 @@
+{
+  "id": "kampanje",
+  "label_nb": "Kampanjens rammer",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "bilde-som-tredje-tanke",
+    "brief-en-setning",
+    "east-tiltak-og-test",
+    "innsiktsjakt",
+    "kampanjekort",
+    "konkurrenter-for-loftet",
+    "leserkort",
+    "linjebredde-og-valg",
+    "logikkjede",
+    "lovsjekk-per-land",
+    "merkeelement-revisjon",
+    "merkevare-og-salgsaktivering",
+    "rekkevidde-og-medieplan",
+    "resultater-og-laering",
+    "testplan-ekte-annonser",
+    "trakt-navngi-oppgaven"
+  ],
+  "fields": [
+    {
+      "id": "kampanje.id",
+      "path": "id",
+      "group": "id",
+      "label_nb": "Kampanje-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Stabil kampanjeidentitet som binder alle deler og valg.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Stabil kampanjeidentitet som binder alle deler og valg."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.goal",
+      "path": "goal",
+      "group": "goal",
+      "label_nb": "Hovedmål",
+      "type": "string",
+      "values": [
+        {
+          "value": "kjennskap",
+          "definition": "Øke kjennskap til avsender."
+        },
+        {
+          "value": "mental-tilgjengelighet",
+          "definition": "Knytte merke til kjøpssituasjon."
+        },
+        {
+          "value": "vurdering",
+          "definition": "Hjelpe vurdering av alternativer."
+        },
+        {
+          "value": "henvendelser",
+          "definition": "Skape relevante henvendelser."
+        },
+        {
+          "value": "salg",
+          "definition": "Skape faktiske betalende kjøp."
+        },
+        {
+          "value": "bruk",
+          "definition": "Hjelpe kunden å få bruksverdi."
+        },
+        {
+          "value": "fornyelse",
+          "definition": "Bevare eller fornye kundeforhold."
+        }
+      ],
+      "definition": "Velger oppgave og testens primære utfall.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger oppgave og testens primære utfall."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kampanje.funnel.stage",
+      "path": "funnel.stage",
+      "group": "funnel",
+      "label_nb": "Hovedtrinn og salgsrunde",
+      "type": "array",
+      "values": [
+        {
+          "value": "topp",
+          "definition": "Bygge tilgjengelighet og første relevans."
+        },
+        {
+          "value": "midt",
+          "definition": "Hjelpe utforskning eller vurdering."
+        },
+        {
+          "value": "bunn",
+          "definition": "Gjøre ønsket kjøp eller bestilling gjennomførbar."
+        },
+        {
+          "value": "lojalitet",
+          "definition": "Hjelpe bruk, gjenkjøp eller fornyelse."
+        },
+        {
+          "value": "salgsrunde",
+          "definition": "Tillegg for avgrenset salgsaktivitet; aldri eneste hovedtrinn."
+        }
+      ],
+      "definition": "Nøyaktig ett hovedtrinn; salgsrunde er et betinget tillegg. Trinn beskriver oppgaven, ikke en tvungen reise.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "merkevare-og-salgsaktivering",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Nøyaktig ett hovedtrinn; salgsrunde er et betinget tillegg. Trinn beskriver oppgaven, ikke en tvungen reise."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "merkevare-og-salgsaktivering",
+        "resultater-og-laering",
+        "testplan-ekte-annonser",
+        "trakt-navngi-oppgaven"
+      ]
+    },
+    {
+      "id": "kampanje.funnel.mode",
+      "path": "funnel.mode",
+      "group": "funnel",
+      "label_nb": "Arbeidsmodus",
+      "type": "string",
+      "values": [
+        {
+          "value": "merkebygging",
+          "definition": "Bygge merkeminner med begrunnet tidshorisont."
+        },
+        {
+          "value": "hosting",
+          "definition": "Høsting/salgsaktivering som fjerner et konkret kjøpshinder."
+        }
+      ],
+      "definition": "Velger merkebygging eller høsting per del; begge krever separate deler.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "merkevare-og-salgsaktivering",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger merkebygging eller høsting per del; begge krever separate deler."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "merkevare-og-salgsaktivering",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kampanje.market",
+      "path": "market",
+      "group": "market",
+      "label_nb": "Kjøpsmarked",
+      "type": "string",
+      "values": [
+        {
+          "value": "B2B",
+          "definition": "Kjøp på vegne av en virksomhet."
+        },
+        {
+          "value": "B2C",
+          "definition": "Kjøp som privatperson eller husholdning."
+        }
+      ],
+      "definition": "Velger relevante B2B- og B2C-kontroller.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "leserkort",
+          "lovsjekk-per-land",
+          "rekkevidde-og-medieplan",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger relevante B2B- og B2C-kontroller."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "leserkort",
+        "lovsjekk-per-land",
+        "rekkevidde-og-medieplan",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kampanje.audience",
+      "path": "audience",
+      "group": "audience",
+      "label_nb": "Målgruppe",
+      "type": "object",
+      "values": [],
+      "definition": "Binder valgt leser-ID, situasjon og avgrensning; leserregistret eier kunnskapsfeltene.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "leserkort",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder valgt leser-ID, situasjon og avgrensning; leserregistret eier kunnskapsfeltene."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "leserkort",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.audience.reader_id",
+      "path": "audience.reader_id",
+      "group": "audience",
+      "label_nb": "Leser-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Velger versjonsbundet leser fra leserregistret.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "leserkort",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger versjonsbundet leser fra leserregistret."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "leserkort",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.offer_id",
+      "path": "offer_id",
+      "group": "offer_id",
+      "label_nb": "Tilbuds-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Velger konkret versjon av tilbudet før løfte og tekst.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort"
+        ],
+        "choices": "Velger konkret versjon av tilbudet før løfte og tekst."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.category_id",
+      "path": "category_id",
+      "group": "category_id",
+      "label_nb": "Kategori-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Velger kategorigrunnlag for involvering, frekvens og regulering.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "konkurrenter-for-loftet",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Velger kategorigrunnlag for involvering, frekvens og regulering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.timing.start",
+      "path": "timing.start",
+      "group": "timing",
+      "label_nb": "Start",
+      "type": "string",
+      "values": [],
+      "definition": "Avgrenser kampanjen; RFC3339 med tidssone.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "lovsjekk-per-land",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Avgrenser kampanjen; RFC3339 med tidssone."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "lovsjekk-per-land",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "format": "RFC3339",
+        "timezone_required": true,
+        "end_after_start": true
+      }
+    },
+    {
+      "id": "kampanje.timing.end",
+      "path": "timing.end",
+      "group": "timing",
+      "label_nb": "Slutt",
+      "type": "string",
+      "values": [],
+      "definition": "Avgrenser kampanjen; senere enn start, uten å legitimere knapphet.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "lovsjekk-per-land",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Avgrenser kampanjen; senere enn start, uten å legitimere knapphet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "lovsjekk-per-land",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "format": "RFC3339",
+        "timezone_required": true,
+        "end_after_start": true
+      }
+    },
+    {
+      "id": "kampanje.channels",
+      "path": "channels",
+      "group": "channels",
+      "label_nb": "Kanaler",
+      "type": "array",
+      "values": [
+        {
+          "value": "meta",
+          "definition": "Meta-distribusjon; plattform/flate bestemmes av plassering."
+        },
+        {
+          "value": "google-ads-other",
+          "definition": "Google Ads uten Demand Gen og uten YouTube-levering."
+        },
+        {
+          "value": "google-demand-gen",
+          "definition": "Demand Gen, også når valgt flate er YouTube; velges først."
+        },
+        {
+          "value": "youtube",
+          "definition": "YouTube-levering uten Demand Gen; betalt/egen/fortjent er egen akse."
+        },
+        {
+          "value": "tiktok",
+          "definition": "TikTok-distribusjon."
+        },
+        {
+          "value": "linkedin",
+          "definition": "LinkedIn-distribusjon."
+        },
+        {
+          "value": "e-post",
+          "definition": "E-post, også digitale kundebrev sendt som e-post."
+        },
+        {
+          "value": "sms",
+          "definition": "SMS."
+        },
+        {
+          "value": "nettside",
+          "definition": "Eget nettsted, også digitalt brev eller skjema på nettstedet."
+        },
+        {
+          "value": "brev",
+          "definition": "Bare fysisk postlagt brev."
+        },
+        {
+          "value": "telefon",
+          "definition": "Telefon."
+        },
+        {
+          "value": "produktsok",
+          "definition": "Produktsøk utenfor de navngitte systemene."
+        },
+        {
+          "value": "markedsplass",
+          "definition": "Markedsplass utenfor de navngitte systemene."
+        },
+        {
+          "value": "annet-sosialt",
+          "definition": "Annen navngitt sosial plattform; binding må oppgi hvilken."
+        },
+        {
+          "value": "annen",
+          "definition": "Annen dokumentert distribusjon; binding kreves, ingen ukjent restklasse."
+        }
+      ],
+      "definition": "Velger kanaloppgaver og formattilpasning, med egne plasseringer.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Velger kanaloppgaver og formattilpasning, med egne plasseringer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "kampanje.customer_status",
+      "path": "customer_status",
+      "group": "customer_status",
+      "label_nb": "Kundestatus",
+      "type": "string",
+      "values": [
+        {
+          "value": "nye",
+          "definition": "Ingen kjøp etter avtalt produkt- og periodedefinisjon."
+        },
+        {
+          "value": "eksisterende",
+          "definition": "Har kjøpt etter avtalt definisjon."
+        },
+        {
+          "value": "begge",
+          "definition": "Felles oppgave og nivå er begrunnet; ellers del kampanjen."
+        }
+      ],
+      "definition": "Velger nyanskaffelse eller eksisterende kunde med produkt, periode og datakilde.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Velger nyanskaffelse eller eksisterende kunde med produkt, periode og datakilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "kampanje.sales_round.active",
+      "path": "sales_round.active",
+      "group": "sales_round",
+      "label_nb": "Avgrenset salgsrunde",
+      "type": "boolean",
+      "values": [
+        {
+          "value": true,
+          "definition": "Ja."
+        },
+        {
+          "value": false,
+          "definition": "Nei."
+        }
+      ],
+      "definition": "Slår på ekstra dokumentasjon for salgsrunde; tilbudskontroll gjelder uansett.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Slår på ekstra dokumentasjon for salgsrunde; tilbudskontroll gjelder uansett."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "kampanje.kpi.metric",
+      "path": "kpi.metric",
+      "group": "kpi",
+      "label_nb": "Primært mål",
+      "type": "string",
+      "values": [
+        {
+          "value": "kjennskap",
+          "definition": "Målt kjennskap i definert utvalg."
+        },
+        {
+          "value": "cep-kobling",
+          "definition": "Målt fremhenting i kjøpssituasjon."
+        },
+        {
+          "value": "unik-rekkevidde",
+          "definition": "Dedupliserte personer eller bedrifter."
+        },
+        {
+          "value": "kvalifiserte-henvendelser",
+          "definition": "Henvendelser etter forhåndsdefinerte vilkår."
+        },
+        {
+          "value": "betalende-kunder",
+          "definition": "Unike faktiske betalende kunder."
+        },
+        {
+          "value": "inntekt",
+          "definition": "Inntekt med valuta og måleperiode."
+        },
+        {
+          "value": "kostnad-per-kunde",
+          "definition": "Kostnad delt på faktiske kunder."
+        },
+        {
+          "value": "gjenkjop",
+          "definition": "Nytt kjøp i definert startkohort."
+        },
+        {
+          "value": "fornyelse",
+          "definition": "Fornyelser i kvalifisert kohort."
+        },
+        {
+          "value": "frafall",
+          "definition": "Tap i definert startkohort."
+        },
+        {
+          "value": "respons",
+          "definition": "Observerte svar eller klikk; ikke salgsbevis."
+        },
+        {
+          "value": "annet",
+          "definition": "Måleeier definerer annet utfall og hvorfor det trengs."
+        }
+      ],
+      "definition": "Velger hovedutfall med separat måledefinisjon og grunnrate.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger hovedutfall med separat måledefinisjon og grunnrate."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kampanje.kpi.baseline",
+      "path": "kpi.baseline",
+      "group": "kpi",
+      "label_nb": "Startverdi",
+      "type": "number",
+      "values": [],
+      "definition": "Gir målegrunnlag; fravær merkes i evidence, aldri som null.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Gir målegrunnlag; fravær merkes i evidence, aldri som null."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.kpi.target",
+      "path": "kpi.target",
+      "group": "kpi",
+      "label_nb": "Målverdi",
+      "type": "number",
+      "values": [],
+      "definition": "Binder forhåndsbestemt suksesskriterium i riktig måleenhet.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder forhåndsbestemt suksesskriterium i riktig måleenhet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.kpi.definition",
+      "path": "kpi.definition",
+      "group": "kpi",
+      "label_nb": "Måledefinisjon",
+      "type": "object",
+      "values": [],
+      "definition": "Teller, nevner, kohort, enhet, datakilde, attribusjon, frist og måleeier; kreves også ved annet mål.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Teller, nevner, kohort, enhet, datakilde, attribusjon, frist og måleeier; kreves også ved annet mål."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.budget.class",
+      "path": "budget.class",
+      "group": "budget",
+      "label_nb": "Budsjettklasse",
+      "type": "string",
+      "values": [
+        {
+          "value": "mikro",
+          "definition": "Begrenset pilot med lokalt fastsatt øvre beløp."
+        },
+        {
+          "value": "liten",
+          "definition": "Liten plan etter kundens terskeltabell."
+        },
+        {
+          "value": "middels",
+          "definition": "Mellomnivå etter kundens terskeltabell."
+        },
+        {
+          "value": "stor",
+          "definition": "Stor plan etter kundens terskeltabell."
+        }
+      ],
+      "definition": "Fume-klasse for planens ressurser; beløpsgrenser fastsettes lokalt og følger budsjettversjonen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Fume-klasse for planens ressurser; beløpsgrenser fastsettes lokalt og følger budsjettversjonen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kampanje.budget.amount",
+      "path": "budget.amount",
+      "group": "budget",
+      "label_nb": "Totalbeløp",
+      "type": "number",
+      "values": [],
+      "definition": "Setter kostnadsgrense, med ikke-negativt beløp og valuta.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Setter kostnadsgrense, med ikke-negativt beløp og valuta."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 0
+      }
+    },
+    {
+      "id": "kampanje.budget.currency",
+      "path": "budget.currency",
+      "group": "budget",
+      "label_nb": "Valuta",
+      "type": "string",
+      "values": [],
+      "definition": "Tre store bokstaver; må være gyldig valuta i faktisk budsjettkilde. Ingen implisitt NOK.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Tre store bokstaver; må være gyldig valuta i faktisk budsjettkilde. Ingen implisitt NOK."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.budget.thresholds",
+      "path": "budget.thresholds",
+      "group": "budget",
+      "label_nb": "Lokale budsjettgrenser",
+      "type": "object",
+      "values": [],
+      "definition": "Sorterbare beløpsintervaller for de fire klassene i samme valuta, godkjent av budsjettansvarlig.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Sorterbare beløpsintervaller for de fire klassene i samme valuta, godkjent av budsjettansvarlig."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.evidence",
+      "path": "evidence",
+      "group": "evidence",
+      "label_nb": "Belegg og usikkerhet",
+      "type": "array",
+      "values": [],
+      "definition": "Kilde, locator, dato, observasjon, tolkning, motbelegg og avklart mangel for alle antatte fakta.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kilde, locator, dato, observasjon, tolkning, motbelegg og avklart mangel for alle antatte fakta."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kampanje.countries",
+      "path": "countries",
+      "group": "countries",
+      "label_nb": "Planlagte land",
+      "type": "array",
+      "values": [
+        {
+          "value": "AD",
+          "definition": "Andorra"
+        },
+        {
+          "value": "AE",
+          "definition": "United Arab Emirates"
+        },
+        {
+          "value": "AF",
+          "definition": "Afghanistan"
+        },
+        {
+          "value": "AG",
+          "definition": "Antigua and Barbuda"
+        },
+        {
+          "value": "AI",
+          "definition": "Anguilla"
+        },
+        {
+          "value": "AL",
+          "definition": "Albania"
+        },
+        {
+          "value": "AM",
+          "definition": "Armenia"
+        },
+        {
+          "value": "AO",
+          "definition": "Angola"
+        },
+        {
+          "value": "AQ",
+          "definition": "Antarctica"
+        },
+        {
+          "value": "AR",
+          "definition": "Argentina"
+        },
+        {
+          "value": "AS",
+          "definition": "American Samoa"
+        },
+        {
+          "value": "AT",
+          "definition": "Austria"
+        },
+        {
+          "value": "AU",
+          "definition": "Australia"
+        },
+        {
+          "value": "AW",
+          "definition": "Aruba"
+        },
+        {
+          "value": "AX",
+          "definition": "Åland Islands"
+        },
+        {
+          "value": "AZ",
+          "definition": "Azerbaijan"
+        },
+        {
+          "value": "BA",
+          "definition": "Bosnia and Herzegovina"
+        },
+        {
+          "value": "BB",
+          "definition": "Barbados"
+        },
+        {
+          "value": "BD",
+          "definition": "Bangladesh"
+        },
+        {
+          "value": "BE",
+          "definition": "Belgium"
+        },
+        {
+          "value": "BF",
+          "definition": "Burkina Faso"
+        },
+        {
+          "value": "BG",
+          "definition": "Bulgaria"
+        },
+        {
+          "value": "BH",
+          "definition": "Bahrain"
+        },
+        {
+          "value": "BI",
+          "definition": "Burundi"
+        },
+        {
+          "value": "BJ",
+          "definition": "Benin"
+        },
+        {
+          "value": "BL",
+          "definition": "Saint Barthélemy"
+        },
+        {
+          "value": "BM",
+          "definition": "Bermuda"
+        },
+        {
+          "value": "BN",
+          "definition": "Brunei Darussalam"
+        },
+        {
+          "value": "BO",
+          "definition": "Bolivia (Plurinational State of)"
+        },
+        {
+          "value": "BQ",
+          "definition": "Bonaire, Sint Eustatius and Saba"
+        },
+        {
+          "value": "BR",
+          "definition": "Brazil"
+        },
+        {
+          "value": "BS",
+          "definition": "Bahamas"
+        },
+        {
+          "value": "BT",
+          "definition": "Bhutan"
+        },
+        {
+          "value": "BV",
+          "definition": "Bouvet Island"
+        },
+        {
+          "value": "BW",
+          "definition": "Botswana"
+        },
+        {
+          "value": "BY",
+          "definition": "Belarus"
+        },
+        {
+          "value": "BZ",
+          "definition": "Belize"
+        },
+        {
+          "value": "CA",
+          "definition": "Canada"
+        },
+        {
+          "value": "CC",
+          "definition": "Cocos (Keeling) Islands"
+        },
+        {
+          "value": "CD",
+          "definition": "Democratic Republic of the Congo"
+        },
+        {
+          "value": "CF",
+          "definition": "Central African Republic"
+        },
+        {
+          "value": "CG",
+          "definition": "Congo"
+        },
+        {
+          "value": "CH",
+          "definition": "Switzerland"
+        },
+        {
+          "value": "CI",
+          "definition": "Côte d’Ivoire"
+        },
+        {
+          "value": "CK",
+          "definition": "Cook Islands"
+        },
+        {
+          "value": "CL",
+          "definition": "Chile"
+        },
+        {
+          "value": "CM",
+          "definition": "Cameroon"
+        },
+        {
+          "value": "CN",
+          "definition": "China"
+        },
+        {
+          "value": "CO",
+          "definition": "Colombia"
+        },
+        {
+          "value": "CR",
+          "definition": "Costa Rica"
+        },
+        {
+          "value": "CU",
+          "definition": "Cuba"
+        },
+        {
+          "value": "CV",
+          "definition": "Cabo Verde"
+        },
+        {
+          "value": "CW",
+          "definition": "Curaçao"
+        },
+        {
+          "value": "CX",
+          "definition": "Christmas Island"
+        },
+        {
+          "value": "CY",
+          "definition": "Cyprus"
+        },
+        {
+          "value": "CZ",
+          "definition": "Czechia"
+        },
+        {
+          "value": "DE",
+          "definition": "Germany"
+        },
+        {
+          "value": "DJ",
+          "definition": "Djibouti"
+        },
+        {
+          "value": "DK",
+          "definition": "Denmark"
+        },
+        {
+          "value": "DM",
+          "definition": "Dominica"
+        },
+        {
+          "value": "DO",
+          "definition": "Dominican Republic"
+        },
+        {
+          "value": "DZ",
+          "definition": "Algeria"
+        },
+        {
+          "value": "EC",
+          "definition": "Ecuador"
+        },
+        {
+          "value": "EE",
+          "definition": "Estonia"
+        },
+        {
+          "value": "EG",
+          "definition": "Egypt"
+        },
+        {
+          "value": "EH",
+          "definition": "Western Sahara"
+        },
+        {
+          "value": "ER",
+          "definition": "Eritrea"
+        },
+        {
+          "value": "ES",
+          "definition": "Spain"
+        },
+        {
+          "value": "ET",
+          "definition": "Ethiopia"
+        },
+        {
+          "value": "FI",
+          "definition": "Finland"
+        },
+        {
+          "value": "FJ",
+          "definition": "Fiji"
+        },
+        {
+          "value": "FK",
+          "definition": "Falkland Islands (Malvinas)"
+        },
+        {
+          "value": "FM",
+          "definition": "Micronesia (Federated States of)"
+        },
+        {
+          "value": "FO",
+          "definition": "Faroe Islands"
+        },
+        {
+          "value": "FR",
+          "definition": "France"
+        },
+        {
+          "value": "GA",
+          "definition": "Gabon"
+        },
+        {
+          "value": "GB",
+          "definition": "United Kingdom of Great Britain and Northern Ireland"
+        },
+        {
+          "value": "GD",
+          "definition": "Grenada"
+        },
+        {
+          "value": "GE",
+          "definition": "Georgia"
+        },
+        {
+          "value": "GF",
+          "definition": "French Guiana"
+        },
+        {
+          "value": "GG",
+          "definition": "Guernsey"
+        },
+        {
+          "value": "GH",
+          "definition": "Ghana"
+        },
+        {
+          "value": "GI",
+          "definition": "Gibraltar"
+        },
+        {
+          "value": "GL",
+          "definition": "Greenland"
+        },
+        {
+          "value": "GM",
+          "definition": "Gambia"
+        },
+        {
+          "value": "GN",
+          "definition": "Guinea"
+        },
+        {
+          "value": "GP",
+          "definition": "Guadeloupe"
+        },
+        {
+          "value": "GQ",
+          "definition": "Equatorial Guinea"
+        },
+        {
+          "value": "GR",
+          "definition": "Greece"
+        },
+        {
+          "value": "GS",
+          "definition": "South Georgia and the South Sandwich Islands"
+        },
+        {
+          "value": "GT",
+          "definition": "Guatemala"
+        },
+        {
+          "value": "GU",
+          "definition": "Guam"
+        },
+        {
+          "value": "GW",
+          "definition": "Guinea-Bissau"
+        },
+        {
+          "value": "GY",
+          "definition": "Guyana"
+        },
+        {
+          "value": "HK",
+          "definition": "China, Hong Kong Special Administrative Region"
+        },
+        {
+          "value": "HM",
+          "definition": "Heard Island and McDonald Islands"
+        },
+        {
+          "value": "HN",
+          "definition": "Honduras"
+        },
+        {
+          "value": "HR",
+          "definition": "Croatia"
+        },
+        {
+          "value": "HT",
+          "definition": "Haiti"
+        },
+        {
+          "value": "HU",
+          "definition": "Hungary"
+        },
+        {
+          "value": "ID",
+          "definition": "Indonesia"
+        },
+        {
+          "value": "IE",
+          "definition": "Ireland"
+        },
+        {
+          "value": "IL",
+          "definition": "Israel"
+        },
+        {
+          "value": "IM",
+          "definition": "Isle of Man"
+        },
+        {
+          "value": "IN",
+          "definition": "India"
+        },
+        {
+          "value": "IO",
+          "definition": "British Indian Ocean Territory"
+        },
+        {
+          "value": "IQ",
+          "definition": "Iraq"
+        },
+        {
+          "value": "IR",
+          "definition": "Iran (Islamic Republic of)"
+        },
+        {
+          "value": "IS",
+          "definition": "Iceland"
+        },
+        {
+          "value": "IT",
+          "definition": "Italy"
+        },
+        {
+          "value": "JE",
+          "definition": "Jersey"
+        },
+        {
+          "value": "JM",
+          "definition": "Jamaica"
+        },
+        {
+          "value": "JO",
+          "definition": "Jordan"
+        },
+        {
+          "value": "JP",
+          "definition": "Japan"
+        },
+        {
+          "value": "KE",
+          "definition": "Kenya"
+        },
+        {
+          "value": "KG",
+          "definition": "Kyrgyzstan"
+        },
+        {
+          "value": "KH",
+          "definition": "Cambodia"
+        },
+        {
+          "value": "KI",
+          "definition": "Kiribati"
+        },
+        {
+          "value": "KM",
+          "definition": "Comoros"
+        },
+        {
+          "value": "KN",
+          "definition": "Saint Kitts and Nevis"
+        },
+        {
+          "value": "KP",
+          "definition": "Democratic People's Republic of Korea"
+        },
+        {
+          "value": "KR",
+          "definition": "Republic of Korea"
+        },
+        {
+          "value": "KW",
+          "definition": "Kuwait"
+        },
+        {
+          "value": "KY",
+          "definition": "Cayman Islands"
+        },
+        {
+          "value": "KZ",
+          "definition": "Kazakhstan"
+        },
+        {
+          "value": "LA",
+          "definition": "Lao People's Democratic Republic"
+        },
+        {
+          "value": "LB",
+          "definition": "Lebanon"
+        },
+        {
+          "value": "LC",
+          "definition": "Saint Lucia"
+        },
+        {
+          "value": "LI",
+          "definition": "Liechtenstein"
+        },
+        {
+          "value": "LK",
+          "definition": "Sri Lanka"
+        },
+        {
+          "value": "LR",
+          "definition": "Liberia"
+        },
+        {
+          "value": "LS",
+          "definition": "Lesotho"
+        },
+        {
+          "value": "LT",
+          "definition": "Lithuania"
+        },
+        {
+          "value": "LU",
+          "definition": "Luxembourg"
+        },
+        {
+          "value": "LV",
+          "definition": "Latvia"
+        },
+        {
+          "value": "LY",
+          "definition": "Libya"
+        },
+        {
+          "value": "MA",
+          "definition": "Morocco"
+        },
+        {
+          "value": "MC",
+          "definition": "Monaco"
+        },
+        {
+          "value": "MD",
+          "definition": "Republic of Moldova"
+        },
+        {
+          "value": "ME",
+          "definition": "Montenegro"
+        },
+        {
+          "value": "MF",
+          "definition": "Saint Martin (French Part)"
+        },
+        {
+          "value": "MG",
+          "definition": "Madagascar"
+        },
+        {
+          "value": "MH",
+          "definition": "Marshall Islands"
+        },
+        {
+          "value": "MK",
+          "definition": "North Macedonia"
+        },
+        {
+          "value": "ML",
+          "definition": "Mali"
+        },
+        {
+          "value": "MM",
+          "definition": "Myanmar"
+        },
+        {
+          "value": "MN",
+          "definition": "Mongolia"
+        },
+        {
+          "value": "MO",
+          "definition": "China, Macao Special Administrative Region"
+        },
+        {
+          "value": "MP",
+          "definition": "Northern Mariana Islands"
+        },
+        {
+          "value": "MQ",
+          "definition": "Martinique"
+        },
+        {
+          "value": "MR",
+          "definition": "Mauritania"
+        },
+        {
+          "value": "MS",
+          "definition": "Montserrat"
+        },
+        {
+          "value": "MT",
+          "definition": "Malta"
+        },
+        {
+          "value": "MU",
+          "definition": "Mauritius"
+        },
+        {
+          "value": "MV",
+          "definition": "Maldives"
+        },
+        {
+          "value": "MW",
+          "definition": "Malawi"
+        },
+        {
+          "value": "MX",
+          "definition": "Mexico"
+        },
+        {
+          "value": "MY",
+          "definition": "Malaysia"
+        },
+        {
+          "value": "MZ",
+          "definition": "Mozambique"
+        },
+        {
+          "value": "NA",
+          "definition": "Namibia"
+        },
+        {
+          "value": "NC",
+          "definition": "New Caledonia"
+        },
+        {
+          "value": "NE",
+          "definition": "Niger"
+        },
+        {
+          "value": "NF",
+          "definition": "Norfolk Island"
+        },
+        {
+          "value": "NG",
+          "definition": "Nigeria"
+        },
+        {
+          "value": "NI",
+          "definition": "Nicaragua"
+        },
+        {
+          "value": "NL",
+          "definition": "Netherlands (Kingdom of the)"
+        },
+        {
+          "value": "NO",
+          "definition": "Norway"
+        },
+        {
+          "value": "NP",
+          "definition": "Nepal"
+        },
+        {
+          "value": "NR",
+          "definition": "Naoero"
+        },
+        {
+          "value": "NU",
+          "definition": "Niue"
+        },
+        {
+          "value": "NZ",
+          "definition": "New Zealand"
+        },
+        {
+          "value": "OM",
+          "definition": "Oman"
+        },
+        {
+          "value": "PA",
+          "definition": "Panama"
+        },
+        {
+          "value": "PE",
+          "definition": "Peru"
+        },
+        {
+          "value": "PF",
+          "definition": "French Polynesia"
+        },
+        {
+          "value": "PG",
+          "definition": "Papua New Guinea"
+        },
+        {
+          "value": "PH",
+          "definition": "Philippines"
+        },
+        {
+          "value": "PK",
+          "definition": "Pakistan"
+        },
+        {
+          "value": "PL",
+          "definition": "Poland"
+        },
+        {
+          "value": "PM",
+          "definition": "Saint Pierre and Miquelon"
+        },
+        {
+          "value": "PN",
+          "definition": "Pitcairn"
+        },
+        {
+          "value": "PR",
+          "definition": "Puerto Rico"
+        },
+        {
+          "value": "PS",
+          "definition": "State of Palestine"
+        },
+        {
+          "value": "PT",
+          "definition": "Portugal"
+        },
+        {
+          "value": "PW",
+          "definition": "Palau"
+        },
+        {
+          "value": "PY",
+          "definition": "Paraguay"
+        },
+        {
+          "value": "QA",
+          "definition": "Qatar"
+        },
+        {
+          "value": "RE",
+          "definition": "Réunion"
+        },
+        {
+          "value": "RO",
+          "definition": "Romania"
+        },
+        {
+          "value": "RS",
+          "definition": "Serbia"
+        },
+        {
+          "value": "RU",
+          "definition": "Russian Federation"
+        },
+        {
+          "value": "RW",
+          "definition": "Rwanda"
+        },
+        {
+          "value": "SA",
+          "definition": "Saudi Arabia"
+        },
+        {
+          "value": "SB",
+          "definition": "Solomon Islands"
+        },
+        {
+          "value": "SC",
+          "definition": "Seychelles"
+        },
+        {
+          "value": "SD",
+          "definition": "Sudan"
+        },
+        {
+          "value": "SE",
+          "definition": "Sweden"
+        },
+        {
+          "value": "SG",
+          "definition": "Singapore"
+        },
+        {
+          "value": "SH",
+          "definition": "Saint Helena"
+        },
+        {
+          "value": "SI",
+          "definition": "Slovenia"
+        },
+        {
+          "value": "SJ",
+          "definition": "Svalbard and Jan Mayen Islands"
+        },
+        {
+          "value": "SK",
+          "definition": "Slovakia"
+        },
+        {
+          "value": "SL",
+          "definition": "Sierra Leone"
+        },
+        {
+          "value": "SM",
+          "definition": "San Marino"
+        },
+        {
+          "value": "SN",
+          "definition": "Senegal"
+        },
+        {
+          "value": "SO",
+          "definition": "Somalia"
+        },
+        {
+          "value": "SR",
+          "definition": "Suriname"
+        },
+        {
+          "value": "SS",
+          "definition": "South Sudan"
+        },
+        {
+          "value": "ST",
+          "definition": "Sao Tome and Principe"
+        },
+        {
+          "value": "SV",
+          "definition": "El Salvador"
+        },
+        {
+          "value": "SX",
+          "definition": "Sint Maarten (Dutch part)"
+        },
+        {
+          "value": "SY",
+          "definition": "Syrian Arab Republic"
+        },
+        {
+          "value": "SZ",
+          "definition": "Eswatini"
+        },
+        {
+          "value": "TC",
+          "definition": "Turks and Caicos Islands"
+        },
+        {
+          "value": "TD",
+          "definition": "Chad"
+        },
+        {
+          "value": "TF",
+          "definition": "French Southern Territories"
+        },
+        {
+          "value": "TG",
+          "definition": "Togo"
+        },
+        {
+          "value": "TH",
+          "definition": "Thailand"
+        },
+        {
+          "value": "TJ",
+          "definition": "Tajikistan"
+        },
+        {
+          "value": "TK",
+          "definition": "Tokelau"
+        },
+        {
+          "value": "TL",
+          "definition": "Timor-Leste"
+        },
+        {
+          "value": "TM",
+          "definition": "Turkmenistan"
+        },
+        {
+          "value": "TN",
+          "definition": "Tunisia"
+        },
+        {
+          "value": "TO",
+          "definition": "Tonga"
+        },
+        {
+          "value": "TR",
+          "definition": "Türkiye"
+        },
+        {
+          "value": "TT",
+          "definition": "Trinidad and Tobago"
+        },
+        {
+          "value": "TV",
+          "definition": "Tuvalu"
+        },
+        {
+          "value": "TW",
+          "definition": "Taiwan"
+        },
+        {
+          "value": "TZ",
+          "definition": "United Republic of Tanzania"
+        },
+        {
+          "value": "UA",
+          "definition": "Ukraine"
+        },
+        {
+          "value": "UG",
+          "definition": "Uganda"
+        },
+        {
+          "value": "UM",
+          "definition": "United States Minor Outlying Islands"
+        },
+        {
+          "value": "US",
+          "definition": "United States of America"
+        },
+        {
+          "value": "UY",
+          "definition": "Uruguay"
+        },
+        {
+          "value": "UZ",
+          "definition": "Uzbekistan"
+        },
+        {
+          "value": "VA",
+          "definition": "Holy See"
+        },
+        {
+          "value": "VC",
+          "definition": "Saint Vincent and the Grenadines"
+        },
+        {
+          "value": "VE",
+          "definition": "Venezuela (Bolivarian Republic of)"
+        },
+        {
+          "value": "VG",
+          "definition": "British Virgin Islands"
+        },
+        {
+          "value": "VI",
+          "definition": "United States Virgin Islands"
+        },
+        {
+          "value": "VN",
+          "definition": "Viet Nam"
+        },
+        {
+          "value": "VU",
+          "definition": "Vanuatu"
+        },
+        {
+          "value": "WF",
+          "definition": "Wallis and Futuna Islands"
+        },
+        {
+          "value": "WS",
+          "definition": "Samoa"
+        },
+        {
+          "value": "YE",
+          "definition": "Yemen"
+        },
+        {
+          "value": "YT",
+          "definition": "Mayotte"
+        },
+        {
+          "value": "ZA",
+          "definition": "South Africa"
+        },
+        {
+          "value": "ZM",
+          "definition": "Zambia"
+        },
+        {
+          "value": "ZW",
+          "definition": "Zimbabwe"
+        }
+      ],
+      "definition": "ISO 3166-1 alpha-2; land velges separat fra regelområde. Nye land krever egen lovsjekk.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "ISO — ISO 3166 Country Codes",
+          "url": "https://www.iso.org/iso-3166-country-codes.html",
+          "locator": "What is included in ISO 3166?; alpha-2"
+        },
+        {
+          "source": "UN Statistics Division — M49 country or area codes",
+          "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+          "locator": "Geographic Regions; Country or Area; ISO-alpha2 Code"
+        },
+        {
+          "source": "Portugal Autoridade Tributária — ISO 3166 country table",
+          "url": "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/irs/documents/tabela_paises_cod_norma_iso_3166.pdf",
+          "locator": "Tabellrad 158 / TW / TWN"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "kampanjekort",
+          "lovsjekk-per-land",
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "ISO 3166-1 alpha-2; land velges separat fra regelområde. Nye land krever egen lovsjekk."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "lovsjekk-per-land",
+        "rekkevidde-og-medieplan"
+      ]
+    }
+  ],
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

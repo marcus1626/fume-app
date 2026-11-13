@@ -1,0 +1,23 @@
+{
+  "enum": [
+    "meta",
+    "google-ads-other",
+    "google-demand-gen",
+    "youtube",
+    "tiktok",
+    "linkedin",
+    "e-post",
+    "sms",
+    "nettside",
+    "brev",
+    "telefon",
+    "produktsok",
+    "markedsplass",
+    "annet-sosialt",
+    "annen"
+  ],
+  "x-list": "../../lists/channel.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/channel.schema.json",
+  "title": "channel"
+}

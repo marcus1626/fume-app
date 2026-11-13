@@ -1,0 +1,169 @@
+{
+  "id": "09-klarsprak-utkast",
+  "label_nb": "Revider teksten med klarspråk og forståelsestest — steg 2",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "leser",
+    "tilbud"
+  ],
+  "read_by": [
+    "klarsprak-revisjon"
+  ],
+  "fields": [
+    {
+      "id": "09-klarsprak-utkast.innhold.klarsprak",
+      "path": "innhold.klarsprak",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet klarsprak for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "klarsprak-revisjon"
+        ],
+        "choices": "Samlet klarsprak for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "klarsprak-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-klarsprak-utkast.innhold.klarsprak.kjopssporsmal",
+      "path": "innhold.klarsprak.kjopssporsmal",
+      "group": "innhold",
+      "label_nb": "Kjøpsspørsmål",
+      "type": "array",
+      "values": [],
+      "definition": "Ikke-tom kildebelagt liste over nødvendige spørsmål og tidligere forståelsesfunn.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "klarsprak-revisjon"
+        ],
+        "choices": "Ikke-tom kildebelagt liste over nødvendige spørsmål og tidligere forståelsesfunn."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "klarsprak-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-klarsprak-utkast.innhold.klarsprak.revisjon",
+      "path": "innhold.klarsprak.revisjon",
+      "group": "innhold",
+      "label_nb": "Revidert tekst",
+      "type": "object",
+      "values": [],
+      "definition": "Original/revisjon, endrings-ID, grunn, svarsted per spørsmål og nøytrale testoppgaver.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "klarsprak-revisjon"
+        ],
+        "choices": "Original/revisjon, endrings-ID, grunn, svarsted per spørsmål og nøytrale testoppgaver."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "klarsprak-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-klarsprak-utkast.innhold.klarsprak.forstaelsestest",
+      "path": "innhold.klarsprak.forstaelsestest",
+      "group": "innhold",
+      "label_nb": "Faktisk forståelse",
+      "type": "array",
+      "values": [],
+      "definition": "Virkelige relevante deltakere, versjon, oppgave, minimerte svar/funn og hjelp; tilbud, forpliktelse og handling gjengis korrekt uten fasit.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "klarsprak-revisjon"
+        ],
+        "choices": "Virkelige relevante deltakere, versjon, oppgave, minimerte svar/funn og hjelp; tilbud, forpliktelse og handling gjengis korrekt uten fasit."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "klarsprak-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-klarsprak-utkast.innhold.klarsprak.korrektur",
+      "path": "innhold.klarsprak.korrektur",
+      "group": "innhold",
+      "label_nb": "Korrektur og ny kontroll",
+      "type": "object",
+      "values": [],
+      "definition": "Navngitt tekstansvarlig, dato, versjon, lukkede feil og obligatorisk ny lovsjekk/testplan/frigivelse.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "klarsprak-revisjon"
+        ],
+        "choices": "Navngitt tekstansvarlig, dato, versjon, lukkede feil og obligatorisk ny lovsjekk/testplan/frigivelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "klarsprak-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/09-klarsprak-utkast.json",
+  "artifact_family": "klarsprak",
+  "producer": {
+    "flow": "klarsprak-revisjon",
+    "step": 2,
+    "who": "modell"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.klarsprak.",
+  "validation_profile": {
+    "step_validation": "flows/klarsprak-revisjon.json#/steps/1/validation",
+    "required_from_steps": {
+      "kjopssporsmal": 1,
+      "revisjon": 2,
+      "forstaelsestest": 4,
+      "korrektur": 5
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

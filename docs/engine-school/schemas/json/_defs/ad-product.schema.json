@@ -1,0 +1,32 @@
+{
+  "enum": [
+    "generisk",
+    "karusell",
+    "samling",
+    "fleksibel",
+    "responsiv-display",
+    "shopping",
+    "app",
+    "yt-skippable",
+    "yt-non-skippable",
+    "yt-in-feed",
+    "yt-bumper",
+    "yt-masthead",
+    "yt-shorts",
+    "tt-spark",
+    "tt-non-spark",
+    "li-dokument",
+    "li-event",
+    "li-melding",
+    "li-samtale",
+    "li-follower",
+    "li-spotlight",
+    "li-jobb",
+    "li-artikkel-nyhetsbrev",
+    "li-thought-leader"
+  ],
+  "x-list": "../../lists/ad-product.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/ad-product.schema.json",
+  "title": "ad-product"
+}

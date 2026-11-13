@@ -1,0 +1,16 @@
+{
+  "enum": [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "video/mp4",
+    "video/quicktime",
+    "application/pdf",
+    "text/plain",
+    "annet"
+  ],
+  "x-list": "../../lists/mime.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/mime.schema.json",
+  "title": "mime"
+}

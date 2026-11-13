@@ -1,0 +1,36 @@
+{
+  "id": "origin",
+  "label_nb": "Opphav",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "virkelig",
+      "label_nb": "Virkelig",
+      "definition": "Dokumentert virkelig opptak eller tekst."
+    },
+    {
+      "id": "ki",
+      "label_nb": "Ki",
+      "definition": "Dokumentert KI-bidrag; etikkreglene gjelder fortsatt."
+    },
+    {
+      "id": "blandet",
+      "label_nb": "Blandet",
+      "definition": "Virkelige og KI-bidrag er spesifisert."
+    },
+    {
+      "id": "ukjent",
+      "label_nb": "Ukjent",
+      "definition": "Kan ikke verifiseres; blokkerer."
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "type": "object",
+  "properties": {
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "what_engine_takes": {
+      "type": "string",
+      "minLength": 1
+    },
+    "free_access": {
+      "type": "string",
+      "minLength": 1
+    },
+    "url_status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "$ref": "_defs/subject.schema.json"
+    },
+    "tier": {
+      "$ref": "_defs/tier.schema.json"
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "_defs/checkpoint.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "source",
+    "url",
+    "what_engine_takes",
+    "free_access",
+    "url_status",
+    "subject",
+    "tier",
+    "checkpoints"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/pensum-entry.schema.json",
+  "title": "pensum-entry"
+}

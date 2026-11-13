@@ -1,0 +1,36 @@
+{
+  "id": "scope",
+  "label_nb": "Omfang",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "Alle ferdigheter i skills/*.json. skills_used i en flyt er kandidater for oppgaven, ikke en beskjed om å bruke dem ved alle kjøringer. Trakt-kortets egne strukturporter gjelder alltid, uavhengig av målgruppens ferdighetsfilter.",
+      "label_nb": "Alle ferdigheter i skills/*.json. skills_used i en flyt er kandidater for oppgaven, ikke en beskjed om å bruke dem ved alle kjøringer. trakt kortets egne strukturporter gjelder alltid, uavhengig av målgruppens ferdighetsfilter.",
+      "definition": "Feltets levetid og omfang: Alle ferdigheter i skills/*.json. skills_used i en flyt er kandidater for oppgaven, ikke en beskjed om å bruke dem ved alle kjøringer. Trakt-kortets egne strukturporter gjelder alltid, uavhengig av målgruppens ferdighetsfilter.."
+    },
+    {
+      "id": "kampanjevalg",
+      "label_nb": "Kampanjevalg",
+      "definition": "Feltets levetid og omfang: kampanjevalg."
+    },
+    {
+      "id": "merkevarekonstant",
+      "label_nb": "Merkevarekonstant",
+      "definition": "Feltets levetid og omfang: merkevarekonstant."
+    },
+    {
+      "id": "begge",
+      "label_nb": "Begge",
+      "definition": "Feltets levetid og omfang: begge."
+    }
+  ]
+}
