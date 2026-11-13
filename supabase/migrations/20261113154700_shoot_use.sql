@@ -462,10 +462,16 @@ language sql stable security definer set search_path = '' as $$
 $$;
 revoke all on function app.is_shoot_draft(public.creative_versions) from public,anon,authenticated,service_role;
 
-create or replace function public.render_creative(p_creative_id uuid, p_key text default null) returns jsonb
-language plpgsql security definer set search_path = '' as $$
+-- Based on the live three-argument render_creative (with the Direction); only the shoot draft check is new.
+create or replace function public.render_creative(p_creative_id uuid, p_key text DEFAULT NULL::text, p_direction jsonb DEFAULT NULL::jsonb)
+ RETURNS jsonb
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO ''
+AS $function$
 declare
-  req jsonb := jsonb_build_object('creative_id', p_creative_id);
+  req jsonb := jsonb_build_object('creative_id', p_creative_id, 'direction', p_direction);
+  d jsonb;
   prior jsonb;
   cr public.creatives;
   v public.creative_versions;
@@ -485,6 +491,20 @@ begin
   end if;
   if not app.is_staff(cr.workspace_id, array['designer']) then
     perform app.fail('forbidden', 'Only a designer renders a creative.');
+  end if;
+  -- What the designer said with this Render: the words of the Engine bar, the creative's Direction, the picture to change.
+  if p_direction is not null then
+    if jsonb_typeof(p_direction) <> 'object' or length(coalesce(p_direction ->> 'instruction', '')) > 500
+      or length(coalesce(p_direction ->> 'direction', '')) > 1000 then
+      perform app.fail('invalid', 'Say it in fewer words: up to 500 characters, and 1000 for the Direction.');
+    end if;
+    d := jsonb_strip_nulls(jsonb_build_object(
+      'instruction', nullif(btrim(p_direction ->> 'instruction'), ''),
+      'direction', nullif(btrim(p_direction ->> 'direction'), ''),
+      'from_candidate_id', (
+        select c.id from public.candidates c join public.production_jobs pj on pj.id = c.job_id
+        where c.id::text = p_direction ->> 'from_candidate_id' and pj.creative_id = cr.id)));
+    if d = '{}'::jsonb then d := null; end if;
   end if;
   v := app.latest_version(cr.id);
   if v.id is null or app.is_shoot_draft(v) then
@@ -510,6 +530,7 @@ begin
   order by pj.created_at desc limit 1;
   open_job := found;
   if open_job and j.state in ('queued', 'running', 'unknown') then
+    -- Still at work: the words wait for the next Render.
     return app.idem_end(p_key, 'render_creative', req, to_jsonb(j));
   end if;
   if not (public.fume_engine_budget() ->> 'allowed')::boolean then
@@ -517,7 +538,9 @@ begin
   end if;
   if open_job then
     -- Rendered before (failed, or made and not sent yet): the same job again, with what it knows now.
-    update public.production_jobs set state = 'queued', error = null, updated_at = now() where id = j.id returning * into j;
+    update public.production_jobs set state = 'queued', error = null, direction = d, updated_at = now(),
+      tries_from = coalesce((select max(x.number) from public.job_attempts x where x.job_id = j.id), 0) + 1
+    where id = j.id returning * into j;
     perform app.record(j.workspace_id, 'job.queued', 'production_job', j.id, jsonb_build_object('by', 'render'));
   else
     select * into j from jsonb_populate_record(null::public.production_jobs, public.start_job(
@@ -525,10 +548,10 @@ begin
       jsonb_build_object('provider', 'engine', 'image_model', model, 'creative', cr.title, 'slot', cr.slot,
         'format', cr.format, 'corrects', v.id),
       '[]', cr.id, mv.id, 'engine', null));
-    update public.production_jobs set creative_id = cr.id where id = j.id returning * into j;
+    update public.production_jobs set creative_id = cr.id, direction = d where id = j.id returning * into j;
   end if;
   return app.idem_end(p_key, 'render_creative', req, to_jsonb(j));
-end $$;
+end $function$;
 
 create or replace function public.add_manual_version(
   p_creative_id uuid, p_file_id uuid, p_note text, p_key text default null
