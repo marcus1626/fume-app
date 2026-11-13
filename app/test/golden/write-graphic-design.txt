@@ -57,21 +57,24 @@ anna designAsk("doc-autumn-m3", "rv-3")
     "book": {"state":"checked","version":1},
     "fromNumber": 3,
     "fromVersionId": "rv-3",
-    "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+    "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"},
+    "wordsPlacement": "on_picture"
   }
 anna designAsk("doc-autumn-m3", "rv-4")
   {
     "book": {"state":"checked","version":1},
     "fromNumber": 4,
     "fromVersionId": "rv-4",
-    "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"}
+    "words": {"cta":"Se kveldsoljen","headline":"Den langsomme timen før søvn.","subline":"Night Body Oil · 100 ml"},
+    "wordsPlacement": "on_picture"
   }
 anna designAsk("doc-bf-1", "rv-bf-1")
   {
     "blocked": "The approved plan has no headline to set on this creative.",
     "book": {"state":"checked","version":1},
     "fromNumber": 1,
-    "fromVersionId": "rv-bf-1"
+    "fromVersionId": "rv-bf-1",
+    "wordsPlacement": "on_picture"
   }
 anna designVersion("doc-bf-1", "rv-bf-1")
   {"error":"invalid","message":"The approved plan has no headline to set on this creative."}

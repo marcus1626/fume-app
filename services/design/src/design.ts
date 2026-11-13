@@ -14,6 +14,7 @@ export interface Ask {
   format: Format;
   book: DesignBook;
   words: Words;
+  wordsPlacement?: "on_picture" | "own_area";
   /** The model's choice, tried first. */
   prefer?: Partial<Layout>;
   /** What the words must never cover (the product, a face, a logo), in layout pixels. */
@@ -84,7 +85,7 @@ const BUDGET_MS = { first: 22_000, all: 40_000 };
 export async function design(asked: Ask): Promise<Designed> {
   const t0 = Date.now();
   const first = await designOn(asked, t0 + BUDGET_MS.first);
-  if (first.ok) return first;
+  if (first.ok || asked.wordsPlacement === "own_area") return first;
   // A packshot the product fills: set the picture smaller on its own backdrop, so the words get room.
   const g = gridOf(asked.book, asked.format);
   let best = first;
@@ -152,7 +153,7 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const keep = ask.keepClear ?? [];
+  const keep = ask.wordsPlacement === "own_area" ? [] : ask.keepClear ?? [];
   const logo = ask.logo
     ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null)
     : null;
@@ -166,7 +167,11 @@ async function designOn(asked: Ask, until = Infinity): Promise<Designed> {
   // work never uses them all up (Anthem, 9 Nov: the photo used every try and the brand's navy block got none).
   for (const l of searchOrder(layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta)), Boolean(words.subline))) {
     if (best && Date.now() > until) break;
+    if (ask.wordsPlacement === "own_area") {
+      Object.assign(l, { wordsPlacement: "own_area", ground: "flat", band: "bottom", align: "left", columns: g.columns, cta: words.cta ? "with_words" : "none", at: undefined, signature: undefined, groundHex: undefined });
+    }
     const plan = logo ? logoPlan(book, g, l, logo) : null;
+    if (plan && l.wordsPlacement === "own_area") plan.inside = true;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? undefined);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
     let t = measure(doc, c, l, book, pixels, keep, plan);
@@ -274,6 +279,7 @@ export async function balance(
   const { book, format, words } = ask;
   const l = base.layout;
   const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
+  if (plan && l.wordsPlacement === "own_area") plan.inside = true;
   const widths: Partial<Record<"Headline" | "Subline", number>> = {};
   let longest = 0;
   const heightOf = async (w: typeof widths, name: "Headline" | "Subline") => {
@@ -447,6 +453,12 @@ export function measure(
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words")!;
+  if (l.wordsPlacement === "own_area") {
+    // The panel reaches the edges; the photograph has its own rectangle and keeps its whole subject (FIT).
+    const top = Math.max(g.top, words.y - g.margin);
+    place(doc, "Words area", { y: top, height: g.h - top });
+    place(doc, "Picture", { height: top });
+  }
   const shades: Shade[] = [];
   const shade = shadeFor(book, l, g, words);
   if (shade) {
@@ -470,6 +482,7 @@ export function measure(
     if (b) boxes[n] = b;
   }
   const checks: Check[] = [];
+  if (l.wordsPlacement === "own_area") checks.push({ check: "fits", node: "Words", ok: words.y - g.margin >= g.h * 0.35, hard: true, note: "The separate words area leaves at least 35% of the frame for the picture." });
   const safe = { x: g.margin - 1, y: g.top - 1, w: g.w - 2 * g.margin + 2, h: g.h - g.top - g.bottom + 2 };
   for (const n of ["Words", "CTA"]) {
     const b = boxes[n];

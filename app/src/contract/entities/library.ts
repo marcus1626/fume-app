@@ -1,4 +1,4 @@
-// The brand's own pictures (FLOWS §38, PROPOSED 12 Nov 2026): a shoot the customer or Fume's people upload, kept as it
+// The brand's own pictures (FLOWS §38, DECIDED 13 Nov 2026): a shoot the customer or Fume's people upload, kept as it
 // is, what the Engine read in it, and what an expert checked. The Library's second half, beside what Fume made (§37).
 
 import type { Id, Instant } from "./common";

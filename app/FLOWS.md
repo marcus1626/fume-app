@@ -1920,7 +1920,7 @@ and solo only dim their lanes. The four sounds in "Sounds" stand in for a real l
 **Open.** Precomps (a group of layers as one item, opened in its own timeline) are not built. The Timing sliders in
 the inspector can still stretch a thing over its neighbour on the same track. The 3D track stays behind its flag.
 
-## 37. The Library: everything made, in one place (10 Nov 2026, PROPOSED)
+## 37. The Library: everything made, in one place (10 Nov 2026; DECIDED 13 Nov 2026)
 
 Marcus tested the live app on 10 Nov: "I don't know where the asset library is, or where I find already-checked
 ads. It was a bit chaotic; I can't find the Nike ads you made." What it showed:
@@ -1957,12 +1957,13 @@ and every Studio document that never went to check (In the Studio, its picked ve
 its own clients only. Live it is the creatives with their newest version, plus the creatives with pictures and no
 version yet (the Nike masters), which read as In the Studio.
 
-**Defaults to confirm.** The Library holds creatives only; the brand's own files (logo, product photos, models and
+**Defaults (approved with the Library, 13 Nov).** The Library holds creatives only; the brand's own files (logo, product photos, models and
 references) stay under Brand. Drafts are in it. Its icon is the folder.
 
-**Open.** Whether the admin should see every place (Check, Studio, Engine) to read, or only the Library added to §20.
+**Decided 13 Nov.** The admin gets the Library added to §20, read only. Check, Studio and the Engine stay as §20 has
+them.
 
-## 38. The brand's own pictures in the Library (12 Nov 2026, PROPOSED)
+## 38. The brand's own pictures in the Library (12 Nov 2026; DECIDED 13 Nov 2026)
 
 Marcus, 12 Nov: "The Fume app must have an asset library, so the customer does not have to use AI-made creatives but
 can upload, use and reuse real pictures. The Engine can take a big photo shoot, judge the pictures, pick the best, and
@@ -2044,5 +2045,15 @@ each picture. Live, the Engine reads it with vision, the Look Book and the produ
 **Order.** Real photographs are statics, so they come with statics and graphic design, before video (§33, the decided
 order). The clips wait in the shoot for the video editor.
 
-**Open.** Whether a customer can start a campaign from a shoot themselves ("Make creatives from these"), or asks Fume
-in the chat. Whether a shoot with people needs the release file itself uploaded, or a yes is enough.
+**Decided 13 Nov (Marcus's yes to the defaults).** For now only Fume's people start creatives from a shoot; a customer
+asks Fume in the chat. A recorded yes that everyone in the pictures signed a release is enough; the release itself is
+not uploaded.
+
+## Words on the picture or in their own area — PROPOSED (12 Nov 2026)
+
+Marcus, 12 Nov: “det burde være en egen variabel, om teksten skal stå på bildet, eller på eget design separat fra bildet”.
+Each planned creative may set `words: on_picture | own_area`; absent means `on_picture` for older data. A Fume designer
+can change this in Studio beside the graphic design ask; starting the design saves an override on that creative,
+without editing the approved plan. `own_area` asks the Engine for a complete photograph, with no room-for-words or
+room-calm checklist or room remake. The design puts the approved words in a separate area below the picture, coloured
+from the brand's design tokens. The photo, words area and editable text remain separate layers in the `.fig`.

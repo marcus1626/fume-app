@@ -114,6 +114,12 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
     const plan = db.plans.find((p) => p.campaignId === d.campaignId && p.state === "approved");
     return wordsOf(plan?.content ?? planCopy[d.campaignId ?? ""] ?? []);
   };
+  function placementOf(d: CreativeDocument): "on_picture" | "own_area" {
+    if (d.words) return d.words;
+    const plan = db.plans.find((p) => p.campaignId === d.campaignId && p.state === "approved");
+    const creatives = plan?.directions.find((x) => x.id === plan.chosenDirectionId)?.creatives;
+    return creatives?.find((c) => c.id === d.slot || c.name === d.slot)?.words ?? "on_picture";
+  }
   function designAskOf(d: CreativeDocument, versionId: Id): DesignAsk {
     const asked = m.find(d.versions, versionId, "version");
     // On a designed version, Fume designs again from the picture under it.
@@ -130,6 +136,7 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
             ? "The approved plan has no headline to set on this creative."
             : undefined;
     return {
+      wordsPlacement: placementOf(d),
       fromVersionId: from.id,
       fromNumber: from.number,
       ...(words ? { words } : {}),
@@ -197,7 +204,27 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
         touch(d);
         return;
       }
-      const { drawing, ...made } = measured(book.body, from.specs.format, plan, choice);
+      const ownArea = placementOf(d) === "own_area";
+      const { drawing, ...made } = measured(
+        book.body,
+        from.specs.format,
+        plan,
+        ownArea ? { ...choice, band: "bottom", colour: "text", ground: "photo" } : choice,
+      );
+      if (ownArea) {
+        const colour =
+          book.body.colours.find((c) => c.role === "surface")?.hex ??
+          book.body.colours.find((c) => c.role === "background")?.hex ??
+          book.body.colours[0].hex;
+        drawing.area = {
+          picture: from.image,
+          colour,
+          top: Math.max(35, Math.min(...drawing.layers.map((l) => l.y)) - 4),
+        };
+        made.checks = made.checks.filter((c) => c.check !== "busy" && c.check !== "covers");
+        made.findings = [];
+        made.verdict = "ready_for_check";
+      }
       v.state = "done";
       v.evaluation = designEvaluation(v.evaluation, made.checks, n);
       v.design = {
@@ -911,12 +938,13 @@ export function studioCalls(m: Mock): Pick<FumeApi, Calls> {
       mustDesigner();
       return wait(designAskOf(doc(id), versionId));
     },
-    async designVersion(id, versionId, words) {
+    async designVersion(id, versionId, words, placement) {
       mustDesigner();
       const d = doc(id);
       const ask = designAskOf(d, versionId);
       if (ask.designingVersionId) return wait(structuredClone(d));
       if (ask.blocked) throw new FumeError("invalid", ask.blocked);
+      if (placement) d.words = placement;
       startDesign(d, ask, words);
       // Answered at once, with the version Fume is designing.
       return wait(structuredClone(d));

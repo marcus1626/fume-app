@@ -1,4 +1,4 @@
-// The Library (FLOWS §37, PROPOSED 10 Nov 2026): everything made for a brand in one place, whatever stage it is at.
+// The Library (FLOWS §37, DECIDED 13 Nov 2026): everything made for a brand in one place, whatever stage it is at.
 import { expect, test } from "vitest";
 import { createMockApi } from "../src/mock/mockApi";
 

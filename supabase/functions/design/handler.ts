@@ -66,7 +66,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     let choice: LayoutChoice | null = null;
     let kept = false;
     let keptWhy: string | null = null;
-    if (!t.ask && d.before) {
+    if (t.planned.words !== "own_area" && !t.ask && d.before) {
       try {
         choice = await d.before(t);
         // A layout from an earlier book the brand has since replaced is not the brand's any more (Anthem, 9 Nov: the
@@ -93,7 +93,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     // person or the product while every measured check still passes (Anthem "Two on two", 9 Nov: a headline across
     // the father's body, no keep-clear box at all).
     let blind: string | null = null;
-    for (let i = 0; !choice && !kept && i < 2; i++) {
+    for (let i = 0; t.planned.words !== "own_area" && !choice && !kept && i < 2; i++) {
       try {
         choice = await d.choose(t, words, picture, spent);
         if (!choice) blind = "the model gave no answer";
@@ -102,10 +102,10 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
         blind = e instanceof Error ? e.message.slice(0, 200) : String(e).slice(0, 200);
       }
     }
-    if (choice) blind = null;
+    if (choice || t.planned.words === "own_area") blind = null;
     // The layout the plan chose is the one the Engine left room for (9 Nov): the words go there. The model's eye still
     // marks what to keep clear and the colour; only an earlier design kept above, or a designer's ask, sets it apart.
-    const planned = kept || t.ask ? null : plannedLayout(t);
+    const planned = t.planned.words === "own_area" || kept || t.ask ? null : plannedLayout(t);
     const plannedBand = (["top", "middle", "bottom"] as const).find((b) => b === planned?.band);
     const plannedAlign = (["left", "center", "right"] as const).find((a) => a === planned?.align);
     if (planned && choice) {
@@ -122,7 +122,7 @@ export async function designLayer(t: Take, d: Deps): Promise<"made" | "failed"> 
     const faults = first.findings.filter((f) => f.by === "fume_review" && (f.severity === "critical" || f.severity === "major") && !f.what.startsWith("Not like the brand"));
     if (
       first.verdict === "needs_work" && first.findings.some((f) => f.by === "fume_review" && f.severity === "critical") &&
-      !kept && !t.ask && d.service.settle && d.now() - started < AGAIN_BEFORE_MS
+      t.planned.words !== "own_area" && !kept && !t.ask && d.service.settle && d.now() - started < AGAIN_BEFORE_MS
     ) {
       const was = first.out.layout as { band?: string; align?: string; ground?: string } | null;
       let again: LayoutChoice | null = null;
@@ -223,6 +223,7 @@ async function attempt(
     format,
     book: t.book.body,
     words,
+    wordsPlacement: t.planned.words ?? "on_picture",
     // Where the Engine left room for the words comes first; the model's eye places the rest. Not on a second try, a
     // layout kept from an earlier design, or a designer's own ask: those choose their own place.
     prefer: {
@@ -238,7 +239,7 @@ async function attempt(
         : {}),
       ...(alt || kept || t.ask ? {} : roomOf(t)),
     },
-    keepClear: choice ? keepClearOf(choice, format) : [],
+    keepClear: t.planned.words === "own_area" ? [] : choice ? keepClearOf(choice, format) : [],
     ...(links.logo ? { logo: links.logo } : {}),
     ...(links.fonts?.length ? { fonts: links.fonts } : {}),
     upload: { png: links.png, fig: links.fig },

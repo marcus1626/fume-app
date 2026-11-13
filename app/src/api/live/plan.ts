@@ -103,6 +103,7 @@ function toPlanned(x: Json, i: number): PlannedCreative {
     productIds: strings(x.productIds),
     scene: str(x.scene),
     ...opt("text", x.text),
+    ...(x.words === "own_area" || x.words === "on_picture" ? { words: x.words } : {}),
     people: str(x.people) || "No people",
     ...opt("changedBy", x.changedBy),
     ...opt("changedAt", x.changedAt),

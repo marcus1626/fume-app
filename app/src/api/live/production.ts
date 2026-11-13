@@ -40,8 +40,9 @@ import { askEngine, command, requestKey, rows, supabase } from "./supabase";
 
 export interface StudioCreativeRow extends CreativeRow {
   slot: string | null;
+  words?: "on_picture" | "own_area" | null;
 }
-export const STUDIO_CREATIVE = `${CREATIVE}, slot`;
+export const STUDIO_CREATIVE = `${CREATIVE}, slot, words`;
 
 interface JobRow {
   id: string;
@@ -454,6 +455,7 @@ export async function readDocuments(
       creativeId: cr.id,
       title: desk.title ?? cr.title,
       slot: cr.title,
+      ...(cr.words ? { words: cr.words } : {}),
       studio: desk.studio ?? mode.studio,
       modeId: mode.id,
       variables,

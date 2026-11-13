@@ -87,7 +87,7 @@ Deno.serve((req) =>
             if (Array.isArray(seen) && seen.length) data.seen = seen;
             // What filled the room for the words on this job's last picture, when it is made once more for that.
             const { data: again } = await service.rpc("engine_again_note", { p_job_id: jobId });
-            if (typeof again === "string" && again) data.again = again;
+            if (typeof again === "string" && again && data.creative.words !== "own_area") data.again = again;
           }
           return { data, error: err(error) };
         },

@@ -67,6 +67,7 @@ begin
   perform test.keep('ea2', (t #>> '{run,attempt_id}')::uuid);
   perform test.ok((select state = 'failed' from public.job_attempts where id = test.id('ea1')), 'and the silent one is failed');
   perform test.ok(t #>> '{creative,slot}' = 'pc1' and t #>> '{creative,format}' = 'feed', 'it names the creative and its format');
+  perform test.ok(t #>> '{creative,words}' = 'on_picture', 'older plans default to words on the picture');
   perform test.ok(t #>> '{plan,chosen_direction_id}' is not null and jsonb_array_length(t #> '{plan,planned_creatives}') = 2,
     'it carries the approved plan');
   perform test.ok(jsonb_array_length(t -> 'products') = 1 and jsonb_array_length(t #> '{products,0,facts}') > 0

@@ -20,6 +20,7 @@ const Creative = z.object({
   format: z.enum(["feed", "square", "story"]),
   productIds: z.array(z.string()).describe("Ids of the campaign's products shown"),
   scene: z.string().describe("What we see: subject, setting, light, composition, space for text"),
+  words: z.enum(["on_picture", "own_area"]).optional().describe("Where the words go: on_picture over the photograph, or own_area in a separate brand-coloured panel below it. For own_area, write a complete photograph without reserving room for words"),
   text: z.string().nullable().describe("The words on the creative, or null for none"),
   claimRefs: z.array(z.string()).describe("Ids of the verified claim facts the words rely on; empty when none"),
   people: z.string().describe("'No people', 'Hands only', or who"),
@@ -262,7 +263,7 @@ export function layoutPart(layouts: BrandLayout[] | undefined): string[] {
   if (!layouts?.length) return [];
   return [
     `<brand_layouts>\n${JSON.stringify(layouts)}\n</brand_layouts>`,
-    "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For every creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product, every person and the ball stay clear of that place (people go beside the product, never in the words' room), and the ground there is calm, so the words can be set there later.",
+    "These are the brand's own layouts for words on its pictures: where the words sit (band and align), how wide their column is (a share of the picture's width) and what they stand on. For own_area, do not reserve space or specify a calm or light/dark area for words in the photograph; the design service makes a separate panel. For every on_picture creative with words, choose the layout that suits its scene and name it in layout, exactly as listed. Write the scene for it: the product, every person and the ball stay clear of that place (people go beside the product, never in the words' room), and the ground there is calm, so the words can be set there later.",
     // The Engine holds the picture to the tone the words need (engine/context.ts roomRules). A plan that put white
     // words on a seamless light grey studio ground could not be written as a prompt at all (Nike UK, P-6000, 10 Nov).
     ...(layouts.some((l) => l.words)
@@ -482,6 +483,7 @@ export function toBody(a: PlanAnswer, layouts: BrandLayout[] = []): Record<strin
       productIds: c.productIds,
       scene: c.scene,
       ...(c.text ? { text: c.text } : {}),
+      words: c.words ?? "on_picture",
       claimRefs: c.claimRefs,
       people: c.people,
       // Where the camera stands to the subject and how close, for the Engine's choice of reference pictures.

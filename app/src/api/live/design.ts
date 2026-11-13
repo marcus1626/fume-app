@@ -17,7 +17,7 @@ import {
 } from "../../contract";
 import type { Live } from "./context";
 import { fileUrls } from "./map";
-import { command, rows, supabase } from "./supabase";
+import { command, rows, supabase, WORDS_COLUMN } from "./supabase";
 import { designScores } from "./scores";
 
 type Json = Record<string, unknown>;
@@ -305,6 +305,31 @@ async function wordsFor(campaignId: Id | undefined): Promise<DesignWords | undef
   return planWords(plans[0]?.body?.content ?? []);
 }
 
+async function placementFor(d: CreativeDocument): Promise<"on_picture" | "own_area"> {
+  const plans = await rows<{
+    body: {
+      chosen_direction_id?: string;
+      directions?: { id: string; creatives?: { id: string; words?: string }[] }[];
+      planned_creatives?: { id: string; words?: string }[];
+    };
+  }>(
+    supabase()
+      .from("plan_versions")
+      .select("body")
+      .eq("campaign_id", d.campaignId!)
+      .eq("state", "approved")
+      .order("version", { ascending: false })
+      .limit(1),
+  );
+  const body = plans[0]?.body;
+  const creatives =
+    body?.directions?.find((x) => x.id === body.chosen_direction_id)?.creatives ?? body?.planned_creatives;
+  // The Studio document's label is its title; read the stable slot from the creative.
+  const { data, error } = await supabase().from("creatives").select("slot").eq("id", d.id).single();
+  if (error) throw error;
+  return creatives?.find((x) => x.id === data.slot)?.words === "own_area" ? "own_area" : "on_picture";
+}
+
 type Calls = "designAsk" | "designVersion";
 
 export function designCalls(live: Live, read: (documentId: Id) => Promise<CreativeDocument>): Pick<FumeApi, Calls> {
@@ -324,6 +349,7 @@ export function designCalls(live: Live, read: (documentId: Id) => Promise<Creati
             ? "The approved plan has no headline to set on this creative."
             : undefined;
     return {
+      wordsPlacement: d.words ?? (await placementFor(d)),
       fromVersionId: from.id,
       fromNumber: from.number,
       ...(words ? { words } : {}),
@@ -340,13 +366,14 @@ export function designCalls(live: Live, read: (documentId: Id) => Promise<Creati
     },
     // design_candidate keeps the layer (and refuses what cannot be designed); the edge function makes it in the
     // background and answers at once. The document comes back with the version Fume is designing.
-    async designVersion(documentId, versionId, ask) {
+    async designVersion(documentId, versionId, ask, words) {
       const d = await read(documentId);
       const a = await askOf(d, versionId);
       if (a.designingVersionId) return d;
       if (a.blocked) throw new FumeError("invalid", a.blocked);
       const layer = await command<{ id: string }>("design_candidate", {
         p_candidate_id: a.fromVersionId,
+        ...(WORDS_COLUMN ? { p_words: words ?? null } : {}),
         p_ask: ask?.trim() ? ask.trim().slice(0, 1000) : null,
       });
       const { error } = await supabase().functions.invoke("design", { body: { layerId: layer.id } });

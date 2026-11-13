@@ -1,4 +1,4 @@
-// The brand's own pictures in the Library (FLOWS §38, PROPOSED 12 Nov 2026): the Engine's read of a shoot, an
+// The brand's own pictures in the Library (FLOWS §38, DECIDED 13 Nov 2026): the Engine's read of a shoot, an
 // expert's check of the picks, and a checked pick becoming a creative in a campaign.
 import { expect, test } from "vitest";
 import type { OwnPicture } from "../src/contract";

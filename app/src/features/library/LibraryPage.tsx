@@ -1,4 +1,4 @@
-// The Library (FLOWS §37, PROPOSED 10 Nov 2026): everything made for a brand in one place, whatever stage it is at.
+// The Library (FLOWS §37, DECIDED 13 Nov 2026): everything made for a brand in one place, whatever stage it is at.
 // Marcus, testing the app on 10 Nov: "I don't know where the asset library is, where I find already-checked ads; I
 // can't find the Nike ads you made." A creative used to live in Check, Campaigns, the Studio, Engine output or
 // Deliveries depending on how far it had come; here it is one grid, newest first.
@@ -10,7 +10,7 @@
 //   check's own words (the Amber triangle only on checked work; a draft says "In the Studio").
 // - A tile opens the viewer: the creative large, and beside it where it stands, who made it, its version, and the way
 //   to the place to work on it (Studio, Check or its campaign). Fume's admin reads the Library too, without those ways.
-// FLOWS §38 (PROPOSED 12 Nov 2026) makes it two halves: "Made by Fume" (the above) and "Uploaded", the brand's own
+// FLOWS §38 (DECIDED 13 Nov 2026) makes it two halves: "Made by Fume" (the above) and "Uploaded", the brand's own
 // shoots (Uploaded.tsx, ShootPage.tsx). ?from=uploaded keeps the half in the address. The customer has a Library of
 // their own at /library: what Fume made that reached them (approved and delivered), and their own pictures.
 import {

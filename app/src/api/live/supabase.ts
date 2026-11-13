@@ -125,3 +125,6 @@ export async function askEngine(jobId: string, now = false): Promise<void> {
     .functions.invoke("engine", { body: { jobId } })
     .catch(() => undefined);
 }
+
+/** creatives.words and design_candidate's p_words (migration 20261112174210_creative_words.sql, live since 13 Nov). */
+export const WORDS_COLUMN = true;

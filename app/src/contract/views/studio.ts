@@ -39,7 +39,7 @@ export interface StudioCampaignRow {
   approver?: User;
 }
 
-/** Where a creative stands in the Library (FLOWS §37, PROPOSED 10 Nov 2026), in the order it moves: a draft in the
+/** Where a creative stands in the Library (FLOWS §37, DECIDED 13 Nov 2026), in the order it moves: a draft in the
  *  Studio, being made by the Engine, waiting for a check (or back with the Engine or a designer), checked, changes the
  *  customer asked for, approved by the customer, delivered. */
 export type LibraryState = "studio" | "making" | "to_check" | "checked" | "changes" | "approved" | "delivered";

@@ -1,4 +1,4 @@
-// The brand's own pictures (FLOWS §38, PROPOSED): shoots uploaded to the Library, the Engine's read of them, an
+// The brand's own pictures (FLOWS §38, DECIDED 13 Nov 2026): shoots uploaded to the Library, the Engine's read of them, an
 // expert's check of its picks, and a checked pick becoming a creative in a campaign.
 
 import type { Id } from "../entities/common";

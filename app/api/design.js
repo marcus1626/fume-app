@@ -86,9 +86,9 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const panel = componentOf(book, "body");
   const isBlock = l.ground === "block";
   const onPanel = l.ground === "flat" || isBlock;
-  const ownGround = onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
+  const ownGround = l.wordsPlacement === "own_area" ? colourOf(book, panel?.background ?? "surface") ?? colourOf(book, "background") ?? book.colours[0]?.hex ?? "#FFFFFF" : onPanel && l.groundHex && /^#[0-9a-f]{6}$/i.test(l.groundHex) ? l.groundHex.toUpperCase() : null;
   const wordsHex = ownGround ? readableOn(ownGround, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000") : isBlock ? colourOf(book, "on_primary") ?? "#FFFFFF" : onPanel ? colourOf(book, "text") ?? "#000000" : colourOf(book, l.colour) ?? "#FFFFFF";
-  const subHex = isBlock || ownGround ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
+  const subHex = l.wordsPlacement === "own_area" ? wordsHex : isBlock || ownGround ? wordsHex : onPanel ? colourOf(book, "text_muted") ?? wordsHex : wordsHex;
   const width = columnsWidth(g, Math.min(g.columns, Math.max(4, l.columns)));
   const x = l.align === "left" ? g.margin : l.align === "right" ? g.w - g.margin - width : Math.round((g.w - width) / 2);
   const textAlign = l.align;
@@ -191,7 +191,7 @@ function compose(book, format, words, l, family, widths = {}, logo) {
   const logoNode = logo && !logo.inside ? `<Rectangle name="Logo" position="absolute" x={${g.margin}} y={${g.top}} w={${Math.round(logo.w)}} h={${Math.round(
     logo.h
   )}} fills={[{ type: "IMAGE", imageHash: "LOGO", imageScaleMode: "FIT", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />` : "";
-  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg="#000000"><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "FILL", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${shade}${block}${alone}${logoNode}</Frame>`;
+  const jsx = `<Frame name=${q(`${format} ${g.w}x${g.h}`)} w={${g.w}} h={${g.h}} overflow="hidden" bg=${q(l.wordsPlacement === "own_area" ? panelHex : "#000000")}><Rectangle name="Picture" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} fills={[{ type: "IMAGE", imageHash: "PHOTO", imageScaleMode: "${l.wordsPlacement === "own_area" ? "FIT" : "FILL"}", color: { r: 0, g: 0, b: 0, a: 1 }, visible: true, opacity: 1 }]} />${l.wordsPlacement === "own_area" ? `<Rectangle name="Words area" position="absolute" x={0} y={0} w={${g.w}} h={${g.h}} bg=${q(panelHex)} />` : ""}${shade}${block}${alone}${logoNode}</Frame>`;
   return { jsx, grid: g, fonts, colours, sizes, ...onPanel ? { panel: panelHex } : {} };
 }
 function splitPrice(line) {
@@ -845,7 +845,7 @@ var BUDGET_MS = { first: 22e3, all: 4e4 };
 async function design(asked) {
   const t0 = Date.now();
   const first = await designOn(asked, t0 + BUDGET_MS.first);
-  if (first.ok) return first;
+  if (first.ok || asked.wordsPlacement === "own_area") return first;
   const g = gridOf(asked.book, asked.format);
   let best = first;
   let tried = first.tried;
@@ -900,7 +900,7 @@ async function designOn(asked, until = Infinity) {
   const { book, format, words } = ask;
   const g = gridOf(book, format);
   const pixels = await pictureAt(ask.picture, format, SCALE);
-  const keep = ask.keepClear ?? [];
+  const keep = ask.wordsPlacement === "own_area" ? [] : ask.keepClear ?? [];
   const logo = ask.logo ? await logoOf(ask.logo, colourOf(book, "on_photo") ?? "#FFFFFF", colourOf(book, "text") ?? "#000000").catch(() => null) : null;
   let best = null;
   let tried = 0;
@@ -909,7 +909,11 @@ async function designOn(asked, until = Infinity) {
   const attempts = [];
   for (const l of searchOrder(layoutsFor(book, format, ask.prefer ?? {}, Boolean(words.cta)), Boolean(words.subline))) {
     if (best && Date.now() > until) break;
+    if (ask.wordsPlacement === "own_area") {
+      Object.assign(l, { wordsPlacement: "own_area", ground: "flat", band: "bottom", align: "left", columns: g.columns, cta: words.cta ? "with_words" : "none", at: void 0, signature: void 0, groundHex: void 0 });
+    }
     const plan = logo ? logoPlan(book, g, l, logo) : null;
+    if (plan && l.wordsPlacement === "own_area") plan.inside = true;
     const c = compose(book, format, words, l, familyFor, {}, plan ?? void 0);
     const doc = await build(c.jsx, ask.picture, plan?.logo.variants);
     let t = measure(doc, c, l, book, pixels, keep, plan);
@@ -996,6 +1000,7 @@ async function balance(ask, base, familyFor, pixels, keep, logo = null) {
   const { book, format, words } = ask;
   const l = base.layout;
   const plan = logo ? logoPlan(book, gridOf(book, format), l, logo) : null;
+  if (plan && l.wordsPlacement === "own_area") plan.inside = true;
   const widths = {};
   let longest = 0;
   const heightOf = async (w, name) => {
@@ -1125,6 +1130,11 @@ function measure(doc, c, l, book, p, keep, logo = null) {
   place(doc, "Words", { y });
   if (action0) place(doc, "Action", { y: g.h - g.bottom - action0.h });
   const words = boxOf(doc, "Words");
+  if (l.wordsPlacement === "own_area") {
+    const top = Math.max(g.top, words.y - g.margin);
+    place(doc, "Words area", { y: top, height: g.h - top });
+    place(doc, "Picture", { height: top });
+  }
   const shades = [];
   const shade = shadeFor(book, l, g, words);
   if (shade) {
@@ -1148,6 +1158,7 @@ function measure(doc, c, l, book, p, keep, logo = null) {
     if (b) boxes[n] = b;
   }
   const checks = [];
+  if (l.wordsPlacement === "own_area") checks.push({ check: "fits", node: "Words", ok: words.y - g.margin >= g.h * 0.35, hard: true, note: "The separate words area leaves at least 35% of the frame for the picture." });
   const safe = { x: g.margin - 1, y: g.top - 1, w: g.w - 2 * g.margin + 2, h: g.h - g.top - g.bottom + 2 };
   for (const n of ["Words", "CTA"]) {
     const b = boxes[n];
@@ -1817,6 +1828,7 @@ async function handle(req, deps) {
   const op = r2.op;
   if (op === "fix-crop" || op === "fix-set") return fixStep(r2, deps);
   if (op === "format" || op === "format-set" || op === "format-drawn" || op === "format-guide") return formatStep(r2, deps);
+  if (r2.wordsPlacement != null && r2.wordsPlacement !== "on_picture" && r2.wordsPlacement !== "own_area") return json(400, { error: "Unknown words placement." });
   const why = invalid(r2, deps.storageHost);
   if (why) return json(400, { error: why });
   let picture;
@@ -1854,6 +1866,7 @@ async function handle(req, deps) {
     format: r2.format,
     book: r2.book,
     words: r2.words,
+    wordsPlacement: r2.wordsPlacement ?? "on_picture",
     prefer: r2.prefer ?? {},
     keepClear: (r2.keepClear ?? []).filter(isBox).slice(0, 12),
     ...logo ? { logo } : {},

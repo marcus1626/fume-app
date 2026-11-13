@@ -31,6 +31,7 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
+  Switch,
   TextShimmer,
   Textarea,
   useToast,
@@ -78,6 +79,17 @@ export function DrawnWords({ drawing }: { drawing: DesignDrawing }) {
   const px = (n: number) => `${(n / 1080) * 100}cqw`;
   return (
     <span className="ui-design-drawn" aria-hidden="true">
+      {drawing.area && (
+        <svg className="ui-design-drawn" width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 100 100">
+          <rect width="100" height="100" fill={drawing.area.colour} />
+          <image
+            href={drawing.area.picture}
+            width="100"
+            height={drawing.area.top}
+            preserveAspectRatio="xMidYMid meet"
+          />
+        </svg>
+      )}
       {drawing.shade && (
         <span
           className="ui-design-shade"
@@ -359,6 +371,7 @@ function DesignDialog({
   const design = useDesignVersion();
   const toast = useToast();
   const [text, setText] = useState("");
+  const [placement, setPlacement] = useState<"on_picture" | "own_area">();
   const a = ask.data;
   const n = a?.fromNumber ?? version.number;
   const id = "design-ask";
@@ -366,7 +379,12 @@ function DesignDialog({
     e.preventDefault();
     if (!a || a.blocked) return;
     design
-      .mutateAsync({ documentId: doc.id, versionId: version.id, ...(text.trim() ? { ask: text.trim() } : {}) })
+      .mutateAsync({
+        documentId: doc.id,
+        versionId: version.id,
+        words: placement ?? a.wordsPlacement ?? "on_picture",
+        ...(text.trim() ? { ask: text.trim() } : {}),
+      })
       .then(
         (d) => {
           onOpenChange(false);
@@ -385,7 +403,7 @@ function DesignDialog({
         <DialogHeader>
           <DialogTitle>{version.design ? `Design again from V${n}` : `Add graphic design to V${n}`}</DialogTitle>
           <DialogDescription>
-            {`Fume lays the plan’s words on V${n} and checks the layout. You get a new version, with a file you can change by hand; V${n} stays as it is.`}
+            {`Fume combines V${n} with the plan’s words and checks the layout. You get a new version, with a file you can change by hand; V${n} stays as it is.`}
           </DialogDescription>
         </DialogHeader>
         <DialogBody>
@@ -395,6 +413,18 @@ function DesignDialog({
             </p>
           ) : a ? (
             <form id={id} className="ui-design-form" onSubmit={submit}>
+              <Field>
+                <FieldLabel htmlFor={`${id}-placement`}>Words in their own area</FieldLabel>
+                <Switch
+                  id={`${id}-placement`}
+                  checked={(placement ?? a.wordsPlacement ?? "on_picture") === "own_area"}
+                  onCheckedChange={(on) => setPlacement(on ? "own_area" : "on_picture")}
+                />
+                <FieldDescription>
+                  Off: words on the picture. On: a separate area below the picture. Saved for this creative when you
+                  start the design.
+                </FieldDescription>
+              </Field>
               <section className="ui-design-part" aria-labelledby={`${id}-words`}>
                 <h3 className="ui-design-head" id={`${id}-words`}>
                   The words, from the approved plan

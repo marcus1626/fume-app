@@ -1,9 +1,9 @@
-/* The Library (app FLOWS §37, PROPOSED 10 Nov 2026): everything made for a brand in one place.
+/* The Library (app FLOWS §37, DECIDED 13 Nov 2026): everything made for a brand in one place.
    Markup: div.ui-library > .ui-library-stages (a SegmentedControl of where it stands, with counts), the filter bar,
    then ul.ui-creative-grid of tiles. A tile's caption holds span.ui-library-caption (the campaign over the format) and
    the check, or span.ui-library-state for a draft still in the Studio (no triangle: it has not been checked).
    The viewer's info list holds span.ui-library-ways, the way to the place to work on it.
-   Uploaded (FLOWS §38, PROPOSED 12 Nov 2026), the brand's own pictures: ul.ui-library-shoots of a.ui-card.ui-library-shoot
+   Uploaded (FLOWS §38, DECIDED 13 Nov 2026), the brand's own pictures: ul.ui-library-shoots of a.ui-card.ui-library-shoot
    (span.ui-library-shoot-cover[data-count] of up to four pictures, the first large; then span.ui-library-shoot-text:
    name, meta, where it stands, a warning). A shoot's page: p.ui-library-shoot-line (the one shimmer while the Engine
    reads it, then the check), and ul.ui-creative-grid.ui-library-own of tiles at each picture's own shape, the why

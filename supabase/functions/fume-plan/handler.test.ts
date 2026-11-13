@@ -567,3 +567,13 @@ Deno.test("the plan writer reads the brand's taste schema: its habits, what a ca
   assertEquals(tastePart(null), []);
   assertEquals(tastePart(direction(buildProfile(cards.slice(0, 3)))), [], "too few pictures give no direction");
 });
+
+Deno.test("each planned creative keeps its words placement, defaulting old answers to on_picture", () => {
+  const old = toBody(plan).directions as { creatives: { words: string }[] }[];
+  assertEquals(old[0].creatives[0].words, "on_picture");
+  const own: PlanAnswer = { ...plan, directions: plan.directions.map((d) => ({ ...d, creatives: d.creatives.map((c, i) => ({ ...c, words: i === 0 ? "own_area" : "on_picture" })) })) };
+  const body = toBody(own);
+  const directions = body.directions as { creatives: { words: string }[] }[];
+  assertEquals(directions[0].creatives[0].words, "own_area");
+  assertEquals(directions[0].creatives[1].words, "on_picture");
+});

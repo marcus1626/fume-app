@@ -1,4 +1,4 @@
-// The brand's own pictures (FLOWS §38, PROPOSED): shoots in the Library, the Engine's read, an expert's check of the
+// The brand's own pictures (FLOWS §38, DECIDED 13 Nov 2026): shoots in the Library, the Engine's read, an expert's check of the
 // picks, and a checked pick becoming a creative in a campaign. A shoot dropped in the preview is read for real in the
 // browser (lib/probe.ts, domain/shoot.ts); in the tests, where there is no canvas, every photograph is kept for later.
 import { FumeError, type FumeApi, type Id, type OwnPicture, type Shoot } from "../contract";

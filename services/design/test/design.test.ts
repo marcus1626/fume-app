@@ -445,3 +445,22 @@ test("among layouts that fail alike, the brand's own colour wins", () => {
   const taste = (t: Tried) => tasteOf(t, branded, {});
   assert.ok(better(tried("on_photo", "tint", -8), tried("text", "photo", -6), taste));
 });
+
+test("own_area keeps the photograph and a brand-coloured words panel as separate editable layers", async () => {
+  const l = { wordsPlacement: "own_area" as const, band: "bottom" as const, align: "left" as const, headline: "h1", colour: "text", ground: "flat" as const, cta: "with_words" as const, columns: 12 };
+  const c = compose(book, "feed", words, l, () => "Inter");
+  const doc = await build(c.jsx, await picture("#EEEEEE", "#222222"));
+  const { measure } = await import("../src/design.ts");
+  const pixels = await pixelsOf(await png(doc, 0.25), 0.25);
+  measure(doc, c, l, book, pixels, []);
+  const photo = boxOf(doc, "Picture")!;
+  const area = boxOf(doc, "Words area")!;
+  const text = boxOf(doc, "Words")!;
+  assert.equal(photo.y + photo.h, area.y);
+  assert.ok(text.y >= area.y);
+  assert.ok(text.y + text.h <= area.y + area.h);
+  assert.ok(book.colours.some((x) => x.hex.toUpperCase() === c.panel?.toUpperCase()));
+  assert.match(c.jsx, /imageScaleMode: "FIT"/);
+  const { fig } = await import("../src/render.ts");
+  assert.ok((await fig(doc)).length > 100);
+});

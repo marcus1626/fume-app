@@ -402,3 +402,18 @@ test("train the Engine: Fume's own people answer the Engine's pictures and the c
   await assert.rejects(api.trainAnswer({ cardId: second.id, verdict: "maybe" as never }), /yes or no/);
   await assert.rejects(maja().trainDeck(), /Fume’s own team/);
 });
+
+test("a designer saves words placement per creative and the mock composes a separate area", async () => {
+  const api = anna();
+  assert.equal((await api.designAsk("doc-autumn-m3", "rv-3")).wordsPlacement, "on_picture");
+  const before = await api.document("doc-autumn-m3");
+  const d = await api.designVersion("doc-autumn-m3", "rv-3", undefined, "own_area");
+  assert.equal(d.words, "own_area");
+  assert.equal(d.versions.find((v) => v.id === "rv-3")?.image, before.versions.find((v) => v.id === "rv-3")?.image);
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  const made = await api.document("doc-autumn-m3");
+  assert.ok(made.versions.find((v) => v.id === made.pickedVersionId)?.drawn?.area);
+  assert.equal((await api.designAsk("doc-autumn-m3", "rv-3")).wordsPlacement, "own_area");
+  assert.equal((await api.document("doc-bf-1")).words, undefined);
+  assert.equal((await api.designVersion("doc-autumn-m3", "rv-3", undefined, "on_picture")).words, "on_picture");
+});

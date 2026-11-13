@@ -1,4 +1,4 @@
-// The Library (FLOWS §37, PROPOSED 10 Nov 2026): everything made, in one place, for Fume's people and the admin.
+// The Library (FLOWS §37, DECIDED 13 Nov 2026): everything made, in one place, for Fume's people and the admin.
 import { expect, test } from "./fixtures";
 
 test("Anna finds the checked ads of a brand in the Library and opens one", async ({ page }) => {
@@ -34,7 +34,7 @@ test("Vera, the admin, has the Library across every brand, without the ways into
   await expect(viewer.getByRole("link", { name: "Open in Check" })).toHaveCount(0);
 });
 
-// The brand's own pictures (FLOWS §38, PROPOSED 12 Nov 2026)
+// The brand's own pictures (FLOWS §38, DECIDED 13 Nov 2026)
 test("Anna checks the picks of LYSNE's own shoot and puts them into a campaign", async ({ page }) => {
   await page.goto("/studio/b/w-lysne/library?as=anna");
   await page.getByRole("tab", { name: /^Uploaded/ }).click();

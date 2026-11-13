@@ -353,3 +353,18 @@ Deno.test("the layout keeps where each part sits, as shares of the frame, and th
   assertEquals(placed({ png: out.png, fig: out.fig }), {});
   assertEquals(placed({ ...out, logo: null, boxes: undefined }), { logo: null });
 });
+
+Deno.test("own_area bypasses photographic room and sends the composition choice with the approved copy", async () => {
+  const { d, calls } = deps({ choose: () => { throw new Error("A separate panel needs no photographic room"); } });
+  const own: Take = { ...take, planned: { ...take.planned, words: "own_area" }, room: "the left 40% of the width has no person" };
+  assertEquals(roomOf(own), {});
+  assertEquals(await designLayer(own, d), "made");
+  const request = calls.lay[0] as { wordsPlacement: string; words: unknown; keepClear: unknown[]; prefer: unknown };
+  assertEquals(request.wordsPlacement, "own_area");
+  assertEquals(request.words, wordsOf(take));
+  assertEquals(request.keepClear, []);
+  assertEquals(request.prefer, {});
+  const old = deps();
+  await designLayer(take, old.d);
+  assertEquals((old.calls.lay[0] as { wordsPlacement: string }).wordsPlacement, "on_picture");
+});
