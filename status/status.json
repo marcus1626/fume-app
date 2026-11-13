@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-12T17:50:00Z",
+  "updated": "2026-11-13T17:50:00Z",
   "deadline": "2026-11-21T23:59:59+01:00",
   "deadlineLabel": "the Fume app is finished",
   "start": "2026-10-26T08:00:00+01:00",
@@ -224,6 +224,19 @@
     }
   ],
   "reports": [
+    {
+      "date": "2026-11-13",
+      "title": "The Library and the brand's own photos, built for the real app",
+      "items": [
+        "Live in the real app: the picture check turns down a product cut off at the edge, the Engine uses only the Look Book recipe for the right scene, and each picture can have its words on the picture or in their own area.",
+        "Two test pictures for Anthem with the new Engine, 15 cents each. The right brand name is on the product now. Three faults still showed: the picture did not fill the width in its own area, a cut-off product still passed, and a football rule reached a non-football picture. All three are fixed in code.",
+        "Marcus approved the Library and the asset library for the brand's own photos.",
+        "Both are built for the real app: the Library on real data, upload of a shoot with its rights, the expert's check, a photo used as a creative at no cost, and the Engine reading a shoot to pick the best. All tests are green and the database changes are in.",
+        "Putting the new versions live waits for a permission setting on Marcus's Mac.",
+        "Supabase is now on the Pro plan, with daily backups.",
+        "Next: the production checklist before 21 November."
+      ]
+    },
     {
       "date": "2026-11-12",
       "title": "A stricter picture check, and the brand's own photos",
