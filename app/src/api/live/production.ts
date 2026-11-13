@@ -42,9 +42,7 @@ export interface StudioCreativeRow extends CreativeRow {
   slot: string | null;
   words?: "on_picture" | "own_area" | null;
 }
-// creatives.words is read once migration 20261112174210_creative_words.sql is live (see WORDS_COLUMN in ./supabase):
-// add ", words" here in the same change.
-export const STUDIO_CREATIVE = `${CREATIVE}, slot`;
+export const STUDIO_CREATIVE = `${CREATIVE}, slot, words`;
 
 interface JobRow {
   id: string;
