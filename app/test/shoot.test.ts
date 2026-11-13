@@ -219,3 +219,19 @@ test("nothing from a shoot is used while nobody knows who is in it", async () =>
     /who is in the pictures/,
   );
 });
+
+test("rights can be resolved after upload; returning to unsure blocks every later use", async () => {
+  const anna = createMockApi({ latency: 0, userId: "u-anna" });
+  await anna.checkPicks("sh-autumn");
+  await anna.updateShootRights("sh-autumn", { people: "unsure" });
+  await expect(anna.useShootInCampaign({ shootId: "sh-autumn", campaignId: "c-winter" })).rejects.toThrow(/who is in/);
+  await anna.updateShootRights("sh-autumn", { people: "released", photographer: " Ola " });
+  expect((await anna.shoot("sh-autumn")).rights).toEqual({ people: "released", photographer: "Ola" });
+  expect(
+    (await anna.useShootInCampaign({ shootId: "sh-autumn", campaignId: "c-winter", pictureIds: ["sh-autumn-p1"] }))
+      .documentIds,
+  ).toHaveLength(1);
+  await expect(
+    createMockApi({ latency: 0, userId: "u-ida" }).updateShootRights("sh-autumn", { people: "none" }),
+  ).rejects.toThrow(/viewer/);
+});

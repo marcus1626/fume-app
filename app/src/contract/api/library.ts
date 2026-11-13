@@ -31,6 +31,8 @@ export interface LibraryApi {
     rights: ShootRights;
     files: ShootFile[];
   }): Promise<Shoot>;
+  /** Updates who took the shoot, its usage period and the recorded release answer. */
+  updateShootRights(shootId: Id, rights: ShootRights): Promise<Shoot>;
   /** An expert moves a picture to the picks, the rest or left out; the move wins over the Engine's place. Moving a
    *  picture of a checked shoot opens its check again. */
   movePicture(pictureId: Id, sort: OwnSort): Promise<Shoot>;

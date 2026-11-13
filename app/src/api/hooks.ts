@@ -121,6 +121,10 @@ export const useShoot = (shootId: Id | undefined) => {
   });
 };
 export const useAddShoot = () => useM((a, v: Parameters<FumeApi["addShoot"]>[0]) => a.addShoot(v));
+export const useUpdateShootRights = () =>
+  useM((a, v: { shootId: Id; rights: Parameters<FumeApi["updateShootRights"]>[1] }) =>
+    a.updateShootRights(v.shootId, v.rights),
+  );
 export const useMovePicture = () =>
   useM((a, v: { pictureId: Id; sort: Parameters<FumeApi["movePicture"]>[1] }) => a.movePicture(v.pictureId, v.sort));
 export const useCheckPicks = () => useM((a, shootId: Id) => a.checkPicks(shootId));

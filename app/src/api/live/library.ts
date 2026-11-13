@@ -138,7 +138,7 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
       if (!found.length) return [];
       const ids = found.map((c) => c.id);
       const productIds = [...new Set(links.map((p) => p.product_id))];
-      const [jobs, products, versionFiles, designs] = await Promise.all([
+      const [jobs, products, versionFiles, designs, versionKinds] = await Promise.all([
         customer
           ? Promise.resolve([] as Job[])
           : readIn<Job>(ids, (batch, from, to) =>
@@ -166,6 +166,16 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
                 .order("id")
                 .range(from, to),
             ),
+        customer
+          ? readIn<{ version_id: Id; kind: "design" | "picture" }>(
+              found.flatMap((c) => (c.creative_versions ?? []).map((v) => v.id)),
+              (batch, from, to) =>
+                supabase()
+                  .rpc("library_version_kinds", { p_version_ids: batch })
+                  .order("version_id")
+                  .range(from, to),
+            )
+          : Promise.resolve([]),
       ]);
       const pictures = jobs.length
         ? await readIn<Picture>(
@@ -215,6 +225,7 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
           plansByCampaign.set(plan.campaign_id, plan);
       }
       const designPictures = new Set(designs.map((d) => d.result_candidate_id));
+      const kindsByVersion = new Map(versionKinds.map((v) => [v.version_id, v.kind]));
       const creatives = new Map(found.flatMap((c) => toCreatives([c], versionFiles)).map((c) => [c.id, c]));
       const items: LibraryItem[] = [];
       for (const c of found) {
@@ -243,7 +254,11 @@ export function libraryCalls(live: Live): Pick<FumeApi, "library"> {
           title: titleOf(c, plansByCampaign),
           name: c.name,
           format: toFormat(c.format),
-          studio: picture && designPictures.has(picture.id) ? "design" : (desk?.studio ?? "render"),
+          studio:
+            (customer && current && kindsByVersion.get(current.id) === "design") ||
+            (picture && designPictures.has(picture.id))
+              ? "design"
+              : (desk?.studio ?? "render"),
           kind: current ? (c.kind === "master" ? "master" : "variant") : "draft",
           image: current?.image ?? (shown ? draftFiles.get(shown.file_id)?.url : undefined),
           state,

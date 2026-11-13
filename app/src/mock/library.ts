@@ -3,12 +3,13 @@
 // browser (lib/probe.ts, domain/shoot.ts); in the tests, where there is no canvas, every photograph is kept for later.
 import { FumeError, type FumeApi, type Id, type OwnPicture, type Shoot } from "../contract";
 import { canCheckPlan } from "../domain/permissions";
-import { nearestFormat, pad, readShoot, sortOf, summarise, type PictureProbe } from "../domain/shoot";
+import { nearestFormat, requireShootUse, pad, readShoot, sortOf, summarise, type PictureProbe } from "../domain/shoot";
 import { probePicture } from "../lib/probe";
 import type { Mock } from "./context";
 import { agencyBrands } from "./home";
 
-type Calls = "shoots" | "shoot" | "addShoot" | "movePicture" | "checkPicks" | "useShootInCampaign";
+type Calls =
+  "shoots" | "shoot" | "addShoot" | "updateShootRights" | "movePicture" | "checkPicks" | "useShootInCampaign";
 
 export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
   const { db, wait } = m;
@@ -100,6 +101,12 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
       void read(s);
       return wait(seen(s));
     },
+    async updateShootRights(id, rights) {
+      mustAdd();
+      const s = shootOf(id);
+      s.rights = { ...rights, photographer: rights.photographer?.trim() || undefined };
+      return wait(seen(s));
+    },
     async movePicture(pictureId, sort) {
       const s = db.shoots.find((x) => x.pictures.some((p) => p.id === pictureId));
       if (!s) throw new FumeError("not_found", `No picture ${pictureId}`);
@@ -130,10 +137,10 @@ export function libraryCalls(m: Mock): Pick<FumeApi, Calls> {
     async useShootInCampaign({ shootId, campaignId, pictureIds }) {
       m.mustStaff();
       if (m.me().staffRole === "admin") throw new FumeError("forbidden", "Fume's admin reads the Library.");
+      if (m.me().agency) throw new FumeError("forbidden", "Only Fume starts creatives from a shoot.");
       const s = shootOf(shootId);
       if (s.state !== "checked") throw new FumeError("invalid", "An expert checks the picks first.");
-      if (s.rights.people === "unsure")
-        throw new FumeError("invalid", "Ask who is in the pictures before they are used.");
+      requireShootUse(s.rights);
       const campaign = m.campaignOf(campaignId);
       if (campaign.workspaceId !== s.workspaceId) throw new FumeError("invalid", "The campaign is in another brand.");
       const picks = s.pictures.filter(

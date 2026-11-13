@@ -1,7 +1,8 @@
 // A shoot's pictures sorted into picks, the rest and left out (FLOWS §38.3), from what a quick look measures in each.
 // Pure rules: the mock measures a dropped shoot in the browser (lib/probe.ts) and sorts it here; live,
 // the Engine also reads the Look Book and the products. The tests are in test/shoot.test.ts.
-import type { Format, Id, OwnPicture, OwnRead, OwnSort, Shoot, ShootSummary } from "../contract";
+import { FumeError } from "../contract";
+import type { ShootRights, Format, Id, OwnPicture, OwnRead, OwnSort, Shoot, ShootSummary } from "../contract";
 
 /** The place a picture stands in: the expert's move, else the Engine's read. */
 export const sortOf = (p: Pick<OwnPicture, "read" | "moved">): OwnSort | undefined => p.moved?.sort ?? p.read?.sort;
@@ -159,4 +160,10 @@ export function nearestFormat(width?: number, height?: number): Format {
   if (!width || !height) return "feed";
   const r = width / height;
   return r >= 0.9 ? "square" : r >= 0.66 ? "feed" : "story";
+}
+
+/** Every production use, including clips, must pass the shoot's rights first. Reading and checking are not use. */
+export function requireShootUse(rights: ShootRights, today = new Date().toISOString().slice(0, 10)): void {
+  if (rights.people === "unsure") throw new FumeError("invalid", "Ask who is in the pictures before they are used.");
+  if (rights.until && rights.until < today) throw new FumeError("invalid", "The shoot's usage period has ended.");
 }

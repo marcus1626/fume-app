@@ -32,6 +32,7 @@ import { docHref, useFrameKind } from "../../shell/scope";
 import { useNames } from "../studio/qa/names";
 import { UseInCampaign } from "./UseInCampaign";
 import { SORTS, rightsWords, sortWords, useLibraryBase } from "./words";
+import { EditShootRights } from "./EditShootRights";
 import { whatGoesIn } from "./AddShoot";
 
 type Show = OwnSort | "clips" | "all";
@@ -50,6 +51,7 @@ export function ShootPage() {
   const limited = !customer && session.user.staffRole === "admin";
   const [params, setParams] = useSearchParams();
   const [open, setOpen] = useState<number | null>(null);
+  const [editingRights, setEditingRights] = useState(false);
   const [using, setUsing] = useState(false);
 
   const back = <Back to={`${base}?from=uploaded`} label="Library" />;
@@ -208,7 +210,7 @@ export function ShootPage() {
                       onError: (err: Error) => toast.error("Not checked", { description: err.message }),
                     }),
                 }
-              : mayCheck && checked && s.rights.people !== "unsure"
+              : mayCheck && checked && s.rights.people !== "unsure" && !session.user.agency
                 ? { label: "Use in a campaign", icon: "megaphone" as const, onSelect: () => setUsing(true) }
                 : undefined;
 
@@ -226,6 +228,12 @@ export function ShootPage() {
                 description={rightsWords(s.rights).join(" · ")}
                 primaryAction={primary}
               />
+              {!limited && (session.user.staffRole || session.role !== "viewer") && (
+                <Button variant="glass-clear" onClick={() => setEditingRights(true)}>
+                  Edit rights
+                </Button>
+              )}
+              <EditShootRights shoot={s} open={editingRights} onOpenChange={setEditingRights} />
               <div className="ui-library">
                 <p className="ui-library-shoot-line">
                   {reading ? (

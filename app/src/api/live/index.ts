@@ -31,6 +31,7 @@ import { trainCalls } from "./train";
 import { bookCalls } from "./books";
 import { designCalls } from "./design";
 import { readDocument } from "./production";
+import { shootCalls } from "./shoots";
 import { libraryCalls } from "./library";
 
 /** The calls not moved yet, answered by an empty mock workspace that loads on the first such call. */
@@ -56,6 +57,7 @@ export function createLiveApi(): FumeApi {
     ...planCalls(live),
     ...homeCalls(live),
     ...libraryCalls(live),
+    ...shootCalls(live),
     ...productionCalls(live),
     ...studioCalls(live),
     ...qualityCalls(live),

@@ -9,12 +9,28 @@ const db = vi.hoisted(() => ({
   tables: {} as Record<string, Record<string, unknown>[]>,
   reads: [] as string[],
   customer: false,
+  kinds: [] as { version_id: string; kind: "design" | "picture" }[],
+  rpcs: [] as { name: string; params: { p_version_ids: string[] } }[],
   pages: [] as { table: string; from: number; orders: string[] }[],
+  rpcError: null as { message: string; details: string } | null,
   error: null as { message: string; details: string } | null,
 }));
 vi.mock("../src/api/live/supabase", async (original) => ({
   ...(await original<typeof import("../src/api/live/supabase")>()),
   supabase: () => ({
+    rpc: (name: string, params: { p_version_ids: string[] }) => {
+      db.rpcs.push({ name, params });
+      const q = {
+        order: () => q,
+        range: () => q,
+        then: (resolve: (value: unknown) => unknown) =>
+          Promise.resolve({
+            data: db.kinds.filter((v) => params.p_version_ids.includes(v.version_id)),
+            error: db.rpcError,
+          }).then(resolve),
+      };
+      return q;
+    },
     from: (table: string) => {
       db.reads.push(table);
       let data = [...(db.tables[table] ?? [])];
@@ -170,9 +186,12 @@ function live(user: Partial<User> = {}): Live {
 }
 beforeEach(() => {
   db.reads = [];
+  db.kinds = [];
+  db.rpcs = [];
   db.pages = [];
   db.customer = false;
   db.error = null;
+  db.rpcError = null;
   db.tables = {
     campaigns: [
       { id: "c1", workspace_id: "w1", name: "Nike UK" },
@@ -321,9 +340,14 @@ test("customers never get an unsent approved version, and keep the latest sent v
     creative("cr1", "c1", [unsent, sent]),
     creative("unsent", "c1", [{ ...unsent, creative_id: "unsent" }]),
   ];
+  db.kinds = [
+    { version_id: "v1", kind: "picture" },
+    { version_id: "v2", kind: "design" },
+  ];
   const items = await libraryCalls(live({ staffRole: undefined })).library();
   expect(items).toHaveLength(1);
   expect(items[0]).toMatchObject({ id: "cr1", state: "delivered", version: 1, studio: "render" });
+  expect(db.rpcs).toEqual([{ name: "library_version_kinds", params: { p_version_ids: ["v1"] } }]);
 });
 
 test("reads every page with stable ordering, including pictures, jobs, plans and draft images", async () => {
@@ -425,4 +449,29 @@ test("a creative with more than 1000 versions reads only its newest visible vers
   const items = await libraryCalls(live()).library("w1");
   expect(items).toHaveLength(1);
   expect(items[0]).toMatchObject({ id: "cr1", version: 1001, state: "approved" });
+});
+
+test("customers classify sent versions through the narrow RPC without reading design layers", async () => {
+  db.customer = true;
+  db.tables.creatives = [
+    creative("cr1", "c1", [version("delivered")]),
+    creative("picture", "c1", [{ ...version("approved", 3), creative_id: "picture" }]),
+  ];
+  db.kinds = [
+    { version_id: "v2", kind: "design" },
+    { version_id: "v3", kind: "picture" },
+  ];
+  const items = await libraryCalls(live({ staffRole: undefined })).library();
+  expect(items.find((i) => i.id === "cr1")?.studio).toBe("design");
+  expect(items.find((i) => i.id === "picture")?.studio).toBe("render");
+  expect(db.rpcs).toEqual([{ name: "library_version_kinds", params: { p_version_ids: ["v2", "v3"] } }]);
+  expect(db.reads).not.toContain("design_layers");
+  expect(db.reads).not.toContain("candidates");
+});
+
+test("customer kind lookup failures propagate", async () => {
+  db.customer = true;
+  db.tables.creatives![0]!.creative_versions = [version("delivered")];
+  db.rpcError = { message: "Kind lookup failed", details: "unavailable" };
+  await expect(libraryCalls(live({ staffRole: undefined })).library()).rejects.toMatchObject({ code: "unavailable" });
 });

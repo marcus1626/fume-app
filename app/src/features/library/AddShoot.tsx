@@ -116,7 +116,7 @@ export function AddShoot({
         bytes: f.size,
         state: "done",
         src: URL.createObjectURL(f),
-        kind: f.type.startsWith("video/") ? "video" : "image",
+        kind: f.type.startsWith("video/") || /\.(mov|mp4)$/i.test(f.name) ? "video" : "image",
         file: f,
       })),
     ]);
@@ -181,14 +181,14 @@ export function AddShoot({
                       return now.filter((i) => i.id !== gone);
                     })
                   }
-                  accept="image/jpeg,image/png,image/webp,video/mp4,video/quicktime"
+                  accept="image/jpeg,image/png,image/webp,image/heic,image/heif,.heic,.heif,.raw,.arw,.cr2,.cr3,.nef,.dng,.orf,.rw2,video/mp4,video/quicktime"
                   maxBytes={2_000_000_000}
                   maxLabel="2 GB"
                   icon="image-plus"
                   copy="Drop the shoot here or choose the pictures"
                   touchCopy="Tap to choose the pictures"
                   moreCopy="Add more from the shoot"
-                  meta="JPG, PNG, WebP, MP4 or MOV · up to 2 GB each"
+                  meta="JPG, PNG, WebP, HEIC, RAW, MP4 or MOV · up to 2 GB each"
                   aria-invalid={noFiles || undefined}
                 />
                 {noFiles && <FieldError>Add the pictures first.</FieldError>}

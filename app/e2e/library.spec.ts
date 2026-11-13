@@ -78,3 +78,30 @@ test("Maja has a Library of her own: what she approved, and her pictures with th
   await expect(page.getByText("6 picks checked by Anna", { exact: false })).toBeVisible();
   await expect(page.getByRole("button", { name: "Use in a campaign" })).toHaveCount(0);
 });
+
+test("Maja uploads HEIC and HEIF pictures with an empty browser MIME type", async ({ page }) => {
+  await page.goto("/library?as=maja&from=uploaded");
+  await page.getByRole("button", { name: "Upload a shoot" }).click();
+  const panel = page.getByRole("dialog", { name: "Upload a shoot" });
+  const pictures = await page.evaluateHandle(() => {
+    const transfer = new DataTransfer();
+    // Chromium can preview these bytes; acceptance must use the HEIC/HEIF name with no MIME hint.
+    const bytes = Uint8Array.from(
+      atob("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII="),
+      (c) => c.charCodeAt(0),
+    );
+    transfer.items.add(new File([bytes], "studio.HEIC", { type: "" }));
+    transfer.items.add(new File([bytes], "studio.heif", { type: "" }));
+    return transfer;
+  });
+  await panel.locator(".ui-dropzone").dispatchEvent("drop", { dataTransfer: pictures });
+  await expect(panel.getByRole("button", { name: "Add 2 pictures" })).toBeVisible();
+  await expect(panel.getByRole("img", { name: "studio.HEIC" })).toBeVisible();
+  await expect(panel.getByRole("img", { name: "studio.heif" })).toBeVisible();
+  await panel.getByLabel("Name of the shoot").fill("HEIC studio day");
+  await panel.getByRole("radio", { name: "No people" }).check();
+  await panel.getByRole("button", { name: "Add 2 pictures" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "HEIC studio day" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /studio\.HEIC/ })).toBeVisible();
+  await expect(page.getByRole("button", { name: /studio\.heif/ })).toBeVisible();
+});
