@@ -30,7 +30,8 @@ begin
   where id = a.id;
   update public.production_jobs set state = 'queued', error = null, updated_at = now() where id = j.id;
   perform app.record(j.workspace_id, 'job.again', 'production_job', j.id,
-    jsonb_build_object('by', 'engine', 'attempt', a.number, 'why', 'room-for-words'));
+    jsonb_build_object('by', 'engine', 'attempt', a.number, 'why',
+      case when btrim(p_reason) like 'product-completeness:%' then 'product-completeness' else 'room-for-words' end));
   return true;
 end $$;
 revoke execute on function public.engine_again(uuid, text) from public, anon, authenticated;
