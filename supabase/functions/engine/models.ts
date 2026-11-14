@@ -34,7 +34,7 @@ const Slots = z.object({ slots: z.array(z.object({ slotKey: z.string(), text: z.
 const Answers = z.object({ answers: z.array(z.object({ n: z.number().int(), probability: z.number().min(0).max(1) })) });
 const Verdict = z.object({ expressed: z.boolean(), probability: z.number().min(0).max(1), reason: z.string() });
 export const Looked = z.object({
-  answers: z.array(z.object({ n: z.number().int(), verdict: z.enum(["holds", "off", "unclear"]), note: z.string() })),
+  answers: z.array(z.object({ n: z.number().int(), verdict: z.enum(["holds", "off", "unclear"]), note: z.string(), cause: z.enum(["frame_edge", "missing_part", "other"]).optional() })),
   artefacts: z.enum(["none", "minor", "major"]),
   artefactNotes: z.array(z.string()),
   printedText: z.boolean(),

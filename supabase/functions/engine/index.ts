@@ -4,7 +4,7 @@
 // change an endpoint.
 import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2.117.3";
-import { handleEngine } from "./handler.ts";
+import { againNote, handleEngine } from "./handler.ts";
 import { claudeModels } from "./models.ts";
 import { fal } from "./fal.ts";
 import { byModel, higgsfield } from "./provider.ts";
@@ -85,9 +85,9 @@ Deno.serve((req) =>
             // What the picture check found on the brand's last pictures, so this one avoids it.
             const { data: seen } = await service.rpc("engine_recent_checks", { p_job_id: jobId });
             if (Array.isArray(seen) && seen.length) data.seen = seen;
-            // What filled the room for the words on this job's last picture, when it is made once more for that.
+            // What the next picture must fix: a crop still needs fixing when the words move to their own area.
             const { data: again } = await service.rpc("engine_again_note", { p_job_id: jobId });
-            if (typeof again === "string" && again && data.creative.words !== "own_area") data.again = again;
+            data.again = againNote(again, data.creative.words);
           }
           return { data, error: err(error) };
         },

@@ -1,5 +1,5 @@
-import { assert, assertEquals } from "jsr:@std/assert@1";
-import { type Deps, enforcedOf, handleEngine, NO_PROVIDER, roomLesson, runJob, seenLessons, type Taken } from "./handler.ts";
+import { assert, assertEquals, assertMatch } from "jsr:@std/assert@1";
+import { againNote, type Deps, enforcedOf, handleEngine, NO_PROVIDER, roomLesson, runJob, seenLessons, type Taken } from "./handler.ts";
 import { byModel, higgsfield, ratioFor } from "./provider.ts";
 import { fal, sizeFor } from "./fal.ts";
 import type { Composer, Decider, SlotText, Verifier } from "../_shared/engine/index.ts";
@@ -487,7 +487,7 @@ Deno.test("a picture that left no room for the words is made once more, told wha
       if (withProductPhotos) {
         assertEquals(input.productPhotos.length, 2);
         assertEquals(input.checks.map((c) => [c.n, c.area, c.ref]), [
-          [1, "product", undefined], [2, "product", undefined], [3, "brand", room.refId],
+          [1, "product", "product-completeness"], [2, "product", undefined], [3, "brand", room.refId],
         ]);
       }
       const verdict = verdicts[picture++];
@@ -526,6 +526,119 @@ Deno.test("a picture that left no room for the words is made once more, told wha
   assertEquals((await run(["off", "holds"])).asked, [], "one picture with room is enough for the expert");
   assertEquals((await run(["unclear"])).asked, [], "a room the check cannot tell is left to the expert");
   assertEquals((await run(["off"], false)).ran, [], "nothing starts when the job may not be made again");
+});
+
+Deno.test("an unrequested product crop uses the same bounded again path and teaches the next prompt", async () => {
+  const run = async (notes: (string | null)[], queue = true, resume = false) => {
+    const t = taken(4);
+    const f = fake({ takes: [resume ? { collect: {
+      job_id: JOB, attempt_id: "att-4", workspace_id: "ws1", provider: "fake", model: "nano-banana-pro", provider_job_id: "req-1", started_at: "2026-11-14T00:00:00Z",
+    } } : t], provider: fakeProvider(["done"]) });
+    const asked: [string, string][] = [];
+    const ran: string[] = [];
+    const later: Promise<unknown>[] = [];
+    let picture = 0;
+    f.deps.later = (w) => void later.push(w);
+    f.deps.service.toEvaluate = async () => ({ data: {
+      candidates: notes.map((_, i) => ({ id: `cand-${i}`, path: `ws1/engine/${i}.png` })),
+      manifest: [], references: [{ url: "https://brand.example/sled.png", role: "Sled, front" }],
+    }, error: null });
+    f.deps.models.evaluate = async ({ checks }) => {
+      const note = notes[picture++];
+      return { looked: {
+        answers: checks.map((c) => ({ n: c.n, verdict: c.n === 1 && note ? "off" : "holds", note: c.n === 1 ? note ?? "" : "" })),
+        artefacts: "none", artefactNotes: [], printedText: false,
+      }, call };
+    };
+    f.deps.service.evaluated = async () => ({ error: null });
+    f.deps.service.again = async (id, why) => (asked.push([id, why]), queue);
+    f.deps.service.runAgain = async (id) => void ran.push(id);
+    assertEquals(await runJob(JOB, f.deps), "made");
+    await Promise.all(later);
+    return { asked, ran };
+  };
+  for (const resume of [false, true]) {
+    const { asked, ran } = await run(["The sled's pad is cut off by the frame edge on the right."], true, resume);
+    assertEquals(asked.length, 1);
+    assertEquals(asked[0][0], "att-4");
+    assert(asked[0][1].length <= 240);
+    assertMatch(asked[0][1], /^product-completeness:/);
+    assertMatch(asked[0][1], /whole product.*clear space.*every frame edge/);
+    assertMatch(asked[0][1], /pull the camera back rather than crop/i);
+    assertEquals(ran, [JOB]);
+    const retry = { ...taken(5), creative: { ...taken(5).creative, words: "own_area" as const }, again: againNote(asked[0][1], "own_area") };
+    const next = fake({ takes: [retry] });
+    const lessons: string[] = [];
+    next.deps.models.compose = async (input) => {
+      lessons.push(...input.compilePackage.knowledge.lessons.map((l) => l.statement));
+      return compose(input);
+    };
+    assertEquals(await runJob(JOB, next.deps), "dry");
+    assertMatch(lessons[0], /whole product.*clear space.*every frame edge/);
+    assertMatch(lessons[0], /pull the camera back rather than crop/i);
+    assert(!lessons[0].includes("room for the words"), "a crop repair applies even without words");
+  }
+  assertEquals((await run(["The cage frame is cropped at the right edge."], false)).ran, [], "engine_again retains its once/newest/budget veto");
+  assertEquals((await run(["The cage frame is cropped at the right edge.", null])).asked, [], "a usable candidate avoids a redo");
+  assertEquals((await run(["A defining part is missing from the sled."])).asked, [], "other completeness faults stay with the expert");
+  const long = await run([`The product is cut off by the frame edge. ${"More detail. ".repeat(40)}`]);
+  assertEquals(long.asked[0][1].length, 240);
+  assertMatch(roomLesson(long.asked[0][1])[0].statement, /pull the camera back rather than crop/i);
+});
+
+Deno.test("the single redo combines room and crop lessons across all failed candidates", async () => {
+  const run = async (faults: { crop?: "frame_edge" | "missing_part"; room?: boolean }[]) => {
+    const f = fake({ takes: [taken()], provider: fakeProvider(["done"]) });
+    const asked: string[] = [];
+    let picture = 0;
+    f.deps.service.toEvaluate = async () => ({ data: {
+      candidates: faults.map((_, i) => ({ id: `cand-${i}`, path: `ws1/engine/${i}.png` })),
+      manifest: [{ id: "room", kind: "brand_rule_hard", refId: "room-for-words", required: true, check: "decision", requirement: "Keep the left clear for words.", suggestedSlot: "scene" }],
+      references: [{ url: "https://brand.example/sled.png", role: "Sled, front" }],
+    }, error: null });
+    f.deps.models.evaluate = async ({ checks }) => {
+      const fault = faults[picture++];
+      return { looked: {
+        answers: checks.map((c) => ({ n: c.n,
+          verdict: c.ref === "product-completeness" && fault.crop || c.ref === "room-for-words" && fault.room ? "off" : "holds",
+          note: c.ref === "product-completeness" && fault.crop
+            ? fault.crop === "frame_edge" ? "The base extends past the right edge." : "The central pad is missing, not cut off by the frame edge."
+            : c.ref === "room-for-words" && fault.room ? "The sled fills the words' room. ".repeat(40) : "",
+          ...(c.ref === "product-completeness" && fault.crop ? { cause: fault.crop } : {}),
+        })),
+        artefacts: "none", artefactNotes: [], printedText: false,
+      }, call };
+    };
+    f.deps.service.evaluated = async () => ({ error: null });
+    f.deps.service.again = async (_, why) => (asked.push(why), false);
+    assertEquals(await runJob(JOB, f.deps), "made");
+    return asked;
+  };
+  assertEquals((await run([{ crop: "frame_edge" }])).length, 1, "structured edge cause triggers a redo");
+  assertEquals(await run([{ crop: "missing_part" }]), [], "a missing pad is not a crop redo");
+  for (const faults of [
+    [{ crop: "frame_edge", room: true }],
+    [{ room: true }, { crop: "frame_edge" }],
+    [{ crop: "frame_edge" }, { room: true }],
+  ] as const) {
+    const asked = await run([...faults]);
+    assertEquals(asked.length, 1);
+    const reason = asked[0];
+    assert(reason.length <= 240);
+    assertMatch(reason, /^product-completeness:.*whole product.*every frame edge.*pull the camera back rather than crop/);
+    assertMatch(reason, /room-for-words: Keep the room for words bare; move the product and all objects out of it\.$/);
+    const next = fake({ takes: [{ ...taken(2), again: againNote(reason, "on_picture") }] });
+    const lessons: string[] = [];
+    next.deps.models.compose = async (input) => {
+      lessons.push(...input.compilePackage.knowledge.lessons.map((l) => l.statement));
+      return compose(input);
+    };
+    assertEquals(await runJob(JOB, next.deps), "dry");
+    assertMatch(lessons[0], /whole product.*room for words bare/);
+    assert(!againNote(reason, "own_area")?.includes("room-for-words"), "moving the words keeps only the crop lesson");
+  }
+  assertEquals(await run([{ crop: "frame_edge", room: true }, {}]), [], "a usable candidate still avoids a redo");
+  assertEquals(againNote("The sled fills the words' room.", "own_area"), undefined, "a stale room-only note stays blocked");
 });
 
 Deno.test("a texture where the words go is a note for the expert, not a reason to make the picture again", async () => {

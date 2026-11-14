@@ -196,8 +196,8 @@ export function roomRules(task: EngineTask): BrandRule[] {
       : "";
   const button = room.button ? ` The bottom ${room.button} corner, the lowest eighth of the frame's height across ${room.button === room.side ? "that side" : `the ${room.button} half`}, holds only ground (grass, court, floor), with no person, feet, ball or base of the product in it, for the brand's button.` : "";
   const statement = across
-    ? `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's width; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`
-    : `Compose the frame so the product sits whole in the ${other} ${rest}% of the frame's height; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`;
+    ? `Compose the frame so the product sits in the ${other} ${rest}% of the frame's width, whole, with a clear margin from the frame edges on that side too; the ${room.side} ${pct}% of the width, around the middle of the frame's height, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`
+    : `Compose the frame so the product sits in the ${other} ${rest}% of the frame's height, whole, with a clear margin from the frame edges on that side too; the ${room.side} ${pct}% of the height, edge to edge, has no person, product or object in it, for the words set later.${tone}${button} The product never fills the frame.`;
   return [
     { id: "room-for-words", dimension: "composition", lookKey: null, statement, binding: "hard", epistemic: "known", scope: "core" },
     { id: "room-calm", dimension: "composition", lookKey: null, statement: calm, binding: "hard", epistemic: "known", scope: "core" },
@@ -632,10 +632,19 @@ export function buildConcept(task: EngineTask): Concept {
   const planned = plannedCreative(task);
   const directionId = task.plan.chosen_direction_id ?? null;
   const direction = (task.plan.directions ?? []).find((d) => d.id === directionId);
+  const scene = planned?.words === "own_area" ? pictureScene(planned.scene) : planned?.scene ?? direction?.idea ?? task.creative.title;
+  // A side placement needs a margin on the product's side even without words. When words share the photograph,
+  // roomRules carries this as a hard composition rule. A requested crop or a picked picture keeps its framing.
+  const crop = needOf(planned).crop;
+  const margin = task.products.length > 0 && !task.master?.picked && !wordsRoom(task)
+    && (!crop || crop === "whole")
+    && /\b(left|right|top|bottom|upper|lower)(?:[- ]hand)?(?: side| half| third| of the frame)\b/i.test(pictureScene(scene))
+    ? " Keep the product whole, with a clear margin from the frame edges on that side too."
+    : "";
   return {
     id: `${directionId ?? "-"}.${task.creative.slot ?? task.creative.id}`,
     title: planned?.name ?? task.creative.title,
-    sceneIdea: sentence(planned?.words === "own_area" ? pictureScene(planned.scene) : planned?.scene ?? direction?.idea ?? task.creative.title) + (planned?.crop ? ` Planned crop: ${sentence(planned.crop)}` : ""),
+    sceneIdea: sentence(scene) + margin + (planned?.crop ? ` Planned crop: ${sentence(planned.crop)}` : ""),
     productRole: (direction?.productRole ?? "the clear hero of the frame").replace(/\.$/, ""),
     lookKey: direction ? direction.id : null,
   };

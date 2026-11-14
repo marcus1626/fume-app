@@ -26,6 +26,8 @@ import {
   type MachineResult,
   type ManifestItem,
   type ModelCall,
+  productCutOff,
+  PRODUCT_COMPLETENESS_REF,
   roomTaken,
   runPromptMachine,
   selectMethod,
@@ -52,8 +54,7 @@ export type Taken = Omit<EngineTask, "products" | "master" | "composition"> & {
   change: { problem: string; must_change: string[]; must_stay: string[]; ask?: string; direction?: string } | null;
   /** What Fume's own picture check found on the brand's recent pictures, newest first (public.engine_recent_checks). */
   seen?: string[];
-  /** What filled the room for the words on this job's last picture, when the Engine makes it once more for that
-   *  (public.engine_again). */
+  /** Why this job's last picture needs one redo: room for words or a product cropped at the frame (public.engine_again). */
   again?: string | null;
 };
 /** A person's answer on one of the Engine's pictures, with the prompt behind it. */
@@ -101,7 +102,7 @@ export interface Deps {
     unevaluated?(jobId: string): Promise<string[]>;
     /** Asks the details function to read the product's small print on a picture (docs/mvp/detail-read.md). */
     askDetails?(candidateId: string): Promise<void>;
-    /** Queues the job once more because its pictures left no room for the words (public.engine_again); false when it
+    /** Queues the job once more for room for words or a product cropped at the frame (public.engine_again); false when it
      *  may not: it was made again already, a newer attempt exists, or the week's budget is used up. */
     again?(attemptId: string, why: string): Promise<boolean>;
     /** Starts a fresh run of the job, so the next picture does not wait for someone to open the Studio. */
@@ -232,7 +233,7 @@ async function collect(
       const { error } = await deps.service.finish(c.attemptId, files, r.response, provider.priceCents(c.model) * r.urls.length);
       if (error) return "failed";
       const seen = await evaluatePictures(c.attemptId, deps);
-      await makeRoom(c, seen, deps);
+      await makeAgain(c, seen, deps);
       return "made";
     }
     await deps.wait(delay);
@@ -295,17 +296,19 @@ async function shown(url: string, deps: Deps): Promise<Shown | null> {
   }
 }
 
+type Redo = { crop: string | null; room: string | null };
+
 /** The Engine looks at the pictures it just kept. A failure here never undoes the picture: it is simply not evaluated,
  *  and the expert checks it by eye as with any picture. The reason goes to the function's log. */
-async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked: number; roomTaken: string[] }> {
+async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked: number; redo: Redo[] }> {
   const evaluate = deps.models.evaluate;
-  const roomless: string[] = [];
-  if (!evaluate || !deps.service.toEvaluate || !deps.service.evaluated) return { looked: 0, roomTaken: roomless };
+  const redo: Redo[] = [];
+  if (!evaluate || !deps.service.toEvaluate || !deps.service.evaluated) return { looked: 0, redo };
   let looked = 0;
   try {
     const { data, error } = await deps.service.toEvaluate(attemptId);
     if (error) throw new Error(error.message);
-    if (!data?.candidates.length) return { looked: 0, roomTaken: roomless };
+    if (!data?.candidates.length) return { looked: 0, redo };
     // The product's photographs (the picture this is made from is not one: context.ts names it "the approved …" or "the
     // picture of …").
     const productUrls = (data.references ?? [])
@@ -323,8 +326,9 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
         const { error: notKept } = await deps.service.evaluated(c.id, evaluation, call.costUsd ?? 0);
         if (notKept) throw new Error(notKept.message);
         looked++;
-        const taken = roomTaken(evaluation);
-        if (taken) roomless.push(taken);
+        const crop = productCutOff(evaluation);
+        const room = roomTaken(evaluation);
+        if (crop || room) redo.push({ crop, room });
         // The small print is read closer, against the product's own photographs, after the picture is evaluated.
         if (productPhotos.length > 0) await deps.service.askDetails?.(c.id).catch(() => undefined);
       } catch (e) {
@@ -334,30 +338,50 @@ async function evaluatePictures(attemptId: string, deps: Deps): Promise<{ looked
   } catch (e) {
     console.error(`engine: attempt ${attemptId} not evaluated: ${(e as Error).message}`);
   }
-  return { looked, roomTaken: roomless };
+  return { looked, redo };
 }
 
-/** When every picture the Engine looked at left no room for the words, the words would cover the product: the Engine
- *  makes the picture once more, told what stood in the room. Once per job; the pictures already made stay for the
- *  expert. A failure here never undoes the picture. Anthem, 10 Nov: six of eight pictures had the product where the
- *  words go, though the prompt asked for the room. Only the rule `room-for-words` asks for it (something in the room,
- *  or the wrong tone under the words); a texture in the room (`room-calm`) is a note for the expert. */
-async function makeRoom(c: { attemptId: string; jobId: string }, seen: { looked: number; roomTaken: string[] }, deps: Deps): Promise<boolean> {
-  if (!deps.service.again || seen.looked === 0 || seen.roomTaken.length < seen.looked) return false;
+const WHOLE_PRODUCT = "Show the whole product with clear space between it and every frame edge; pull the camera back rather than crop.";
+
+/** When every evaluated picture needs room for words or has an unrequested product crop, reuse engine_again.
+ *  The database owns the newest-attempt, once-per-job and budget limits; all pictures stay for the expert.
+ *  `room-calm` and other product faults remain notes for the expert. */
+async function makeAgain(c: { attemptId: string; jobId: string }, seen: { looked: number; redo: Redo[] }, deps: Deps): Promise<boolean> {
+  if (!deps.service.again || seen.looked === 0 || seen.redo.length < seen.looked) return false;
+  const crop = seen.redo.find((r) => r.crop)?.crop;
+  const room = seen.redo.find((r) => r.room)?.room;
+  // Put both instructions before any detail so neither lesson is lost to the database's 240-character limit.
+  const reason = crop
+    ? `${PRODUCT_COMPLETENESS_REF}: ${WHOLE_PRODUCT}${room ? " room-for-words: Keep the room for words bare; move the product and all objects out of it." : ` Last picture: ${crop}`}`
+    : room!;
   try {
-    const queued = await deps.service.again(c.attemptId, seen.roomTaken[0].slice(0, 240));
+    const queued = await deps.service.again(c.attemptId, reason.slice(0, 240));
     if (queued) deps.later((deps.service.runAgain?.(c.jobId) ?? Promise.resolve()).catch(() => undefined));
     return queued;
   } catch (e) {
-    console.error(`engine: job ${c.jobId} not made again for room: ${(e as Error).message}`);
+    console.error(`engine: job ${c.jobId} not made again: ${(e as Error).message}`);
     return false;
   }
 }
 
-/** The lesson the next picture takes from the last one's missing room: the first the prompt reads. */
+/** Studio may move the words after the previous attempt: keep the crop lesson, without a stale room lesson. */
+export function againNote(again: unknown, words?: "on_picture" | "own_area" | null): string | undefined {
+  if (typeof again !== "string" || !again.trim()) return undefined;
+  const note = again.trim();
+  if (words !== "own_area") return note;
+  return note.startsWith(`${PRODUCT_COMPLETENESS_REF}:`) ? note.split(" room-for-words:")[0] : undefined;
+}
+
+/** The lesson from the job's single redo: the first the next prompt reads. Older room notes remain valid. */
 export function roomLesson(again: string | null | undefined): Taken["lessons"] {
   const what = again?.trim().replace(/\s+/g, " ");
   if (!what) return [];
+  if (what.startsWith(`${PRODUCT_COMPLETENESS_REF}:`)) return [{
+    id: "product-completeness-again",
+    polarity: "do",
+    statement: what,
+    reason: "Fume's own check found the product cut off by a frame edge on this creative's last picture.",
+  }];
   return [{
     id: "room-again",
     polarity: "do",
@@ -420,7 +444,7 @@ async function attempt(t: Taken, deps: Deps): Promise<RunOutcome> {
   let recorded = false;
   try {
     await digestAnswers(t, deps);
-    t.lessons = [...roomLesson(t.again), ...t.lessons, ...seenLessons(t.seen)];
+    t.lessons = [...roomLesson(againNote(t.again, t.creative.words)), ...t.lessons, ...seenLessons(t.seen)];
     const task = await signTask(t, deps);
     // Words on a picture already made change that picture, and a format reshapes its master; everything else is a new
     // campaign still.

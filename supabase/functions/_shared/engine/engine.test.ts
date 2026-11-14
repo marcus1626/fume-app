@@ -772,6 +772,77 @@ Deno.test("the picture check asks product completeness first, separately from id
   }
 });
 
+Deno.test("only an off product completeness item reporting a frame crop asks for a remake", async () => {
+  const { checklist, toEvaluation, productCutOff } = await import("./evaluate.ts");
+  const checks = checklist([
+    { kind: "product_invariant", requirement: "A sled with a pad", required: true, refId: "sled" },
+    { kind: "concept", requirement: "A sled on the right", required: false, refId: "concept" },
+  ], true);
+  assertEquals(checks[0].ref, "product-completeness");
+  const evaluate = (n: number, verdict: "holds" | "off" | "unclear", note: string, cause?: "frame_edge" | "missing_part" | "other") => toEvaluation(checks, {
+    answers: checks.toReversed().map((c) => ({ n: c.n, verdict: c.n === n ? verdict : "holds", note: c.n === n ? note : "", ...(c.n === n && cause !== undefined ? { cause } : {}) })),
+    artefacts: "none", artefactNotes: [], printedText: false,
+  });
+  for (const note of [
+    "The sled's pad is cut off by the frame edge.",
+    "The cage frame is cropped at the RIGHT edge.",
+    "The frame is cut at the picture's right edge.",
+    "The product extends beyond the frame.",
+  ]) {
+    assertEquals(productCutOff(evaluate(1, "off", note)), note);
+    assertEquals(productCutOff(evaluate(1, "holds", note)), null, "a requested crop holds");
+    assertEquals(productCutOff(evaluate(1, "unclear", note)), null);
+    for (const n of [2, 3, 4]) assertEquals(productCutOff(evaluate(n, "off", note)), null, "identity, facts and scene cannot trigger the remake");
+  }
+  for (const note of ["", "A defining part is missing.", "The pad is hidden behind a player.", "The frame is built wrong."]) {
+    assertEquals(productCutOff(evaluate(1, "off", note)), null);
+  }
+  const edge = "The base extends past the right edge.";
+  assertEquals(productCutOff(evaluate(1, "off", edge, "frame_edge")), edge);
+  const missing = "The central pad is missing, not cut off by the frame edge.";
+  assertEquals(productCutOff(evaluate(1, "off", missing, "missing_part")), null);
+  assertEquals(productCutOff(evaluate(1, "off", missing)), null, "legacy note fallback rejects negated crops");
+  assertEquals(productCutOff(evaluate(1, "off", "The product is cropped by the frame edge.", "other")), null, "a supplied cause always wins over note wording");
+  assertEquals(productCutOff(evaluate(1, "off", "", "frame_edge")), "The product is cut off by the frame edge.");
+  assertEquals(productCutOff(evaluate(1, "holds", edge, "frame_edge")), null);
+  assertEquals(productCutOff(evaluate(1, "unclear", edge, "frame_edge")), null);
+  assertEquals(evaluate(2, "off", edge, "frame_edge").items[1].cause, undefined, "only completeness keeps the cause");
+  const { EVALUATOR_SYSTEM } = await import("./evaluate.ts");
+  for (const cause of ["frame_edge", "missing_part", "other"]) assert(EVALUATOR_SYSTEM.includes(`"${cause}"`));
+  const noPhotos = checklist([{ kind: "product_invariant", requirement: "A black frame", required: true, refId: "frame" }]);
+  assertEquals(productCutOff(toEvaluation(noPhotos, {
+    answers: [{ n: 1, verdict: "off", note: "The product is cut off by the frame edge." }], artefacts: "none", artefactNotes: [], printedText: false,
+  })), null, "the first product item is not necessarily completeness");
+});
+
+Deno.test("a product beside the words keeps a clear margin on its own side in the compiled prompt", () => {
+  for (const side of ["left", "right", "top", "bottom"]) {
+    const t = { ...task, plan: { ...task.plan, planned_creatives: [{ ...task.plan.planned_creatives![0],
+      text: "Ready for practice", scene: `A sled on the field. ${side} side of the frame kept clear for the words.`,
+    }] } };
+    const rule = roomRules(t).find((r) => r.id === "room-for-words")!;
+    assertMatch(rule.statement, /whole, with a clear margin from the frame edges on that side too/);
+    const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+    assert(compilePackage.manifest.some((m) => m.refId === rule.id && m.requirement.includes("whole, with a clear margin from the frame edges on that side too")));
+  }
+});
+
+Deno.test("a side placement without words also keeps the product whole, unless a crop is planned", () => {
+  const pc = task.plan.planned_creatives![0];
+  for (const words of [undefined, "own_area"] as const) {
+    const t = { ...task, plan: { ...task.plan, planned_creatives: [{ ...pc, words,
+      scene: "A sled placed on the right side of the field.",
+    }] } };
+    assertEquals(roomRules(t), [], "no room for words is invented");
+    const { compilePackage } = buildCompilePackage({ ...inputOf(t), grammar: CAMPAIGN_STILL_V1, dialect: DIALECTS[0] });
+    assert(compilePackage.manifest.some((m) => m.kind === "concept" && m.requirement.includes("whole, with a clear margin from the frame edges on that side too")));
+    for (const crop of ["close", "half"]) {
+      const cropped = { ...t, plan: { ...t.plan, planned_creatives: [{ ...t.plan.planned_creatives[0], crop }] } };
+      assert(!buildConcept(cropped).sceneIdea.includes("whole, with a clear margin"), "an explicit crop is respected");
+    }
+  }
+});
+
 Deno.test("the room answer keeps its note after the two product photograph checks renumber it", async () => {
   const { checklist, toEvaluation, ROOM_REF, roomTaken } = await import("./evaluate.ts");
   const checks = checklist([
@@ -779,7 +850,7 @@ Deno.test("the room answer keeps its note after the two product photograph check
     { kind: "brand_rule_hard", requirement: "Keep the left clear for words", required: true, refId: ROOM_REF },
   ], true);
   assertEquals(checks.map((c) => [c.n, c.area, c.ref]), [
-    [1, "product", undefined], [2, "product", undefined], [3, "scene", undefined], [4, "brand", ROOM_REF],
+    [1, "product", "product-completeness"], [2, "product", undefined], [3, "scene", undefined], [4, "brand", ROOM_REF],
   ]);
   const note = "The lamp stands in the left side kept for the words.";
   const e = toEvaluation(checks, {
