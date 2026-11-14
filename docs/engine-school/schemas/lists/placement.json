@@ -1,0 +1,920 @@
+{
+  "id": "placement",
+  "label_nb": "Plassering",
+  "source": [
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+    },
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/407108559393196",
+      "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/1722124",
+      "locator": "Ad formats available in a Google Ads account",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+      "locator": "Format comparison; Where it serves",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+      "locator": "Ad format eligibility",
+      "read_on": "2026-11-13",
+      "verified": false,
+      "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+      "locator": "For You Feed; Search Feed; Search Results Page",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+      "locator": "Spark Ads (Pull); Non-Spark Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Ads Guide",
+      "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+      "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Help",
+      "url": "https://www.linkedin.com/help/lms/answer/a422880",
+      "locator": "Ad Objective / Goal / Ad Formats",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    }
+  ],
+  "values": [
+    {
+      "id": "fb-feed",
+      "label_nb": "Fb feed",
+      "definition": "Facebook-feed, inkludert Friends etter oppgitt utrulling.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-profile-feed",
+      "label_nb": "Fb profile feed",
+      "definition": "Feed på Facebook-profil; avhengig av kontotilgang.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "threads-feed",
+      "label_nb": "Threads feed",
+      "definition": "Threads-feed.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-feed",
+      "label_nb": "Ig feed",
+      "definition": "Instagram-feed.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-profile-feed",
+      "label_nb": "Ig profile feed",
+      "definition": "Feed ved Instagram-profil.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-marketplace",
+      "label_nb": "Fb marketplace",
+      "definition": "Facebook Marketplace.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-right-column",
+      "label_nb": "Fb right column",
+      "definition": "Facebooks høyre kolonne.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-notifications",
+      "label_nb": "Fb notifications",
+      "definition": "Facebook-varsler.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-business-explore",
+      "label_nb": "Fb business explore",
+      "definition": "Facebook Business Explore.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-explore-home",
+      "label_nb": "Ig explore home",
+      "definition": "Hjemflaten i Instagram Explore.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-stories",
+      "label_nb": "Fb stories",
+      "definition": "Facebook Stories.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-stories",
+      "label_nb": "Ig stories",
+      "definition": "Instagram Stories.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "messenger-stories",
+      "label_nb": "Messenger stories",
+      "definition": "Messenger Stories.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-reels",
+      "label_nb": "Ig reels",
+      "definition": "Instagram Reels.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-reels",
+      "label_nb": "Fb reels",
+      "definition": "Facebook Reels.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "whatsapp-status",
+      "label_nb": "Whatsapp status",
+      "definition": "WhatsApp Status.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-in-stream-reels",
+      "label_nb": "Fb in stream reels",
+      "definition": "Facebook in-stream ved Reels.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-reels-overlay",
+      "label_nb": "Fb reels overlay",
+      "definition": "Annonser oppå Facebook Reels.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "fb-search",
+      "label_nb": "Fb search",
+      "definition": "Facebook-søkeresultater.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "ig-search",
+      "label_nb": "Ig search",
+      "definition": "Instagram-søkeresultater.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "audience-network-native-banner-interstitial",
+      "label_nb": "Audience network native banner interstitial",
+      "definition": "Native, banner eller mellomannonse i Audience Network.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "audience-network-rewarded",
+      "label_nb": "Audience network rewarded",
+      "definition": "Belønnet video i Audience Network.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+        }
+      ]
+    },
+    {
+      "id": "google-search",
+      "label_nb": "Google search",
+      "definition": "Google-søkeresultater.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "google-display",
+      "label_nb": "Google display",
+      "definition": "Nettsteder og apper i Google Display Network.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "google-shopping",
+      "label_nb": "Google shopping",
+      "definition": "Shopping-oppføringer etter oppsett.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "google-app",
+      "label_nb": "Google app",
+      "definition": "App-kampanjens kvalifiserte flater.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-in-stream",
+      "label_nb": "Yt in stream",
+      "definition": "I eller rundt YouTube-video.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-home",
+      "label_nb": "Yt home",
+      "definition": "YouTube-forside.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-search",
+      "label_nb": "Yt search",
+      "definition": "YouTube-søkeresultater.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-watch-next",
+      "label_nb": "Yt watch next",
+      "definition": "YouTube Watch Next.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-subscriptions",
+      "label_nb": "Yt subscriptions",
+      "definition": "YouTube-abonnementsfeed.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "yt-shorts",
+      "label_nb": "Yt shorts",
+      "definition": "YouTube Shorts-feed.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "google-video-partners",
+      "label_nb": "Google video partners",
+      "definition": "Google video partneres nettsteder eller apper; ikke YouTube-flate.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "dg-discover",
+      "label_nb": "Dg discover",
+      "definition": "Discover-feed.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "dg-gmail",
+      "label_nb": "Dg gmail",
+      "definition": "Gmail-flater.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "dg-youtube-feed",
+      "label_nb": "Dg youtube feed",
+      "definition": "YouTube-feeder ved Demand Gen.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "dg-youtube-in-stream",
+      "label_nb": "Dg youtube in stream",
+      "definition": "YouTube in-stream ved Demand Gen.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "dg-youtube-shorts",
+      "label_nb": "Dg youtube shorts",
+      "definition": "Shorts ved Demand Gen.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "dg-display",
+      "label_nb": "Dg display",
+      "definition": "Display ved Demand Gen der tilgjengelig.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "tt-for-you",
+      "label_nb": "Tt for you",
+      "definition": "TikTok For You-feed; kan inkludere dokumenterte underflater.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-search-feed",
+      "label_nb": "Tt search feed",
+      "definition": "TikTok-søkefeed.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-search-results",
+      "label_nb": "Tt search results",
+      "definition": "TikTok-søkeresultatside med målbegrensninger.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-profile-feed",
+      "label_nb": "Tt profile feed",
+      "definition": "Underflate ved profil når For You inkluderer den.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-following-feed",
+      "label_nb": "Tt following feed",
+      "definition": "Underflate i Following-feed.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-friends-feed",
+      "label_nb": "Tt friends feed",
+      "definition": "Underflate i Friends-feed.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-lite",
+      "label_nb": "Tt lite",
+      "definition": "TikTok Lite i tilgjengelige markeder.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-web",
+      "label_nb": "Tt web",
+      "definition": "TikTok for Web i tilgjengelige markeder.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-mini-drama",
+      "label_nb": "Tt mini drama",
+      "definition": "Mini Drama-feed.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-lemon8",
+      "label_nb": "Tt lemon8",
+      "definition": "Lemon8 bare i markedene angitt i aktuell kilde.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tt-pinedrama",
+      "label_nb": "Tt pinedrama",
+      "definition": "PineDrama bare i markedene angitt i aktuell kilde.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-feed",
+      "label_nb": "Li feed",
+      "definition": "LinkedIn-feed for støttet sponset innhold.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-messaging",
+      "label_nb": "Li messaging",
+      "definition": "LinkedIn-meldinger der format og marked tillater.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-right-rail",
+      "label_nb": "Li right rail",
+      "definition": "LinkedIn-sidekolonne for tekst/dynamiske format.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "li-audience-network",
+      "label_nb": "Li audience network",
+      "definition": "LinkedIn Audience Network på partnerflater.",
+      "source": [
+        {
+          "source": "LinkedIn",
+          "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+          "locator": "Choose where your ads appear",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Tidligere kontroll; ikke åpnet på nytt i denne runden."
+        }
+      ]
+    },
+    {
+      "id": "yt-playables",
+      "label_nb": "Yt playables",
+      "definition": "YouTube Playables i mobilappen; skippable, non-skippable og bumper etter faktisk kampanje-/kontostøtte.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "egen-flate",
+      "label_nb": "Egen flate",
+      "definition": "Eget nettsted, brev, skjema eller direkte kanal; eksakt sted i bindingen.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    }
+  ]
+}

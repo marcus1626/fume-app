@@ -1,0 +1,941 @@
+{
+  "state": "PROPOSED",
+  "lang": "nb",
+  "changes": {
+    "copy-proevetilbudets-vilkaar": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-svar-paa-kjoepsspoersmaal": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-proeven-lar-leseren-proeve": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-bestill-proeven-tydelig": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-be-om-en-handling": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-foelg-opp-samme-interesse": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-forklar-ukjent-produktnavn": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-sammendrag-i-lange-brev": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "copy-selvforklarende-skjemafelt": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "trakt-kjopsberedskap-med-belegg": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "trakt-merkebygging-med-minne": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "trakt-hosting-har-kjopshinder": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "trakt-verdi-for-rabatt": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "plattform-samling-koblet-til-katalog": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "plattform-youtube-handling-synlig-og-hoerbar": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "plattform-youtube-vurdering-vis-bruk": {
+      "before": {
+        "stage": [
+          "midt"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "plattform-youtube-handling-etter-kontekst": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "plattform-tiktok-hendelse-svarer-til-handling": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-ett-budskap-per-annonse": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-merke-og-situasjon-sammen": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-bredere-situasjonsnettverk": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-mal-mentale-koblinger": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-folelsens-rolle": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-salgsutlosende-informasjon": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-test-for-oppskalering": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "strategi-kundeverdi-fremfor-svar": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-sted-i-fortelling": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-handling-med-utvikling": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-figur-med-handling": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "merkebygging"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-konkret-hverdagsproblem": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-praktisk-losning": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "ide-grunn-til-a-bytte": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-allerede-kunde": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "hosting"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-uro-ved-bytte": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-rekonstruer-bytte": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-fire-byttekrefter": {
+      "before": {
+        "stage": [
+          "topp",
+          "midt",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-kartlegg-friksjon": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-presis-handling": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-begrunn-tidspunkt": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-innsats-naa": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-planlegg-handlingen": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    },
+    "leseren-frivillig-forpliktelse": {
+      "before": {
+        "stage": [
+          "midt",
+          "bunn",
+          "salgsrunde",
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "after": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "reason": "Format, handling eller kunnskapsgrunnlag kan forekomme i alle trinn. Regelens egen konkrete betingelse avgjør relevans; strategisk valgt modus beholdes der den er selve oppgaven."
+    }
+  },
+  "reviewed_narrow": [
+    {
+      "id": "copy-proevetilbudets-vilkaar",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-svar-paa-kjoepsspoersmaal",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-proeven-lar-leseren-proeve",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-bestill-proeven-tydelig",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-be-om-en-handling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-foelg-opp-samme-interesse",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-forklar-ukjent-produktnavn",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-sammendrag-i-lange-brev",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "copy-selvforklarende-skjemafelt",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "trakt-kjopsberedskap-med-belegg",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "trakt-merkebygging-med-minne",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "trakt-hosting-har-kjopshinder",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "trakt-na-fremtidige-kjopere",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-lojalitet-med-riktig-nevner",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-lojalitet-er-ikke-hele-veksten",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-lojalitet-gir-bruksverdi",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-topp-har-liten-foresporsel",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-midt-svarer-pa-valget",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-bunn-har-gjennomforbart-kjop",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-utforskning-og-vurdering",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-klassifiser-pristilbudet",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-forpris-med-historikk",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-reell-prisfordel",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-betingelser-for-fordelen",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-frist-har-kilde",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "trakt-verdi-for-rabatt",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "plattform-samling-koblet-til-katalog",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "plattform-youtube-handling-synlig-og-hoerbar",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "plattform-youtube-vurdering-vis-bruk",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "plattform-youtube-handling-etter-kontekst",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "plattform-tiktok-hendelse-svarer-til-handling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-ett-budskap-per-annonse",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-merke-og-situasjon-sammen",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-bredere-situasjonsnettverk",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-mal-mentale-koblinger",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-fremtidige-kjopere",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "strategi-folelsens-rolle",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-salgsutlosende-informasjon",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-prospektdekning",
+      "decision": "beholdt",
+      "reason": "Regelen navngir selv valgt modus/trinn eller salgsrunde. Kandidatporten svarer til oppgavens eksplisitte klassifisering; lov/etikk vurderes uavhengig."
+    },
+    {
+      "id": "strategi-test-for-oppskalering",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "strategi-kundeverdi-fremfor-svar",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-sted-i-fortelling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-handling-med-utvikling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-figur-med-handling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-konkret-hverdagsproblem",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-praktisk-losning",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "ide-grunn-til-a-bytte",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-allerede-kunde",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-uro-ved-bytte",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-rekonstruer-bytte",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-fire-byttekrefter",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-kartlegg-friksjon",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-presis-handling",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-begrunn-tidspunkt",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-innsats-naa",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-planlegg-handlingen",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    },
+    {
+      "id": "leseren-frivillig-forpliktelse",
+      "decision": "utvidet",
+      "reason": "Se changes; betingelsen vurderes etter kandidatfilter."
+    }
+  ]
+}

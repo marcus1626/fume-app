@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "kritiker",
+    "kode",
+    "kritiker+menneske",
+    "menneske",
+    "kode+kritiker",
+    "kode+menneske",
+    "kode+kritiker+menneske"
+  ],
+  "x-list": "../../lists/check-type.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/check-type.schema.json",
+  "title": "check-type"
+}

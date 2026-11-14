@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "foreslatt",
+    "godkjent",
+    "avvist",
+    "utlopt"
+  ],
+  "x-list": "../../lists/override-approval.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/override-approval.schema.json",
+  "title": "override-approval"
+}

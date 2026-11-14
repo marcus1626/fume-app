@@ -1,0 +1,516 @@
+{
+  "id": "kategori",
+  "label_nb": "Kategori og kjøpsatferd",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "kampanjekort",
+    "leserkort",
+    "lovsjekk-per-land",
+    "merkeelement-revisjon",
+    "merkevare-og-salgsaktivering",
+    "rekkevidde-og-medieplan",
+    "resultater-og-laering"
+  ],
+  "fields": [
+    {
+      "id": "kategori.id",
+      "path": "id",
+      "group": "id",
+      "label_nb": "Kategori-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Binder den avgrensede kategorien på tvers av merke og kampanjer.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering"
+        ],
+        "choices": "Binder den avgrensede kategorien på tvers av merke og kampanjer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "merkevarekonstant",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kategori.name",
+      "path": "name",
+      "group": "name",
+      "label_nb": "Kategori",
+      "type": "string",
+      "values": [],
+      "definition": "Navngi kategorien og hvilke alternativer den omfatter.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering"
+        ],
+        "choices": "Navngi kategorien og hvilke alternativer den omfatter."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kategori.type",
+      "path": "type",
+      "group": "type",
+      "label_nb": "Leveransetype",
+      "type": "string",
+      "values": [
+        {
+          "value": "produkt",
+          "definition": "Fysisk vare."
+        },
+        {
+          "value": "tjeneste",
+          "definition": "Utført tjeneste."
+        },
+        {
+          "value": "opplevelse",
+          "definition": "Deltatt opplevelse."
+        },
+        {
+          "value": "kombinasjon",
+          "definition": "Kombinert leveranse; bestanddelene navngis."
+        }
+      ],
+      "definition": "Velger hva som skal dokumenteres og leveres; kombinasjoner beskrives eksplisitt.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "OpenStax — Products, Services, and Experiences",
+        "url": "https://openstax.org/books/principles-marketing/pages/9-1-products-services-and-experiences",
+        "locator": "9.1 Products and Services Defined; product classifications"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort"
+        ],
+        "choices": "Velger hva som skal dokumenteres og leveres; kombinasjoner beskrives eksplisitt."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "kategori.purchase_frequency.class",
+      "path": "purchase_frequency.class",
+      "group": "purchase_frequency",
+      "label_nb": "Kjøpshyppighet",
+      "type": "string",
+      "values": [
+        {
+          "value": "ukentlig",
+          "definition": "Median kjøpsintervall høyst 7 døgn."
+        },
+        {
+          "value": "manedlig",
+          "definition": "Median over 7 og høyst 31 døgn."
+        },
+        {
+          "value": "kvartalsvis",
+          "definition": "Median over 31 og høyst 92 døgn."
+        },
+        {
+          "value": "arlig",
+          "definition": "Median over 92 og høyst 366 døgn."
+        },
+        {
+          "value": "sjeldnere",
+          "definition": "Median over 366 døgn."
+        },
+        {
+          "value": "engang",
+          "definition": "Dokumentert ikke-gjentakende kategorioppgave; har forrang over målt tidsintervall. Tidsklassene gjelder bare gjentakende oppgaver."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Grunnlag mangler; ikke sett lik sjelden."
+        }
+      ],
+      "definition": "Velg først engang ved dokumentert ikke-gjentakende kategorioppgave; ellers ukjent ved manglende median, ellers nøyaktig én disjunkt tidsklasse. Ikke universelle forskningsgrenser eller mediefrekvens.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering"
+        ],
+        "choices": "Velg først engang ved dokumentert ikke-gjentakende kategorioppgave; ellers ukjent ved manglende median, ellers nøyaktig én disjunkt tidsklasse. Ikke universelle forskningsgrenser eller mediefrekvens."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "kategori.purchase_frequency.measurement",
+      "path": "purchase_frequency.measurement",
+      "group": "purchase_frequency",
+      "label_nb": "Frekvensgrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Kategori, kjøpsteller, unike kjøpere, observasjonsperiode, enhet, medianintervall, kilde og bortfall; kjøpsrate blant alle skilles fra frekvens blant kjøpere.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "Feiming Chen — NBDdirichlet reference manual",
+        "url": "https://feimingchen.r-universe.dev/NBDdirichlet/doc/manual.html",
+        "locator": "dirichlet; summary.dirichlet; period.set; referanse Goodhardt, Ehrenberg & Chatfield (1984)"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering"
+        ],
+        "choices": "Kategori, kjøpsteller, unike kjøpere, observasjonsperiode, enhet, medianintervall, kilde og bortfall; kjøpsrate blant alle skilles fra frekvens blant kjøpere."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kategori.involvement.level",
+      "path": "involvement.level",
+      "group": "involvement",
+      "label_nb": "Involvering",
+      "type": "string",
+      "values": [
+        {
+          "value": "lav",
+          "definition": "Lite personlig relevans i dokumentert situasjon."
+        },
+        {
+          "value": "hoy",
+          "definition": "Stor personlig relevans i dokumentert situasjon."
+        },
+        {
+          "value": "varierer",
+          "definition": "Forskjeller mellom situasjoner eller grupper krever egne deler."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Relevans er ikke undersøkt."
+        }
+      ],
+      "definition": "Begrunnet Fume-arbeidsklasse for personlig relevans i denne situasjonen; verken PII-skår eller mekanisk kategoriutledning.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Begrunnet Fume-arbeidsklasse for personlig relevans i denne situasjonen; verken PII-skår eller mekanisk kategoriutledning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "kategori.involvement.evidence",
+      "path": "involvement.evidence",
+      "group": "involvement",
+      "label_nb": "Belegg for involvering",
+      "type": "object",
+      "values": [],
+      "definition": "Utvalg, situasjon, metode, relevant observasjon og usikkerhet; bruk PII bare med egen godkjent operasjonalisering.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "Zaichkowsky (1985) — Measuring the Involvement Construct",
+        "url": "https://www.sfu.ca/~zaichkow/JCR%2085.pdf",
+        "locator": "Journal of Consumer Research 12(3), s. 341–352; s. 341, The Problem"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "leserkort",
+          "merkevare-og-salgsaktivering"
+        ],
+        "choices": "Utvalg, situasjon, metode, relevant observasjon og usikkerhet; bruk PII bare med egen godkjent operasjonalisering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "merkevare-og-salgsaktivering"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kategori.regulation.areas",
+      "path": "regulation.areas",
+      "group": "regulation",
+      "label_nb": "Reguleringsområder",
+      "type": "array",
+      "values": [
+        {
+          "value": "generell",
+          "definition": "Allmenn markedsføringskontroll."
+        },
+        {
+          "value": "mat",
+          "definition": "Mat og ernæring; påstander krever egen kontroll."
+        },
+        {
+          "value": "helse",
+          "definition": "Helsepåstander, behandling eller medisinske produkter må avklares."
+        },
+        {
+          "value": "finans",
+          "definition": "Finansielle produkter og tjenester krever lokal kontroll."
+        },
+        {
+          "value": "alkohol",
+          "definition": "Alkohol eller felles merke/kjennetegn krever lokal kontroll."
+        },
+        {
+          "value": "barn",
+          "definition": "Barn kan være mottakere; egen vurdering kreves."
+        },
+        {
+          "value": "personvern",
+          "definition": "Databehandling, sporing eller direkte kontakt må vurderes."
+        },
+        {
+          "value": "annet",
+          "definition": "Navngi ekstra regulering og lokal ansvarlig."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Kan ikke avgjøres; menneskelig avklaring før videreføring."
+        }
+      ],
+      "definition": "Utløser land- og produktsjekk i lovsjekk-per-land; fravær av kategori fritar aldri fra generell lovkontroll.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Utløser land- og produktsjekk i lovsjekk-per-land; fravær av kategori fritar aldri fra generell lovkontroll."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "kategori.regulation.basis",
+      "path": "regulation.basis",
+      "group": "regulation",
+      "label_nb": "Lokalt regelgrunnlag",
+      "type": "array",
+      "values": [],
+      "definition": "Per land: produkttype, lov/policy, paragraf, dato og juridisk ansvarlig; helse, finans og alkohol trenger selvstendig avklaring.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "EU — Nutrition and Health Claims Regulation 1924/2006",
+          "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32006R1924",
+          "locator": "Artikkel 1–4; nærings- og helsepåstander på mat"
+        },
+        {
+          "source": "Helsedirektoratet — Alkoholloven § 9-2",
+          "url": "https://www.helsedirektoratet.no/rundskriv/alkoholloven/kapittel-9-reklameforbud/-9-2.reklame-for-alkoholholdig-drikk",
+          "locator": "§ 9-2; kommentarer 9.2.1"
+        },
+        {
+          "source": "FCA — Financial promotions and adverts",
+          "url": "https://www.fca.org.uk/firms/financial-promotions-adverts",
+          "locator": "Financial promotions; product-specific rules; perimeter guidance"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Per land: produkttype, lov/policy, paragraf, dato og juridisk ansvarlig; helse, finans og alkohol trenger selvstendig avklaring."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kategori.seasonality.pattern",
+      "path": "seasonality.pattern",
+      "group": "seasonality",
+      "label_nb": "Sesongmønster",
+      "type": "array",
+      "values": [
+        {
+          "value": "helars",
+          "definition": "Ingen dokumentert sesongtopp."
+        },
+        {
+          "value": "kalender",
+          "definition": "Kalenderbundet mønster."
+        },
+        {
+          "value": "vaer",
+          "definition": "Væravhengig mønster."
+        },
+        {
+          "value": "hendelse",
+          "definition": "Knyttet til en navngitt hendelse."
+        },
+        {
+          "value": "fornyelse",
+          "definition": "Knyttet til kontrakt eller gjenkjøpssyklus."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Mønster er ikke dokumentert."
+        }
+      ],
+      "definition": "Velger tidsavgrensning med lokalt kildegrunnlag, uten å dikte opp knapphet.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Velger tidsavgrensning med lokalt kildegrunnlag, uten å dikte opp knapphet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "kategori.seasonality.evidence",
+      "path": "seasonality.evidence",
+      "group": "seasonality",
+      "label_nb": "Sesonggrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Geografi, periode, kilde, dato og målte variasjoner før timing velges.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan"
+        ],
+        "choices": "Geografi, periode, kilde, dato og målte variasjoner før timing velges."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "begge",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

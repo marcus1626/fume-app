@@ -1,0 +1,793 @@
+{
+  "id": "00-kampanjekort-utkast",
+  "label_nb": "Kampanjekort før skriving — steg 3",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kanal-format",
+    "kategori",
+    "leser",
+    "merkevare-vs-kampanje",
+    "skill-filter",
+    "tilbud"
+  ],
+  "read_by": [
+    "kampanjekort"
+  ],
+  "fields": [
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort",
+      "path": "innhold.kampanjekort",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet kampanjekort for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Samlet kampanjekort for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.grunnlagsreferanser",
+      "path": "innhold.kampanjekort.grunnlagsreferanser",
+      "group": "innhold",
+      "label_nb": "Grunnlagsreferanser",
+      "type": "array",
+      "values": [],
+      "definition": "Kilde-ID, locator, dato og mangler for hvert påkrevd kortfelt.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Kilde-ID, locator, dato og mangler for hvert påkrevd kortfelt."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.avklaringer",
+      "path": "innhold.kampanjekort.avklaringer",
+      "group": "innhold",
+      "label_nb": "Kundens avklaringer",
+      "type": "array",
+      "values": [],
+      "definition": "Datert svar, kilde, ansvarlig og eksplisitt godkjent antakelse med test/frist.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Datert svar, kilde, ansvarlig og eksplisitt godkjent antakelse med test/frist."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.kort_id",
+      "path": "innhold.kampanjekort.kort_id",
+      "group": "innhold",
+      "label_nb": "Kort-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Stabil identitet for versjonsbundet kampanjekort.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Stabil identitet for versjonsbundet kampanjekort."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler",
+      "path": "innhold.kampanjekort.deler",
+      "group": "innhold",
+      "label_nb": "Kampanjedeler",
+      "type": "array",
+      "values": [],
+      "definition": "Ikke-tom liste med unik del_id per oppgave, segment, hovedtrinn, modus og forespørsel.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Ikke-tom liste med unik del_id per oppgave, segment, hovedtrinn, modus og forespørsel."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].malgruppe",
+      "path": "innhold.kampanjekort.deler[].malgruppe",
+      "group": "innhold",
+      "label_nb": "Målgruppe per del",
+      "type": "object",
+      "values": [],
+      "definition": "Leser-ID, segment, avgrensning og dokumentert behov.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Leser-ID, segment, avgrensning og dokumentert behov."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].foresporsel",
+      "path": "innhold.kampanjekort.deler[].foresporsel",
+      "group": "innhold",
+      "label_nb": "Kostnad ved forespørselen",
+      "type": "object",
+      "values": [],
+      "definition": "Handling, minutter med grunnlag, penger/valuta, data, binding/risiko, mottakerverdi og begrunnelse for størrelse.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Handling, minutter med grunnlag, penger/valuta, data, binding/risiko, mottakerverdi og begrunnelse for størrelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].maling",
+      "path": "innhold.kampanjekort.deler[].maling",
+      "group": "innhold",
+      "label_nb": "Måleoppgave",
+      "type": "object",
+      "values": [],
+      "definition": "Ønsket utfall, grunnrate eller merket mangel, mål, kilde, frist, horisont og suksesskriterium.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Ønsket utfall, grunnrate eller merket mangel, mål, kilde, frist, horisont og suksesskriterium."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kontekst",
+      "path": "innhold.kampanjekort.deler[].kontekst",
+      "group": "innhold",
+      "label_nb": "Filterkontekst",
+      "type": "object",
+      "values": [],
+      "definition": "Konkrete verdier fra skill-filter uten jokere: kanaler, formatfamilie, land, regelområder, målgruppe og bekreftede regelutløsere.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Konkrete verdier fra skill-filter uten jokere: kanaler, formatfamilie, land, regelområder, målgruppe og bekreftede regelutløsere."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.ferdighetsbibliotek",
+      "path": "innhold.kampanjekort.ferdighetsbibliotek",
+      "group": "innhold",
+      "label_nb": "Bibliotekmanifest",
+      "type": "array",
+      "values": [],
+      "definition": "Alle skills-filer med versjon og SHA-256; endring krever ny filtrering.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Alle skills-filer med versjon og SHA-256; endring krever ny filtrering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].ferdighetsvalg",
+      "path": "innhold.kampanjekort.deler[].ferdighetsvalg",
+      "group": "innhold",
+      "label_nb": "Ferdighetsvalg",
+      "type": "object",
+      "values": [],
+      "definition": "Selected/excluded IDs og beslutning med årsak per bibliotek-ID og alle predikatdimensjoner; uavklart blokkerer.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Selected/excluded IDs og beslutning med årsak per bibliotek-ID og alle predikatdimensjoner; uavklart blokkerer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].konfliktlosninger",
+      "path": "innhold.kampanjekort.deler[].konfliktlosninger",
+      "group": "innhold",
+      "label_nb": "Konfliktavgrensninger",
+      "type": "array",
+      "values": [],
+      "definition": "Begge valgte konfliktskills, berørt oppgave, avgrensning, belegg og menneskevedtak før sluttgodkjenning.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Begge valgte konfliktskills, berørt oppgave, avgrensning, belegg og menneskevedtak før sluttgodkjenning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].funnel.stage",
+      "path": "innhold.kampanjekort.deler[].funnel.stage",
+      "group": "innhold",
+      "label_nb": "Trinn",
+      "type": "array",
+      "values": [
+        {
+          "value": "topp",
+          "definition": "Bygge tilgjengelighet og første relevans."
+        },
+        {
+          "value": "midt",
+          "definition": "Hjelpe utforskning eller vurdering."
+        },
+        {
+          "value": "bunn",
+          "definition": "Gjøre ønsket kjøp eller bestilling gjennomførbar."
+        },
+        {
+          "value": "lojalitet",
+          "definition": "Hjelpe bruk, gjenkjøp eller fornyelse."
+        },
+        {
+          "value": "salgsrunde",
+          "definition": "Tillegg for avgrenset salgsaktivitet; aldri eneste hovedtrinn."
+        }
+      ],
+      "definition": "Nøyaktig ett hovedtrinn; salgsrunde er et betinget tillegg. Trinn beskriver oppgaven, ikke en tvungen reise.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Nøyaktig ett hovedtrinn; salgsrunde er et betinget tillegg. Trinn beskriver oppgaven, ikke en tvungen reise."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "kampanje#funnel.stage"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].funnel.mode",
+      "path": "innhold.kampanjekort.deler[].funnel.mode",
+      "group": "innhold",
+      "label_nb": "Modus",
+      "type": "string",
+      "values": [
+        {
+          "value": "merkebygging",
+          "definition": "Bygge merkeminner med begrunnet tidshorisont."
+        },
+        {
+          "value": "hosting",
+          "definition": "Høsting/salgsaktivering som fjerner et konkret kjøpshinder."
+        }
+      ],
+      "definition": "Velger merkebygging eller høsting per del; begge krever separate deler.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Velger merkebygging eller høsting per del; begge krever separate deler."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "kampanje#funnel.mode"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kundestatus.value",
+      "path": "innhold.kampanjekort.deler[].kundestatus.value",
+      "group": "innhold",
+      "label_nb": "Kundestatus",
+      "type": "string",
+      "values": [
+        {
+          "value": "nye",
+          "definition": "Ingen kjøp etter avtalt produkt- og periodedefinisjon."
+        },
+        {
+          "value": "eksisterende",
+          "definition": "Har kjøpt etter avtalt definisjon."
+        },
+        {
+          "value": "begge",
+          "definition": "Felles oppgave og nivå er begrunnet; ellers del kampanjen."
+        }
+      ],
+      "definition": "Velger nyanskaffelse eller eksisterende kunde med produkt, periode og datakilde.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Velger nyanskaffelse eller eksisterende kunde med produkt, periode og datakilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "kampanje#customer_status"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].schwartz.level",
+      "path": "innhold.kampanjekort.deler[].schwartz.level",
+      "group": "innhold",
+      "label_nb": "Nivå",
+      "type": "integer",
+      "values": [
+        {
+          "value": 1,
+          "definition": "Kjenner ikke problemet."
+        },
+        {
+          "value": 2,
+          "definition": "Kjenner problemet."
+        },
+        {
+          "value": 3,
+          "definition": "Kjenner løsningstypen."
+        },
+        {
+          "value": 4,
+          "definition": "Kjenner det konkrete produktet."
+        },
+        {
+          "value": 5,
+          "definition": "Kjenner og ønsker produktet; trenger kjøpsinformasjon."
+        }
+      ],
+      "definition": "Velger hvor teksten begynner; utledes fra kunnskap med belegg, aldri fra trinn eller klikk alene.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "De fem nivåene: Unaware; Problem Aware; Solution Aware; Product Aware; Most Aware; fri forklaring, ikke originalboken"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Velger hvor teksten begynner; utledes fra kunnskap med belegg, aldri fra trinn eller klikk alene."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "leser#schwartz.level"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].foresporsel.size",
+      "path": "innhold.kampanjekort.deler[].foresporsel.size",
+      "group": "innhold",
+      "label_nb": "Forespørselens størrelse",
+      "type": "string",
+      "values": [
+        {
+          "value": "ingen",
+          "definition": "Ingen oppfordret handling."
+        },
+        {
+          "value": "liten",
+          "definition": "Lav innsats uten betaling, kontaktdata eller binding."
+        },
+        {
+          "value": "middels",
+          "definition": "Begrunnet mellomnivå."
+        },
+        {
+          "value": "stor",
+          "definition": "Vesentlig tid, betaling, data eller forpliktelse."
+        }
+      ],
+      "definition": "Fume-vurdering av samlet tid, penger, data, binding og risiko; klasse må begrunnes.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Fume-vurdering av samlet tid, penger, data, binding og risiko; klasse må begrunnes."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].salgsrunde.aktiv",
+      "path": "innhold.kampanjekort.deler[].salgsrunde.aktiv",
+      "group": "innhold",
+      "label_nb": "Aktiv salgsrunde",
+      "type": "boolean",
+      "values": [
+        {
+          "value": true,
+          "definition": "Ja."
+        },
+        {
+          "value": false,
+          "definition": "Nei."
+        }
+      ],
+      "definition": "Slår på ekstra dokumentasjon for salgsrunde; tilbudskontroll gjelder uansett.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Slår på ekstra dokumentasjon for salgsrunde; tilbudskontroll gjelder uansett."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "kampanje#sales_round.active"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].salgsrunde.tilbudstype",
+      "path": "innhold.kampanjekort.deler[].salgsrunde.tilbudstype",
+      "group": "innhold",
+      "label_nb": "Tilbudstype",
+      "type": "string",
+      "values": [
+        {
+          "value": "ordinaer-pris",
+          "definition": "Salg til ordinær pris."
+        },
+        {
+          "value": "prisnedsettelse",
+          "definition": "Påstått individuell prisreduksjon."
+        },
+        {
+          "value": "betinget-tilbud",
+          "definition": "Fordel avhengig av bestemte vilkår."
+        },
+        {
+          "value": "kombinasjon",
+          "definition": "Flere tilbudsmekanismer må kontrolleres hver for seg."
+        },
+        {
+          "value": "ikke-relevant",
+          "definition": "Ingen pris- eller tilbudsoppgave; begrunn hvorfor."
+        }
+      ],
+      "definition": "Utløser riktig pris- og tilbudskontroll.",
+      "filled_by": "menneske",
+      "source": {
+        "source": "Forbrukertilsynet — Salg og betingede tilbud (2025)",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2025/06/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.pdf",
+        "locator": "Salg og betingede tilbud; klassifisering og vilkår"
+      },
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Utløser riktig pris- og tilbudskontroll."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "ref": "tilbud#type"
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kontekst.kombinasjoner",
+      "path": "innhold.kampanjekort.deler[].kontekst.kombinasjoner",
+      "group": "innhold",
+      "label_nb": "Konkrete kombinasjoner",
+      "type": "array",
+      "values": [],
+      "definition": "Én rad per faktisk kanal, plassering, format og land; ingen konstruert krysskombinasjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Én rad per faktisk kanal, plassering, format og land; ingen konstruert krysskombinasjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].id",
+      "path": "innhold.kampanjekort.deler[].kontekst.kombinasjoner[].id",
+      "group": "innhold",
+      "label_nb": "Kombinasjons-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Stabil identitet for eget filterspor og relevante skills.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Stabil identitet for eget filterspor og relevante skills."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_values",
+      "path": "innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_values",
+      "group": "innhold",
+      "label_nb": "Maskinverdier",
+      "type": "object",
+      "values": [],
+      "definition": "Bare registrerte skill-filter-dimensjoner; ingen joker. Trinn, modus og nivå samsvarer med delen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Bare registrerte skill-filter-dimensjoner; ingen joker. Trinn, modus og nivå samsvarer med delen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_fakta",
+      "path": "innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_fakta",
+      "group": "innhold",
+      "label_nb": "Filterbelegg",
+      "type": "object",
+      "values": [],
+      "definition": "Kilde, locator, kontrolltid og ansvarlig for hver verdi; vurder også mulige utløsere som ikke gjelder.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Kilde, locator, kontrolltid og ansvarlig for hver verdi; vurder også mulige utløsere som ikke gjelder."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "00-kampanjekort-utkast.innhold.kampanjekort.deler[].ferdighetsvalg.per_kombinasjon",
+      "path": "innhold.kampanjekort.deler[].ferdighetsvalg.per_kombinasjon",
+      "group": "innhold",
+      "label_nb": "Utvalg per kombinasjon",
+      "type": "array",
+      "values": [],
+      "definition": "Kombinasjons-ID, skill-ID, alle dimensjonsutfall og relevant/ikke relevant/uavklart med grunn; union av ID-er alene gir ikke tillatelse på en annen annonse.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Kombinasjons-ID, skill-ID, alle dimensjonsutfall og relevant/ikke relevant/uavklart med grunn; union av ID-er alene gir ikke tillatelse på en annen annonse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json",
+  "artifact_family": "kampanjekort",
+  "producer": {
+    "flow": "kampanjekort",
+    "step": 3,
+    "who": "modell"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.kampanjekort.",
+  "validation_profile": {
+    "step_validation": "flows/kampanjekort.json#/steps/2/validation",
+    "required_from_steps": {
+      "grunnlagsreferanser": 1,
+      "avklaringer": 2,
+      "kort_id": 3,
+      "deler": 3,
+      "deler[].malgruppe": 3,
+      "deler[].foresporsel": 3,
+      "deler[].maling": 3,
+      "deler[].kontekst": 3,
+      "ferdighetsbibliotek": 4,
+      "deler[].ferdighetsvalg": 4,
+      "deler[].konfliktlosninger": 4
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

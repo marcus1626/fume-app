@@ -1,0 +1,9 @@
+{
+  "enum": [
+    "field_registry"
+  ],
+  "x-list": "../../lists/registry-kind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/registry-kind.schema.json",
+  "title": "registry-kind"
+}

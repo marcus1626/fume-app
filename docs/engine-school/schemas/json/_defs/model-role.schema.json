@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "skriver",
+    "bilde",
+    "kritiker"
+  ],
+  "x-list": "../../lists/model-role.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/model-role.schema.json",
+  "title": "model-role"
+}

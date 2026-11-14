@@ -1,0 +1,1212 @@
+[
+  {
+    "id": "trakt-kort-for-tekst",
+    "subject": "Trakt",
+    "name": "Godkjenn kampanjekort før tekst",
+    "principle": "Kampanjens oppgave skal være avklart før budskap og annonsetekst lages. Porten er Fumes arbeidsregel.",
+    "sources": [
+      {
+        "source": "Fume — BRIEF.md",
+        "url": "BRIEF.md",
+        "locator": "Step 2 — Skills; Step 3 — Flows og regler for validering"
+      }
+    ],
+    "source_says": "Briefen krever sjekkbare ferdigheter og validerte artefakter mellom flytsteg.",
+    "house_rule": true,
+    "rule": "Bestått bare når et datert, versjonsbundet kampanjekort er godkjent før første budskaps-, løfte-, linje- eller annonseutkast; manglende kort stopper skriving.",
+    "check": "kode+menneske",
+    "example_bad": "Skriver ti annonser før målgruppen er avklart.",
+    "example_good": "Kort v2 er godkjent og referert med hash i skrivegrunnlaget.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "fume",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-navngi-oppgaven",
+    "subject": "Trakt",
+    "name": "Velg ett hovedtrinn per del",
+    "principle": "Trinnet beskriver kommunikasjonsoppgaven. En kampanje med flere oppgaver trenger separate deler.",
+    "sources": [
+      {
+        "source": "Amazon Ads — What is a marketing funnel?",
+        "url": "https://advertising.amazon.com/en-gb/library/guides/marketing-funnel",
+        "locator": "Stages of the marketing funnel"
+      }
+    ],
+    "source_says": "Amazon beskriver kjennskap, vurdering, konvertering og lojalitet som en mulig inndeling.",
+    "house_rule": true,
+    "rule": "Bestått bare når hver del har ett hovedtrinn: topp, midt, bunn eller lojalitet, med begrunnelse og målhandling; salgsrunde er et tillegg og kan ikke stå alene.",
+    "check": "kode+kritiker",
+    "example_bad": "Hele kampanjen merkes alle.",
+    "example_good": "Del A skal bygge kjennskap; del B skal gjøre tilbudet enkelt å kjøpe.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-ingen-tvungen-reise",
+    "subject": "Trakt",
+    "name": "Tillat at folk hopper og vender tilbake",
+    "principle": "Trakten er en arbeidsmodell for tiltak. Mottakeren må kunne finne nødvendig informasjon uten å følge en påtvunget rekkefølge.",
+    "sources": [
+      {
+        "source": "Google / The Behavioural Architects — Navigating purchase behavior and decision-making",
+        "url": "https://business.google.com/en-all/think/consumer-insights/navigating-purchase-behavior-and-decision-making/",
+        "locator": "What happens in the messy middle? Two mental modes"
+      }
+    ],
+    "source_says": "Google beskriver gjentatt veksling mellom utforskning og vurdering.",
+    "house_rule": true,
+    "rule": "Bestått bare når planen viser direkte adgang til vurdering og kjøp og en vei tilbake til informasjon; påstander om obligatorisk lineær fremdrift er fjernet eller dokumentert særskilt.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle må se fire annonser før de kan lese pris.",
+    "example_good": "Pris, sammenligning og kjøp er tilgjengelig fra samme relevante inngang.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-kundestatus-er-egen-akse",
+    "subject": "Trakt",
+    "name": "Skill kundestatus fra trinn",
+    "principle": "En tidligere kunde kan mangle kunnskap om et nytt produkt. Kundestatus alene avgjør verken trinn eller beredskap.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass — Effective brand growth: Acquisition or retention?",
+        "url": "https://marketingscience.info/news-and-insights/effective-brand-growth-acquisition-or-retention",
+        "locator": "Focus resources on acquisition initiatives – and retention will follow"
+      }
+    ],
+    "source_says": "Instituttet beskriver at samme annonsering kan nå og påvirke både kjøpere og ikke-kjøpere.",
+    "house_rule": true,
+    "rule": "Bestått bare når nye og eksisterende kunder er definert med produkt, måleperiode og datakilde, og trinn og kunnskapsnivå er begrunnet separat.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle i CRM settes til kjøpsklare.",
+    "example_good": "Eksisterende avtaleeiere trenger først forklaring av den nye tjenesten.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-kjopsberedskap-med-belegg",
+    "subject": "Trakt",
+    "name": "Begrunn hvem som kan kjøpe nå",
+    "principle": "Beredskap må bygge på den aktuelle kjøpssituasjonen. Besøk og kundestatus er bare signaler.",
+    "sources": [
+      {
+        "source": "LinkedIn B2B Institute — 95-5 Rule",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/95-5-rule",
+        "locator": "Avsnittene om in-market/out-market og tid mellom kjøp"
+      }
+    ],
+    "source_says": "95-5-artikkelen fremhever at mange kategorikjøpere ikke har et aktuelt kjøpsbehov.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet beskriver kjøpssignal, observasjonsdato, kilde og usikkerhet for påstanden om at mottakerne kan kjøpe nå; ett klikk alene er ikke tilstrekkelig.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle videoseere merkes klare for tilbud.",
+    "example_good": "Forespurt tilbud og dokumentert fornyelsestidspunkt støtter beredskapen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-ikke-fast-nittifem",
+    "subject": "Trakt",
+    "name": "Bruk lokal kjøpssyklus",
+    "principle": "95-5 er en påminnelse om fremtidige kjøpere. Tallet er ikke en automatisk andel for enhver kategori.",
+    "sources": [
+      {
+        "source": "LinkedIn B2B Institute — 95-5 Rule",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/95-5-rule",
+        "locator": "Eksemplene om datamaskiner, banktjenester og biler"
+      }
+    ],
+    "source_says": "Artikkelen viser ulike kjøpsintervaller som forklaring på at de fleste ikke kjøper akkurat nå.",
+    "house_rule": true,
+    "rule": "Bestått bare når et brukt anslag for andelen i markedet har lokal periode, nevner og kilde eller er merket som uprøvd antakelse med undersøkelsesplan; 5 prosent kopieres ikke som faktum.",
+    "check": "kode+kritiker",
+    "example_bad": "Fem prosent av alle norske kunder er alltid i markedet.",
+    "example_good": "Anslaget bygger på kategoriens fornyelser siste kvartal.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-merkebygging-med-minne",
+    "subject": "Trakt",
+    "name": "Beskriv hvilket minne som skal bygges",
+    "principle": "Merkebygging skal knytte merket til noe mottakeren kan huske når behovet oppstår.",
+    "sources": [
+      {
+        "source": "LinkedIn B2B Institute — 95-5 Rule",
+        "url": "https://business.linkedin.com/advertise/resources/b2b-institute/b2b-research/trends/95-5-rule",
+        "locator": "Avsnittet om category entry points før kjøpere går inn i markedet"
+      }
+    ],
+    "source_says": "Artikkelen anbefaler koblinger mellom merket og relevante kjøpssituasjoner før kjøpsbehovet oppstår.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet navngir én ønsket kobling mellom merke og kjøpssituasjon per del, og en plan for å undersøke gjenkjenning eller fremhenting.",
+    "check": "kode+kritiker",
+    "example_bad": "Målet er bare flere visninger.",
+    "example_good": "Merket skal huskes når bedriften ansetter sin første medarbeider.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-hosting-har-kjopshinder",
+    "subject": "Trakt",
+    "name": "Navngi hinderet høstingen skal fjerne",
+    "principle": "Salgsaktivering skal gjøre en aktuell beslutning enklere. Rabatt er ikke et nødvendig kjennetegn.",
+    "sources": [
+      {
+        "source": "Binet & Field — The 5 Principles of Growth in B2B Marketing, rapport",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/b2b-research/LIN_B2B-Marketing-Report-Digital-v02.pdf",
+        "locator": "Trykt side 11–13, Principle 2: Balance Brand and Activation (PDF-side 12–14)"
+      }
+    ],
+    "source_says": "Rapporten skiller varig preferansebygging fra aktivering som utløser nær respons.",
+    "house_rule": true,
+    "rule": "Bestått bare når høstingsdelen har et konkret beslutningshinder, dokumentert løsning og målhandling; rabatt uten forklart hinder gir ikke bestått.",
+    "check": "kode+kritiker",
+    "example_bad": "Kjører rabatt fordi kalenderen sier kampanje.",
+    "example_good": "Viser tilgjengelig levering og samlet pris til dem som vurderer kjøp.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-balanse-er-lokal",
+    "subject": "Trakt",
+    "name": "Begrunn balansen lokalt",
+    "principle": "Budsjettfordelingen må passe oppgaven og markedet. Forskningsgjennomsnitt er et utgangspunkt for vurdering.",
+    "sources": [
+      {
+        "source": "Binet & Field — The 5 Principles of Growth in B2B Marketing, rapport",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/b2b-research/LIN_B2B-Marketing-Report-Digital-v02.pdf",
+        "locator": "Trykt side 13, Figure 6 og forbeholdet om lite utvalg (PDF-side 14)"
+      }
+    ],
+    "source_says": "Binet og Field sier at omtrentlig budsjettbalanse varierer med kategori og kontekst.",
+    "house_rule": true,
+    "rule": "Bestått bare når fordelingen viser beløp, tidshorisont og lokal begrunnelse for begge aktiviteter, også ved null til én del; ingen fast 60/40- eller 46/54-port brukes.",
+    "check": "kode+kritiker",
+    "example_bad": "Avviser planen fordi merkedelen ikke er nøyaktig 46 prosent.",
+    "example_good": "Fordelingen begrunnes med budsjett, merkeutgangspunkt og kjøpssyklus.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-samme-merke-i-begge",
+    "subject": "Trakt",
+    "name": "La merke og høsting henge sammen",
+    "principle": "Aktivitetene bør kunne gjenkjennes som samme avsender. De kan ha ulike oppgaver.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, gratis presentasjon",
+        "url": "https://ipa.co.uk/media/14463/long_and_short_of_it_presentation_final_030424.pdf",
+        "locator": "PDF-side 25, 8) Integrate brand and activation"
+      }
+    ],
+    "source_says": "IPA-presentasjonen viser samspill mellom merkeaktivitet og aktivering.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet viser et felles godkjent merkeelement og koblingen mellom merkeoppgaven og høstingsoppgaven når begge inngår.",
+    "check": "kode+kritiker",
+    "example_bad": "Merkeannonsen og tilbudet bruker uforenlige avsendere.",
+    "example_good": "Begge bruker samme kjente merkeelement, med ulike forespørsler.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-mal-over-riktig-tid",
+    "subject": "Trakt",
+    "name": "Tilpass mål og tid til oppgaven",
+    "principle": "Raske klikk kan ikke alene avgjøre om merkebygging virker. Høsting trenger et konkret utfall.",
+    "sources": [
+      {
+        "source": "IPA / Binet & Field — The Long and the Short of It, gratis presentasjon",
+        "url": "https://ipa.co.uk/media/14463/long_and_short_of_it_presentation_final_030424.pdf",
+        "locator": "PDF-side 31 og 34, Measure short and long-term effects"
+      }
+    ],
+    "source_says": "IPA fremhever at kortsiktige mål alene kan gi et misvisende bilde.",
+    "house_rule": true,
+    "rule": "Bestått bare når hver del har startverdi, målkilde, frist og begrunnet tidshorisont; merkebygging vurderes med et relevant minne- eller forretningsmål utover klikk.",
+    "check": "kode+kritiker",
+    "example_bad": "Stenger merkekampanjen etter to dager med lav klikkrate.",
+    "example_good": "Måler merke over begrunnet periode og kjøpsutfall separat.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-na-fremtidige-kjopere",
+    "subject": "Trakt",
+    "name": "Gi fremtidige kjøpere plass",
+    "principle": "En vekstplan må vurdere flere enn dem som søker eller allerede er i kundelisten.",
+    "sources": [
+      {
+        "source": "Binet & Field — The 5 Principles of Growth in B2B Marketing, rapport",
+        "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/b2b-research/LIN_B2B-Marketing-Report-Digital-v02.pdf",
+        "locator": "Trykt side 15–17, Expand Your Customer Base (PDF-side 16–18)"
+      }
+    ],
+    "source_says": "Rapporten finner sterkere vekstresultater for kundeanskaffelse og bred kategoridekning enn bare lojalitetskampanjer.",
+    "house_rule": true,
+    "rule": "Bestått bare når vekstplanen viser hvordan relevante ikke-kunder og fremtidige kjøpere kan nås, eller har et datert menneskevedtak med grunn for avgrensningen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Vekstmålet skal nås bare med retargeting av dagens kunder.",
+    "example_good": "Nye kategorikjøpere får en egen dekningsplan.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "merkebygging"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-penetrasjon-egen-maling",
+    "subject": "Trakt",
+    "name": "Mål nye kjøpere for seg",
+    "principle": "Flere kjøp fra samme personer er forskjellig fra flere personer som kjøper.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass — Effective brand growth: Acquisition or retention?",
+        "url": "https://marketingscience.info/news-and-insights/effective-brand-growth-acquisition-or-retention",
+        "locator": "How brands grow – expanding the customer base or increasing current purchases?"
+      }
+    ],
+    "source_says": "Instituttet skiller antall kategorikjøpere som kjøper merket fra kjøpshyppighet og fornyelse.",
+    "house_rule": true,
+    "rule": "Bestått bare når rapporten oppgir unike nye kjøpere, definisjon av ny og periodens kategorigrunnlag der penetrasjon påstås; ordre telles ikke som unike kunder.",
+    "check": "kode+kritiker",
+    "example_bad": "Ti ekstra ordre rapporteres som ti nye kunder.",
+    "example_good": "Kunder dedupliseres før nye kjøpere telles.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-lojalitet-med-riktig-nevner",
+    "subject": "Trakt",
+    "name": "Definer lojalitet for forretningsmodellen",
+    "principle": "Gjenkjøp og abonnementsfornyelse trenger ulike beregninger. En åpningsrate er ingen av delene.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass — Effective brand growth: Acquisition or retention?",
+        "url": "https://marketingscience.info/news-and-insights/effective-brand-growth-acquisition-or-retention",
+        "locator": "How brands grow – expanding the customer base or increasing current purchases?"
+      }
+    ],
+    "source_says": "Artikkelen skiller lojalitetsmål i repertoarmarkeder fra fortsatt kundeforhold i abonnement.",
+    "house_rule": true,
+    "rule": "Bestått bare når lojalitetsmålet angir startkohort, periode, teller, nevner og om det gjelder gjenkjøp, fornyelse eller frafall.",
+    "check": "kode+kritiker",
+    "example_bad": "Nyhetsbrevåpning kalles 80 prosent kundelojalitet.",
+    "example_good": "Fornyelse måles blant avtalene som faktisk forfalt i perioden.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-lojalitet-er-ikke-hele-veksten",
+    "subject": "Trakt",
+    "name": "Kontroller vekstplanen utenfor basen",
+    "principle": "God oppfølging er verdifull, men en lojalitetsplan er ikke i seg selv belegg for økt penetrasjon.",
+    "sources": [
+      {
+        "source": "Ehrenberg-Bass — Effective brand growth: Acquisition or retention?",
+        "url": "https://marketingscience.info/news-and-insights/effective-brand-growth-acquisition-or-retention",
+        "locator": "Will acquisition or retention lead to brand growth?; avsnittet om service levels and product quality"
+      }
+    ],
+    "source_says": "Instituttet fremhever penetrasjon som viktigste vekstdriver og understreker samtidig betydningen av rimelig service og kvalitet.",
+    "house_rule": true,
+    "rule": "Bestått bare når en vekstpåstand fra lojalitetstiltak har separat begrunnelse for nye kjøpere og lokal test; ellers avgrenses påstanden til kundebevaring.",
+    "check": "kode+kritiker",
+    "example_bad": "Færre oppsigelser beviser at vi tar nye markedsandeler.",
+    "example_good": "Bevaring og anskaffelse vises som separate bidrag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-lojalitet-gir-bruksverdi",
+    "subject": "Trakt",
+    "name": "Start oppfølging med kundens behov",
+    "principle": "Oppfølging etter kjøp bør hjelpe mottakeren med det vedkommende har kjøpt. Nye tilbud må ha et eget relevant formål.",
+    "sources": [
+      {
+        "source": "LinkedIn Ads — Marketing Funnel Stages",
+        "url": "https://business.linkedin.com/nl/nl/advertise/resources/marketing-terms/stages-of-the-marketing-funnel",
+        "locator": "How To Create A Full-Funnel Marketing Strategy → Develop Relevant Content for Each Stage"
+      }
+    ],
+    "source_says": "LinkedIn nevner brukerveiledninger og oppfølging som innhold etter kjøpet.",
+    "house_rule": true,
+    "rule": "Bestått bare når lojalitetsdelen navngir en dokumentert bruksoppgave eller relevant fornyelse, og ikke gjentar en anskaffelsesforespørsel for et produkt mottakeren allerede har.",
+    "check": "kode+kritiker",
+    "example_bad": "Kjøp grunnpakken du kjøpte i går.",
+    "example_good": "Hjelper kunden med første oppsett og forklarer neste fornyelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "lojalitet"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-topp-har-liten-foresporsel",
+    "subject": "Trakt",
+    "name": "Vurder belastningen i første møte",
+    "principle": "Tidlig kommunikasjon trenger ikke kreve kontaktopplysninger eller kjøp for å være nyttig.",
+    "sources": [
+      {
+        "source": "Amazon Ads — What is a marketing funnel?",
+        "url": "https://advertising.amazon.com/en-gb/library/guides/marketing-funnel",
+        "locator": "Awareness"
+      }
+    ],
+    "source_says": "Amazon beskriver kjennskap som å gjøre merket gjenkjennelig og lett å huske.",
+    "house_rule": true,
+    "rule": "Bestått bare når en stor forespørsel i topp har dokumentert behov og mindre alternativ; ellers brukes ingen eller liten forespørsel med tydelig verdi.",
+    "check": "kode+kritiker",
+    "example_bad": "Krever møtebooking før en ukjent mottaker får vite hva tilbudet er.",
+    "example_good": "Viser kjøpssituasjonen og tilbyr en åpen forklaring.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "topp"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-midt-svarer-pa-valget",
+    "subject": "Trakt",
+    "name": "Gi hjelp til vurderingen",
+    "principle": "Midten skal svare på det som gjør valget vanskelig. Mer innhold er ikke et mål i seg selv.",
+    "sources": [
+      {
+        "source": "Amazon Ads — What is a marketing funnel?",
+        "url": "https://advertising.amazon.com/en-gb/library/guides/marketing-funnel",
+        "locator": "Consideration"
+      }
+    ],
+    "source_says": "Amazon beskriver vurderingsinnhold som hjelp til å forstå hvordan løsningen dekker behovet.",
+    "house_rule": true,
+    "rule": "Bestått bare når midt-delen kobler et dokumentert vurderingsspørsmål til konkret innhold, belegg og neste valg.",
+    "check": "kode+kritiker",
+    "example_bad": "Sender alle til en generell forside.",
+    "example_good": "Viser sammenligning av to løsninger på spørsmålet kunden faktisk stiller.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "midt"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-bunn-har-gjennomforbart-kjop",
+    "subject": "Trakt",
+    "name": "Gjør kjøpet gjennomførbart",
+    "principle": "Et kjøpsønske hjelper lite når tilbudet ikke kan kjøpes på oppgitte vilkår.",
+    "sources": [
+      {
+        "source": "LinkedIn Ads — Marketing Funnel Stages",
+        "url": "https://business.linkedin.com/nl/nl/advertise/resources/marketing-terms/stages-of-the-marketing-funnel",
+        "locator": "Bottom of the Funnel (BOFU)"
+      }
+    ],
+    "source_says": "LinkedIn beskriver bunn som å støtte valg og en enkel kjøpsprosess.",
+    "house_rule": true,
+    "rule": "Bestått bare når bunn-delen har kontrollert pris, tilgjengelighet, vilkår og fungerende målhandling for den valgte kunden og kanalen.",
+    "check": "kode+kritiker",
+    "example_bad": "Kjøp nå leder til et utilgjengelig produkt.",
+    "example_good": "Pris og levering kontrolleres, og kjøpsveien er prøvd.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-utforskning-og-vurdering",
+    "subject": "Trakt",
+    "name": "Skill utforskning fra vurdering",
+    "principle": "En person kan søke flere alternativer eller forsøke å redusere dem. Innholdet bør svare på den aktuelle oppgaven.",
+    "sources": [
+      {
+        "source": "Google / The Behavioural Architects — Navigating purchase behavior and decision-making",
+        "url": "https://business.google.com/en-all/think/consumer-insights/navigating-purchase-behavior-and-decision-making/",
+        "locator": "What happens in the messy middle? Two mental modes"
+      }
+    ],
+    "source_says": "Google skiller utvidende utforskning fra innsnevrende vurdering.",
+    "house_rule": true,
+    "rule": "Bestått bare når midt-delen angir hvilken av de to oppgavene innholdet hjelper med, datagrunnlaget og hvilken informasjon som gjør den enklere.",
+    "check": "kode+kritiker",
+    "example_bad": "Samme lange produktliste brukes som svar på et konkret sammenligningsspørsmål.",
+    "example_good": "Oversikt for utforskning, avgrenset sammenligning for vurdering.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "midt"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-foresporsel-har-kostnad",
+    "subject": "Trakt",
+    "name": "Beskriv hva forespørselen koster",
+    "principle": "Størrelsen på en forespørsel avhenger av tid, penger, data og binding. Et gratis møte kan kreve mye.",
+    "sources": [
+      {
+        "source": "LinkedIn Ads — Marketing Funnel Stages",
+        "url": "https://business.linkedin.com/nl/nl/advertise/resources/marketing-terms/stages-of-the-marketing-funnel",
+        "locator": "Develop Relevant Content for Each Stage; Conversion"
+      }
+    ],
+    "source_says": "LinkedIn knytter ulike innholdstyper og oppfordringer til mottakerens oppgave.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet oppgir handling, anslåtte minutter, betaling, nødvendige persondata og binding, og begrunner klassen ingen, liten, middels eller stor; uavklart kostnad stopper.",
+    "check": "kode+kritiker",
+    "example_bad": "Gratis demo merkes liten selv om den krever en time og salgsoppfølging.",
+    "example_good": "En times demo med kontaktdata og oppfølging klassifiseres stor med begrunnelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13"
+  },
+  {
+    "id": "trakt-schwartz-fra-kunnskap",
+    "subject": "Trakt",
+    "name": "Utled Schwartz fra hva leseren vet",
+    "principle": "Trinn og kundestatus gir hypoteser om kunnskap. Det valgte nivået må ha eget belegg.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "source_says": "Copps sekundærforklaring skiller fem nivåer etter kunnskap om problem, løsning og produkt.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet registrerer belegg for problem-, løsnings- og produktkunnskap samt kjøpsønske, velger nivå 1–5 med begrunnelse og usikkerhet; trinn alene eller ett klikk godtas ikke som belegg.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle i bunn får nivå 5 automatisk.",
+    "example_good": "Nivå 4 begrunnes med produktkunnskap og dokumentert tvil; kjøpsønske mangler.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-flere-nivaer-flere-deler",
+    "subject": "Trakt",
+    "name": "Del når kunnskapen krever ulike svar",
+    "principle": "En samlet målgruppe kan inneholde personer med forskjellige forkunnskaper.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words; Mistakes I see creators make with this"
+      }
+    ],
+    "source_says": "Sekundærforklaringen peker på at samme salgsbudskap kan passe ulikt for lesere som vet forskjellige ting.",
+    "house_rule": true,
+    "rule": "Bestått bare når vesentlige forskjeller i kunnskap eller forespørsel gir egne deler med eget nivå og budskapsoppgave, eller et begrunnet menneskevalg for felles innhold.",
+    "check": "kode+kritiker",
+    "example_bad": "Ukjente og kjøpsklare mottakere får bare pris og frist.",
+    "example_good": "To deler får henholdsvis forklaring og et konkret tilbud.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-salgsrunde-er-eget-valg",
+    "subject": "Trakt",
+    "name": "Avklar om det er en salgsrunde",
+    "principle": "En avgrenset salgsinnsats kan gå til nye eller eksisterende kunder og trenger ikke innebære prisnedsettelse. Fume bruker salgsrunde som planfelt.",
+    "sources": [
+      {
+        "source": "Fume — BRIEF.md",
+        "url": "BRIEF.md",
+        "locator": "The 10 checkpoints, særlig 1, 2 og 6; Step 3 — Flows"
+      }
+    ],
+    "source_says": "Briefen skiller forståelse av oppgaven, leseren og salgsmålet i egne sjekkpunkter.",
+    "house_rule": true,
+    "rule": "Bestått bare når salgsrunde.aktiv er ja eller nei med kilde og begrunnelse; ja har formål, omfang, start og slutt med tidssone, eier og tilbudstype; nei har begrunnet fravalg.",
+    "check": "kode+menneske",
+    "example_bad": "Alle kampanjer kalles salg uten kontroll av tilbudet.",
+    "example_good": "En tidsavgrenset fornyelsesrunde har ordinær pris og ingen rabattpåstand.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "fume",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-klassifiser-pristilbudet",
+    "subject": "Trakt",
+    "name": "Skill salgsrunde fra lovens salgsbegrep",
+    "principle": "Det samlede inntrykket avgjør hvilke prisregler som må undersøkes. Et internt kampanjenavn avgjør ikke dette.",
+    "sources": [
+      {
+        "source": "Forbrukertilsynet — Salg og bruk av førpriser",
+        "url": "https://www.forbrukertilsynet.no/vi-jobber-med/prismarkedsforing/salg-og-bruk-av-forpriser",
+        "locator": "Reglene dere må kjenne til; Når skal dere oppgi førpris?; Sjekkliste for markedsføring av salg på tjenester"
+      }
+    ],
+    "source_says": "Forbrukertilsynet skiller markedsførte prisnedsettelser på varer fra tjenester og andre tilbud.",
+    "house_rule": true,
+    "rule": "Bestått bare når pristilbudet er klassifisert som ordinær pris, prisnedsettelse, betinget tilbud eller kombinasjon, med vare/tjeneste og konkret begrunnelse; usikkerhet går til juridisk menneske før tekst.",
+    "check": "kritiker+menneske",
+    "example_bad": "Black Friday behandles automatisk som ordinær pris.",
+    "example_good": "Det forventede salgsinntrykket utløser prisvurdering selv uten ordet rabatt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": [
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-forpris-med-historikk",
+    "subject": "Trakt",
+    "name": "Kontroller førpris og rabattgrunnlag",
+    "principle": "Markedsført prisnedsettelse på varer krever riktig referansepris. Særtilfeller må begrunnes.",
+    "sources": [
+      {
+        "source": "Norge — Prisopplysningsforskriften",
+        "url": "https://lovdata.no/dokument/SF/forskrift/2012-11-14-1066",
+        "locator": "§ 9a, alle tre ledd"
+      }
+    ],
+    "source_says": "§ 9a krever laveste anvendte pris i minst 30 dager, med regler om kundeklubber, gradvis nedsettelse og raskt bedervelige varer.",
+    "house_rule": true,
+    "rule": "Bestått bare når hver berørt vare har datert prishistorikk for relevant salgskanal, førpris og rabattberegning; allment tilgjengelige klubbpriser inngår, og eventuelt særtilfelle har konkret hjemmel kontrollert av menneske.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "Rabatten regnes fra veiledende pris selv om klubbprisen var lavere.",
+    "example_good": "Laveste relevante pris brukes; et særtilfelle behandles og dokumenteres separat.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": [
+          "bunn",
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-reell-prisfordel",
+    "subject": "Trakt",
+    "name": "Vurder om prisfordelen er reell",
+    "principle": "Tretti dager alene beviser ikke en reell besparelse. Salgshistorikken må også vurderes.",
+    "sources": [
+      {
+        "source": "Forbrukertilsynet — Salg og bruk av førpriser",
+        "url": "https://www.forbrukertilsynet.no/vi-jobber-med/prismarkedsforing/salg-og-bruk-av-forpriser",
+        "locator": "Hvor ofte og hvor lenge kan dere ha salg?; Ikke skru opp prisen før et salg"
+      }
+    ],
+    "source_says": "Tilsynet advarer mot langvarige eller hyppige salg og prisøkning som gir et misvisende spareinntrykk.",
+    "house_rule": true,
+    "rule": "Bestått bare når salgsplanen har en menneskevurdering av pris- og tilbudshistorikk, varighet og helhetsinntrykk; eksempeltabeller behandles ikke som eneste mulige lovlige løsning.",
+    "check": "kritiker+menneske",
+    "example_bad": "Hever prisen før et langt salg og godkjenner bare på 30-dagersregelen.",
+    "example_good": "Prishistorikk og kampanjelengde vurderes sammen før besparelsen brukes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": [
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-betingelser-for-fordelen",
+    "subject": "Trakt",
+    "name": "Vis vilkårene for betingede tilbud",
+    "principle": "Mottakeren må forstå hva som kreves for prisfordelen. Kombinasjoner med vanlig salg må klassifiseres særskilt.",
+    "sources": [
+      {
+        "source": "Forbrukertilsynet — Betingede tilbud",
+        "url": "https://www.forbrukertilsynet.no/vi-jobber-med/prismarkedsforing/betingede-tilbud",
+        "locator": "Hva er betingede tilbud?; Kort om reglene som gjelder; Informer tydelig om betingelsene som gjelder"
+      }
+    ],
+    "source_says": "Tilsynet krever tydelige vilkår og reelle prisfordeler og skiller betingede tilbud fra individuelle prisnedsettelser.",
+    "house_rule": true,
+    "rule": "Bestått bare når kortet lagrer antall, minstebeløp, utvalg og unntak som gjelder, og en plan for synlighet i hver flate; kombinasjonstilbud har separat prisvurdering per berørt vare.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "Viser halv pris uten kravet om å kjøpe to.",
+    "example_good": "Vilkåret og hvilke varer det gjelder følger tilbudet fra annonse til kasse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": [
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-frist-har-kilde",
+    "subject": "Trakt",
+    "name": "Underbygg slutt og knapphet",
+    "principle": "Tilbudsfrister skal bygge på faktiske beslutninger og kontrolleres mot gjennomføringen. Kampanjekortet fritar ikke fra ny kontroll før publisering.",
+    "sources": [
+      {
+        "source": "Forbrukertilsynet — Salg og betingede tilbud (2025)",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2025/06/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.pdf",
+        "locator": "Side 4 punkt 2 og side 7–13 punkt 3.3–3.6; Fumes lagringsport fra runde 2"
+      }
+    ],
+    "source_says": "Veiledningen krever dokumenterbare og reelle prisfordeler og vurdering av tilbudshistorikk.",
+    "house_rule": true,
+    "rule": "Bestått bare når hver varslet frist eller knapphet har kilde, avgrensning og ansvarlig; kortet peker til lov-eu-ekte-tidsfrist og leseren-ekte-knapphet for kildebelagt sluttdato og kontroll før publisering; mangler stopper og går til menneske.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "Intern kalender brukes som eneste bevis for siste sjanse.",
+    "example_good": "Kundens skriftlige vedtak og tilbudshistorikk kobles til planlagt publiseringskontroll.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": [
+          "salgsrunde"
+        ],
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-verdi-for-rabatt",
+    "subject": "Trakt",
+    "name": "Undersøk et alternativ til rabatt",
+    "principle": "Kunden kan trenge tryggere informasjon eller enklere levering. Valg av rabatt bør kunne begrunnes.",
+    "sources": [
+      {
+        "source": "Think with Google — The Messy Middle: How behavioural science can help you avoid a pricing race to the bottom",
+        "url": "https://business.google.com/en-all/think/consumer-insights/messy-middle-2023/",
+        "locator": "How behavioural science can balance price"
+      }
+    ],
+    "source_says": "Google beskriver hvordan informasjon og mindre leveringsfriksjon påvirket simulerte valg i fem australske kategorier.",
+    "house_rule": true,
+    "rule": "Bestått bare når en rabattplan vurderer minst ett dokumenterbart alternativ som produktbevis eller enklere levering, og begrunner valgt tiltak uten å love samme effekt som studien.",
+    "check": "kode+kritiker",
+    "example_bad": "Kopierer studiens prosentløft som norsk salgsprognose.",
+    "example_good": "Tester tydelig levering mot rabatt med reelle utfall og kostnader.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "hosting"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  },
+  {
+    "id": "trakt-filtrer-ferdigheter",
+    "subject": "Trakt",
+    "name": "Velg ferdigheter med sporbar filtrering",
+    "principle": "Riktig kontroll avhenger av oppgave og kontekst. Ukjent anvendelse må avklares fremfor å bli tolket som bestått.",
+    "sources": [
+      {
+        "source": "Fume — BRIEF.md",
+        "url": "BRIEF.md",
+        "locator": "Step 2 — applies_when; Step 3 — skills_used og validation"
+      }
+    ],
+    "source_says": "Briefen gir ferdigheter anvendelsesfelt og flyter referanser til ferdighetene som brukes.",
+    "house_rule": true,
+    "rule": "Bestått bare når hver del har en sortert liste over valgte ferdighets-ID-er og en beslutning per vurdert ferdighet med treff eller avslag per applies_when-felt, bibliotekversjon og hash; ukjent nødvendig felt blokkerer og konfliktpar har begrunnet løsning.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle ferdigheter slås på uten å lese trinn eller kanal.",
+    "example_good": "Valget kan gjenskapes fra kortets kontekst og ferdighetsfilenes versjon.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      2,
+      6
+    ],
+    "tier": "fume",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb"
+  }
+]

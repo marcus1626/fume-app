@@ -1,0 +1,10 @@
+{
+  "enum": [
+    true,
+    false
+  ],
+  "x-list": "../../lists/boolean.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/boolean.schema.json",
+  "title": "boolean"
+}

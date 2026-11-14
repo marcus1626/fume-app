@@ -1,0 +1,51 @@
+{
+  "id": "subject",
+  "label_nb": "Fag",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "Copy",
+      "label_nb": "Copy",
+      "definition": "Fag i Fume-skolen: Copy."
+    },
+    {
+      "id": "Idé",
+      "label_nb": "Idé",
+      "definition": "Fag i Fume-skolen: Idé."
+    },
+    {
+      "id": "Leseren",
+      "label_nb": "Leseren",
+      "definition": "Fag i Fume-skolen: Leseren."
+    },
+    {
+      "id": "Lov",
+      "label_nb": "Lov",
+      "definition": "Fag i Fume-skolen: Lov."
+    },
+    {
+      "id": "Plattform",
+      "label_nb": "Plattform",
+      "definition": "Fag i Fume-skolen: Plattform."
+    },
+    {
+      "id": "Strategi",
+      "label_nb": "Strategi",
+      "definition": "Fag i Fume-skolen: Strategi."
+    },
+    {
+      "id": "Trakt",
+      "label_nb": "Trakt",
+      "definition": "Fag i Fume-skolen: Trakt."
+    }
+  ]
+}

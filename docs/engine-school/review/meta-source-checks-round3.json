@@ -1,0 +1,27 @@
+{
+  "state": "PROPOSED",
+  "lang": "nb",
+  "read_on": "2026-11-13",
+  "checks": [
+    {
+      "url": "https://www.facebook.com/business/help/407108559393196",
+      "web_open": "Innlogging/blokkering",
+      "fallback": "Firecrawl scrape maxAge=0 HTTP 200; hovedliste lest",
+      "findings": [
+        "Friends er underflate av Facebook Feed fra mars 2026, ikke eget plasseringsvalg.",
+        "Plasseringer er mål-, format-, konto- og markedsavhengige."
+      ]
+    },
+    {
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "web_open": "Innlogging/blokkering",
+      "fallback": "Firecrawl scrape maxAge=0 HTTP 200; måltabeller lest",
+      "scrape_id": "01a1d5b0-29c8-748b-8752-dbd7309e5715",
+      "findings": [
+        "Facebook profile feed finnes i måltabell med vilkår om etterlevelse.",
+        "Mål og konverteringssted begrenser format og plassering."
+      ]
+    }
+  ],
+  "limits": "Ingen konto er åpnet eller faktisk plasseringsvalg testet. Ingen fulltekst lagret. Unionen av listene er datert dokumentasjon, ikke garanti for alle kontoer."
+}

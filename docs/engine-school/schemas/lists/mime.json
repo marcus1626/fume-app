@@ -1,0 +1,56 @@
+{
+  "id": "mime",
+  "label_nb": "MIME-type",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "image/jpeg",
+      "label_nb": "Image/jpeg",
+      "definition": "JPEG-bilde."
+    },
+    {
+      "id": "image/png",
+      "label_nb": "Image/png",
+      "definition": "PNG-bilde."
+    },
+    {
+      "id": "image/gif",
+      "label_nb": "Image/gif",
+      "definition": "GIF-ressurs."
+    },
+    {
+      "id": "video/mp4",
+      "label_nb": "Video/mp4",
+      "definition": "MP4-video."
+    },
+    {
+      "id": "video/quicktime",
+      "label_nb": "Video/quicktime",
+      "definition": "MOV-video."
+    },
+    {
+      "id": "application/pdf",
+      "label_nb": "Application/pdf",
+      "definition": "PDF-dokument."
+    },
+    {
+      "id": "text/plain",
+      "label_nb": "Text/plain",
+      "definition": "Ren tekst."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Eksakt MIME-type må dokumenteres og bekreftes."
+    }
+  ]
+}

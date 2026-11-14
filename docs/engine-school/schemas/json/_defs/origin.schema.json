@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "virkelig",
+    "ki",
+    "blandet",
+    "ukjent"
+  ],
+  "x-list": "../../lists/origin.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/origin.schema.json",
+  "title": "origin"
+}

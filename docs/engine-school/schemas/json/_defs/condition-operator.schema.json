@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "present",
+    "in",
+    "eq"
+  ],
+  "x-list": "../../lists/condition-operator.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/condition-operator.schema.json",
+  "title": "condition-operator"
+}

@@ -1,0 +1,336 @@
+{
+  "id": "testplan-ekte-annonser",
+  "name": "Testplan for ekte annonser",
+  "purpose": "Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+  "sources": [
+    {
+      "source": "Claude Hopkins — Scientific Advertising (1923)",
+      "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+      "locator": "sources/scientific-advertising.txt, kapittel 15; Test Campaigns, innledningen og avslutningen om sammenlignende tester"
+    },
+    {
+      "source": "Claude Hopkins — Scientific Advertising (1923)",
+      "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+      "locator": "Lokalt: sources/scientific-advertising.txt, kapittel 15, Test Campaigns, avsnittene om small venture og cost and result"
+    },
+    {
+      "source": "Claude Hopkins — Scientific Advertising (1923)",
+      "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+      "locator": "Lokalt: sources/scientific-advertising.txt, kapittel 1, How Advertising Laws Are Established, avsnittet But those figures are not final"
+    },
+    {
+      "source": "IPA / Binet & Field — The Long and the Short of It, summary presentation",
+      "url": "https://ipa.co.uk/knowledge/documents/the-long-and-the-short-of-it-presentation",
+      "locator": "10 Key principles for success, punkt 10: Measure short and long-term effects"
+    },
+    {
+      "source": "LinkedIn / WARC / LIONS — The B2B Effectiveness Code",
+      "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/the-b2b-effectiveness-code-27-october.pdf",
+      "locator": "Introduction to the B2B Effectiveness Ladder, side 16, Driving response og Closing the sale"
+    },
+    {
+      "source": "Behavioural Insights Team — EAST handbook",
+      "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+      "locator": "4. Make it timely → Behavioural pitfall 3: Why behaviour is different from intentions, beliefs or attitudes"
+    },
+    {
+      "source": "TikTok — Performance Fundamentals",
+      "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+      "locator": "Campaign Measurement → Measurement Strategies → Split Testing"
+    },
+    {
+      "source": "TikTok — Performance Fundamentals",
+      "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+      "locator": "Optimal Data Connection Setup → Events og Parameters"
+    },
+    {
+      "source": "TikTok — Performance Fundamentals",
+      "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+      "locator": "Attribution Strategy; tabellen med Click Through Attribution, View Through Attribution og Attribution Window Setting"
+    },
+    {
+      "source": "TikTok — Performance Fundamentals",
+      "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+      "locator": "Attribution Strategy → Assessing Impact; avsnittet om comparing attribution windows across different platforms"
+    },
+    {
+      "source": "TikTok — Creative best practices for performance ads",
+      "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+      "locator": "Evaluate and optimize"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "../BRIEF.md",
+      "locator": "Step 2 — Skills, punktet Fume ethics beat platform advice"
+    }
+  ],
+  "checkpoints": [
+    6,
+    10
+  ],
+  "input": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+  "steps": [
+    {
+      "n": 1,
+      "what": "Kontroller at de lovsjekkede filene er faktiske annonser, at alle tilbud og målsteder fungerer, og at planlagte land, kanaler og målgrupper dekkes av godkjenningene. Samle historisk grunnrate, målehendelser, reelle budsjettgrenser, målhandling, salgskilde og attribusjonsvinduer fra godkjent grunnlag. Merk manglende grunnrate; ikke dikt opp forventet effekt eller resultater. Les og viderefør kampanjekortet etter input_fields.kampanjekort; bruk aktiv del som bindende ramme.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "output": "artefakter/{oppdrag_id}/10-testgrunnlag.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "1–3 reelle annonsevarianter finnes som åpnbare refererte filer med gyldige hasher og relevante landgodkjenninger.",
+          "Målehendelser er koblet til faktisk handling og datakilde; historiske tall har periode og kilde, og ukjente tall er merket ukjent.",
+          "Reelt publikum, mediebudsjett og salgsdata er planens grunnlag; KI-respondenter, syntetiske kunder og modellpoeng kan ikke være effektbevis.",
+          "Kampanjekortet finnes gjennom inndata, er bestått, og aktiv del_id, kortversjon, SHA-256 og bibliotekmanifest samsvarer; kontekst og ferdighetsvalg er videreført.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Utdata følger schemas/10-testgrunnlag.json med importert felleskontrakt; inndata følger schemas/10-annonser-lovsjekket.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-annonser-lovsjekket.json",
+      "output_schema": "schemas/10-testgrunnlag.json"
+    },
+    {
+      "n": 2,
+      "what": "Lag en forhåndsbestemt plan for ekte betalte annonser til et virkelig publikum. Angi hypotese, én variabel som endres i en sammenligning, kontrollvariant eller registrert kontrollgruppe, målgruppe, land, plassering, tilfeldig fordeling med enhet og andeler, primært resultatmål, datakilde, sporing, attribusjonsvindu, start, slutt, budsjettgrense og stoppregel. Ved bare én annonse må kontrollgruppe defineres. Knytt salgstesten til faktiske kunder eller salg og kostnadsgrense; klikk er sekundær respons. Bruk historisk grunnrate, minste relevante forskjell og begrunnet usikkerhetsmetode til å planlegge utvalg. Uten grunnrate lages en avgrenset pilot med budsjett og frist, merket uten grunnlag for endelig vinner. Angi hva som gir vinner, uavklart resultat, stopp eller vurdering av oppskalering, og hvordan annonsetretthet og tekniske feil håndteres. Registrer skriverens faktiske leverandør- og modell-ID i modellsporet; modellalias alene er ikke nok. Tilpass måleplanen til kortets hovedoppgave og tidshorisont. Reelle tester kan måle minne og fremtidig etterspørsel; klikk eller umiddelbart salg alene avgjør ikke merkebygging.",
+      "who": "modell",
+      "input": "artefakter/{oppdrag_id}/10-testgrunnlag.json",
+      "output": "artefakter/{oppdrag_id}/10-testplanutkast.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Planen har alle oppgitte felter og peker til uendrede, godkjente annonse-ID-er og hasher.",
+          "Sammenligningen endrer én definert variabel; en samlet tekst- og bildeidé kan testes som konsept, men delene får ikke hver sin påståtte årsakseffekt.",
+          "Planen er enten et begrunnet eksperiment med utvalgs- og usikkerhetsberegning eller en tydelig pilot uten endelig vinner; ingen resultater er fylt inn på forhånd.",
+          "Langsiktig merkeeffekt har egen måling og tidshorisont dersom briefen krever den; kortsiktige klikk brukes ikke som bevis for langsiktig salg.",
+          "Utdata følger schemas/10-testplanutkast.json med importert felleskontrakt; inndata følger schemas/10-testgrunnlag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-testgrunnlag.json",
+      "output_schema": "schemas/10-testplanutkast.json"
+    },
+    {
+      "n": 3,
+      "what": "Kontroller fordelingsandeler, tilfeldig tildelingsenhet, utvalgsberegning, budsjett, måledefinisjoner og datoer. Beregn om planlagt volum kan nå ønsket utvalg innen budsjett og tid med kildebelagte kostnadsanslag. Kontroller at stopp- og beslutningsgrenser er tallfestet før start, og at salgssporingen kan avstemmes med den valgte datakilden. Registrer målekontroll i planartefaktet, ikke som kampanjeresultat.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/10-testplanutkast.json",
+      "output": "artefakter/{oppdrag_id}/10-testplan-beregnet.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Fordelingsandelene summerer til 100 prosent, målgruppene kan holdes atskilt, og testens kontroll er definert.",
+          "Budsjett og datoer er innen bekreftede rammer; beregningsmetode og antakelser er lagret og kan regnes på nytt.",
+          "Ved eksperiment er utvalget gjennomførbart og usikkerhetsmetoden tilpasset stoppregelen; ellers retur for endring til pilot eller ny ramme.",
+          "Hendelsesdefinisjoner og attribusjonsvinduer er like ved direkte rangering; forskjeller gir separat rapportering uten plattformrangering.",
+          "Landgodkjenninger dekker planlagt testperiode, og ingen annonse eller målsted er endret.",
+          "Utdata følger schemas/10-testplan-beregnet.json med importert felleskontrakt; inndata følger schemas/10-testplanutkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-testplanutkast.json",
+      "output_schema": "schemas/10-testplan-beregnet.json"
+    },
+    {
+      "n": 4,
+      "what": "Prøv om testen faktisk kan besvare hypotesen med reelle annonser og observerte handlinger. Kontroller kontrollgruppe, fordeling, utvalg, forvekslingsfaktorer, usikkerhet, kostnadsgrense, stoppregel og kriterier for uavklart resultat. Avvis antatte salg fra klikk, modellvurderinger som effektbevis og oppskalering uten registrert terskel. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/10-testplan-beregnet.json",
+      "output": "artefakter/{oppdrag_id}/10-testplankritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Kritikeren er en annen faktisk modell enn planens skriver og andre skrivermodeller bak materialet som vurderes.",
+          "Hypotese, design, gjennomførbarhet, måling og beslutningsregler har alle begrunnet bestått.",
+          "Ingen plan lover statistisk sikkerhet uten beregning eller kårer salgsvinner fra respons alene; pilotbegrensninger er tydelige.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/10-testplankritikk.json med importert felleskontrakt; inndata følger schemas/10-testplan-beregnet.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/10-testplan-beregnet.json",
+      "output_schema": "schemas/10-testplankritikk.json"
+    },
+    {
+      "n": 5,
+      "what": "La budsjettansvarlig, måleansvarlig og oppdragsansvarlig godkjenne den uendrede planen før start. Bekreft reelt publikum, budsjett, teknisk måling, nødvendig behandlingsgrunnlag og lovgodkjenningenes gyldighet. Lagre én signert plan med ansvar, dato, hasher og beslutningsregler. Planen er leveransen fra denne flyten; faktisk publisering og resultatinnhenting skjer først ved separat gjennomføring av den godkjente planen. Registrer også separat endelig frigivelsesgodkjenning fra ansvarlig menneske for eksakte annonse-, målsted- og vilkårsversjoner etter lovsjekken. Planen starter ingen annonser. Valgfri resultater-og-laering leser denne pakken og krever et nytt, uttrykkelig menneskestyrt startvalg.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/10-testplankritikk.json",
+      "output": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle tre ansvarsroller har godkjent samme versjon, og ansvar for gjennomføring og avstemming mot salg er navngitt.",
+          "Annonser, land, kanaler, målgruppe, budsjett, periode, måling og stoppregel er låst og godkjent; ingen kjent endring krever ny lovsjekk.",
+          "Planen gjelder faktiske annonser og mennesker; ingen oppdiktede testresultater er registrert, og ingen kampanje er startet av denne flyten.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Endelig menneskelig frigivelsesgodkjenning finnes for lovsjekket, uendret versjon; reviderte tekster eller medier krever ny lovsjekk og frigivelse. Neste valgfrie flyt er resultater-og-laering, og den starter ikke uten menneskelig startvalg.",
+          "Utdata følger schemas/10-testplan-godkjent.json med importert felleskontrakt; inndata følger schemas/10-testplankritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/10-testplankritikk.json",
+      "output_schema": "schemas/10-testplan-godkjent.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at flytens lagrede inndata finnes, er lesbart og har validering.status lik bestått. Det første oppdragsartefaktet må oppfylle inngangskontrakten i flows/_index.json. Senere flyter leser bare den umiddelbart foregående flytens godkjente sluttartefakt. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Kampanjekortets referanse i inndata skal oppfylle input_fields.kampanjekort. Kode sjekker bestått status, del_id, versjon og SHA-256 mot den godkjente kortversjonen og biblioteket; feil eller mangler stopper før skriving.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": "Eventuell videre kjøring går til resultater-og-laering etter indeksens binding, med videreført godkjent grunnlag; faktisk start er menneskestyrt. Kampanjekortets versjon, hash og aktiv del_id videreføres uendret i grunnlaget; ved motstrid returneres til kampanjekort før videre skriving."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "ide-sammenlign-ideer",
+    "strategi-test-for-oppskalering",
+    "strategi-kundeverdi-fremfor-svar",
+    "strategi-kortsiktig-og-langsiktig-maling",
+    "strategi-respons-er-ikke-salg",
+    "leseren-maal-handling",
+    "plattform-tiktok-splittest-med-hypotese",
+    "plattform-tiktok-hendelse-svarer-til-handling",
+    "plattform-tiktok-registrer-attribusjonsvinduer",
+    "plattform-sammenlign-like-maalegrunnlag",
+    "plattform-tiktok-plan-for-utskifting",
+    "plattform-ingen-ki-ugc-eller-falske-kunder"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "kampanjekort": {
+      "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+      "required": [
+        "kort_id",
+        "versjon",
+        "SHA-256",
+        "validering.status bestått",
+        "aktiv del_id",
+        "funnel.stage og funnel.mode",
+        "kundestatus",
+        "salgsrunde",
+        "schwartz.level med belegg",
+        "foresporsel",
+        "maling",
+        "ferdighetsvalg og konfliktlosninger",
+        "ferdighetsbibliotek med versjon og hash"
+      ],
+      "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+      "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+      "schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  },
+  "input_schema": "schemas/10-annonser-lovsjekket.json",
+  "output_artifact_schema": "schemas/10-testplan-godkjent.json",
+  "schema_reads": [
+    "schemas/kampanje.json",
+    "schemas/kanal-format.json",
+    "schemas/leser.json",
+    "schemas/tilbud.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "field_reads": {
+    "kampanje.id": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.goal": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.funnel.stage": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.funnel.mode": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.market": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.audience": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.audience.reader_id": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.timing.start": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.timing.end": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.kpi.metric": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.kpi.baseline": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.kpi.target": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.kpi.definition": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.budget.class": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.budget.amount": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.budget.currency": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.budget.thresholds": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kampanje.evidence": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.id": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.schwartz.level": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.schwartz.evidence": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.ceps": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.jtbd.progress": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.ceps[].cue_type": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.jtbd.dimension": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "leser.jtbd.circumstances": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.id": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.type": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.benefit": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.price.amount": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.price.currency": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.price.history": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.availability": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "tilbud.destination": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.channel": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.placement": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.format": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.binding.creative_medium": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.binding.ad_product": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.binding.delivery_behavior": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.availability": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "kanal-format.binding": "Grunnlag for Forhåndsbestemme en målbar test av virkelige annonser mot et virkelig publikum med faktiske forretningsresultater.",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

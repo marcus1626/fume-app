@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "betalt",
+    "egen",
+    "fortjent",
+    "alle"
+  ],
+  "x-list": "../../lists/media-class.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/media-class.schema.json",
+  "title": "media-class"
+}

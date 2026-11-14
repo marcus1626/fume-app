@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "motiv",
+    "folelse",
+    "tid",
+    "sted",
+    "sammen-med",
+    "aktivitet",
+    "annet"
+  ],
+  "x-list": "../../lists/cep-cue.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/cep-cue.schema.json",
+  "title": "cep-cue"
+}

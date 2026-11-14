@@ -1,0 +1,860 @@
+{
+  "type": "object",
+  "properties": {
+    "campaign_card_contract": {
+      "type": "object",
+      "properties": {
+        "constants": {
+          "type": "object",
+          "properties": {
+            "lang": {
+              "type": "string"
+            },
+            "state": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "lang",
+            "state"
+          ],
+          "additionalProperties": false
+        },
+        "deler": {
+          "type": "object",
+          "properties": {
+            "ferdighetsvalg": {
+              "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3789fcbb58b4cfd9"
+            },
+            "foresporsel": {
+              "type": "object",
+              "properties": {
+                "classification": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "size": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "classification",
+                "required",
+                "size"
+              ],
+              "additionalProperties": false
+            },
+            "funnel": {
+              "type": "object",
+              "properties": {
+                "mode": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "mode_note": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "stage": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "mode",
+                "mode_note",
+                "required",
+                "stage"
+              ],
+              "additionalProperties": false
+            },
+            "konfliktlosninger": {
+              "type": "string"
+            },
+            "kontekst": {
+              "type": "object",
+              "properties": {
+                "evaluation": {
+                  "type": "string"
+                },
+                "market": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "schema": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "evaluation",
+                "market",
+                "required",
+                "schema",
+                "tags"
+              ],
+              "additionalProperties": false
+            },
+            "kundestatus": {
+              "type": "object",
+              "properties": {
+                "begge": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "value": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "begge",
+                "required",
+                "value"
+              ],
+              "additionalProperties": false
+            },
+            "maling": {
+              "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3789fcbb58b4cfd9"
+            },
+            "required": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 0
+            },
+            "salgsrunde": {
+              "type": "object",
+              "properties": {
+                "aktiv": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "tilbudstype": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                },
+                "when_true": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "aktiv",
+                "note",
+                "required",
+                "tilbudstype",
+                "when_true"
+              ],
+              "additionalProperties": false
+            },
+            "schwartz": {
+              "type": "object",
+              "properties": {
+                "definitions": {
+                  "type": "object",
+                  "properties": {
+                    "1": {
+                      "type": "string"
+                    },
+                    "2": {
+                      "type": "string"
+                    },
+                    "3": {
+                      "type": "string"
+                    },
+                    "4": {
+                      "type": "string"
+                    },
+                    "5": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                  ],
+                  "additionalProperties": false
+                },
+                "derivation": {
+                  "type": "string"
+                },
+                "level": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer"
+                  },
+                  "minItems": 0
+                },
+                "required": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 0
+                }
+              },
+              "required": [
+                "definitions",
+                "derivation",
+                "level",
+                "required"
+              ],
+              "additionalProperties": false
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "ferdighetsvalg",
+            "foresporsel",
+            "funnel",
+            "konfliktlosninger",
+            "kontekst",
+            "kundestatus",
+            "maling",
+            "required",
+            "salgsrunde",
+            "schwartz",
+            "type"
+          ],
+          "additionalProperties": false
+        },
+        "ferdighetsbibliotek": {
+          "type": "string"
+        },
+        "godkjenning": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "required": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "schema": {
+          "type": "string"
+        },
+        "schema_aliases": {
+          "type": "object",
+          "properties": {
+            "deler[].funnel": {
+              "type": "string"
+            },
+            "deler[].kontekst": {
+              "type": "string"
+            },
+            "deler[].kundestatus.value": {
+              "type": "string"
+            },
+            "deler[].salgsrunde.aktiv": {
+              "type": "string"
+            },
+            "deler[].salgsrunde.tilbudstype": {
+              "type": "string"
+            },
+            "deler[].schwartz": {
+              "type": "string"
+            },
+            "innhold.kampanjekort.godkjenning": {
+              "type": "string"
+            },
+            "innhold.kampanjekort.lang": {
+              "type": "string"
+            },
+            "innhold.kampanjekort.oppdrag_id": {
+              "type": "string"
+            },
+            "innhold.kampanjekort.state": {
+              "type": "string"
+            },
+            "innhold.kampanjekort.versjon": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "deler[].funnel",
+            "deler[].kontekst",
+            "deler[].kundestatus.value",
+            "deler[].salgsrunde.aktiv",
+            "deler[].salgsrunde.tilbudstype",
+            "deler[].schwartz",
+            "innhold.kampanjekort.godkjenning",
+            "innhold.kampanjekort.lang",
+            "innhold.kampanjekort.oppdrag_id",
+            "innhold.kampanjekort.state",
+            "innhold.kampanjekort.versjon"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "constants",
+        "deler",
+        "ferdighetsbibliotek",
+        "godkjenning",
+        "location",
+        "required",
+        "schema",
+        "schema_aliases"
+      ],
+      "additionalProperties": false
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "_defs/checkpoint.schema.json"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "fail_route": {
+      "type": "object",
+      "properties": {
+        "on_failure": {
+          "type": "string",
+          "minLength": 1
+        },
+        "return_to": {
+          "type": "string",
+          "minLength": 1
+        },
+        "counting": {
+          "type": "string",
+          "minLength": 1
+        },
+        "after_limit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resume": {
+          "type": "string",
+          "minLength": 1
+        },
+        "max_failed_tries": {
+          "const": 2
+        }
+      },
+      "required": [
+        "on_failure",
+        "return_to",
+        "counting",
+        "after_limit",
+        "resume",
+        "max_failed_tries"
+      ],
+      "additionalProperties": false
+    },
+    "field_reads": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "input": {
+      "type": "string"
+    },
+    "input_fields": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-61a190c1f09cab02"
+    },
+    "input_schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_artifact": {
+      "type": "string"
+    },
+    "output_artifact_schema": {
+      "type": "string"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schema_reads": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "skill_filter": {
+      "type": "object",
+      "properties": {
+        "conditional_rule": {
+          "type": "string"
+        },
+        "conflicts": {
+          "type": "string"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "context": {
+                "type": "string"
+              },
+              "exclude": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 0
+              },
+              "include": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 0
+              },
+              "input": {
+                "type": "object",
+                "properties": {
+                  "awareness_level": {
+                    "type": "integer"
+                  },
+                  "channel": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0
+                  },
+                  "country": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0
+                  },
+                  "funnel": {
+                    "type": "object",
+                    "properties": {
+                      "mode": {
+                        "type": "string"
+                      },
+                      "stage": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 0
+                      }
+                    },
+                    "required": [
+                      "mode",
+                      "stage"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "legal_area": {
+                    "type": "array",
+                    "items": {},
+                    "minItems": 0
+                  },
+                  "market": {
+                    "type": "string"
+                  },
+                  "media_class": {
+                    "type": "string"
+                  },
+                  "regulation": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 0
+                  },
+                  "trigger": {
+                    "type": "array",
+                    "items": {},
+                    "minItems": 0
+                  }
+                },
+                "required": [
+                  "awareness_level",
+                  "channel",
+                  "country",
+                  "funnel",
+                  "legal_area",
+                  "market",
+                  "media_class",
+                  "regulation",
+                  "trigger"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "context",
+              "exclude",
+              "include",
+              "input"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 0
+        },
+        "normalization": {
+          "type": "object",
+          "properties": {
+            "channel_contract": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            },
+            "mapping": {
+              "type": "string"
+            },
+            "override": {
+              "type": "string"
+            },
+            "runtime": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "channel_contract",
+            "context",
+            "mapping",
+            "override",
+            "runtime"
+          ],
+          "additionalProperties": false
+        },
+        "predicate": {
+          "type": "object",
+          "properties": {
+            "aspect_ratio": {
+              "type": "string"
+            },
+            "awareness_level": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            },
+            "country": {
+              "type": "string"
+            },
+            "format": {
+              "type": "string"
+            },
+            "funnel.mode": {
+              "type": "string"
+            },
+            "funnel.stage": {
+              "type": "string"
+            },
+            "legal_area": {
+              "type": "string"
+            },
+            "market": {
+              "type": "string"
+            },
+            "media_class": {
+              "type": "string"
+            },
+            "regulation": {
+              "type": "string"
+            },
+            "selected": {
+              "type": "string"
+            },
+            "trigger": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "aspect_ratio",
+            "awareness_level",
+            "channel",
+            "country",
+            "format",
+            "funnel.mode",
+            "funnel.stage",
+            "legal_area",
+            "market",
+            "media_class",
+            "regulation",
+            "selected",
+            "trigger"
+          ],
+          "additionalProperties": false
+        },
+        "schema": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "trace": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "conditional_rule",
+        "conflicts",
+        "examples",
+        "normalization",
+        "predicate",
+        "schema",
+        "scope",
+        "trace",
+        "unknown"
+      ],
+      "additionalProperties": false
+    },
+    "skills_used": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "sources": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c5a54073a166cc63"
+    },
+    "state": {
+      "$ref": "_defs/state.schema.json"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "n": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "what": {
+            "type": "string",
+            "minLength": 1
+          },
+          "who": {
+            "$ref": "_defs/who.schema.json#/$defs/subset-f747005d297bef3b"
+          },
+          "input": {
+            "type": "string",
+            "minLength": 1
+          },
+          "output": {
+            "type": "string",
+            "minLength": 1
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "who": {
+                "$ref": "_defs/who.schema.json"
+              },
+              "checks": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              },
+              "pass_condition": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "who",
+              "checks",
+              "pass_condition"
+            ],
+            "additionalProperties": false
+          },
+          "input_schema": {
+            "type": "string",
+            "minLength": 1
+          },
+          "output_schema": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "n",
+          "what",
+          "who",
+          "input",
+          "output",
+          "validation",
+          "input_schema",
+          "output_schema"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "taste_override_contract": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string"
+        },
+        "schema": {
+          "type": "string"
+        },
+        "verification": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule",
+        "schema",
+        "verification"
+      ],
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "artifact_contract": {
+          "type": "string"
+        },
+        "continuation": {
+          "type": "string"
+        },
+        "copyright": {
+          "type": "string"
+        },
+        "entry_gate": {
+          "type": "string"
+        },
+        "ethics": {
+          "type": "string"
+        },
+        "exit_gate": {
+          "type": "string"
+        },
+        "model_separation": {
+          "type": "string"
+        },
+        "step_gate": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "artifact_contract",
+        "continuation",
+        "copyright",
+        "entry_gate",
+        "ethics",
+        "exit_gate",
+        "model_separation",
+        "step_gate"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "purpose",
+    "sources",
+    "checkpoints",
+    "input",
+    "steps",
+    "output_artifact",
+    "validation",
+    "fail_route",
+    "skills_used",
+    "state",
+    "input_fields",
+    "input_schema",
+    "output_artifact_schema",
+    "schema_reads",
+    "field_reads"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/flow.schema.json",
+  "title": "flow"
+}

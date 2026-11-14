@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "krav",
+    "anbefaling",
+    "fume-valg"
+  ],
+  "x-list": "../../lists/rule-kind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/rule-kind.schema.json",
+  "title": "rule-kind"
+}

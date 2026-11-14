@@ -1,0 +1,1266 @@
+{
+  "id": "country",
+  "label_nb": "Landkode",
+  "source": [
+    {
+      "source": "UN Statistics Division / ISO",
+      "url": "https://unstats.un.org/unsd/methodology/m49/overview/",
+      "locator": "ISO-alpha2 Code; eksisterende scripts/country_codes.json",
+      "read_on": "2026-11-13",
+      "verified": false,
+      "verification_note": "Eksisterende snapshot med 249 koder beholdt; ikke hentet på nytt. Alle er brukt i registrenes lukkede verdier."
+    }
+  ],
+  "values": [
+    {
+      "id": "AD",
+      "label_nb": "Landkode AD",
+      "definition": "Andorra"
+    },
+    {
+      "id": "AE",
+      "label_nb": "Landkode AE",
+      "definition": "United Arab Emirates"
+    },
+    {
+      "id": "AF",
+      "label_nb": "Landkode AF",
+      "definition": "Afghanistan"
+    },
+    {
+      "id": "AG",
+      "label_nb": "Landkode AG",
+      "definition": "Antigua and Barbuda"
+    },
+    {
+      "id": "AI",
+      "label_nb": "Landkode AI",
+      "definition": "Anguilla"
+    },
+    {
+      "id": "AL",
+      "label_nb": "Landkode AL",
+      "definition": "Albania"
+    },
+    {
+      "id": "AM",
+      "label_nb": "Landkode AM",
+      "definition": "Armenia"
+    },
+    {
+      "id": "AO",
+      "label_nb": "Landkode AO",
+      "definition": "Angola"
+    },
+    {
+      "id": "AQ",
+      "label_nb": "Landkode AQ",
+      "definition": "Antarctica"
+    },
+    {
+      "id": "AR",
+      "label_nb": "Landkode AR",
+      "definition": "Argentina"
+    },
+    {
+      "id": "AS",
+      "label_nb": "Landkode AS",
+      "definition": "American Samoa"
+    },
+    {
+      "id": "AT",
+      "label_nb": "Landkode AT",
+      "definition": "Austria"
+    },
+    {
+      "id": "AU",
+      "label_nb": "Landkode AU",
+      "definition": "Australia"
+    },
+    {
+      "id": "AW",
+      "label_nb": "Landkode AW",
+      "definition": "Aruba"
+    },
+    {
+      "id": "AX",
+      "label_nb": "Landkode AX",
+      "definition": "Åland Islands"
+    },
+    {
+      "id": "AZ",
+      "label_nb": "Landkode AZ",
+      "definition": "Azerbaijan"
+    },
+    {
+      "id": "BA",
+      "label_nb": "Landkode BA",
+      "definition": "Bosnia and Herzegovina"
+    },
+    {
+      "id": "BB",
+      "label_nb": "Landkode BB",
+      "definition": "Barbados"
+    },
+    {
+      "id": "BD",
+      "label_nb": "Landkode BD",
+      "definition": "Bangladesh"
+    },
+    {
+      "id": "BE",
+      "label_nb": "Landkode BE",
+      "definition": "Belgium"
+    },
+    {
+      "id": "BF",
+      "label_nb": "Landkode BF",
+      "definition": "Burkina Faso"
+    },
+    {
+      "id": "BG",
+      "label_nb": "Landkode BG",
+      "definition": "Bulgaria"
+    },
+    {
+      "id": "BH",
+      "label_nb": "Landkode BH",
+      "definition": "Bahrain"
+    },
+    {
+      "id": "BI",
+      "label_nb": "Landkode BI",
+      "definition": "Burundi"
+    },
+    {
+      "id": "BJ",
+      "label_nb": "Landkode BJ",
+      "definition": "Benin"
+    },
+    {
+      "id": "BL",
+      "label_nb": "Landkode BL",
+      "definition": "Saint Barthélemy"
+    },
+    {
+      "id": "BM",
+      "label_nb": "Landkode BM",
+      "definition": "Bermuda"
+    },
+    {
+      "id": "BN",
+      "label_nb": "Landkode BN",
+      "definition": "Brunei Darussalam"
+    },
+    {
+      "id": "BO",
+      "label_nb": "Landkode BO",
+      "definition": "Bolivia (Plurinational State of)"
+    },
+    {
+      "id": "BQ",
+      "label_nb": "Landkode BQ",
+      "definition": "Bonaire, Sint Eustatius and Saba"
+    },
+    {
+      "id": "BR",
+      "label_nb": "Landkode BR",
+      "definition": "Brazil"
+    },
+    {
+      "id": "BS",
+      "label_nb": "Landkode BS",
+      "definition": "Bahamas"
+    },
+    {
+      "id": "BT",
+      "label_nb": "Landkode BT",
+      "definition": "Bhutan"
+    },
+    {
+      "id": "BV",
+      "label_nb": "Landkode BV",
+      "definition": "Bouvet Island"
+    },
+    {
+      "id": "BW",
+      "label_nb": "Landkode BW",
+      "definition": "Botswana"
+    },
+    {
+      "id": "BY",
+      "label_nb": "Landkode BY",
+      "definition": "Belarus"
+    },
+    {
+      "id": "BZ",
+      "label_nb": "Landkode BZ",
+      "definition": "Belize"
+    },
+    {
+      "id": "CA",
+      "label_nb": "Landkode CA",
+      "definition": "Canada"
+    },
+    {
+      "id": "CC",
+      "label_nb": "Landkode CC",
+      "definition": "Cocos (Keeling) Islands"
+    },
+    {
+      "id": "CD",
+      "label_nb": "Landkode CD",
+      "definition": "Democratic Republic of the Congo"
+    },
+    {
+      "id": "CF",
+      "label_nb": "Landkode CF",
+      "definition": "Central African Republic"
+    },
+    {
+      "id": "CG",
+      "label_nb": "Landkode CG",
+      "definition": "Congo"
+    },
+    {
+      "id": "CH",
+      "label_nb": "Landkode CH",
+      "definition": "Switzerland"
+    },
+    {
+      "id": "CI",
+      "label_nb": "Landkode CI",
+      "definition": "Côte d’Ivoire"
+    },
+    {
+      "id": "CK",
+      "label_nb": "Landkode CK",
+      "definition": "Cook Islands"
+    },
+    {
+      "id": "CL",
+      "label_nb": "Landkode CL",
+      "definition": "Chile"
+    },
+    {
+      "id": "CM",
+      "label_nb": "Landkode CM",
+      "definition": "Cameroon"
+    },
+    {
+      "id": "CN",
+      "label_nb": "Landkode CN",
+      "definition": "China"
+    },
+    {
+      "id": "CO",
+      "label_nb": "Landkode CO",
+      "definition": "Colombia"
+    },
+    {
+      "id": "CR",
+      "label_nb": "Landkode CR",
+      "definition": "Costa Rica"
+    },
+    {
+      "id": "CU",
+      "label_nb": "Landkode CU",
+      "definition": "Cuba"
+    },
+    {
+      "id": "CV",
+      "label_nb": "Landkode CV",
+      "definition": "Cabo Verde"
+    },
+    {
+      "id": "CW",
+      "label_nb": "Landkode CW",
+      "definition": "Curaçao"
+    },
+    {
+      "id": "CX",
+      "label_nb": "Landkode CX",
+      "definition": "Christmas Island"
+    },
+    {
+      "id": "CY",
+      "label_nb": "Landkode CY",
+      "definition": "Cyprus"
+    },
+    {
+      "id": "CZ",
+      "label_nb": "Landkode CZ",
+      "definition": "Czechia"
+    },
+    {
+      "id": "DE",
+      "label_nb": "Landkode DE",
+      "definition": "Germany"
+    },
+    {
+      "id": "DJ",
+      "label_nb": "Landkode DJ",
+      "definition": "Djibouti"
+    },
+    {
+      "id": "DK",
+      "label_nb": "Landkode DK",
+      "definition": "Denmark"
+    },
+    {
+      "id": "DM",
+      "label_nb": "Landkode DM",
+      "definition": "Dominica"
+    },
+    {
+      "id": "DO",
+      "label_nb": "Landkode DO",
+      "definition": "Dominican Republic"
+    },
+    {
+      "id": "DZ",
+      "label_nb": "Landkode DZ",
+      "definition": "Algeria"
+    },
+    {
+      "id": "EC",
+      "label_nb": "Landkode EC",
+      "definition": "Ecuador"
+    },
+    {
+      "id": "EE",
+      "label_nb": "Landkode EE",
+      "definition": "Estonia"
+    },
+    {
+      "id": "EG",
+      "label_nb": "Landkode EG",
+      "definition": "Egypt"
+    },
+    {
+      "id": "EH",
+      "label_nb": "Landkode EH",
+      "definition": "Western Sahara"
+    },
+    {
+      "id": "ER",
+      "label_nb": "Landkode ER",
+      "definition": "Eritrea"
+    },
+    {
+      "id": "ES",
+      "label_nb": "Landkode ES",
+      "definition": "Spain"
+    },
+    {
+      "id": "ET",
+      "label_nb": "Landkode ET",
+      "definition": "Ethiopia"
+    },
+    {
+      "id": "FI",
+      "label_nb": "Landkode FI",
+      "definition": "Finland"
+    },
+    {
+      "id": "FJ",
+      "label_nb": "Landkode FJ",
+      "definition": "Fiji"
+    },
+    {
+      "id": "FK",
+      "label_nb": "Landkode FK",
+      "definition": "Falkland Islands (Malvinas)"
+    },
+    {
+      "id": "FM",
+      "label_nb": "Landkode FM",
+      "definition": "Micronesia (Federated States of)"
+    },
+    {
+      "id": "FO",
+      "label_nb": "Landkode FO",
+      "definition": "Faroe Islands"
+    },
+    {
+      "id": "FR",
+      "label_nb": "Landkode FR",
+      "definition": "France"
+    },
+    {
+      "id": "GA",
+      "label_nb": "Landkode GA",
+      "definition": "Gabon"
+    },
+    {
+      "id": "GB",
+      "label_nb": "Landkode GB",
+      "definition": "United Kingdom of Great Britain and Northern Ireland"
+    },
+    {
+      "id": "GD",
+      "label_nb": "Landkode GD",
+      "definition": "Grenada"
+    },
+    {
+      "id": "GE",
+      "label_nb": "Landkode GE",
+      "definition": "Georgia"
+    },
+    {
+      "id": "GF",
+      "label_nb": "Landkode GF",
+      "definition": "French Guiana"
+    },
+    {
+      "id": "GG",
+      "label_nb": "Landkode GG",
+      "definition": "Guernsey"
+    },
+    {
+      "id": "GH",
+      "label_nb": "Landkode GH",
+      "definition": "Ghana"
+    },
+    {
+      "id": "GI",
+      "label_nb": "Landkode GI",
+      "definition": "Gibraltar"
+    },
+    {
+      "id": "GL",
+      "label_nb": "Landkode GL",
+      "definition": "Greenland"
+    },
+    {
+      "id": "GM",
+      "label_nb": "Landkode GM",
+      "definition": "Gambia"
+    },
+    {
+      "id": "GN",
+      "label_nb": "Landkode GN",
+      "definition": "Guinea"
+    },
+    {
+      "id": "GP",
+      "label_nb": "Landkode GP",
+      "definition": "Guadeloupe"
+    },
+    {
+      "id": "GQ",
+      "label_nb": "Landkode GQ",
+      "definition": "Equatorial Guinea"
+    },
+    {
+      "id": "GR",
+      "label_nb": "Landkode GR",
+      "definition": "Greece"
+    },
+    {
+      "id": "GS",
+      "label_nb": "Landkode GS",
+      "definition": "South Georgia and the South Sandwich Islands"
+    },
+    {
+      "id": "GT",
+      "label_nb": "Landkode GT",
+      "definition": "Guatemala"
+    },
+    {
+      "id": "GU",
+      "label_nb": "Landkode GU",
+      "definition": "Guam"
+    },
+    {
+      "id": "GW",
+      "label_nb": "Landkode GW",
+      "definition": "Guinea-Bissau"
+    },
+    {
+      "id": "GY",
+      "label_nb": "Landkode GY",
+      "definition": "Guyana"
+    },
+    {
+      "id": "HK",
+      "label_nb": "Landkode HK",
+      "definition": "China, Hong Kong Special Administrative Region"
+    },
+    {
+      "id": "HM",
+      "label_nb": "Landkode HM",
+      "definition": "Heard Island and McDonald Islands"
+    },
+    {
+      "id": "HN",
+      "label_nb": "Landkode HN",
+      "definition": "Honduras"
+    },
+    {
+      "id": "HR",
+      "label_nb": "Landkode HR",
+      "definition": "Croatia"
+    },
+    {
+      "id": "HT",
+      "label_nb": "Landkode HT",
+      "definition": "Haiti"
+    },
+    {
+      "id": "HU",
+      "label_nb": "Landkode HU",
+      "definition": "Hungary"
+    },
+    {
+      "id": "ID",
+      "label_nb": "Landkode ID",
+      "definition": "Indonesia"
+    },
+    {
+      "id": "IE",
+      "label_nb": "Landkode IE",
+      "definition": "Ireland"
+    },
+    {
+      "id": "IL",
+      "label_nb": "Landkode IL",
+      "definition": "Israel"
+    },
+    {
+      "id": "IM",
+      "label_nb": "Landkode IM",
+      "definition": "Isle of Man"
+    },
+    {
+      "id": "IN",
+      "label_nb": "Landkode IN",
+      "definition": "India"
+    },
+    {
+      "id": "IO",
+      "label_nb": "Landkode IO",
+      "definition": "British Indian Ocean Territory"
+    },
+    {
+      "id": "IQ",
+      "label_nb": "Landkode IQ",
+      "definition": "Iraq"
+    },
+    {
+      "id": "IR",
+      "label_nb": "Landkode IR",
+      "definition": "Iran (Islamic Republic of)"
+    },
+    {
+      "id": "IS",
+      "label_nb": "Landkode IS",
+      "definition": "Iceland"
+    },
+    {
+      "id": "IT",
+      "label_nb": "Landkode IT",
+      "definition": "Italy"
+    },
+    {
+      "id": "JE",
+      "label_nb": "Landkode JE",
+      "definition": "Jersey"
+    },
+    {
+      "id": "JM",
+      "label_nb": "Landkode JM",
+      "definition": "Jamaica"
+    },
+    {
+      "id": "JO",
+      "label_nb": "Landkode JO",
+      "definition": "Jordan"
+    },
+    {
+      "id": "JP",
+      "label_nb": "Landkode JP",
+      "definition": "Japan"
+    },
+    {
+      "id": "KE",
+      "label_nb": "Landkode KE",
+      "definition": "Kenya"
+    },
+    {
+      "id": "KG",
+      "label_nb": "Landkode KG",
+      "definition": "Kyrgyzstan"
+    },
+    {
+      "id": "KH",
+      "label_nb": "Landkode KH",
+      "definition": "Cambodia"
+    },
+    {
+      "id": "KI",
+      "label_nb": "Landkode KI",
+      "definition": "Kiribati"
+    },
+    {
+      "id": "KM",
+      "label_nb": "Landkode KM",
+      "definition": "Comoros"
+    },
+    {
+      "id": "KN",
+      "label_nb": "Landkode KN",
+      "definition": "Saint Kitts and Nevis"
+    },
+    {
+      "id": "KP",
+      "label_nb": "Landkode KP",
+      "definition": "Democratic People's Republic of Korea"
+    },
+    {
+      "id": "KR",
+      "label_nb": "Landkode KR",
+      "definition": "Republic of Korea"
+    },
+    {
+      "id": "KW",
+      "label_nb": "Landkode KW",
+      "definition": "Kuwait"
+    },
+    {
+      "id": "KY",
+      "label_nb": "Landkode KY",
+      "definition": "Cayman Islands"
+    },
+    {
+      "id": "KZ",
+      "label_nb": "Landkode KZ",
+      "definition": "Kazakhstan"
+    },
+    {
+      "id": "LA",
+      "label_nb": "Landkode LA",
+      "definition": "Lao People's Democratic Republic"
+    },
+    {
+      "id": "LB",
+      "label_nb": "Landkode LB",
+      "definition": "Lebanon"
+    },
+    {
+      "id": "LC",
+      "label_nb": "Landkode LC",
+      "definition": "Saint Lucia"
+    },
+    {
+      "id": "LI",
+      "label_nb": "Landkode LI",
+      "definition": "Liechtenstein"
+    },
+    {
+      "id": "LK",
+      "label_nb": "Landkode LK",
+      "definition": "Sri Lanka"
+    },
+    {
+      "id": "LR",
+      "label_nb": "Landkode LR",
+      "definition": "Liberia"
+    },
+    {
+      "id": "LS",
+      "label_nb": "Landkode LS",
+      "definition": "Lesotho"
+    },
+    {
+      "id": "LT",
+      "label_nb": "Landkode LT",
+      "definition": "Lithuania"
+    },
+    {
+      "id": "LU",
+      "label_nb": "Landkode LU",
+      "definition": "Luxembourg"
+    },
+    {
+      "id": "LV",
+      "label_nb": "Landkode LV",
+      "definition": "Latvia"
+    },
+    {
+      "id": "LY",
+      "label_nb": "Landkode LY",
+      "definition": "Libya"
+    },
+    {
+      "id": "MA",
+      "label_nb": "Landkode MA",
+      "definition": "Morocco"
+    },
+    {
+      "id": "MC",
+      "label_nb": "Landkode MC",
+      "definition": "Monaco"
+    },
+    {
+      "id": "MD",
+      "label_nb": "Landkode MD",
+      "definition": "Republic of Moldova"
+    },
+    {
+      "id": "ME",
+      "label_nb": "Landkode ME",
+      "definition": "Montenegro"
+    },
+    {
+      "id": "MF",
+      "label_nb": "Landkode MF",
+      "definition": "Saint Martin (French Part)"
+    },
+    {
+      "id": "MG",
+      "label_nb": "Landkode MG",
+      "definition": "Madagascar"
+    },
+    {
+      "id": "MH",
+      "label_nb": "Landkode MH",
+      "definition": "Marshall Islands"
+    },
+    {
+      "id": "MK",
+      "label_nb": "Landkode MK",
+      "definition": "North Macedonia"
+    },
+    {
+      "id": "ML",
+      "label_nb": "Landkode ML",
+      "definition": "Mali"
+    },
+    {
+      "id": "MM",
+      "label_nb": "Landkode MM",
+      "definition": "Myanmar"
+    },
+    {
+      "id": "MN",
+      "label_nb": "Landkode MN",
+      "definition": "Mongolia"
+    },
+    {
+      "id": "MO",
+      "label_nb": "Landkode MO",
+      "definition": "China, Macao Special Administrative Region"
+    },
+    {
+      "id": "MP",
+      "label_nb": "Landkode MP",
+      "definition": "Northern Mariana Islands"
+    },
+    {
+      "id": "MQ",
+      "label_nb": "Landkode MQ",
+      "definition": "Martinique"
+    },
+    {
+      "id": "MR",
+      "label_nb": "Landkode MR",
+      "definition": "Mauritania"
+    },
+    {
+      "id": "MS",
+      "label_nb": "Landkode MS",
+      "definition": "Montserrat"
+    },
+    {
+      "id": "MT",
+      "label_nb": "Landkode MT",
+      "definition": "Malta"
+    },
+    {
+      "id": "MU",
+      "label_nb": "Landkode MU",
+      "definition": "Mauritius"
+    },
+    {
+      "id": "MV",
+      "label_nb": "Landkode MV",
+      "definition": "Maldives"
+    },
+    {
+      "id": "MW",
+      "label_nb": "Landkode MW",
+      "definition": "Malawi"
+    },
+    {
+      "id": "MX",
+      "label_nb": "Landkode MX",
+      "definition": "Mexico"
+    },
+    {
+      "id": "MY",
+      "label_nb": "Landkode MY",
+      "definition": "Malaysia"
+    },
+    {
+      "id": "MZ",
+      "label_nb": "Landkode MZ",
+      "definition": "Mozambique"
+    },
+    {
+      "id": "NA",
+      "label_nb": "Landkode NA",
+      "definition": "Namibia"
+    },
+    {
+      "id": "NC",
+      "label_nb": "Landkode NC",
+      "definition": "New Caledonia"
+    },
+    {
+      "id": "NE",
+      "label_nb": "Landkode NE",
+      "definition": "Niger"
+    },
+    {
+      "id": "NF",
+      "label_nb": "Landkode NF",
+      "definition": "Norfolk Island"
+    },
+    {
+      "id": "NG",
+      "label_nb": "Landkode NG",
+      "definition": "Nigeria"
+    },
+    {
+      "id": "NI",
+      "label_nb": "Landkode NI",
+      "definition": "Nicaragua"
+    },
+    {
+      "id": "NL",
+      "label_nb": "Landkode NL",
+      "definition": "Netherlands (Kingdom of the)"
+    },
+    {
+      "id": "NO",
+      "label_nb": "Landkode NO",
+      "definition": "Norway"
+    },
+    {
+      "id": "NP",
+      "label_nb": "Landkode NP",
+      "definition": "Nepal"
+    },
+    {
+      "id": "NR",
+      "label_nb": "Landkode NR",
+      "definition": "Naoero"
+    },
+    {
+      "id": "NU",
+      "label_nb": "Landkode NU",
+      "definition": "Niue"
+    },
+    {
+      "id": "NZ",
+      "label_nb": "Landkode NZ",
+      "definition": "New Zealand"
+    },
+    {
+      "id": "OM",
+      "label_nb": "Landkode OM",
+      "definition": "Oman"
+    },
+    {
+      "id": "PA",
+      "label_nb": "Landkode PA",
+      "definition": "Panama"
+    },
+    {
+      "id": "PE",
+      "label_nb": "Landkode PE",
+      "definition": "Peru"
+    },
+    {
+      "id": "PF",
+      "label_nb": "Landkode PF",
+      "definition": "French Polynesia"
+    },
+    {
+      "id": "PG",
+      "label_nb": "Landkode PG",
+      "definition": "Papua New Guinea"
+    },
+    {
+      "id": "PH",
+      "label_nb": "Landkode PH",
+      "definition": "Philippines"
+    },
+    {
+      "id": "PK",
+      "label_nb": "Landkode PK",
+      "definition": "Pakistan"
+    },
+    {
+      "id": "PL",
+      "label_nb": "Landkode PL",
+      "definition": "Poland"
+    },
+    {
+      "id": "PM",
+      "label_nb": "Landkode PM",
+      "definition": "Saint Pierre and Miquelon"
+    },
+    {
+      "id": "PN",
+      "label_nb": "Landkode PN",
+      "definition": "Pitcairn"
+    },
+    {
+      "id": "PR",
+      "label_nb": "Landkode PR",
+      "definition": "Puerto Rico"
+    },
+    {
+      "id": "PS",
+      "label_nb": "Landkode PS",
+      "definition": "State of Palestine"
+    },
+    {
+      "id": "PT",
+      "label_nb": "Landkode PT",
+      "definition": "Portugal"
+    },
+    {
+      "id": "PW",
+      "label_nb": "Landkode PW",
+      "definition": "Palau"
+    },
+    {
+      "id": "PY",
+      "label_nb": "Landkode PY",
+      "definition": "Paraguay"
+    },
+    {
+      "id": "QA",
+      "label_nb": "Landkode QA",
+      "definition": "Qatar"
+    },
+    {
+      "id": "RE",
+      "label_nb": "Landkode RE",
+      "definition": "Réunion"
+    },
+    {
+      "id": "RO",
+      "label_nb": "Landkode RO",
+      "definition": "Romania"
+    },
+    {
+      "id": "RS",
+      "label_nb": "Landkode RS",
+      "definition": "Serbia"
+    },
+    {
+      "id": "RU",
+      "label_nb": "Landkode RU",
+      "definition": "Russian Federation"
+    },
+    {
+      "id": "RW",
+      "label_nb": "Landkode RW",
+      "definition": "Rwanda"
+    },
+    {
+      "id": "SA",
+      "label_nb": "Landkode SA",
+      "definition": "Saudi Arabia"
+    },
+    {
+      "id": "SB",
+      "label_nb": "Landkode SB",
+      "definition": "Solomon Islands"
+    },
+    {
+      "id": "SC",
+      "label_nb": "Landkode SC",
+      "definition": "Seychelles"
+    },
+    {
+      "id": "SD",
+      "label_nb": "Landkode SD",
+      "definition": "Sudan"
+    },
+    {
+      "id": "SE",
+      "label_nb": "Landkode SE",
+      "definition": "Sweden"
+    },
+    {
+      "id": "SG",
+      "label_nb": "Landkode SG",
+      "definition": "Singapore"
+    },
+    {
+      "id": "SH",
+      "label_nb": "Landkode SH",
+      "definition": "Saint Helena"
+    },
+    {
+      "id": "SI",
+      "label_nb": "Landkode SI",
+      "definition": "Slovenia"
+    },
+    {
+      "id": "SJ",
+      "label_nb": "Landkode SJ",
+      "definition": "Svalbard and Jan Mayen Islands"
+    },
+    {
+      "id": "SK",
+      "label_nb": "Landkode SK",
+      "definition": "Slovakia"
+    },
+    {
+      "id": "SL",
+      "label_nb": "Landkode SL",
+      "definition": "Sierra Leone"
+    },
+    {
+      "id": "SM",
+      "label_nb": "Landkode SM",
+      "definition": "San Marino"
+    },
+    {
+      "id": "SN",
+      "label_nb": "Landkode SN",
+      "definition": "Senegal"
+    },
+    {
+      "id": "SO",
+      "label_nb": "Landkode SO",
+      "definition": "Somalia"
+    },
+    {
+      "id": "SR",
+      "label_nb": "Landkode SR",
+      "definition": "Suriname"
+    },
+    {
+      "id": "SS",
+      "label_nb": "Landkode SS",
+      "definition": "South Sudan"
+    },
+    {
+      "id": "ST",
+      "label_nb": "Landkode ST",
+      "definition": "Sao Tome and Principe"
+    },
+    {
+      "id": "SV",
+      "label_nb": "Landkode SV",
+      "definition": "El Salvador"
+    },
+    {
+      "id": "SX",
+      "label_nb": "Landkode SX",
+      "definition": "Sint Maarten (Dutch part)"
+    },
+    {
+      "id": "SY",
+      "label_nb": "Landkode SY",
+      "definition": "Syrian Arab Republic"
+    },
+    {
+      "id": "SZ",
+      "label_nb": "Landkode SZ",
+      "definition": "Eswatini"
+    },
+    {
+      "id": "TC",
+      "label_nb": "Landkode TC",
+      "definition": "Turks and Caicos Islands"
+    },
+    {
+      "id": "TD",
+      "label_nb": "Landkode TD",
+      "definition": "Chad"
+    },
+    {
+      "id": "TF",
+      "label_nb": "Landkode TF",
+      "definition": "French Southern Territories"
+    },
+    {
+      "id": "TG",
+      "label_nb": "Landkode TG",
+      "definition": "Togo"
+    },
+    {
+      "id": "TH",
+      "label_nb": "Landkode TH",
+      "definition": "Thailand"
+    },
+    {
+      "id": "TJ",
+      "label_nb": "Landkode TJ",
+      "definition": "Tajikistan"
+    },
+    {
+      "id": "TK",
+      "label_nb": "Landkode TK",
+      "definition": "Tokelau"
+    },
+    {
+      "id": "TL",
+      "label_nb": "Landkode TL",
+      "definition": "Timor-Leste"
+    },
+    {
+      "id": "TM",
+      "label_nb": "Landkode TM",
+      "definition": "Turkmenistan"
+    },
+    {
+      "id": "TN",
+      "label_nb": "Landkode TN",
+      "definition": "Tunisia"
+    },
+    {
+      "id": "TO",
+      "label_nb": "Landkode TO",
+      "definition": "Tonga"
+    },
+    {
+      "id": "TR",
+      "label_nb": "Landkode TR",
+      "definition": "Türkiye"
+    },
+    {
+      "id": "TT",
+      "label_nb": "Landkode TT",
+      "definition": "Trinidad and Tobago"
+    },
+    {
+      "id": "TV",
+      "label_nb": "Landkode TV",
+      "definition": "Tuvalu"
+    },
+    {
+      "id": "TW",
+      "label_nb": "Landkode TW",
+      "definition": "Taiwan"
+    },
+    {
+      "id": "TZ",
+      "label_nb": "Landkode TZ",
+      "definition": "United Republic of Tanzania"
+    },
+    {
+      "id": "UA",
+      "label_nb": "Landkode UA",
+      "definition": "Ukraine"
+    },
+    {
+      "id": "UG",
+      "label_nb": "Landkode UG",
+      "definition": "Uganda"
+    },
+    {
+      "id": "UM",
+      "label_nb": "Landkode UM",
+      "definition": "United States Minor Outlying Islands"
+    },
+    {
+      "id": "US",
+      "label_nb": "Landkode US",
+      "definition": "United States of America"
+    },
+    {
+      "id": "UY",
+      "label_nb": "Landkode UY",
+      "definition": "Uruguay"
+    },
+    {
+      "id": "UZ",
+      "label_nb": "Landkode UZ",
+      "definition": "Uzbekistan"
+    },
+    {
+      "id": "VA",
+      "label_nb": "Landkode VA",
+      "definition": "Holy See"
+    },
+    {
+      "id": "VC",
+      "label_nb": "Landkode VC",
+      "definition": "Saint Vincent and the Grenadines"
+    },
+    {
+      "id": "VE",
+      "label_nb": "Landkode VE",
+      "definition": "Venezuela (Bolivarian Republic of)"
+    },
+    {
+      "id": "VG",
+      "label_nb": "Landkode VG",
+      "definition": "British Virgin Islands"
+    },
+    {
+      "id": "VI",
+      "label_nb": "Landkode VI",
+      "definition": "United States Virgin Islands"
+    },
+    {
+      "id": "VN",
+      "label_nb": "Landkode VN",
+      "definition": "Viet Nam"
+    },
+    {
+      "id": "VU",
+      "label_nb": "Landkode VU",
+      "definition": "Vanuatu"
+    },
+    {
+      "id": "WF",
+      "label_nb": "Landkode WF",
+      "definition": "Wallis and Futuna Islands"
+    },
+    {
+      "id": "WS",
+      "label_nb": "Landkode WS",
+      "definition": "Samoa"
+    },
+    {
+      "id": "YE",
+      "label_nb": "Landkode YE",
+      "definition": "Yemen"
+    },
+    {
+      "id": "YT",
+      "label_nb": "Landkode YT",
+      "definition": "Mayotte"
+    },
+    {
+      "id": "ZA",
+      "label_nb": "Landkode ZA",
+      "definition": "South Africa"
+    },
+    {
+      "id": "ZM",
+      "label_nb": "Landkode ZM",
+      "definition": "Zambia"
+    },
+    {
+      "id": "ZW",
+      "label_nb": "Landkode ZW",
+      "definition": "Zimbabwe"
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

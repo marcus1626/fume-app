@@ -1,0 +1,41 @@
+{
+  "id": "gender-expression",
+  "label_nb": "Kjønnsuttrykk",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "maskulint",
+      "label_nb": "Maskulint",
+      "definition": "Kreativt uttrykk kodet maskulint i denne oppgaven."
+    },
+    {
+      "id": "feminint",
+      "label_nb": "Feminint",
+      "definition": "Kreativt uttrykk kodet feminint i denne oppgaven."
+    },
+    {
+      "id": "blandet",
+      "label_nb": "Blandet",
+      "definition": "Både maskuline og feminine elementer er tilsiktet; har forrang over de enkelte uttrykkene."
+    },
+    {
+      "id": "noytralt",
+      "label_nb": "Nøytralt",
+      "definition": "Intet tilsiktet kjønnet uttrykk."
+    },
+    {
+      "id": "ukjent",
+      "label_nb": "Ukjent",
+      "definition": "Uttrykket er ikke avklart."
+    }
+  ]
+}

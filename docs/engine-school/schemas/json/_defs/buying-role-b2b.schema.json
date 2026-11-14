@@ -1,0 +1,14 @@
+{
+  "enum": [
+    "initiativtaker",
+    "pavirker",
+    "portvakt",
+    "innkjoper",
+    "beslutter",
+    "bruker"
+  ],
+  "x-list": "../../lists/buying-role-b2b.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/buying-role-b2b.schema.json",
+  "title": "buying-role-b2b"
+}

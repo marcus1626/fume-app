@@ -1,0 +1,298 @@
+{
+  "id": "klarsprak-revisjon",
+  "name": "Revider teksten med klarspråk og forståelsestest",
+  "purpose": "Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+  "sources": [
+    {
+      "source": "Plainlanguage.gov — Federal plain language guidelines",
+      "url": "https://digital.gov/guides/plain-language/writing",
+      "locator": "Overview → Use the active voice"
+    },
+    {
+      "source": "Plainlanguage.gov — Federal plain language guidelines",
+      "url": "https://digital.gov/guides/plain-language/writing",
+      "locator": "Overview → Avoid hidden verbs; What are hidden verbs?"
+    },
+    {
+      "source": "Claude Hopkins — Scientific Advertising (1923)",
+      "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+      "locator": "Kapittel 8: Tell Your Full Story; lokal tekst: sources/scientific-advertising.txt"
+    },
+    {
+      "source": "Språkrådet — Skriveråd for ulike teksttypar",
+      "url": "https://sprakradet.no/klarsprak/om-skriving/skriverad-for-ulike-teksttypar/",
+      "locator": "Brev → 4 Språk, avsnittet om teiknsetjing og korrektur"
+    },
+    {
+      "source": "Plainlanguage.gov — Federal plain language guidelines",
+      "url": "https://digital.gov/guides/plain-language/test",
+      "locator": "Overview → When to test"
+    },
+    {
+      "source": "Plainlanguage.gov — Federal plain language guidelines",
+      "url": "https://digital.gov/guides/plain-language/test",
+      "locator": "Overview → When to test, avsnittet om iteration"
+    },
+    {
+      "source": "Nielsen Norman Group — Testing Content",
+      "url": "https://www.nngroup.com/articles/testing-content-websites/",
+      "locator": "Test Structure & Facilitation → Use Moderated Instead of Unmoderated Studies, tabellen om follow-up questions"
+    },
+    {
+      "source": "Nielsen Norman Group — Testing Content",
+      "url": "https://www.nngroup.com/articles/testing-content-websites/",
+      "locator": "Participants & Tasks → Recruit the Right Participants"
+    },
+    {
+      "source": "Nielsen Norman Group — Testing Content",
+      "url": "https://www.nngroup.com/articles/testing-content-websites/",
+      "locator": "Test Structure & Facilitation → Be Comfortable with Silence"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "../BRIEF.md",
+      "locator": "Step 2 — Skills; avsnittet Fume ethics beat platform advice"
+    }
+  ],
+  "checkpoints": [
+    9,
+    10
+  ],
+  "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+  "steps": [
+    {
+      "n": 1,
+      "what": "Samle valgt tekst, leserkort, godkjent løfte, bevis, prisvilkår og målhandling fra inndata. Registrer versjon og kontroller at alle spørsmål leseren må få svar på, er navngitt i kontrollgrunnlaget. Ta med tidligere forståelsesfunn ved retting. Les bare det beståtte inndataartefaktet og viderefør grunnlaget. Lagre hele resultatet i ett JSON-objekt på utdatafeltets sti; medier føres som tilgangsstyrte referanser i manifestet, med versjon, rettigheter og SHA-256. Les og viderefør kampanjekortet etter input_fields.kampanjekort; bruk aktiv del som bindende ramme.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output": "artefakter/{oppdrag_id}/09-klarsprak-grunnlag.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle påkrevde kilde-, beslutnings- og modellreferanser er videreført; ukjent opphav gir avvist.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Valgt tekst, leserkort, løfte, bevis, vilkår, målhandling og liste over kjøpsspørsmål er tilgjengelige og versjonsbundet.",
+          "Tidligere forståelsesproblemer har ID og status og kan ikke forsvinne ved ny versjon.",
+          "Kampanjekortet finnes gjennom inndata, er bestått, og aktiv del_id, kortversjon, SHA-256 og bibliotekmanifest samsvarer; kontekst og ferdighetsvalg er videreført.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Utdata følger schemas/09-klarsprak-grunnlag.json med importert felleskontrakt; inndata følger schemas/09-annonseutforelse-godkjent.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_schema": "schemas/09-klarsprak-grunnlag.json"
+    },
+    {
+      "n": 2,
+      "what": "Revider teksten i vanlig bokmål med tydelig ansvar og direkte verb. Behold betydningen av løfte, pris, forbehold og bevis. Lagre revidert tekst, endringsbegrunnelser, svarsted for hvert kjøpsspørsmål og et nøytralt testopplegg i samme objekt. Be leseren gjengi tilbud, forpliktelse og neste handling med egne ord. Registrer faktisk leverandør- og modell-ID; viderefør alle tidligere modellbidrag i modellsporet. Les bare det beståtte inndataartefaktet og viderefør grunnlaget. Lagre hele resultatet i ett JSON-objekt på utdatafeltets sti; medier føres som tilgangsstyrte referanser i manifestet, med versjon, rettigheter og SHA-256.",
+      "who": "modell",
+      "input": "artefakter/{oppdrag_id}/09-klarsprak-grunnlag.json",
+      "output": "artefakter/{oppdrag_id}/09-klarsprak-utkast.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle påkrevde kilde-, beslutnings- og modellreferanser er videreført; ukjent opphav gir avvist.",
+          "Kode kontrollerer bare felter og typer: tekst, endringsliste med begrunnelse, ikke-tom spørsmålsliste med kilde-ID, svarsted per spørsmåls-ID og testoppgaver finnes. Feltdekning er ikke en vurdering av svarenes kvalitet.",
+          "Alle endrings-ID-er har referanse til original og revisjon; testoppgavene er lagret og versjonsbundet. Semantiske vurderinger venter på steg 3.",
+          "Utdata følger schemas/09-klarsprak-utkast.json med importert felleskontrakt; inndata følger schemas/09-klarsprak-grunnlag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-klarsprak-grunnlag.json",
+      "output_schema": "schemas/09-klarsprak-utkast.json"
+    },
+    {
+      "n": 3,
+      "what": "Sammenlign originalen og revisjonen for meningsendringer. Kontroller at kortere tekst ikke har fjernet kjøpsinformasjon eller gjort påstander sterkere. Vurder testoppgavene mot leserkortet og avvis ledende spørsmål. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Les bare det beståtte inndataartefaktet og viderefør grunnlaget. Lagre hele resultatet i ett JSON-objekt på utdatafeltets sti; medier føres som tilgangsstyrte referanser i manifestet, med versjon, rettigheter og SHA-256. For hvert kjøpsspørsmål vurderer kritikeren fullstendighet og svarets faktiske innhold mot leserkort og kjøpsgrunnlag. Knytt vurderinger av bevart mening, ansvar, verbbruk og ikke-ledende oppgaver til konkrete original- og revisjonssteder. Uavklart eller manglende belegg går til menneske før videre test. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/09-klarsprak-utkast.json",
+      "output": "artefakter/{oppdrag_id}/09-klarsprak-kritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle påkrevde kilde-, beslutnings- og modellreferanser er videreført; ukjent opphav gir avvist.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Pris, løfte, forbehold, bevis og målhandling er semantisk bevart og dokumentert punkt for punkt.",
+          "Alle nødvendige kjøpsspørsmål er besvart, og ingen testoppgave forklarer svaret på forhånd.",
+          "Kode har før kritikken bekreftet ulik faktisk modell fra alle skrivermodeller i materialet; modellalias regnes ikke som modellskille. Alle vurderinger har begrunnelse og ingen blokkerende avvik er åpne.",
+          "Kritikeren dokumenterer konkret belegg og begrunnelse for hvert svar, bevart betydning, tydelig ansvar og ikke-ledende oppgave; uavklart vurdering stopper og går til menneske.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/09-klarsprak-kritikk.json med importert felleskontrakt; inndata følger schemas/09-klarsprak-utkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/09-klarsprak-utkast.json",
+      "output_schema": "schemas/09-klarsprak-kritikk.json"
+    },
+    {
+      "n": 4,
+      "what": "Gjennomfør forståelsestesten med virkelige deltakere som oppfyller leserkortets situasjon og forkunnskaper. Logg utvalg, tekstversjon, spørsmål, svar og eventuell hjelp. Ingen modell spiller testdeltaker. Ved retting skal hvert tidligere forståelsesproblem testes på nytt. Testen skjer før endelig godkjenning av utførelsen. Les bare det beståtte inndataartefaktet og viderefør grunnlaget. Lagre hele resultatet i ett JSON-objekt på utdatafeltets sti; medier føres som tilgangsstyrte referanser i manifestet, med versjon, rettigheter og SHA-256. Den tidligere kreative godkjenningen er foreløpig. Enhver revisjon krever ny lovsjekk og deretter ny menneskelig, versjonsbundet endelig frigivelsesgodkjenning; forståelsestesten kan ikke erstatte disse. Før intervjuer, forståelsestester eller innhenting av utfallsdata skal ansvarlig dokumentere samtykke eller annet anvendelig behandlingsgrunnlag, formål, nødvendige felt, tilgangsroller og slettedato. Bruk aggregerte eller minimerte avidentifiserte data; rå identifiserbare svar og sensitive opplysninger skal ikke videreføres i kjeden. Pseudonyme data er fortsatt tilgangsstyrte. Manglende behandlingsgrunnlag eller uklart behov stopper innhenting og går til menneske.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/09-klarsprak-kritikk.json",
+      "output": "artefakter/{oppdrag_id}/09-klarsprak-forstaelsestest.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle påkrevde kilde-, beslutnings- og modellreferanser er videreført; ukjent opphav gir avvist.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Minst én faktisk relevant deltaker har gjennomført testen; dette er en foreslått arbeidsport, ikke en garanti for representativitet.",
+          "Alle deltakere som inngår i beståttresultatet gjengir tilbud, forpliktelse og neste handling korrekt uten at testleder forklarer fasiten; alle observerte feil gir avvist og retur.",
+          "Hvert tidligere forståelsesproblem som er rettet har nytt testresultat på den reviderte versjonen.",
+          "Behandlingsgrunnlag, minimerte testfunn, tilgang og slettedato er kontrollert av ansvarlig menneske; ingen unødvendige identifiserbare råsvar videreføres.",
+          "Utdata følger schemas/09-klarsprak-forstaelsestest.json med importert felleskontrakt; inndata følger schemas/09-klarsprak-kritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-klarsprak-kritikk.json",
+      "output_schema": "schemas/09-klarsprak-forstaelsestest.json"
+    },
+    {
+      "n": 5,
+      "what": "La tekstansvarlig gjøre korrektur og bekrefte forståelsestest og endelig tekstversjon. Viderefør utførelsespakken med revidert tekst og behold alle testfunn. Dersom korrekturen endrer betydning, send tilbake til skriver og ny kritikk og forståelsestest før godkjenning. Les bare det beståtte inndataartefaktet og viderefør grunnlaget. Lagre hele resultatet i ett JSON-objekt på utdatafeltets sti; medier føres som tilgangsstyrte referanser i manifestet, med versjon, rettigheter og SHA-256.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/09-klarsprak-forstaelsestest.json",
+      "output": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Alle påkrevde kilde-, beslutnings- og modellreferanser er videreført; ukjent opphav gir avvist.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Menneskelig korrektur er logget, alle meningsendrende feil er lukket og ingen ny uprøvd meningsendring er innført.",
+          "Tekstansvarlig har datert og signert nøyaktig versjonen som har bestått kritikk og forståelsestest.",
+          "Pakken krever ny lovsjekk og testplan for den endrede utførelsen før videre godkjenning.",
+          "Endret versjon er uttrykkelig merket uten frigivelsesgodkjenning; ny lovsjekk-per-land og testplan-ekte-annonser med endelig menneskelig frigivelsesgodkjenning er obligatorisk før resultater-og-laering kan starte annonser.",
+          "Utdata følger schemas/09-klarsprak-godkjent.json med importert felleskontrakt; inndata følger schemas/09-klarsprak-forstaelsestest.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/09-klarsprak-forstaelsestest.json",
+      "output_schema": "schemas/09-klarsprak-godkjent.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at det navngitte inndataartefaktet finnes, er lesbart og har bestått validering med riktig versjon og SHA-256. Ved innskutt kjøring brukes bare inngangsstien som er eksplisitt bundet i flows/_index.json; bindingen og versjonen lagres i grunnlaget. Godkjente beslutnings- og ressursreferanser videreføres etter artifact_contract; ingen full kopiering av innhold. Inndata 09-annonseutforelse-godkjent.json har bare foreløpig kreativ godkjenning; tidligere endelig godkjenning gjelder ikke revidert innhold. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Kampanjekortets referanse i inndata skal oppfylle input_fields.kampanjekort. Kode sjekker bestått status, del_id, versjon og SHA-256 mot den godkjente kortversjonen og biblioteket; feil eller mangler stopper før skriving.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": "Sluttartefaktet viderefører forgjengerens innholdskontrakt og legger til denne flytens godkjente resultat. Endrede tekster, planer eller materiell merkes med ny versjon. Tidligere godkjenninger for endret innhold er ugyldige; alle berørte etterfølgende flyter må kjøres på nytt etter rutingen i flows/_index.json. Ingen publisering skjer i denne flyten. Kampanjekortets versjon, hash og aktiv del_id videreføres uendret i grunnlaget; ved motstrid returneres til kampanjekort før videre skriving."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "copy-navngi-den-som-handler",
+    "copy-bruk-verb-for-handlinger",
+    "copy-svar-paa-kjoepsspoersmaal",
+    "copy-menneskelig-korrektur",
+    "copy-test-tekstutkastet-tidlig",
+    "copy-test-rettingen",
+    "copy-leseren-forklarer-med-egne-ord",
+    "copy-test-med-relevante-lesere",
+    "copy-ikke-forklar-fasiten-i-testen",
+    "plattform-ingen-ki-ugc-eller-falske-kunder"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "kampanjekort": {
+      "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+      "required": [
+        "kort_id",
+        "versjon",
+        "SHA-256",
+        "validering.status bestått",
+        "aktiv del_id",
+        "funnel.stage og funnel.mode",
+        "kundestatus",
+        "salgsrunde",
+        "schwartz.level med belegg",
+        "foresporsel",
+        "maling",
+        "ferdighetsvalg og konfliktlosninger",
+        "ferdighetsbibliotek med versjon og hash"
+      ],
+      "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+      "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+      "schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  },
+  "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+  "output_artifact_schema": "schemas/09-klarsprak-godkjent.json",
+  "schema_reads": [
+    "schemas/leser.json",
+    "schemas/tilbud.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "field_reads": {
+    "leser.id": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "leser.schwartz.level": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "leser.schwartz.evidence": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "leser.beliefs": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "leser.objections": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.id": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.name": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.benefit": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.price.amount": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.price.currency": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.price.history": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.terms": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "tilbud.destination": "Grunnlag for Revidere valgt tekst og kontrollere om relevante lesere forstår tilbudet, forpliktelsen og neste handling. Dette er tekstforståelse, ikke rangering av nye reklameideer eller måling av salgseffekt. Inndataenes utførelsesgodkjenning er foreløpig kreativ godkjenning, selv om den stabile filstien slutter på godkjent; den gir ikke publiseringstillatelse.",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

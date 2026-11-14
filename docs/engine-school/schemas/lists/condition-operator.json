@@ -1,0 +1,31 @@
+{
+  "id": "condition-operator",
+  "label_nb": "Vilkårsoperator",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "present",
+      "label_nb": "Present",
+      "definition": "Feltet finnes når value er true; ellers mangler det."
+    },
+    {
+      "id": "in",
+      "label_nb": "In",
+      "definition": "Lik en av flere verdier."
+    },
+    {
+      "id": "eq",
+      "label_nb": "Eq",
+      "definition": "Lik én verdi."
+    }
+  ]
+}

@@ -1,0 +1,274 @@
+{
+  "id": "07-linjer-luket",
+  "label_nb": "Mange linjer, kodeluking og høyst tre til kunden — steg 2",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "leser",
+    "merkevare-vs-kampanje"
+  ],
+  "read_by": [
+    "linjebredde-og-valg"
+  ],
+  "fields": [
+    {
+      "id": "07-linjer-luket.innhold.linjer",
+      "path": "innhold.linjer",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet linjer for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Samlet linjer for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.bestilt_antall",
+      "path": "innhold.linjer.bestilt_antall",
+      "group": "innhold",
+      "label_nb": "Bestilt antall",
+      "type": "integer",
+      "values": [],
+      "definition": "100–200 linjer, standard 150; må være konkret bestilt.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "100–200 linjer, standard 150; må være konkret bestilt."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.linjer",
+      "path": "innhold.linjer.linjer",
+      "group": "innhold",
+      "label_nb": "Linjebank",
+      "type": "array",
+      "values": [],
+      "definition": "Stabil ID, uendret tekst, navngitt stil, vinkel, løfte-ID, bevis-ID og modellbidrag per linje.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Stabil ID, uendret tekst, navngitt stil, vinkel, løfte-ID, bevis-ID og modellbidrag per linje."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.luking",
+      "path": "innhold.linjer.luking",
+      "group": "innhold",
+      "label_nb": "Maskinell luking",
+      "type": "array",
+      "values": [],
+      "definition": "NFC-lengde ≤280 kodepunkter, eksakte/normaliserte dubletter, beholdte og avviste ID-er med grunn.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "NFC-lengde ≤280 kodepunkter, eksakte/normaliserte dubletter, beholdte og avviste ID-er med grunn."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.rangering",
+      "path": "innhold.linjer.rangering",
+      "group": "innhold",
+      "label_nb": "Kritikerens rangering",
+      "type": "array",
+      "values": [],
+      "definition": "Belegg og 1–5 poeng for relevans, forståelighet og forskjell; semantiske dubletter/påstander lukes før rangering.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Belegg og 1–5 poeng for relevans, forståelighet og forskjell; semantiske dubletter/påstander lukes før rangering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.kandidater",
+      "path": "innhold.linjer.kandidater",
+      "group": "innhold",
+      "label_nb": "Kundens kandidater",
+      "type": "array",
+      "values": [],
+      "definition": "Én til tre uendrede linje-ID-er med begrunnelse for valg og avvik fra rangeringen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Én til tre uendrede linje-ID-er med begrunnelse for valg og avvik fra rangeringen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.kundevalg",
+      "path": "innhold.linjer.kundevalg",
+      "group": "innhold",
+      "label_nb": "Kundens linjevalg",
+      "type": "object",
+      "values": [],
+      "definition": "Én hovedlinje-ID og inntil to allerede godkjente alternativer; kunde, dato og versjon/hash.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Én hovedlinje-ID og inntil to allerede godkjente alternativer; kunde, dato og versjon/hash."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "linjebredde-og-valg"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "07-linjer-luket.innhold.linjer.linjer[].stil",
+      "path": "innhold.linjer.linjer[].stil",
+      "group": "innhold",
+      "label_nb": "Linjestil",
+      "type": "string",
+      "values": [
+        {
+          "value": "rett-pa-sak",
+          "definition": "Direkte formulert fordel."
+        },
+        {
+          "value": "gjenkjennelig-hverdag",
+          "definition": "Situasjon fra leserens hverdag."
+        },
+        {
+          "value": "sporsmal",
+          "definition": "Spørsmål som åpner relevant tanke."
+        },
+        {
+          "value": "kontrast",
+          "definition": "To forhold settes opp mot hverandre."
+        },
+        {
+          "value": "konkret-bevis",
+          "definition": "Et etterprøvbart forhold bærer linjen."
+        },
+        {
+          "value": "torr-humor",
+          "definition": "Underspilt humor med dokumentert relevans."
+        }
+      ],
+      "definition": "Velger ulike idégrep i bredden; stilen avgjør ikke alene kvalitet.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "linjebredde-og-valg"
+        ],
+        "choices": "Velger ulike idégrep i bredden; stilen avgjør ikke alene kvalitet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/07-linjer-luket.json",
+  "artifact_family": "linjer",
+  "producer": {
+    "flow": "linjebredde-og-valg",
+    "step": 2,
+    "who": "kode"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.linjer.",
+  "validation_profile": {
+    "step_validation": "flows/linjebredde-og-valg.json#/steps/1/validation",
+    "required_from_steps": {
+      "bestilt_antall": 1,
+      "linjer": 1,
+      "luking": 2,
+      "rangering": 3,
+      "kandidater": 4,
+      "kundevalg": 5
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

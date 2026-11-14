@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "tekst",
+    "bilde",
+    "video",
+    "dokument",
+    "sammensatt"
+  ],
+  "x-list": "../../lists/creative-medium.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/creative-medium.schema.json",
+  "title": "creative-medium"
+}

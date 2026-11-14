@@ -1,0 +1,252 @@
+{
+  "id": "10-testplanutkast",
+  "label_nb": "Testplan for ekte annonser — steg 2",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kanal-format",
+    "leser",
+    "tilbud"
+  ],
+  "read_by": [
+    "testplan-ekte-annonser"
+  ],
+  "fields": [
+    {
+      "id": "10-testplanutkast.innhold.testplan",
+      "path": "innhold.testplan",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet testplan for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Samlet testplan for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.grunnrate",
+      "path": "innhold.testplan.grunnrate",
+      "group": "innhold",
+      "label_nb": "Målegrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Historisk grunnrate eller merket mangel, reelle budsjettgrenser, målekilder og gyldige lovgodkjenninger.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Historisk grunnrate eller merket mangel, reelle budsjettgrenser, målekilder og gyldige lovgodkjenninger."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.hypotese",
+      "path": "innhold.testplan.hypotese",
+      "group": "innhold",
+      "label_nb": "Testhypotese",
+      "type": "string",
+      "values": [],
+      "definition": "Forhåndsregistrert forventning som reell annonsering kan besvare.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Forhåndsregistrert forventning som reell annonsering kan besvare."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.design",
+      "path": "innhold.testplan.design",
+      "group": "innhold",
+      "label_nb": "Tildeling og kontroll",
+      "type": "object",
+      "values": [],
+      "definition": "Én endret variabel, kontrollvariant/-gruppe, randomiseringsenhet/andeler, utvalg og analysemetode; én annonse krever kontrollgruppe.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Én endret variabel, kontrollvariant/-gruppe, randomiseringsenhet/andeler, utvalg og analysemetode; én annonse krever kontrollgruppe."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.utfall",
+      "path": "innhold.testplan.utfall",
+      "group": "innhold",
+      "label_nb": "Primært utfall",
+      "type": "object",
+      "values": [],
+      "definition": "KPI, faktisk kundekilde, teller/nevner, måletider, attribusjon og horisont; respons er ikke salg.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "KPI, faktisk kundekilde, teller/nevner, måletider, attribusjon og horisont; respons er ikke salg."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.grenser",
+      "path": "innhold.testplan.grenser",
+      "group": "innhold",
+      "label_nb": "Budsjett og stopp",
+      "type": "object",
+      "values": [],
+      "definition": "Tallfestede kostnads-, stopp- og beslutningsgrenser, start/slutt og kriterier for uavklart resultat.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Tallfestede kostnads-, stopp- og beslutningsgrenser, start/slutt og kriterier for uavklart resultat."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.beregninger",
+      "path": "innhold.testplan.beregninger",
+      "group": "innhold",
+      "label_nb": "Gjennomførbarhet",
+      "type": "object",
+      "values": [],
+      "definition": "Utvalgsberegning, volum, kildebelagte kostnadsanslag og målekontroll før start.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Utvalgsberegning, volum, kildebelagte kostnadsanslag og målekontroll før start."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-testplanutkast.innhold.testplan.frigivelse",
+      "path": "innhold.testplan.frigivelse",
+      "group": "innhold",
+      "label_nb": "Endelig frigivelse",
+      "type": "object",
+      "values": [],
+      "definition": "Separat menneskelig signatur for nøyaktige annonse-/målsted-/vilkårshasher, gyldig lovsjekk, ansvar og tid; starter ingen annonser.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Separat menneskelig signatur for nøyaktige annonse-/målsted-/vilkårshasher, gyldig lovsjekk, ansvar og tid; starter ingen annonser."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/10-testplanutkast.json",
+  "artifact_family": "testplan",
+  "producer": {
+    "flow": "testplan-ekte-annonser",
+    "step": 2,
+    "who": "modell"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.testplan.",
+  "validation_profile": {
+    "step_validation": "flows/testplan-ekte-annonser.json#/steps/1/validation",
+    "required_from_steps": {
+      "grunnrate": 1,
+      "hypotese": 2,
+      "design": 2,
+      "utfall": 2,
+      "grenser": 2,
+      "beregninger": 3,
+      "frigivelse": 5
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

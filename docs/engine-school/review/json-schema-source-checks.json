@@ -1,0 +1,108 @@
+{
+  "date": "2026-11-13",
+  "sources": [
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/1722124",
+      "locator": "Ad formats available in a Google Ads account",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+      "locator": "Format comparison; Where it serves",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+      "locator": "Ad format eligibility",
+      "read_on": "2026-11-13",
+      "verified": false,
+      "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+      "locator": "For You Feed; Search Feed; Search Results Page",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+      "locator": "Spark Ads (Pull); Non-Spark Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Ads Guide",
+      "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+      "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Help",
+      "url": "https://www.linkedin.com/help/lms/answer/a422880",
+      "locator": "Ad Objective / Goal / Ad Formats",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    }
+  ],
+  "additional_source": {
+    "source": "EFTA",
+    "url": "https://www.efta.int/about-efta/legal-documents/eea-legal-texts",
+    "read_on": "2026-11-13",
+    "verified": true,
+    "locator": "The EEA Agreement; EEA Status of EU legal acts"
+  },
+  "notes": [
+    "Only factual category labels, URLs and our own definitions retained; no fetched full text saved.",
+    "Meta web.open showed login/block; Firecrawl live scrape returned HTTP 200 with actual objective/placement/format tables.",
+    "Google Demand Gen page was inaccessible in this round; values retained from registry with verified=false.",
+    "LinkedIn Audience Network source not reopened; verified=false.",
+    "ISO country snapshot scripts/country_codes.json not refetched; verified=false; all 249 codes already used in registries.",
+    "Fume route/family/format labels are internal mappings, not provider API enum strings."
+  ],
+  "round3_followup": {
+    "read_on": "2026-11-13",
+    "checks": [
+      {
+        "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+        "method": "web.open, relevant comparison and format sections read",
+        "verified": true,
+        "finding": "Playables in YouTube mobile app is a serving surface for skippable, non-skippable and bumper; explicit yt-playables sub-surface added. Bumper is non-skippable behavior but a distinct product."
+      },
+      {
+        "url": "https://www.facebook.com/business/help/407108559393196",
+        "method": "web.open redirected to blocked login; Firecrawl fresh scrape HTTP 200, relevant body read",
+        "verified": true,
+        "finding": "Official placement groups and geographic/objective/settings qualifications checked. Friends tab included in Facebook Feed from March 2026; no separate Friends choice added. Facebook profile feed retained from prior objective-table verification, not claimed found in this page."
+      },
+      {
+        "url": "https://ads.tiktok.com/resources/help/article/tiktok-placement?lang=en",
+        "method": "web.open, October 2026 page read",
+        "verified": true,
+        "finding": "For You includes Profile, Following, Friends, Lite, Web, Mini Drama, Lemon8 and PineDrama under-surfaces; Search Feed and Search Results separate. Existing parent/non-independent annotations retained."
+      }
+    ],
+    "limits": "Sample reconciliation, not an exhaustive availability matrix. Demand Gen and LinkedIn prior unverified qualifications remain. Actual account, objective and market evidence required."
+  }
+}

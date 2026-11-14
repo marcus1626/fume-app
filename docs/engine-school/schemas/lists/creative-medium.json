@@ -1,0 +1,41 @@
+{
+  "id": "creative-medium",
+  "label_nb": "Kreativt medium",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "tekst",
+      "label_nb": "Tekst",
+      "definition": "Tekst."
+    },
+    {
+      "id": "bilde",
+      "label_nb": "Bilde",
+      "definition": "Stillbilde."
+    },
+    {
+      "id": "video",
+      "label_nb": "Video",
+      "definition": "Video."
+    },
+    {
+      "id": "dokument",
+      "label_nb": "Dokument",
+      "definition": "Dokument."
+    },
+    {
+      "id": "sammensatt",
+      "label_nb": "Sammensatt",
+      "definition": "Flere medietyper i samme leveranse."
+    }
+  ]
+}

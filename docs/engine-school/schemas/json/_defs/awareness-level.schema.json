@@ -1,0 +1,26 @@
+{
+  "enum": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    "alle"
+  ],
+  "x-list": "../../lists/awareness-level.json",
+  "$defs": {
+    "subset-0c049903ce233019": {
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "x-list": "../../lists/awareness-level.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/awareness-level.schema.json",
+  "title": "awareness-level"
+}

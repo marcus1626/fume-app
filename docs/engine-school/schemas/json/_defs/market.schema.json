@@ -1,0 +1,20 @@
+{
+  "enum": [
+    "B2B",
+    "B2C",
+    "begge"
+  ],
+  "x-list": "../../lists/market.json",
+  "$defs": {
+    "subset-1961988000f01e40": {
+      "enum": [
+        "B2B",
+        "B2C"
+      ],
+      "x-list": "../../lists/market.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/market.schema.json",
+  "title": "market"
+}

@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "produkt",
+    "tjeneste",
+    "opplevelse",
+    "kombinasjon"
+  ],
+  "x-list": "../../lists/category-type.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/category-type.schema.json",
+  "title": "category-type"
+}

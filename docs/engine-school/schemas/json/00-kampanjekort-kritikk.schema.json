@@ -1,0 +1,530 @@
+{
+  "type": "object",
+  "properties": {
+    "grunnlag": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-165636d50a103a07"
+    },
+    "oppdrag_id": {
+      "type": "string",
+      "description": "Binder hele kjeden til samme oppdrag.",
+      "x-field": "artefakt-felles.oppdrag_id",
+      "minLength": 1
+    },
+    "artefakt_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-00098db6a529f2d9"
+    },
+    "versjon": {
+      "type": "integer",
+      "description": "Positiv, monoton versjon; tidligere versjoner beholdes.",
+      "x-field": "artefakt-felles.versjon",
+      "minimum": 1
+    },
+    "schema_id": {
+      "type": "string",
+      "description": "Eksakt fil-ID i schemas; skal samsvare med bindingen.",
+      "x-field": "artefakt-felles.schema_id",
+      "minLength": 1,
+      "const": "00-kampanjekort-kritikk"
+    },
+    "schema_version": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-32c8f5511361ee2c"
+    },
+    "del_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e0a3a64d4bf43b6c"
+    },
+    "SHA-256": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-da68fd3020cb8faa"
+    },
+    "modellspor": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b3d2ff5e207838fe"
+    },
+    "validering": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-12d48ff3ddd99165"
+    },
+    "kritikk": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-de89ebdd22cefb11"
+    },
+    "godkjenning": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8670546d38279230"
+    },
+    "feilrute": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5aa59bec774d609d"
+    },
+    "personvern": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2f24747d1974d863"
+    },
+    "state": {
+      "type": "string",
+      "description": "Godkjent artefakt endrer ikke forslagets status.",
+      "x-field": "artefakt-felles.state",
+      "$ref": "_defs/state.schema.json"
+    },
+    "lang": {
+      "type": "string",
+      "description": "Språket i de interne registrene.",
+      "x-field": "artefakt-felles.lang",
+      "$ref": "_defs/language.schema.json"
+    },
+    "innhold": {
+      "type": "object",
+      "properties": {
+        "kampanjekort": {
+          "type": "object",
+          "description": "Samlet kampanjekort for dette steget; grunnlaget videreføres uten tap.",
+          "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort",
+          "additionalProperties": true,
+          "properties": {
+            "grunnlagsreferanser": {
+              "type": "array",
+              "description": "Kilde-ID, locator, dato og mangler for hvert påkrevd kortfelt.",
+              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.grunnlagsreferanser",
+              "items": {}
+            },
+            "avklaringer": {
+              "type": "array",
+              "description": "Datert svar, kilde, ansvarlig og eksplisitt godkjent antakelse med test/frist.",
+              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.avklaringer",
+              "items": {}
+            },
+            "kort_id": {
+              "type": "string",
+              "description": "Stabil identitet for versjonsbundet kampanjekort.",
+              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.kort_id",
+              "minLength": 1
+            },
+            "deler": {
+              "type": "array",
+              "description": "Ikke-tom liste med unik del_id per oppgave, segment, hovedtrinn, modus og forespørsel.",
+              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "malgruppe": {
+                    "type": "object",
+                    "description": "Leser-ID, segment, avgrensning og dokumentert behov.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].malgruppe",
+                    "additionalProperties": true
+                  },
+                  "foresporsel": {
+                    "type": "object",
+                    "description": "Handling, minutter med grunnlag, penger/valuta, data, binding/risiko, mottakerverdi og begrunnelse for størrelse.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].foresporsel",
+                    "additionalProperties": true,
+                    "properties": {
+                      "size": {
+                        "type": "string",
+                        "description": "Fume-vurdering av samlet tid, penger, data, binding og risiko; klasse må begrunnes.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].foresporsel.size",
+                        "$ref": "_defs/request-size.schema.json"
+                      }
+                    },
+                    "required": [
+                      "size"
+                    ]
+                  },
+                  "maling": {
+                    "type": "object",
+                    "description": "Ønsket utfall, grunnrate eller merket mangel, mål, kilde, frist, horisont og suksesskriterium.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].maling",
+                    "additionalProperties": true
+                  },
+                  "kontekst": {
+                    "type": "object",
+                    "description": "Konkrete verdier fra skill-filter uten jokere: kanaler, formatfamilie, land, regelområder, målgruppe og bekreftede regelutløsere.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kontekst",
+                    "additionalProperties": true,
+                    "properties": {
+                      "kombinasjoner": {
+                        "type": "array",
+                        "description": "Én rad per faktisk kanal, plassering, format og land; ingen konstruert krysskombinasjon.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kontekst.kombinasjoner",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "description": "Stabil identitet for eget filterspor og relevante skills.",
+                              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].id",
+                              "minLength": 1
+                            },
+                            "filter_values": {
+                              "type": "object",
+                              "description": "Bare registrerte skill-filter-dimensjoner; ingen joker. Trinn, modus og nivå samsvarer med delen.",
+                              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_values",
+                              "additionalProperties": true
+                            },
+                            "filter_fakta": {
+                              "type": "object",
+                              "description": "Kilde, locator, kontrolltid og ansvarlig for hver verdi; vurder også mulige utløsere som ikke gjelder.",
+                              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kontekst.kombinasjoner[].filter_fakta",
+                              "additionalProperties": true
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "filter_values",
+                            "filter_fakta"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "kombinasjoner"
+                    ]
+                  },
+                  "ferdighetsvalg": {
+                    "type": "object",
+                    "description": "Selected/excluded IDs og beslutning med årsak per bibliotek-ID og alle predikatdimensjoner; uavklart blokkerer.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].ferdighetsvalg",
+                    "additionalProperties": true,
+                    "properties": {
+                      "per_kombinasjon": {
+                        "type": "array",
+                        "description": "Kombinasjons-ID, skill-ID, alle dimensjonsutfall og relevant/ikke relevant/uavklart med grunn; union av ID-er alene gir ikke tillatelse på en annen annonse.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].ferdighetsvalg.per_kombinasjon",
+                        "items": {}
+                      }
+                    },
+                    "required": [
+                      "per_kombinasjon"
+                    ]
+                  },
+                  "konfliktlosninger": {
+                    "type": "array",
+                    "description": "Begge valgte konfliktskills, berørt oppgave, avgrensning, belegg og menneskevedtak før sluttgodkjenning.",
+                    "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].konfliktlosninger",
+                    "items": {}
+                  },
+                  "funnel": {
+                    "type": "object",
+                    "properties": {
+                      "stage": {
+                        "type": "array",
+                        "description": "Nøyaktig ett hovedtrinn; salgsrunde er et betinget tillegg. Trinn beskriver oppgaven, ikke en tvungen reise.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].funnel.stage",
+                        "items": {
+                          "$ref": "_defs/funnel-stage.schema.json#/$defs/subset-175da1183dca79cf"
+                        },
+                        "minItems": 1,
+                        "maxItems": 2,
+                        "uniqueItems": true,
+                        "contains": {
+                          "$ref": "_defs/funnel-stage.schema.json#/$defs/subset-955a27536de32fcb"
+                        },
+                        "minContains": 1,
+                        "maxContains": 1
+                      },
+                      "mode": {
+                        "type": "string",
+                        "description": "Velger merkebygging eller høsting per del; begge krever separate deler.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].funnel.mode",
+                        "$ref": "_defs/funnel-mode.schema.json#/$defs/subset-27c662fed7e25d70"
+                      }
+                    },
+                    "required": [
+                      "stage",
+                      "mode"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "kundestatus": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "description": "Velger nyanskaffelse eller eksisterende kunde med produkt, periode og datakilde.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].kundestatus.value",
+                        "$ref": "_defs/customer-status.schema.json"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "schwartz": {
+                    "type": "object",
+                    "properties": {
+                      "level": {
+                        "type": "integer",
+                        "description": "Velger hvor teksten begynner; utledes fra kunnskap med belegg, aldri fra trinn eller klikk alene.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].schwartz.level",
+                        "$ref": "_defs/awareness-level.schema.json#/$defs/subset-0c049903ce233019"
+                      }
+                    },
+                    "required": [
+                      "level"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "salgsrunde": {
+                    "type": "object",
+                    "properties": {
+                      "aktiv": {
+                        "type": "boolean",
+                        "description": "Slår på ekstra dokumentasjon for salgsrunde; tilbudskontroll gjelder uansett.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].salgsrunde.aktiv",
+                        "$ref": "_defs/boolean.schema.json"
+                      },
+                      "tilbudstype": {
+                        "type": "string",
+                        "description": "Utløser riktig pris- og tilbudskontroll.",
+                        "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.deler[].salgsrunde.tilbudstype",
+                        "$ref": "_defs/offer-type.schema.json"
+                      }
+                    },
+                    "required": [
+                      "aktiv",
+                      "tilbudstype"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "malgruppe",
+                  "foresporsel",
+                  "maling",
+                  "kontekst",
+                  "ferdighetsvalg",
+                  "konfliktlosninger",
+                  "funnel",
+                  "kundestatus",
+                  "schwartz",
+                  "salgsrunde"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1
+            },
+            "ferdighetsbibliotek": {
+              "type": "array",
+              "description": "Alle skills-filer med versjon og SHA-256; endring krever ny filtrering.",
+              "x-field": "00-kampanjekort-kritikk.innhold.kampanjekort.ferdighetsbibliotek",
+              "items": {}
+            }
+          },
+          "required": [
+            "grunnlagsreferanser",
+            "avklaringer",
+            "kort_id",
+            "deler",
+            "ferdighetsbibliotek"
+          ]
+        }
+      },
+      "required": [
+        "kampanjekort"
+      ],
+      "additionalProperties": false
+    },
+    "forrige_artefakt": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0bf9922cb3c05c2f"
+    },
+    "signatur": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "Betrodd signaturbevis; leverandørformat verifiseres av kjørelaget."
+    }
+  },
+  "required": [
+    "grunnlag",
+    "oppdrag_id",
+    "artefakt_id",
+    "versjon",
+    "schema_id",
+    "schema_version",
+    "del_id",
+    "SHA-256",
+    "modellspor",
+    "validering",
+    "state",
+    "lang",
+    "innhold",
+    "kritikk",
+    "forrige_artefakt"
+  ],
+  "allOf": [
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-cd6114a29f1066b4"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0706ca412b952ec3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-79ddd10da0198cc3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bfb48024d0625b99"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-58585ae11a6c2fad"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-36a1fdf99108d7aa"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-94833092961d11ae"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-93c9fe1ef7b28083"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c33a97b4d5ecf761"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-147a0bfcb7dd992f"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dd936acab73bcd38"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-070d6a61317b04ab"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1e6ef15d7aefe6d6"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-37023c1eb0d1febc"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e8ea0087c5ac9c25"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2818b5be86703548"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bcdc292956fa9b09"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5f7e732abe8446ec"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-471d90e53bb1b234"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8b40814607832a2c"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5b9b68ddef2e1766"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c12c64b575dbe9fb"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3a58a1e4e64185ef"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-48540316354a5d73"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-736f48c45f86385c"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-19399a723250b1b8"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-df4ac8259dd9d19e"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-fa8cfd0d0ae4a611"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-9c3910065b8817ee"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dd53e2ed698db639"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5f5d26c4e3ca080d"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ea706a4571c5f204"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6efea5905615d479"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-9dc2b3c3cd2ee0b3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ea8f32d1d7184717"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5bf4b8ae8e01ead3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-4ed1d0d55827b1f1"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-def59e0bb1b7c6d5"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-57635c83cc031f9c"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c47e659415d985e0"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bb5d01c34fec46f6"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bc04b72feecd4d48"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-71c06d1fb916b244"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-80024bb50241e356"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b83606981e691099"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-a42ebe71a578e2f1"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-857a7436d04ab2a9"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0a3c98548cb3fc70"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-a649b8ee5be07484"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-508784560b959c69"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-f931b53a8207e593"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c7c9d9fc35fbff15"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-314ac0964f84865b"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b1a6a767c04fc84d"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-76548bedec776b4e"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-6579687188ded4d5"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c4a8517413f5bee4"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-f8c8c633dfa07d54"
+    }
+  ],
+  "additionalProperties": false,
+  "x-envelope-source": "flows/*/validation/artifact_contract; schemas/artefakt-felles.json#hash_contract",
+  "x-registry": "../00-kampanjekort-kritikk.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/00-kampanjekort-kritikk.schema.json",
+  "title": "00-kampanjekort-kritikk"
+}

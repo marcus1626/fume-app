@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "lead-gen-form",
+    "undertekst",
+    "lyd",
+    "produktkatalog"
+  ],
+  "x-list": "../../lists/asset-feature.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/asset-feature.schema.json",
+  "title": "asset-feature"
+}

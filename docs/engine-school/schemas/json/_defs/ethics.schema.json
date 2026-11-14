@@ -1,0 +1,10 @@
+{
+  "enum": [
+    "ingen-ki-ugc",
+    "ingen-falske-kunder"
+  ],
+  "x-list": "../../lists/ethics.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/ethics.schema.json",
+  "title": "ethics"
+}

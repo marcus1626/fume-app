@@ -1,0 +1,227 @@
+{
+  "type": "object",
+  "properties": {
+    "grunnlag": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3c808422be4b8e80"
+    },
+    "oppdrag_id": {
+      "type": "string",
+      "description": "Binder hele kjeden til samme oppdrag.",
+      "x-field": "artefakt-felles.oppdrag_id",
+      "minLength": 1
+    },
+    "artefakt_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-00098db6a529f2d9"
+    },
+    "versjon": {
+      "type": "integer",
+      "description": "Positiv, monoton versjon; tidligere versjoner beholdes.",
+      "x-field": "artefakt-felles.versjon",
+      "minimum": 1
+    },
+    "schema_id": {
+      "type": "string",
+      "description": "Eksakt fil-ID i schemas; skal samsvare med bindingen.",
+      "x-field": "artefakt-felles.schema_id",
+      "minLength": 1,
+      "const": "03-innsiktskritikk"
+    },
+    "schema_version": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-32c8f5511361ee2c"
+    },
+    "del_id": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e0a3a64d4bf43b6c"
+    },
+    "SHA-256": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-da68fd3020cb8faa"
+    },
+    "modellspor": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b3d2ff5e207838fe"
+    },
+    "validering": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-12d48ff3ddd99165"
+    },
+    "kritikk": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-de89ebdd22cefb11"
+    },
+    "godkjenning": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8670546d38279230"
+    },
+    "feilrute": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5aa59bec774d609d"
+    },
+    "personvern": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2f24747d1974d863"
+    },
+    "state": {
+      "type": "string",
+      "description": "Godkjent artefakt endrer ikke forslagets status.",
+      "x-field": "artefakt-felles.state",
+      "$ref": "_defs/state.schema.json"
+    },
+    "lang": {
+      "type": "string",
+      "description": "Språket i de interne registrene.",
+      "x-field": "artefakt-felles.lang",
+      "$ref": "_defs/language.schema.json"
+    },
+    "innhold": {
+      "type": "object",
+      "properties": {
+        "innsikt": {
+          "type": "object",
+          "description": "Samlet innsikt for dette steget; grunnlaget videreføres uten tap.",
+          "x-field": "03-innsiktskritikk.innhold.innsikt",
+          "additionalProperties": true,
+          "properties": {
+            "kilder": {
+              "type": "array",
+              "description": "Kilde-ID, locator, dato, tilgang, utvalg og korte dokumenterte observasjoner.",
+              "x-field": "03-innsiktskritikk.innhold.innsikt.kilder",
+              "items": {}
+            },
+            "forslag": {
+              "type": "array",
+              "description": "5–10 ulike forslag: ID, observasjon, kilde/locator, tolkning, relevans, to sider av spenningen og usikkerhet.",
+              "x-field": "03-innsiktskritikk.innhold.innsikt.forslag",
+              "items": {}
+            },
+            "kildekontroll": {
+              "type": "array",
+              "description": "Kobling til hentet kildepakke og synlige avvik; strukturkontroll er ikke faglig godkjenning.",
+              "x-field": "03-innsiktskritikk.innhold.innsikt.kildekontroll",
+              "items": {}
+            },
+            "valgt_id": {
+              "type": "string",
+              "description": "Nøyaktig én validert forslags-ID, valgt av navngitt menneske.",
+              "x-field": "03-innsiktskritikk.innhold.innsikt.valgt_id",
+              "minLength": 1
+            },
+            "valggrunn": {
+              "type": "object",
+              "description": "Begrunnelse, akseptert usikkerhet og hvorfor andre forslag legges til side.",
+              "x-field": "03-innsiktskritikk.innhold.innsikt.valggrunn",
+              "additionalProperties": true
+            }
+          },
+          "required": [
+            "kilder",
+            "forslag",
+            "kildekontroll"
+          ]
+        }
+      },
+      "required": [
+        "innsikt"
+      ],
+      "additionalProperties": false
+    },
+    "forrige_artefakt": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0bf9922cb3c05c2f"
+    },
+    "signatur": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "Betrodd signaturbevis; leverandørformat verifiseres av kjørelaget."
+    }
+  },
+  "required": [
+    "grunnlag",
+    "oppdrag_id",
+    "artefakt_id",
+    "versjon",
+    "schema_id",
+    "schema_version",
+    "del_id",
+    "SHA-256",
+    "modellspor",
+    "validering",
+    "state",
+    "lang",
+    "innhold",
+    "kritikk",
+    "forrige_artefakt"
+  ],
+  "allOf": [
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-cd6114a29f1066b4"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-0706ca412b952ec3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-79ddd10da0198cc3"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bfb48024d0625b99"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-58585ae11a6c2fad"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-36a1fdf99108d7aa"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-94833092961d11ae"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-93c9fe1ef7b28083"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c33a97b4d5ecf761"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-147a0bfcb7dd992f"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-dd936acab73bcd38"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-070d6a61317b04ab"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1e6ef15d7aefe6d6"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-37023c1eb0d1febc"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-e8ea0087c5ac9c25"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-2818b5be86703548"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bcdc292956fa9b09"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-5f7e732abe8446ec"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-471d90e53bb1b234"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3a58a1e4e64185ef"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-48540316354a5d73"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-736f48c45f86385c"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-19399a723250b1b8"
+    },
+    {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-df4ac8259dd9d19e"
+    }
+  ],
+  "additionalProperties": false,
+  "x-envelope-source": "flows/*/validation/artifact_contract; schemas/artefakt-felles.json#hash_contract",
+  "x-registry": "../03-innsiktskritikk.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/03-innsiktskritikk.schema.json",
+  "title": "03-innsiktskritikk"
+}

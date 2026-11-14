@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "product_alone",
+    "people",
+    "whole"
+  ],
+  "x-list": "../../lists/taste-kind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/taste-kind.schema.json",
+  "title": "taste-kind"
+}

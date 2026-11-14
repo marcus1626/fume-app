@@ -1,0 +1,2440 @@
+{
+  "id": "artefakt-felles",
+  "label_nb": "Felles lagringskontrakt",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "bilde-som-tredje-tanke",
+    "brief-en-setning",
+    "east-tiltak-og-test",
+    "innsiktsjakt",
+    "kampanjekort",
+    "kanalformat-tilpasning",
+    "klarsprak-revisjon",
+    "konkurrenter-for-loftet",
+    "leserkort",
+    "linjebredde-og-valg",
+    "logikkjede",
+    "lovsjekk-per-land",
+    "merkeelement-revisjon",
+    "merkevare-og-salgsaktivering",
+    "rekkevidde-og-medieplan",
+    "resultater-og-laering",
+    "testplan-ekte-annonser"
+  ],
+  "fields": [
+    {
+      "id": "artefakt-felles.oppdrag_id",
+      "path": "oppdrag_id",
+      "group": "oppdrag_id",
+      "label_nb": "Oppdrags-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Binder hele kjeden til samme oppdrag.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder hele kjeden til samme oppdrag."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.artefakt_id",
+      "path": "artefakt_id",
+      "group": "artefakt_id",
+      "label_nb": "Artefakt-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Unik artefaktidentitet i oppdrag og del; path alene identifiserer ikke versjon.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Unik artefaktidentitet i oppdrag og del; path alene identifiserer ikke versjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.versjon",
+      "path": "versjon",
+      "group": "versjon",
+      "label_nb": "Versjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv, monoton versjon; tidligere versjoner beholdes.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Positiv, monoton versjon; tidligere versjoner beholdes."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.schema_id",
+      "path": "schema_id",
+      "group": "schema_id",
+      "label_nb": "Skjema-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Eksakt fil-ID i schemas; skal samsvare med bindingen.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Eksakt fil-ID i schemas; skal samsvare med bindingen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.schema_version",
+      "path": "schema_version",
+      "group": "schema_version",
+      "label_nb": "Skjemaversjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv registerversjon; ulik versjon kan ikke leses uten eksplisitt migrering.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Positiv registerversjon; ulik versjon kan ikke leses uten eksplisitt migrering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.del_id",
+      "path": "del_id",
+      "group": "del_id",
+      "label_nb": "Aktiv del",
+      "type": "string",
+      "values": [],
+      "definition": "Binder artefakten til riktig kampanjedel; oppdrag/kort før delvalg bruker dokumentert oppdragsomfang.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder artefakten til riktig kampanjedel; oppdrag/kort før delvalg bruker dokumentert oppdragsomfang."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.SHA-256",
+      "path": "SHA-256",
+      "group": "SHA-256",
+      "label_nb": "Innholdshash",
+      "type": "string",
+      "values": [],
+      "definition": "64 heksadesimale tegn. Hash beregnes av kanonisk nyttelast uten hashfeltet og signaturblokken; signert manifest binder hele versjonen.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "64 heksadesimale tegn. Hash beregnes av kanonisk nyttelast uten hashfeltet og signaturblokken; signert manifest binder hele versjonen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.grunnlag",
+      "path": "grunnlag",
+      "group": "grunnlag",
+      "label_nb": "Videreført grunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Godkjent oppdrag/kort, forrige innhold og ressursmanifest videreføres i samme objekt; ingen uvaliderte sidefiler.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Godkjent oppdrag/kort, forrige innhold og ressursmanifest videreføres i samme objekt; ingen uvaliderte sidefiler."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest",
+      "path": "grunnlag.manifest",
+      "group": "grunnlag",
+      "label_nb": "Referansemanifest",
+      "type": "array",
+      "values": [],
+      "definition": "Per ressurs: sti/URI, ID, del, versjon, SHA-256, kilde, locator, opphav, rettigheter, tilgang og valideringsstatus. Interne fakta har kilde-ID og dato.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Per ressurs: sti/URI, ID, del, versjon, SHA-256, kilde, locator, opphav, rettigheter, tilgang og valideringsstatus. Interne fakta har kilde-ID og dato."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor",
+      "path": "modellspor",
+      "group": "modellspor",
+      "label_nb": "Rekursivt modellspor",
+      "type": "array",
+      "values": [],
+      "definition": "Alle bidragende skriver- og bildemodeller samt kritikere, også fra referert grunnlag; tomt bare uten modellbidrag.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Alle bidragende skriver- og bildemodeller samt kritikere, også fra referert grunnlag; tomt bare uten modellbidrag."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest",
+      "path": "modellspor[].attest",
+      "group": "modellspor",
+      "label_nb": "Betrodd kjørebevis",
+      "type": "object",
+      "values": [],
+      "definition": "Kanonisk leverandør/modell/versjon, kall-ID, rolle, tid og I/O-hash attestert av kjørelag fra leverandørsvar/signert adapter. Modelltekst er ikke attest.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kanonisk leverandør/modell/versjon, kall-ID, rolle, tid og I/O-hash attestert av kjørelag fra leverandørsvar/signert adapter. Modelltekst er ikke attest."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.validering.status",
+      "path": "validering.status",
+      "group": "validering",
+      "label_nb": "Valideringsstatus",
+      "type": "string",
+      "values": [
+        {
+          "value": "bestått",
+          "definition": "Alle relevante porter er dokumentert oppfylt."
+        },
+        {
+          "value": "avvist",
+          "definition": "Minst ett krav er ikke oppfylt."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Grunnlag eller vurdering mangler; videreføring blokkeres."
+        },
+        {
+          "value": "avventer",
+          "definition": "Steget er ennå ikke utført."
+        }
+      ],
+      "definition": "Bare bestått gir neste steg lesetilgang; ukjent/uavklart blokkerer.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Bare bestått gir neste steg lesetilgang; ukjent/uavklart blokkerer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.validering.checks",
+      "path": "validering.checks",
+      "group": "validering",
+      "label_nb": "Kontrollresultater",
+      "type": "array",
+      "values": [],
+      "definition": "Kriterium, utfører, belegg, motbelegg, begrunnelse, status, tidspunkt og berørt hash; faglig uavklart går til menneske.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kriterium, utfører, belegg, motbelegg, begrunnelse, status, tidspunkt og berørt hash; faglig uavklart går til menneske."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.kritikk",
+      "path": "kritikk",
+      "group": "kritikk",
+      "label_nb": "Uavhengig kritikk",
+      "type": "array",
+      "values": [],
+      "definition": "Vurderinger med kriterium og kilde/locator. Kode verifiserer modellskille før kall og ved svar mot hele skriverhistorikken; samme modell eller uverifiserbar attest blokkerer.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Vurderinger med kriterium og kilde/locator. Kode verifiserer modellskille før kall og ved svar mot hele skriverhistorikken; samme modell eller uverifiserbar attest blokkerer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.godkjenning",
+      "path": "godkjenning",
+      "group": "godkjenning",
+      "label_nb": "Menneskevedtak",
+      "type": "array",
+      "values": [],
+      "definition": "Navngitt person, rolle, dato, beslutning, eksakt versjon/hash og vilkår; endring krever ny vurdering.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Navngitt person, rolle, dato, beslutning, eksakt versjon/hash og vilkår; endring krever ny vurdering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.feilrute",
+      "path": "feilrute",
+      "group": "feilrute",
+      "label_nb": "Retur og forsøk",
+      "type": "object",
+      "values": [],
+      "definition": "Produsentsteg, feilgrunn, forsøksteller og ansvarlig; andre mislykkede forsøk går til menneske. Identitetsfeil går straks.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Produsentsteg, feilgrunn, forsøksteller og ansvarlig; andre mislykkede forsøk går til menneske. Identitetsfeil går straks."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.personvern",
+      "path": "personvern",
+      "group": "personvern",
+      "label_nb": "Dataminimering",
+      "type": "object",
+      "values": [],
+      "definition": "Formål, behandlingsgrunnlag, nødvendige felt, tilgang og slettedato før datainnhenting; ikke identifiserbare råsvar i kjeden.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Formål, behandlingsgrunnlag, nødvendige felt, tilgang og slettedato før datainnhenting; ikke identifiserbare råsvar i kjeden."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.state",
+      "path": "state",
+      "group": "state",
+      "label_nb": "Definisjonens tilstand",
+      "type": "string",
+      "values": [
+        {
+          "value": "PROPOSED",
+          "definition": "Foreslått definisjon, ingen beslutning om implementering."
+        }
+      ],
+      "definition": "Godkjent artefakt endrer ikke forslagets status.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Godkjent artefakt endrer ikke forslagets status."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.lang",
+      "path": "lang",
+      "group": "lang",
+      "label_nb": "Språk",
+      "type": "string",
+      "values": [
+        {
+          "value": "nb",
+          "definition": "Norsk bokmål."
+        }
+      ],
+      "definition": "Språket i de interne registrene.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Språket i de interne registrene."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest[].ref",
+      "path": "grunnlag.manifest[].ref",
+      "group": "grunnlag",
+      "label_nb": "Ressursreferanse",
+      "type": "string",
+      "values": [],
+      "definition": "Tilgangsstyrt sti eller URI; aldri en uversjonert siste-fil.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Tilgangsstyrt sti eller URI; aldri en uversjonert siste-fil."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.grunnlag.manifest",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest[].versjon",
+      "path": "grunnlag.manifest[].versjon",
+      "group": "grunnlag",
+      "label_nb": "Ressursversjon",
+      "type": "integer",
+      "values": [],
+      "definition": "Positiv versjon som må samsvare før lesing.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Positiv versjon som må samsvare før lesing."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.grunnlag.manifest",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest[].sha256",
+      "path": "grunnlag.manifest[].sha256",
+      "group": "grunnlag",
+      "label_nb": "Ressurshash",
+      "type": "string",
+      "values": [],
+      "definition": "Eksakt SHA-256 for innholdet det gis tilgang til.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Eksakt SHA-256 for innholdet det gis tilgang til."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.grunnlag.manifest",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest[].opphav",
+      "path": "grunnlag.manifest[].opphav",
+      "group": "grunnlag",
+      "label_nb": "Opphav",
+      "type": "string",
+      "values": [
+        {
+          "value": "virkelig",
+          "definition": "Dokumentert virkelig opptak eller tekst."
+        },
+        {
+          "value": "ki",
+          "definition": "Dokumentert KI-bidrag; etikkreglene gjelder fortsatt."
+        },
+        {
+          "value": "blandet",
+          "definition": "Virkelige og KI-bidrag er spesifisert."
+        },
+        {
+          "value": "ukjent",
+          "definition": "Kan ikke verifiseres; blokkerer."
+        }
+      ],
+      "definition": "Skiller virkelig materiale, generert materiale og uavklart opphav.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Skiller virkelig materiale, generert materiale og uavklart opphav."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.grunnlag.manifest",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.grunnlag.manifest[].rettigheter",
+      "path": "grunnlag.manifest[].rettigheter",
+      "group": "grunnlag",
+      "label_nb": "Bruksrett",
+      "type": "object",
+      "values": [],
+      "definition": "Rettighetshaver, lisens, omfang, periode og kilde for tillatt bruk.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Rettighetshaver, lisens, omfang, periode og kilde for tillatt bruk."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.grunnlag.manifest",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].role",
+      "path": "modellspor[].role",
+      "group": "modellspor",
+      "label_nb": "Modellrolle",
+      "type": "string",
+      "values": [
+        {
+          "value": "skriver",
+          "definition": "Har skrevet eller endret tekst."
+        },
+        {
+          "value": "bilde",
+          "definition": "Har laget eller endret bildeinnhold."
+        },
+        {
+          "value": "kritiker",
+          "definition": "Vurderer materiale uten å skrive det om."
+        }
+      ],
+      "definition": "Bevarer skillet mellom skriverbidrag og uavhengig vurdering.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Bevarer skillet mellom skriverbidrag og uavhengig vurdering."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.provider_id",
+      "path": "modellspor[].attest.provider_id",
+      "group": "modellspor",
+      "label_nb": "Leverandør-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Kanonisk identitet fra betrodd leverandørsvar eller signert adapter.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kanonisk identitet fra betrodd leverandørsvar eller signert adapter."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.model_id",
+      "path": "modellspor[].attest.model_id",
+      "group": "modellspor",
+      "label_nb": "Faktisk modell-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Kanonisk faktisk modell, aldri rollealias eller selvrapportert tekst.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kanonisk faktisk modell, aldri rollealias eller selvrapportert tekst."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.model_version",
+      "path": "modellspor[].attest.model_version",
+      "group": "modellspor",
+      "label_nb": "Modellversjon",
+      "type": "string",
+      "values": [],
+      "definition": "Faktisk versjon; ukjent versjon gir uavklart identitet.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Faktisk versjon; ukjent versjon gir uavklart identitet."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.call_id",
+      "path": "modellspor[].attest.call_id",
+      "group": "modellspor",
+      "label_nb": "Kall-ID",
+      "type": "string",
+      "values": [],
+      "definition": "Leverandørens kallidentitet som kan etterprøves.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Leverandørens kallidentitet som kan etterprøves."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.timestamp",
+      "path": "modellspor[].attest.timestamp",
+      "group": "modellspor",
+      "label_nb": "Kalltid",
+      "type": "string",
+      "values": [],
+      "definition": "RFC3339 med tidssone fra kjørelaget.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "RFC3339 med tidssone fra kjørelaget."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.input_sha256",
+      "path": "modellspor[].attest.input_sha256",
+      "group": "modellspor",
+      "label_nb": "Inndatahash",
+      "type": "string",
+      "values": [],
+      "definition": "Binder vurderingen til materialet modellen faktisk fikk.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder vurderingen til materialet modellen faktisk fikk."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.modellspor[].attest.output_sha256",
+      "path": "modellspor[].attest.output_sha256",
+      "group": "modellspor",
+      "label_nb": "Utdatahash",
+      "type": "string",
+      "values": [],
+      "definition": "Binder svaret til det faktiske modellkallet.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Binder svaret til det faktiske modellkallet."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.modellspor",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.validering.checks[].status",
+      "path": "validering.checks[].status",
+      "group": "validering",
+      "label_nb": "Kontrollens status",
+      "type": "string",
+      "values": [
+        {
+          "value": "bestått",
+          "definition": "Alle relevante porter er dokumentert oppfylt."
+        },
+        {
+          "value": "avvist",
+          "definition": "Minst ett krav er ikke oppfylt."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Grunnlag eller vurdering mangler; videreføring blokkeres."
+        },
+        {
+          "value": "avventer",
+          "definition": "Steget er ennå ikke utført."
+        }
+      ],
+      "definition": "Bevarer status for hvert kriterium i tillegg til samlet status.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Bevarer status for hvert kriterium i tillegg til samlet status."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.validering.checks",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.validering.checks[].evidence",
+      "path": "validering.checks[].evidence",
+      "group": "validering",
+      "label_nb": "Kontrollbelegg",
+      "type": "object",
+      "values": [],
+      "definition": "Kilde/locator, faktisk sted i materialet, motbelegg og begrunnelse.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kilde/locator, faktisk sted i materialet, motbelegg og begrunnelse."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.validering.checks",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.godkjenning[].actor",
+      "path": "godkjenning[].actor",
+      "group": "godkjenning",
+      "label_nb": "Godkjenner",
+      "type": "object",
+      "values": [],
+      "definition": "Navn, intern ID, rolle og dokumentert myndighet for menneskevedtaket.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Navn, intern ID, rolle og dokumentert myndighet for menneskevedtaket."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.godkjenning",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.godkjenning[].decision",
+      "path": "godkjenning[].decision",
+      "group": "godkjenning",
+      "label_nb": "Beslutning",
+      "type": "string",
+      "values": [
+        {
+          "value": "godkjent",
+          "definition": "Tillatt innen oppgitt omfang."
+        },
+        {
+          "value": "avvist",
+          "definition": "Ikke tillatt."
+        },
+        {
+          "value": "avventer",
+          "definition": "Beslutning er ikke tatt."
+        }
+      ],
+      "definition": "Menneskelig beslutning for nøyaktig versjon og hash.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Menneskelig beslutning for nøyaktig versjon og hash."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.godkjenning",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "artefakt-felles.godkjenning[].timestamp",
+      "path": "godkjenning[].timestamp",
+      "group": "godkjenning",
+      "label_nb": "Vedtakstid",
+      "type": "string",
+      "values": [],
+      "definition": "RFC3339 med tidssone.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "RFC3339 med tidssone."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.godkjenning",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "artefakt-felles.godkjenning[].sha256",
+      "path": "godkjenning[].sha256",
+      "group": "godkjenning",
+      "label_nb": "Vedtakets hash",
+      "type": "string",
+      "values": [],
+      "definition": "Identifiserer eksakt godkjent innhold; endring ugyldiggjør vedtaket.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "brief-en-setning",
+          "east-tiltak-og-test",
+          "innsiktsjakt",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "klarsprak-revisjon",
+          "konkurrenter-for-loftet",
+          "leserkort",
+          "linjebredde-og-valg",
+          "logikkjede",
+          "lovsjekk-per-land",
+          "merkeelement-revisjon",
+          "merkevare-og-salgsaktivering",
+          "rekkevidde-og-medieplan",
+          "resultater-og-laering",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Identifiserer eksakt godkjent innhold; endring ugyldiggjør vedtaket."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "artefakt-felles.godkjenning",
+            "op": "present",
+            "value": true
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "hash_contract": {
+    "canonicalization": "UTF-8 JSON; sorterte objektnøkler, ingen ubetydelige mellomrom, ensure_ascii=false, ingen ikke-endelige tall; fjern bare toppnivå SHA-256 og signatur. Listeorden beholdes.",
+    "signature": "Signert manifest binder artefakt_id, oppdrag_id, del_id, versjon, schema_id/schema_version og hash. Selve signaturbeviset lagres i samme objekt; hash alene beviser ikke opphav."
+  },
+  "required_when": {
+    "kritikk": "Alle steg med who=kritiker og alle senere steg i samme artefaktkjede.",
+    "godkjenning": "Når steget gjør et menneske-/kundevedtak.",
+    "personvern": "Før intervju, forståelsestest, sporing eller utfallsinnhenting.",
+    "modellspor[].attest": "For hvert faktisk modellbidrag; kontrollen kan ikke overstyres."
+  },
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

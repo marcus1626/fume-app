@@ -1,0 +1,10 @@
+{
+  "enum": [
+    "plassering",
+    "underflate"
+  ],
+  "x-list": "../../lists/placement-kind.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/placement-kind.schema.json",
+  "title": "placement-kind"
+}

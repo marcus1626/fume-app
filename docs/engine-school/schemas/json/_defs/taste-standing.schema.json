@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "always",
+    "usually",
+    "by_campaign",
+    "free",
+    "unknown"
+  ],
+  "x-list": "../../lists/taste-standing.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/taste-standing.schema.json",
+  "title": "taste-standing"
+}

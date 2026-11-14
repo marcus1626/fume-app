@@ -1,0 +1,48 @@
+{
+  "state": "PROPOSED",
+  "lang": "nb",
+  "result": "PASS",
+  "cases": [
+    {
+      "case": "duplikat-JSON-nokkel",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "ukjent-read_by",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "ukjent-kanal",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "asymmetrisk-konflikt",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "tom-stegvalidering",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "manglende-artefaktbinding",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "udeklarert-feltlesing",
+      "rejected": true,
+      "exit_code": 1
+    },
+    {
+      "case": "tom-kildelocator",
+      "rejected": true,
+      "exit_code": 1
+    }
+  ],
+  "scope": "Isolerte definisjonsfeil; signatur-/myndighetsmanipulasjon testes separat av validate_schemas.py."
+}

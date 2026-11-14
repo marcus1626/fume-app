@@ -1,0 +1,210 @@
+{
+  "id": "04-lofte-godkjent",
+  "label_nb": "Les konkurrentene før løftet velges — steg 6",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "leser",
+    "tilbud"
+  ],
+  "read_by": [
+    "konkurrenter-for-loftet",
+    "logikkjede"
+  ],
+  "fields": [
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning",
+      "path": "innhold.konkurrentlesning",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet konkurrentlesning for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Samlet konkurrentlesning for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning.utvalg",
+      "path": "innhold.konkurrentlesning.utvalg",
+      "group": "innhold",
+      "label_nb": "Konkurrentutvalg",
+      "type": "array",
+      "values": [],
+      "definition": "Minst én relevant konkurrent, eget tilbud og relevante alternativer i samme kjøpssituasjon; utvalgsgrunn.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Minst én relevant konkurrent, eget tilbud og relevante alternativer i samme kjøpssituasjon; utvalgsgrunn."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning.kilder",
+      "path": "innhold.konkurrentlesning.kilder",
+      "group": "innhold",
+      "label_nb": "Konkurrentkilder",
+      "type": "array",
+      "values": [],
+      "definition": "Daterte priser, vilkår, egenskaper, løfter og dokumentasjon med locator; mangler er synlige.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Daterte priser, vilkår, egenskaper, løfter og dokumentasjon med locator; mangler er synlige."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning.sammenligning",
+      "path": "innhold.konkurrentlesning.sammenligning",
+      "group": "innhold",
+      "label_nb": "Sammenlignbare alternativer",
+      "type": "array",
+      "values": [],
+      "definition": "Løfte, bevis og ønsket handling; påstand skilles fra verifisert ytelse.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Løfte, bevis og ønsket handling; påstand skilles fra verifisert ytelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning.lesning_godkjent",
+      "path": "innhold.konkurrentlesning.lesning_godkjent",
+      "group": "innhold",
+      "label_nb": "Kontrollert før løftet",
+      "type": "boolean",
+      "values": [],
+      "definition": "Annen modell eller uavhengig menneske har kontrollert konkurrentgrunnlaget før løfteskriving.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Annen modell eller uavhengig menneske har kontrollert konkurrentgrunnlaget før løfteskriving."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "04-lofte-godkjent.innhold.konkurrentlesning.lofte",
+      "path": "innhold.konkurrentlesning.lofte",
+      "group": "innhold",
+      "label_nb": "Hovedløfte",
+      "type": "object",
+      "values": [],
+      "definition": "Ett hovedløfte med egen dokumentasjon, produkt-/situasjonsavgrensning og eventuell dokumentert USP.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "konkurrenter-for-loftet",
+          "logikkjede"
+        ],
+        "choices": "Ett hovedløfte med egen dokumentasjon, produkt-/situasjonsavgrensning og eventuell dokumentert USP."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+  "artifact_family": "konkurrentlesning",
+  "producer": {
+    "flow": "konkurrenter-for-loftet",
+    "step": 6,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.konkurrentlesning.",
+  "validation_profile": {
+    "step_validation": "flows/konkurrenter-for-loftet.json#/steps/5/validation",
+    "required_from_steps": {
+      "utvalg": 1,
+      "kilder": 1,
+      "sammenligning": 2,
+      "lesning_godkjent": 3,
+      "lofte": 4
+    },
+    "critic_required": true,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

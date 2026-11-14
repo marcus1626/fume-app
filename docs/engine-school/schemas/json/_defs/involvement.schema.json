@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "lav",
+    "hoy",
+    "varierer",
+    "ukjent"
+  ],
+  "x-list": "../../lists/involvement.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/involvement.schema.json",
+  "title": "involvement"
+}

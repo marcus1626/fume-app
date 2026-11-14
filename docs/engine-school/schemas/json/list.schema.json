@@ -1,0 +1,59 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label_nb": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-90528756cfe9e77f"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "integer",
+              "boolean"
+            ]
+          },
+          "label_nb": {
+            "type": "string",
+            "minLength": 1
+          },
+          "definition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "$ref": "_defs/artifact-parts.schema.json#/$defs/part-90528756cfe9e77f"
+          }
+        },
+        "required": [
+          "id",
+          "label_nb",
+          "definition"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "id",
+    "label_nb",
+    "source",
+    "values"
+  ],
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/list.schema.json",
+  "title": "list"
+}

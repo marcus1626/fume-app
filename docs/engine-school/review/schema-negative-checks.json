@@ -1,0 +1,26 @@
+{
+  "result": "PASS",
+  "isolated_temporary_copy": true,
+  "cases": [
+    {
+      "case": "unknown read_by",
+      "result": "REJECTED",
+      "expected_error": "nonexistent reader"
+    },
+    {
+      "case": "missing artifact binding",
+      "result": "REJECTED",
+      "expected_error": "artifact missing registry"
+    },
+    {
+      "case": "unknown skill value",
+      "result": "REJECTED",
+      "expected_error": "unregistered applies_when value"
+    },
+    {
+      "case": "unknown source locator",
+      "result": "REJECTED",
+      "expected_error": "source must resolve"
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "id": "taste-standing",
+  "label_nb": "Merkevanemønster",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "always",
+      "label_nb": "Alltid",
+      "definition": "Opptelt stabilt merkevanemønster med tilstrekkelig sikkerhet."
+    },
+    {
+      "id": "usually",
+      "label_nb": "Vanligvis",
+      "definition": "Vanlig svar med mindre sikkerhet."
+    },
+    {
+      "id": "by_campaign",
+      "label_nb": "Etter kampanje",
+      "definition": "Kampanjene er stabile innad og forskjellige fra hverandre."
+    },
+    {
+      "id": "free",
+      "label_nb": "Fritt",
+      "definition": "Merket varierer."
+    },
+    {
+      "id": "unknown",
+      "label_nb": "Ukjent",
+      "definition": "For få besvarte bilder."
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "enum": [
+    "kjennskap",
+    "cep-kobling",
+    "unik-rekkevidde",
+    "kvalifiserte-henvendelser",
+    "betalende-kunder",
+    "inntekt",
+    "kostnad-per-kunde",
+    "gjenkjop",
+    "fornyelse",
+    "frafall",
+    "respons",
+    "annet"
+  ],
+  "x-list": "../../lists/metric.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/metric.schema.json",
+  "title": "metric"
+}

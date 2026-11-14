@@ -1,0 +1,235 @@
+{
+  "id": "brief-en-setning",
+  "name": "Briefen i én setning og spørsmål til kunden",
+  "purpose": "Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+  "sources": [
+    {
+      "source": "The BetterBriefs Project (2021), IPA EffWorks presentation",
+      "url": "https://ipa.co.uk/effworks/effworks-global-2021/day-4/betterbriefs",
+      "locator": "BetterBriefs, innledende avsnitt om misalignment and miscommunication"
+    },
+    {
+      "source": "The BetterBriefs Project (2021), IPA EffWorks presentation",
+      "url": "https://ipa.co.uk/effworks/effworks-global-2021/day-4/betterbriefs",
+      "locator": "BetterBriefs, innledende avsnitt om shortcomings of marketing briefs"
+    },
+    {
+      "source": "LinkedIn / WARC / LIONS — The B2B Effectiveness Code",
+      "url": "https://business.linkedin.com/content/dam/lem/business/en/advertise/resources/b2b-institute/the-b2b-effectiveness-code-27-october.pdf",
+      "locator": "Introduction, delavsnitt 2: The principle of Creative Commitment"
+    },
+    {
+      "source": "Fume — BRIEF.md",
+      "url": "../BRIEF.md",
+      "locator": "Step 2 — Skills, punktet Fume ethics beat platform advice"
+    }
+  ],
+  "checkpoints": [
+    1
+  ],
+  "input": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+  "steps": [
+    {
+      "n": 1,
+      "what": "Les det godkjente kampanjekortet og oppdragsgrunnlaget som er videreført i dets manifest. Samle kundens opplysninger, produktfakta, vedlegg, kildehenvisninger og mangler i ett oppdragsgrunnlag. Skill oppgitte fakta fra antakelser. Kontroller opphavsopplysninger for person- og kundeinnhold. Ikke finn på manglende svar. Les og viderefør kampanjekortet etter input_fields.kampanjekort; bruk aktiv del som bindende ramme.",
+      "who": "kode",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "output": "artefakter/{oppdrag_id}/01-oppdragsgrunnlag.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Oppdraget har identifisert kunde og ansvarlig, og hvert vedlegg har kilde-ID, tilgangsstatus og opphav; blokkerende mangler i inngangskontrakten er lukket.",
+          "Mangler i mål, målgruppe, tilbud, land, kanal, budsjett og frister er uttrykkelig merket ukjent for spørsmålssteget.",
+          "Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt. KI-merking opphever ikke forbudene. Ukjent opphav gir avvist.",
+          "Kampanjekortet finnes gjennom inndata, er bestått, og aktiv del_id, kortversjon, SHA-256 og bibliotekmanifest samsvarer; kontekst og ferdighetsvalg er videreført.",
+          "Feltlesing: les og kontroller feltene i field_reads fra versjonsbundet domenegrunnlag; manglende påkrevd grunnlag blokkerer. Import alene teller ikke som feltlesing.",
+          "Utdata følger schemas/01-oppdragsgrunnlag.json med importert felleskontrakt; inndata følger schemas/00-kampanjekort-godkjent.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/00-kampanjekort-godkjent.json",
+      "output_schema": "schemas/01-oppdragsgrunnlag.json"
+    },
+    {
+      "n": 2,
+      "what": "Skriv nøyaktig én setning som sier hvem vi skal nå, hvilken endring vi skal skape, med hvilket tilbud og innen hvilken ramme. Lag en egen spørsmålsliste til kunden med spørsmål-ID, hvorfor svaret trengs og om spørsmålet blokkerer mål, målgruppe eller leveranse. Sett ubesvarte forhold som åpne felt i samme artefakt. Registrer skriverens faktiske leverandør- og modell-ID i modellsporet; modellalias alene er ikke nok.",
+      "who": "modell",
+      "input": "artefakter/{oppdrag_id}/01-oppdragsgrunnlag.json",
+      "output": "artefakter/{oppdrag_id}/01-briefutkast.json",
+      "validation": {
+        "who": "kode",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Innhold har én briefsetning og en separat spørsmålsliste; kode kontrollerer at ingen ekstra briefsetninger eller tomme spørsmål er lagt til.",
+          "Alle registrerte ukjente forhold er koblet til et spørsmål eller en uttrykkelig begrunnet avgrensning; spørsmålene er ikke besvart av modellen.",
+          "Utdata følger schemas/01-briefutkast.json med importert felleskontrakt; inndata følger schemas/01-oppdragsgrunnlag.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/01-oppdragsgrunnlag.json",
+      "output_schema": "schemas/01-briefutkast.json"
+    },
+    {
+      "n": 3,
+      "what": "Sammenlign briefsetningen og spørsmålene med kundens grunnlag. Kontroller at målet er forståelig, at vesentlige uenigheter er synlige og at ingen antakelser er blitt til fakta. Viderefør utkastet sammen med en kontrollmatrise i det ene kritikkartefaktet. Kritikeren skal aldri være samme modell som skriveren. Før kjøring kontrollerer kode at kritikerens faktiske leverandør- og modell-ID er forskjellig fra alle skrivermodeller som har bidratt til materialet som vurderes, også bildemodeller. Et nytt kall, en ny rolle eller et annet alias til samme modell teller ikke som en annen modell. Mangler en uavhengig modell, stopp og send til menneske. Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+      "who": "kritiker",
+      "input": "artefakter/{oppdrag_id}/01-briefutkast.json",
+      "output": "artefakter/{oppdrag_id}/01-briefkritikk.json",
+      "validation": {
+        "who": "kode+kritiker",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Kritikerens modell-ID er ulik alle skrivermodeller i grunnlaget.",
+          "Alle krav har begrunnet bestått; alle avgjørende mangler har konkrete spørsmål, og ingen udokumenterte opplysninger står som bekreftet.",
+          "Kode verifiserer betrodd kjørelagsattest, fullstendig rekursivt modellspor og ulik kanonisk kritikeridentitet før kall og ved svarmottak. Felt til stede er ikke tilstrekkelig. Ukjent identitet blokkerer og går straks til menneske.",
+          "Utdata følger schemas/01-briefkritikk.json med importert felleskontrakt; inndata følger schemas/01-briefutkast.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route. Kode avgjør bare struktur, attestasjon og sporbarhet. Kritikeren avgjør innhold med belegg og begrunnelse; uavklart eller ustøttet faglig konklusjon går til menneske og kan ikke passere som bestått."
+      },
+      "input_schema": "schemas/01-briefutkast.json",
+      "output_schema": "schemas/01-briefkritikk.json"
+    },
+    {
+      "n": 4,
+      "what": "La kunden besvare spørsmålene og la både kunden og oppdragsansvarlig godkjenne samme briefsetning og versjon. Lagre svar, navn, dato og enighet i ett godkjent briefartefakt. Hvis et svar endrer oppgaven, send tilbake til steg 2 og krev ny kritikk før godkjenning.",
+      "who": "menneske",
+      "input": "artefakter/{oppdrag_id}/01-briefkritikk.json",
+      "output": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "validation": {
+        "who": "kode+menneske",
+        "checks": [
+          "Utdata er nøyaktig ett lagret JSON-objekt på den navngitte stien, med innhold og valideringsresultat i samme artefakt.",
+          "Inndata har bestått forrige validering, og sti, versjon og SHA-256 stemmer med den godkjente versjonen.",
+          "Hvert blokkerende spørsmål har kundebekreftet svar; ingen avgjørende uenighet står åpen.",
+          "Mål, målgruppe, tilbud, målhandling, land, språk, kanaler, budsjett og tidsramme er avklart, og begge parter har godkjent samme versjon.",
+          "Ikke-blokkerende antakelser har eier og frist; briefsetningen er fortsatt én setning.",
+          "Utdata følger schemas/01-brief-godkjent.json med importert felleskontrakt; inndata følger schemas/01-briefkritikk.json. Kun gyldig skjemaversjon og bestått inngang kan leses."
+        ],
+        "pass_condition": "Alle kontrollene må være bestått og lagret i artefaktets validering før neste steg eller neste flyt får lese innholdet. Ved avvist eller ukjent resultat brukes fail_route."
+      },
+      "input_schema": "schemas/01-briefkritikk.json",
+      "output_schema": "schemas/01-brief-godkjent.json"
+    }
+  ],
+  "output_artifact": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+  "validation": {
+    "artifact_contract": "Hvert steg lagrer nøyaktig ett JSON-objekt med oppdrag_id, artefakt_id, versjon, forrige_artefakt med sti, versjon og SHA-256, grunnlag, innhold, modellspor og validering. Grunnlag viderefører et referansemanifest til godkjente beslutninger, kilder og medier, ikke kopier av hele tekster eller mediefiler. Hver referanse har stabil ressurs-ID eller tilgangsstyrt URI, versjon, SHA-256, opphav, URL og locator der relevant, innhentingsdato, tilgangsstatus, rettighetshaver, tillatelse eller annet bruksgrunnlag, tillatt formål og territorium, tilgangsroller, ansvarlig eier og konkret slettedato eller begrunnet oppbevaringsfrist. Bare nødvendige utdrag og egne oppsummeringer følger objektet; beskyttede fulltekster og unødvendige personopplysninger kopieres ikke. Medier lagres én gang i et autorisert ressurslager av produsenten; objektet refererer til dem, og senere steg leser dem bare gjennom manifestets adgangskontroll og hashkontroll. Ressursen er en del av stegets ene logiske artefakt, ikke en ekstra rapport eller uvalidert sidefil. Manglende tilgang, rettighet, hash eller utløpt tillatelse stopper kjeden. Ved sletting av innhold beholdes bare nødvendig, ikke-identifiserende revisjonsspor med versjon og hash der det er lovlig. Modellattester, valideringslogg, avvisningsgrunner og menneskebeslutninger ligger i samme objekt.",
+    "entry_gate": "Kode kontrollerer at flytens lagrede inndata finnes, er lesbart og har validering.status lik bestått. Det første oppdragsartefaktet må oppfylle inngangskontrakten i flows/_index.json. Senere flyter leser bare den umiddelbart foregående flytens godkjente sluttartefakt. Ressurser åpnes kun via det validerte tilgangsstyrte referansemanifestet; manglende rettigheter eller tilgang stopper. Kampanjekortets referanse i inndata skal oppfylle input_fields.kampanjekort. Kode sjekker bestått status, del_id, versjon og SHA-256 mot den godkjente kortversjonen og biblioteket; feil eller mangler stopper før skriving.",
+    "step_gate": "Før hver lesing kontrollerer kode forrige artefakts validering.status, alle kontrollresultater, versjon og SHA-256. Orkestreringen utfører stegets egne kontroller i stegets validation-felt og lagrer status bestått eller avvist i stegets ene utdataartefakt. Ingen neste steg får lese avvist, ukjent eller uvalidert innhold. Orkestreringen kan lese avvisningsgrunnen for å rute retting.",
+    "model_separation": "Kritikeren skal aldri være samme faktiske modell som noen skriver som har bidratt til materialet, også bilder. Orkestreringens betrodde kjørelag skal attestere kanonisk leverandør-ID, faktisk modell-ID og modellversjon, kall-ID, rolle, tidspunkt og hash for inn- og utdata fra leverandørsvar eller signert adapterlogg. Identitet oppgitt i modelltekst eller et selvvalgt alias er ikke attestasjon. Kode verifiserer attestens avsender og integritet og sammenligner kritikerens kanoniske identitet med hele det rekursive modellsporet fra alle bidragende skrivere før kallet og ved svarmottak. Ny rolle, nytt kall eller alias teller ikke som annen modell. Ulik modell er nødvendig, men sikrer ikke korrekt kritikk. Manglende, ufullstendig eller motstridende attestasjon, ukjent aliasoppløsning eller lik modell blokkerer automatisk videreføring og rutes straks til ansvarlig menneske; mennesket må skaffe verifiserbar annen modell eller utføre dokumentert uavhengig vurdering selv, aldri overstyre kontrollen.",
+    "ethics": "Felles etikkport: anvend plattform-ingen-ki-ugc-eller-falske-kunder før publisering og ved endret materiell. Ingen KI-generert UGC og ingen KI-genererte personer fremstilt som virkelige kunder er tillatt; merking opphever ikke forbudet. Mennesket kontrollerer kildefiler og produksjonslogg; ukjent opphav gir avvist. Ved ren tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse, og kontrollen utsettes til faktisk materiell foreligger.",
+    "copyright": "Lagre egne formuleringer og presise kildehenvisninger. Ikke lagre fullstendige opphavsrettsbeskyttede tekster. Disse flytdefinisjonene inneholder ingen sitater. Ved kjøring brukes korte kildeoppsummeringer med henvisning. For betalte bøker brukes bare lovlig gratis materiale om boken, som forfatterartikler, forlagsutdrag eller åpne foredrag; merk uttrykkelig at selve boken ikke er gratis. Bare verker som er falt i det fri kan lagres som fulltekst i sources/.",
+    "exit_gate": "Flyten består bare når alle steg i den aktive versjonskjeden har bestått, sluttartefaktet finnes på output_artifact, alle obligatoriske menneskevalg er datert og versjonsbundet, og ingen blokkerende avvik er åpne. Hele flytdefinisjonen har state PROPOSED.",
+    "continuation": " Kampanjekortets versjon, hash og aktiv del_id videreføres uendret i grunnlaget; ved motstrid returneres til kampanjekort før videre skriving."
+  },
+  "fail_route": {
+    "on_failure": "Stopp før neste lesing. Sett validering.status til avvist i det ene berørte utdataartefaktet. Registrer kontroll-ID, konkret grunn, kilde eller funn, forventet retting og ansvarlig steg i samme artefakt.",
+    "return_to": "Send tilbake med begrunnelse til steget som skrev det feilaktige innholdet. Feil i kritikkens form eller modellvalg går til kritikersteget; innholdsfeil funnet av kritikeren går til det opprinnelige skriversteget. Manglende kundesvar eller kilder går til mennesket som eier grunnlaget. Feil som stammer fra en tidligere flyt rutes til den flyten og det aktuelle produsentsteget. Uverifiserbar modellidentitet, uavklart faglig belegg eller utilgjengelige kravkilder går umiddelbart til ansvarlig menneske og kan ikke godkjennes av kode alene.",
+    "max_failed_tries": 2,
+    "counting": "Tell mislykkede forsøk per produsentsteg i leveransen, også når neste feil har en annen begrunnelse. Første mislykkede forsøk teller som 1 og gir ett rettingsforsøk. Andre mislykkede forsøk teller som 2 og gir umiddelbar eskalering til menneske. Telleren følger produsentsteget på tvers av modellbytte, omkjøring og flytgrenser og nullstilles ikke av ny feilbegrunnelse eller ny artefaktversjon.",
+    "after_limit": "Etter 2 mislykkede forsøk stopper automatisk retting. Ansvarlig menneske får avvik, begge begrunnelser og siste versjon i det samme artefaktet og velger å rette grunnlaget, endre oppgaven eller avslutte. Ingen automatisk videreføring.",
+    "resume": "Etter retting lages en ny versjon av produsentens ene navngitte artefakt. Berørte etterfølgende artefaktversjoner og godkjenninger ugyldiggjøres. Kjør alle berørte valideringer og steg på nytt i rekkefølge. Mennesket kan ikke omgå etikkforbud, modellskille eller en mislykket obligatorisk kontroll."
+  },
+  "skills_used": [
+    "strategi-felles-brief",
+    "strategi-avklar-uenighet",
+    "strategi-kampanjens-rammer",
+    "plattform-ingen-ki-ugc-eller-falske-kunder"
+  ],
+  "state": "PROPOSED",
+  "input_fields": {
+    "kampanjekort": {
+      "path": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "read_via": "Referanse i det ene navngitte inndataartefaktets grunnlag; kortinnholdet ligger der når kortet selv er inndata. Ikke en ekstra uvalidert sidefil.",
+      "required": [
+        "kort_id",
+        "versjon",
+        "SHA-256",
+        "validering.status bestått",
+        "aktiv del_id",
+        "funnel.stage og funnel.mode",
+        "kundestatus",
+        "salgsrunde",
+        "schwartz.level med belegg",
+        "foresporsel",
+        "maling",
+        "ferdighetsvalg og konfliktlosninger",
+        "ferdighetsbibliotek med versjon og hash"
+      ],
+      "use": "Bruk bare aktiv del og dens kontekst. Operativt ferdighetsutvalg er skills_used ∩ del.ferdighetsvalg.selected_ids, med regelens egen utløser vurdert. Flytens strukturporter og ufravikelige lov-/etikkporter gjelder uansett; et tomt faglig utvalg for en valgt flyt avklares av menneske, aldri automatisk hopp.",
+      "on_change": "Nye fakta som endrer kortets nivå, målgruppe, trinn, modus, salgsrunde eller forespørsel rutes til kampanjekort. Ny kortversjon ugyldiggjør alle berørte nedstrømsartefakter og krever ny filtrering og godkjenning før skriving.",
+      "schema": "schemas/00-kampanjekort-godkjent.json"
+    }
+  },
+  "input_schema": "schemas/00-kampanjekort-godkjent.json",
+  "output_artifact_schema": "schemas/01-brief-godkjent.json",
+  "schema_reads": [
+    "schemas/kampanje.json",
+    "schemas/tilbud.json",
+    "schemas/artefakt-felles.json"
+  ],
+  "field_reads": {
+    "kampanje.id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.goal": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.funnel.stage": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.funnel.mode": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.market": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.audience": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.audience.reader_id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.offer_id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.category_id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.timing.start": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.timing.end": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.channels": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.evidence": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "kampanje.countries": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.product_id": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.name": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.deliverable": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.benefit": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "tilbud.claims": "Grunnlag for Få kunden og oppdragsansvarlig til å bekrefte samme oppgave før leserarbeidet begynner.",
+    "artefakt-felles.oppdrag_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.artefakt_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.schema_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.del_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.SHA-256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.kritikk": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.feilrute": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.personvern": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.state": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.lang": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].ref": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].versjon": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].opphav": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.grunnlag.manifest[].rettigheter": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].role": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.provider_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.model_version": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.call_id": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.input_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.modellspor[].attest.output_sha256": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].status": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.validering.checks[].evidence": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].actor": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].decision": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].timestamp": "Felles inngangs-/utdatakontroll",
+    "artefakt-felles.godkjenning[].sha256": "Felles inngangs-/utdatakontroll"
+  }
+}

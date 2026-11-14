@@ -1,0 +1,14 @@
+{
+  "enum": [
+    "rett-pa-sak",
+    "gjenkjennelig-hverdag",
+    "sporsmal",
+    "kontrast",
+    "konkret-bevis",
+    "torr-humor"
+  ],
+  "x-list": "../../lists/line-style.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/line-style.schema.json",
+  "title": "line-style"
+}

@@ -1,0 +1,225 @@
+{
+  "id": "09-annonseutkast",
+  "label_nb": "Bildet som en tredje tanke — steg 3",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kanal-format",
+    "leser",
+    "merkevare-vs-kampanje"
+  ],
+  "read_by": [
+    "bilde-som-tredje-tanke"
+  ],
+  "fields": [
+    {
+      "id": "09-annonseutkast.innhold.bildeide",
+      "path": "innhold.bildeide",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet bildeide for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Samlet bildeide for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.konsepter",
+      "path": "innhold.bildeide.konsepter",
+      "group": "innhold",
+      "label_nb": "Ord- og bildeskisser",
+      "type": "array",
+      "values": [],
+      "definition": "Tre konsept-ID-er med uendret tekst, bildebeskrivelse, egen opplysning, tredje tanke og kobling til fordel/bevis.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Tre konsept-ID-er med uendret tekst, bildebeskrivelse, egen opplysning, tredje tanke og kobling til fordel/bevis."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.smaksvalg",
+      "path": "innhold.bildeide.smaksvalg",
+      "group": "innhold",
+      "label_nb": "Effektivt smaksgrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Profilversjon/kind, valgte håndverkslinjer, planlagt sted og godkjent overstyringslogg; motiv/sted bestemmes av oppgaven.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Profilversjon/kind, valgte håndverkslinjer, planlagt sted og godkjent overstyringslogg; motiv/sted bestemmes av oppgaven."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.valgt_konsept",
+      "path": "innhold.bildeide.valgt_konsept",
+      "group": "innhold",
+      "label_nb": "Valgt konsept",
+      "type": "string",
+      "values": [],
+      "definition": "Én bestått konsept-ID valgt av designer.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Én bestått konsept-ID valgt av designer."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.annonser",
+      "path": "innhold.bildeide.annonser",
+      "group": "innhold",
+      "label_nb": "Faktiske annonseutkast",
+      "type": "array",
+      "values": [],
+      "definition": "Variant-ID, kundevalgt tekst, tilgangsstyrt medieressurs, opphav/rettigheter, målsted og plassering; ikke bare beskrivelser.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Variant-ID, kundevalgt tekst, tilgangsstyrt medieressurs, opphav/rettigheter, målsted og plassering; ikke bare beskrivelser."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.mediekontroll",
+      "path": "innhold.bildeide.mediekontroll",
+      "group": "innhold",
+      "label_nb": "Dekodede medier",
+      "type": "array",
+      "values": [],
+      "definition": "Hash, filtype, dimensjoner, varighet, kildekrav/read_on og kontrollresultat for faktisk innhold.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Hash, filtype, dimensjoner, varighet, kildekrav/read_on og kontrollresultat for faktisk innhold."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-annonseutkast.innhold.bildeide.korrektur",
+      "path": "innhold.bildeide.korrektur",
+      "group": "innhold",
+      "label_nb": "Menneskelig korrektur",
+      "type": "object",
+      "values": [],
+      "definition": "Navngitt korrekturleser, lukkede meningsfeil og godkjent filhash; kreativ godkjenning er foreløpig før lovsjekk/frigivelse.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke"
+        ],
+        "choices": "Navngitt korrekturleser, lukkede meningsfeil og godkjent filhash; kreativ godkjenning er foreløpig før lovsjekk/frigivelse."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/09-annonseutkast.json",
+  "artifact_family": "bildeide",
+  "producer": {
+    "flow": "bilde-som-tredje-tanke",
+    "step": 3,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.bildeide.",
+  "validation_profile": {
+    "step_validation": "flows/bilde-som-tredje-tanke.json#/steps/2/validation",
+    "required_from_steps": {
+      "konsepter": 1,
+      "smaksvalg": 1,
+      "valgt_konsept": 3,
+      "annonser": 3,
+      "mediekontroll": 4,
+      "korrektur": 6
+    },
+    "critic_required": true,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

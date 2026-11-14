@@ -1,0 +1,196 @@
+{
+  "id": "09-kanalformat-varianter",
+  "label_nb": "Tilpass godkjent idé til kanalformatene — steg 3",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kanal-format",
+    "merkevare-vs-kampanje"
+  ],
+  "read_by": [
+    "kanalformat-tilpasning"
+  ],
+  "fields": [
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter",
+      "path": "innhold.kanalvarianter",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet kanalvarianter for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Samlet kanalvarianter for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter.krav",
+      "path": "innhold.kanalvarianter.krav",
+      "group": "innhold",
+      "label_nb": "Bekreftede kanalformatkrav",
+      "type": "array",
+      "values": [],
+      "definition": "Én datert kravrad per konkret kombinasjon; kilde, locator, read_on og faktisk kontotilgjengelighet.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Én datert kravrad per konkret kombinasjon; kilde, locator, read_on og faktisk kontotilgjengelighet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter.plan",
+      "path": "innhold.kanalvarianter.plan",
+      "group": "innhold",
+      "label_nb": "Tilpasningsplan",
+      "type": "array",
+      "values": [],
+      "definition": "Per plassering: utsnitt, tekstplassering, lengde, lyd/undertekster, låst idé, pris og forbehold.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Per plassering: utsnitt, tekstplassering, lengde, lyd/undertekster, låst idé, pris og forbehold."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter.varianter",
+      "path": "innhold.kanalvarianter.varianter",
+      "group": "innhold",
+      "label_nb": "Faktiske kanalvarianter",
+      "type": "array",
+      "values": [],
+      "definition": "Variant-ID, referert medium med rettigheter/opphav/hash, dimensjoner, varighet, tekst og plassering.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Variant-ID, referert medium med rettigheter/opphav/hash, dimensjoner, varighet, tekst og plassering."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter.kontroll",
+      "path": "innhold.kanalvarianter.kontroll",
+      "group": "innhold",
+      "label_nb": "Dekodet formatkontroll",
+      "type": "array",
+      "values": [],
+      "definition": "Faktisk sideforhold, dimensjoner, varighet, filtype, safe zone, svarte felt og dekning mot kravlisten.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Faktisk sideforhold, dimensjoner, varighet, filtype, safe zone, svarte felt og dekning mot kravlisten."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-kanalformat-varianter.innhold.kanalvarianter.leveranse",
+      "path": "innhold.kanalvarianter.leveranse",
+      "group": "innhold",
+      "label_nb": "Godkjent variantpakke",
+      "type": "object",
+      "values": [],
+      "definition": "Menneskets versjonsbundne godkjenning av alle plasseringer; ny lovsjekk og frigivelse følger.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Menneskets versjonsbundne godkjenning av alle plasseringer; ny lovsjekk og frigivelse følger."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/09-kanalformat-varianter.json",
+  "artifact_family": "kanalvarianter",
+  "producer": {
+    "flow": "kanalformat-tilpasning",
+    "step": 3,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.kanalvarianter.",
+  "validation_profile": {
+    "step_validation": "flows/kanalformat-tilpasning.json#/steps/2/validation",
+    "required_from_steps": {
+      "krav": 1,
+      "plan": 2,
+      "varianter": 3,
+      "kontroll": 4,
+      "leveranse": 6
+    },
+    "critic_required": false,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

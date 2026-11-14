@@ -1,0 +1,76 @@
+{
+  "id": "metric",
+  "label_nb": "Måltall",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "kjennskap",
+      "label_nb": "Kjennskap",
+      "definition": "Målt kjennskap i definert utvalg."
+    },
+    {
+      "id": "cep-kobling",
+      "label_nb": "Cep kobling",
+      "definition": "Målt fremhenting i kjøpssituasjon."
+    },
+    {
+      "id": "unik-rekkevidde",
+      "label_nb": "Unik rekkevidde",
+      "definition": "Dedupliserte personer eller bedrifter."
+    },
+    {
+      "id": "kvalifiserte-henvendelser",
+      "label_nb": "Kvalifiserte henvendelser",
+      "definition": "Henvendelser etter forhåndsdefinerte vilkår."
+    },
+    {
+      "id": "betalende-kunder",
+      "label_nb": "Betalende kunder",
+      "definition": "Unike faktiske betalende kunder."
+    },
+    {
+      "id": "inntekt",
+      "label_nb": "Inntekt",
+      "definition": "Inntekt med valuta og måleperiode."
+    },
+    {
+      "id": "kostnad-per-kunde",
+      "label_nb": "Kostnad per kunde",
+      "definition": "Kostnad delt på faktiske kunder."
+    },
+    {
+      "id": "gjenkjop",
+      "label_nb": "Gjenkjop",
+      "definition": "Nytt kjøp i definert startkohort."
+    },
+    {
+      "id": "fornyelse",
+      "label_nb": "Fornyelse",
+      "definition": "Fornyelser i kvalifisert kohort."
+    },
+    {
+      "id": "frafall",
+      "label_nb": "Frafall",
+      "definition": "Tap i definert startkohort."
+    },
+    {
+      "id": "respons",
+      "label_nb": "Respons",
+      "definition": "Observerte svar eller klikk; ikke salgsbevis."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Måleeier definerer annet utfall og hvorfor det trengs."
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "enum": [
+    "nykjop",
+    "endret-gjenkjop",
+    "rent-gjenkjop"
+  ],
+  "x-list": "../../lists/buying-situation.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/buying-situation.schema.json",
+  "title": "buying-situation"
+}

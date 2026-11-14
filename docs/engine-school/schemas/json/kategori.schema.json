@@ -1,0 +1,46 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Binder den avgrensede kategorien på tvers av merke og kampanjer.",
+      "x-field": "kategori.id",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Navngi kategorien og hvilke alternativer den omfatter.",
+      "x-field": "kategori.name"
+    },
+    "type": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8b6ccae0264ed854"
+    },
+    "purchase_frequency": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b9602e0b5972cce1"
+    },
+    "involvement": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-3940b8c7a85a77c6"
+    },
+    "regulation": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-57e98590003286ca"
+    },
+    "seasonality": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-b0487430134e9eb8"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "type",
+    "purchase_frequency",
+    "involvement",
+    "regulation",
+    "seasonality"
+  ],
+  "additionalProperties": false,
+  "x-registry": "../kategori.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/kategori.schema.json",
+  "title": "kategori"
+}

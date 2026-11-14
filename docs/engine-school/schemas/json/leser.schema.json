@@ -1,0 +1,112 @@
+{
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Binder én avgrenset mottakergruppe og kildegrunnlag.",
+      "x-field": "leser.id",
+      "minLength": 1
+    },
+    "schwartz": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8b1cb0afa736d6a3"
+    },
+    "ceps": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-af49773a1182b4c2"
+    },
+    "jtbd": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c6062f38e2925012"
+    },
+    "beliefs": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-bcba7395040c235d"
+    },
+    "objections": {
+      "type": "array",
+      "description": "Konkrete hindre eller spørsmål med belegg, alvor og mulig dokumentert svar.",
+      "x-field": "leser.objections",
+      "items": {}
+    },
+    "roles": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c20cbed80ce44eae"
+    },
+    "buying_situation": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-c9ee1e1e9595d585"
+    }
+  },
+  "required": [
+    "id",
+    "schwartz",
+    "ceps",
+    "jtbd",
+    "beliefs",
+    "objections",
+    "roles"
+  ],
+  "additionalProperties": false,
+  "x-runtime-conditions": [
+    {
+      "field": "leser.roles.b2b",
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      }
+    },
+    {
+      "field": "leser.roles.b2c",
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2C"
+          }
+        ]
+      }
+    },
+    {
+      "field": "leser.roles.expertise",
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      }
+    },
+    {
+      "field": "leser.roles.functions",
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      }
+    },
+    {
+      "field": "leser.buying_situation",
+      "applies_when": {
+        "all": [
+          {
+            "field": "kampanje.market",
+            "op": "eq",
+            "value": "B2B"
+          }
+        ]
+      }
+    }
+  ],
+  "x-registry": "../leser.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/leser.schema.json",
+  "title": "leser"
+}

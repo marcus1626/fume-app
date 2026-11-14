@@ -1,0 +1,171 @@
+{
+  "id": "10-landgodkjenninger",
+  "label_nb": "Lovsjekk for hvert land — steg 4",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kanal-format",
+    "kategori",
+    "tilbud"
+  ],
+  "read_by": [
+    "lovsjekk-per-land"
+  ],
+  "fields": [
+    {
+      "id": "10-landgodkjenninger.innhold.lovsjekk",
+      "path": "innhold.lovsjekk",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet lovsjekk for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "lovsjekk-per-land"
+        ],
+        "choices": "Samlet lovsjekk for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-landgodkjenninger.innhold.lovsjekk.landmatrise",
+      "path": "innhold.lovsjekk.landmatrise",
+      "group": "innhold",
+      "label_nb": "Planlagte kombinasjoner",
+      "type": "array",
+      "values": [],
+      "definition": "Alle land, regelområder, kanaler, plasseringer, påstander, tilbud og målsteder med eksakte hasher; ingen stille utelatelser.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "lovsjekk-per-land"
+        ],
+        "choices": "Alle land, regelområder, kanaler, plasseringer, påstander, tilbud og målsteder med eksakte hasher; ingen stille utelatelser."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-landgodkjenninger.innhold.lovsjekk.regelkontroller",
+      "path": "innhold.lovsjekk.regelkontroller",
+      "group": "innhold",
+      "label_nb": "Regelkontroller",
+      "type": "array",
+      "values": [],
+      "definition": "Land × annonse: regel, paragraf/locator, kilde, kontrolltid, konkret påstand, belegg og bestått/avvist/uavklart.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "lovsjekk-per-land"
+        ],
+        "choices": "Land × annonse: regel, paragraf/locator, kilde, kontrolltid, konkret påstand, belegg og bestått/avvist/uavklart."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-landgodkjenninger.innhold.lovsjekk.landgodkjenninger",
+      "path": "innhold.lovsjekk.landgodkjenninger",
+      "group": "innhold",
+      "label_nb": "Lokale menneskevedtak",
+      "type": "array",
+      "values": [],
+      "definition": "Juridisk ansvarlig, lokal fagperson ved behov, rolle, dato, regelgrunnlag, hasher, vilkår og ny kontrollfrist.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "lovsjekk-per-land"
+        ],
+        "choices": "Juridisk ansvarlig, lokal fagperson ved behov, rolle, dato, regelgrunnlag, hasher, vilkår og ny kontrollfrist."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "10-landgodkjenninger.innhold.lovsjekk.gyldighetsomfang",
+      "path": "innhold.lovsjekk.gyldighetsomfang",
+      "group": "innhold",
+      "label_nb": "Godkjent omfang",
+      "type": "object",
+      "values": [],
+      "definition": "Eksakte land, perioder, filer, landingssider og vilkår som godkjenningene dekker.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "lovsjekk-per-land"
+        ],
+        "choices": "Eksakte land, perioder, filer, landingssider og vilkår som godkjenningene dekker."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/10-landgodkjenninger.json",
+  "artifact_family": "lovsjekk",
+  "producer": {
+    "flow": "lovsjekk-per-land",
+    "step": 4,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.lovsjekk.",
+  "validation_profile": {
+    "step_validation": "flows/lovsjekk-per-land.json#/steps/3/validation",
+    "required_from_steps": {
+      "landmatrise": 1,
+      "regelkontroller": 2,
+      "landgodkjenninger": 4,
+      "gyldighetsomfang": 5
+    },
+    "critic_required": true,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

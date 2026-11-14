@@ -1,0 +1,46 @@
+{
+  "id": "seasonality",
+  "label_nb": "Sesongmønster",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "helars",
+      "label_nb": "Helars",
+      "definition": "Ingen dokumentert sesongtopp."
+    },
+    {
+      "id": "kalender",
+      "label_nb": "Kalender",
+      "definition": "Kalenderbundet mønster."
+    },
+    {
+      "id": "vaer",
+      "label_nb": "Vaer",
+      "definition": "Væravhengig mønster."
+    },
+    {
+      "id": "hendelse",
+      "label_nb": "Hendelse",
+      "definition": "Knyttet til en navngitt hendelse."
+    },
+    {
+      "id": "fornyelse",
+      "label_nb": "Fornyelse",
+      "definition": "Knyttet til kontrakt eller gjenkjøpssyklus."
+    },
+    {
+      "id": "ukjent",
+      "label_nb": "Ukjent",
+      "definition": "Mønster er ikke dokumentert."
+    }
+  ]
+}

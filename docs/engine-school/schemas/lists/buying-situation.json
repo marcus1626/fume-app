@@ -1,0 +1,31 @@
+{
+  "id": "buying-situation",
+  "label_nb": "Kjøpssituasjon",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "nykjop",
+      "label_nb": "Nykjop",
+      "definition": "Ny oppgave eller første anskaffelse."
+    },
+    {
+      "id": "endret-gjenkjop",
+      "label_nb": "Endret gjenkjop",
+      "definition": "Tidligere kjøp med nye vilkår eller krav."
+    },
+    {
+      "id": "rent-gjenkjop",
+      "label_nb": "Rent gjenkjop",
+      "definition": "Gjentakelse uten vesentlig endring."
+    }
+  ]
+}

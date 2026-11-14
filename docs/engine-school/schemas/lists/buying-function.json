@@ -1,0 +1,46 @@
+{
+  "id": "buying-function",
+  "label_nb": "Kjøpsfunksjon",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "fag",
+      "label_nb": "Fag",
+      "definition": "Produkt- eller fagekspertise."
+    },
+    {
+      "id": "innkjop",
+      "label_nb": "Innkjop",
+      "definition": "Anskaffelsesprosess."
+    },
+    {
+      "id": "okonomi",
+      "label_nb": "Okonomi",
+      "definition": "Økonomi og finansiering."
+    },
+    {
+      "id": "juridisk",
+      "label_nb": "Juridisk",
+      "definition": "Avtaler og regelkrav."
+    },
+    {
+      "id": "drift",
+      "label_nb": "Drift",
+      "definition": "Gjennomføring og drift."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Annen dokumentert funksjon."
+    }
+  ]
+}

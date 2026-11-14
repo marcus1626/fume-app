@@ -1,0 +1,46 @@
+{
+  "id": "awareness-level",
+  "label_nb": "Kunnskapsnivå",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": 1,
+      "label_nb": "Nivå 1",
+      "definition": "Kjenner ikke problemet."
+    },
+    {
+      "id": 2,
+      "label_nb": "Nivå 2",
+      "definition": "Kjenner problemet."
+    },
+    {
+      "id": 3,
+      "label_nb": "Nivå 3",
+      "definition": "Kjenner løsningstypen."
+    },
+    {
+      "id": 4,
+      "label_nb": "Nivå 4",
+      "definition": "Kjenner det konkrete produktet."
+    },
+    {
+      "id": 5,
+      "label_nb": "Nivå 5",
+      "definition": "Kjenner og ønsker produktet; trenger kjøpsinformasjon."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

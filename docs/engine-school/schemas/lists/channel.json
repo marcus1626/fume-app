@@ -1,0 +1,305 @@
+{
+  "id": "channel",
+  "label_nb": "Kanal",
+  "source": [
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/279271845888065",
+      "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+    },
+    {
+      "source": "Meta Business Help Center",
+      "url": "https://www.facebook.com/business/help/407108559393196",
+      "locator": "Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "web.open omdirigerte til blokkert innlogging. Firecrawl fersk henting HTTP 200; plasseringer og Friends-underflate lest 2026-11-13. Konto, mål og marked må kontrolleres."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/1722124",
+      "locator": "Ad formats available in a Google Ads account",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+      "locator": "Format comparison; Where it serves",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "Google Ads Help",
+      "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+      "locator": "Ad format eligibility",
+      "read_on": "2026-11-13",
+      "verified": false,
+      "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+      "locator": "For You Feed; Search Feed; Search Results Page",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "TikTok Business Help Centre",
+      "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+      "locator": "Spark Ads (Pull); Non-Spark Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Ads Guide",
+      "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+      "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    },
+    {
+      "source": "LinkedIn Help",
+      "url": "https://www.linkedin.com/help/lms/answer/a422880",
+      "locator": "Ad Objective / Goal / Ad Formats",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+    }
+  ],
+  "values": [
+    {
+      "id": "meta",
+      "label_nb": "Meta",
+      "definition": "Meta-distribusjon; plattform/flate bestemmes av plassering.",
+      "source": [
+        {
+          "source": "Meta Business Help Center",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Måltabeller; Text, Image, Video, Carousel, Collection; Flexible",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "web.open ga innlogging; Firecrawl maxAge=0 HTTP 200, faktiske tabeller lest."
+        }
+      ]
+    },
+    {
+      "id": "google-ads-other",
+      "label_nb": "Google ads other",
+      "definition": "Google Ads uten Demand Gen og uten YouTube-levering.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "google-demand-gen",
+      "label_nb": "Google demand gen",
+      "definition": "Demand Gen, også når valgt flate er YouTube; velges først.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Ad format eligibility",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "web.open utilgjengelig i denne runden. Tidligere kontroll finnes i review/schema-source-checks.json; ikke nyverifisert."
+        }
+      ]
+    },
+    {
+      "id": "youtube",
+      "label_nb": "YouTube",
+      "definition": "YouTube-levering uten Demand Gen; betalt/egen/fortjent er egen akse.",
+      "source": [
+        {
+          "source": "Google Ads Help",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Format comparison; Where it serves",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "tiktok",
+      "label_nb": "TikTok",
+      "definition": "TikTok-distribusjon.",
+      "source": [
+        {
+          "source": "TikTok Business Help Centre",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "For You Feed; Search Feed; Search Results Page",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "linkedin",
+      "label_nb": "LinkedIn",
+      "definition": "LinkedIn-distribusjon.",
+      "source": [
+        {
+          "source": "LinkedIn Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Sponsored Content; Sponsored Messaging; Dynamic Ads; Text Ads",
+          "read_on": "2026-11-13",
+          "verified": true,
+          "verification_note": "Innhold lest; ingen garanti for kontotilgang."
+        }
+      ]
+    },
+    {
+      "id": "e-post",
+      "label_nb": "E-post",
+      "definition": "E-post, også digitale kundebrev sendt som e-post.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "sms",
+      "label_nb": "SMS",
+      "definition": "SMS.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "nettside",
+      "label_nb": "Nettside",
+      "definition": "Eget nettsted, også digitalt brev eller skjema på nettstedet.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "brev",
+      "label_nb": "Brev",
+      "definition": "Bare fysisk postlagt brev.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "telefon",
+      "label_nb": "Telefon",
+      "definition": "Telefon.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "produktsok",
+      "label_nb": "Produktsok",
+      "definition": "Produktsøk utenfor de navngitte systemene.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "markedsplass",
+      "label_nb": "Markedsplass",
+      "definition": "Markedsplass utenfor de navngitte systemene.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "annet-sosialt",
+      "label_nb": "Annet sosialt",
+      "definition": "Annen navngitt sosial plattform; binding må oppgi hvilken.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    },
+    {
+      "id": "annen",
+      "label_nb": "Annen",
+      "definition": "Annen dokumentert distribusjon; binding kreves, ingen ukjent restklasse.",
+      "source": [
+        {
+          "source": "Fume",
+          "url": "BRIEF.md",
+          "locator": "Step 2 / Step 3; interne distribusjons- og filterklasser",
+          "read_on": "2026-11-13",
+          "verified": false,
+          "verification_note": "Fume-arbeidsverdi; ikke et offisielt plattformvalg."
+        }
+      ]
+    }
+  ]
+}

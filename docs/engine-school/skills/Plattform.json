@@ -1,0 +1,1383 @@
+[
+  {
+    "id": "plattform-plassering-stoetter-format",
+    "subject": "Plattform",
+    "name": "Kontroller hver valgt plassering",
+    "principle": "Tilgjengelige plasseringer avhenger av kampanjemål, annonsetype og innstillinger.",
+    "sources": [
+      {
+        "source": "Meta — Ad creative",
+        "url": "https://www.facebook.com/business/ads/ad-creative",
+        "locator": "Placements"
+      }
+    ],
+    "rule": "Bestått bare når hver valgt plassering er tilgjengelig for kampanjens mål og annonsetype i Ads Manager, og kontrollen er registrert.",
+    "check": "menneske",
+    "example_bad": "Planen krever en plassering som ikke kan velges med kampanjens mål.",
+    "example_good": "Alle valgte plasseringer er bekreftet tilgjengelige i Ads Manager.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "meta",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      6,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Meta beskriver at annonseformater har bestemte tilgjengelige plasseringer."
+  },
+  {
+    "id": "plattform-test-ulike-metaformater",
+    "subject": "Plattform",
+    "name": "Prøv flere annonseformater",
+    "principle": "Ulike annonseformater gir forskjellige måter å vise tilbudet på. Fumes kontroll krever et avgrenset forsøk før ett format velges som standard.",
+    "sources": [
+      {
+        "source": "Meta — Ad creative",
+        "url": "https://www.facebook.com/business/ads/ad-creative",
+        "locator": "Formats; Image, Video, Carousel og Collection Ads"
+      }
+    ],
+    "rule": "Bestått bare når testplanen har minst to støttede formater, samme tilbud og samme primære resultatmål.",
+    "check": "kritiker",
+    "example_bad": "Video velges som fast format uten sammenligning.",
+    "example_good": "Bilde og video prøves med samme tilbud; kostnad per kvalifisert henvendelse er resultatmålet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "meta",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Meta presenterer bilde, video, karusell og samling som forskjellige annonseformater."
+  },
+  {
+    "id": "plattform-meta-budskap-tre-sekunder",
+    "subject": "Plattform",
+    "name": "Vis hovedbudskapet innen tre sekunder",
+    "principle": "Meta anbefaler merke og hovedbudskap i de første tre sekundene av Instagram-videoannonser. Fume bruker dette som obligatorisk husregel for Meta-video, ikke som et teknisk publiseringskrav fra Meta.",
+    "sources": [
+      {
+        "source": "Meta — Best practices for Instagram video ads",
+        "url": "https://www.facebook.com/business/help/188534925073536",
+        "locator": "Creative best practices for Instagram video ads → Showcase your brand early; lest 2026-11-13 med Firecrawl og curl GET (HTTP 200). Rådet gjelder Instagram; obligatorisk port for Meta-video er Fumes utvidelse."
+      }
+    ],
+    "rule": "Fumes husregel: Bestått bare når annonsens hovedbudskap kan identifiseres i bilde, tekst eller tale senest ved 00:03; den obligatoriske porten og bruken på tvers av Meta-video er Fumes valg.",
+    "check": "kritiker",
+    "example_bad": "Først åtte sekunder med logoanimasjon, deretter produktfordelen.",
+    "example_good": "Ved 00:02 viser teksten at produktet samler ubetalte fakturaer.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "meta",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Meta anbefaler å vise merke og hovedbudskap i de første tre sekundene av Instagram-videoannonser.",
+    "verified": true
+  },
+  {
+    "id": "plattform-karusell-maks-ti-kort",
+    "subject": "Plattform",
+    "name": "Hold karusellen innen ti kort",
+    "principle": "Meta beskriver karusellannonser med to til ti bilder eller videoer i én annonse.",
+    "sources": [
+      {
+        "source": "Meta — Best practices for carousel ads",
+        "url": "https://www.facebook.com/business/help/927639917355563",
+        "locator": "Innledningen om 2 eller flere bilder/videoer; Tell your story with all the available carousel components, opptil 10 kort; lest 2026-11-13 med Firecrawl og curl GET (HTTP 200)."
+      }
+    ],
+    "rule": "Bestått bare når karusellannonsen inneholder mellom to og ti kort.",
+    "check": "kode",
+    "example_bad": "En karusellfil med tolv kort.",
+    "example_good": "En karusell med seks produktbilder.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "meta",
+      "format": "karusell",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": false,
+    "source_says": "Meta beskriver karusellannonser som to eller flere bilder eller videoer og oppgir opptil ti kort per annonse.",
+    "verified": true
+  },
+  {
+    "id": "plattform-samling-koblet-til-katalog",
+    "subject": "Plattform",
+    "name": "Koble samlingsannonser til katalogen",
+    "principle": "Samlingsannonser viser varer fra produktkatalogen. Fumes kontroll knytter hvert vist produkt til en faktisk katalogoppføring.",
+    "sources": [
+      {
+        "source": "Meta — Ad creative",
+        "url": "https://www.facebook.com/business/ads/ad-creative",
+        "locator": "Formats → Collection Ads"
+      }
+    ],
+    "rule": "Bestått bare når hvert produkt i samlingsannonsen har en eksisterende produkt-ID i kampanjens tilknyttede katalog.",
+    "check": "kode+menneske",
+    "example_bad": "To annonserte modeller finnes ikke i den tilknyttede katalogen.",
+    "example_good": "Alle fire viste modeller er koblet til kontrollerte produkt-ID-er.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "meta",
+      "format": "samling",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Meta beskriver samlingsannonser som et format for å vise og utforske produkter."
+  },
+  {
+    "id": "plattform-youtube-merke-foer-fem",
+    "subject": "Plattform",
+    "name": "Vis og si merket tidlig",
+    "principle": "Google beskriver tidlig synlig og muntlig merkevare som et kjennetegn ved sine beste YouTube-annonser.",
+    "sources": [
+      {
+        "source": "Google — Inside Google’s 3-part creative approach to paid YouTube marketing",
+        "url": "https://business.google.com/us/think/search-and-video/youtube-marketing-success-playbook/",
+        "locator": "1. Build natively for YouTube → Branding"
+      }
+    ],
+    "rule": "Bestått bare når både et synlig merkeelement og et hørbart merkenavn forekommer innen de første fem sekundene.",
+    "check": "kritiker",
+    "example_bad": "Merkenavnet vises og sies først ved 00:14.",
+    "example_good": "Produktet med synlig merkenavn vises ved 00:01, og navnet sies ved 00:03.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles artikkel anbefaler tidlig og tydelig merkevarebygging i YouTube-videoer."
+  },
+  {
+    "id": "plattform-youtube-ett-hovedbudskap",
+    "subject": "Plattform",
+    "name": "Samle YouTube-annonsen om ett budskap",
+    "principle": "Ett tydelig hovedbudskap reduserer konkurransen mellom argumentene i en kort video.",
+    "sources": [
+      {
+        "source": "Google Ads — About the ABCDs of effective video ads",
+        "url": "https://support.google.com/google-ads/answer/14783551?hl=en",
+        "locator": "Core ABCDs → Connection → Focus the message"
+      }
+    ],
+    "rule": "Bestått bare når alle argumenter i videoen støtter ett navngitt hovedbudskap i briefen; et argument for et annet kjøpsmål gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Videoen selger regnskapssystem, rekrutteringskurs og kontorstoler samtidig.",
+    "example_good": "Alle scenene viser hvordan regnskapssystemet samler fakturaarbeidet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      1,
+      4,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles ABCD-råd anbefaler å fokusere budskapet for å skape kontakt med seeren."
+  },
+  {
+    "id": "plattform-youtube-handling-synlig-og-hoerbar",
+    "subject": "Plattform",
+    "name": "Vis og si neste handling",
+    "principle": "En konkret handling blir tydeligere når både skjermtekst og tale peker mot den.",
+    "sources": [
+      {
+        "source": "Google Ads — About the ABCDs of effective video ads",
+        "url": "https://support.google.com/google-ads/answer/14783551?hl=en",
+        "locator": "Core ABCDs → Direction → Include a call to action (CTA); Supercharge CTAs with audio"
+      }
+    ],
+    "rule": "Bestått bare når annonsen både viser og sier samme konkrete neste handling.",
+    "check": "kritiker",
+    "example_bad": "Skjermen sier «Bestill demo», mens stemmen ber seeren kjøpe nå.",
+    "example_good": "Skjerm og stemme ber begge seeren bestille en demo.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles ABCD-råd anbefaler synlig handlingsoppfordring som forsterkes med tale."
+  },
+  {
+    "id": "plattform-youtube-vurdering-vis-bruk",
+    "subject": "Plattform",
+    "name": "Vis bruken når målet er vurdering",
+    "principle": "Når målet er å få folk til å vurdere produktet, anbefaler Google å vise hvordan det fungerer.",
+    "sources": [
+      {
+        "source": "Google Ads — About the ABCDs of effective video ads",
+        "url": "https://support.google.com/google-ads/answer/14783551?hl=en",
+        "locator": "ABCDs by marketing objectives → Consideration → Connection"
+      }
+    ],
+    "rule": "For en kampanje med vurdering som mål: bestått bare når videoen viser minst én faktisk brukshandling og resultatet av den.",
+    "check": "kritiker",
+    "example_bad": "Annonsen viser bare emballasjen og sier «smart løsning».",
+    "example_good": "En hånd klikker «Samle fakturaer», og den samlede oversikten vises.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "video",
+      "trigger": "vurdering-som-mal",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles ABCD-råd anbefaler å vise hvordan produktet passer inn i seerens liv ved vurderingsmål."
+  },
+  {
+    "id": "plattform-youtube-handling-etter-kontekst",
+    "subject": "Plattform",
+    "name": "Gi kontekst før kjøpsoppfordringen",
+    "principle": "En handlingsrettet video må gi seeren grunnlag for å forstå oppfordringen.",
+    "sources": [
+      {
+        "source": "Google Ads — About the ABCDs of effective video ads",
+        "url": "https://support.google.com/google-ads/answer/14783551?hl=en",
+        "locator": "ABCDs by marketing objectives → Action → Direction"
+      }
+    ],
+    "rule": "For en kampanje med handling som mål: bestått bare når produktet og minst én konkret nytte er vist eller forklart før første kjøpsoppfordring.",
+    "check": "kritiker",
+    "example_bad": "Første skjerm sier «Kjøp nå», uten produkt eller nytte.",
+    "example_good": "Først vises flekkfjerning med børsten; deretter kommer «Kjøp børsten».",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "video",
+      "trigger": "handling-som-mal",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      6,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles ABCD-råd anbefaler å etablere sammenheng før en handlingsoppfordring ved handlingsmål."
+  },
+  {
+    "id": "plattform-google-lever-flere-sideforhold",
+    "subject": "Plattform",
+    "name": "Lever formater til skjermene som brukes",
+    "principle": "Google beskriver liggende, stående og kvadratiske varianter som grunnlag for dekning på flere skjermer.",
+    "sources": [
+      {
+        "source": "Google — Inside Google’s 3-part creative approach to paid YouTube marketing",
+        "url": "https://business.google.com/us/think/search-and-video/youtube-marketing-success-playbook/",
+        "locator": "3. Give AI multiple formats and themes"
+      }
+    ],
+    "rule": "For Demand Gen med liggende, stående og kvadratiske annonseflater i planen: bestått bare når leveransen har minst én kontrollert variant i hvert av sideforholdene 16:9, 9:16 og 1:1.",
+    "check": "kode+menneske",
+    "example_bad": "Kampanjen dekker alle tre flatetyper, men har bare en 16:9-film.",
+    "example_good": "Leveransen har egne, kontrollerte utsnitt i 16:9, 9:16 og 1:1.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-demand-gen",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Google anbefaler flere formater og kreative temaer for å gi automatiseringen flere muligheter."
+  },
+  {
+    "id": "plattform-youtube-skaper-kategorirelevans",
+    "subject": "Plattform",
+    "name": "Velg skapere med relevant publikum",
+    "principle": "Google beskriver valg av skapere ut fra publikums interesse for produktkategorien. Følgertallet alene dokumenterer ikke slik relevans.",
+    "sources": [
+      {
+        "source": "Google — Inside Google’s 3-part creative approach to paid YouTube marketing",
+        "url": "https://business.google.com/us/think/search-and-video/youtube-marketing-success-playbook/",
+        "locator": "2. Pair creators with brand ads"
+      }
+    ],
+    "rule": "Bestått bare når valg av skaper har minst ett datert belegg for at skaperens publikum eller innhold gjelder produktkategorien, med kildehenvisning.",
+    "check": "kritiker",
+    "example_bad": "Skaperen velges bare fordi vedkommende har flest følgere.",
+    "example_good": "En datert publikumsrapport viser interesse for friluftsliv før skaperen velges til turutstyr.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "trigger": "skapersamarbeid",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      7,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Google beskriver samarbeid med skapere som en måte å utfylle merkevareannonser på."
+  },
+  {
+    "id": "plattform-shorts-ekte-produktbruk",
+    "subject": "Plattform",
+    "name": "Vis ekte produktbruk i Shorts",
+    "principle": "Googles Shorts-råd fremhever virkelige mennesker som viser og bruker produktet.",
+    "sources": [
+      {
+        "source": "Google Ads — About the ABCDs of effective video ads",
+        "url": "https://support.google.com/google-ads/answer/14783551?hl=en",
+        "locator": "ABCDs of YouTube Shorts → Connection"
+      }
+    ],
+    "rule": "For Shorts med en produktdemonstrasjon utført av en person: bestått bare når opptaket viser en virkelig person som bruker produktet, og originalopptaket kan spores. Fellesporten plattform-ingen-ki-ugc-eller-falske-kunder skal bestås på det faktiske materiellet før publisering og har prioritet over format- og skaperråd. Dette registrerer en mulig feiltolkning av plattformråd, ikke et krav fra plattformen om syntetisk UGC.",
+    "check": "menneske",
+    "example_bad": "En generert kunde later som hun bruker produktet.",
+    "example_good": "En ansatt viser produktet i et opptak som er registrert med opptaksdato og filreferanse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "youtube",
+      "format": "yt-shorts",
+      "trigger": "persondemonstrasjon",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [
+      "plattform-ingen-ki-ugc-eller-falske-kunder"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Googles Shorts-råd anbefaler å vise produktbruk og knytte produktet til seerens hverdag."
+  },
+  {
+    "id": "plattform-tiktok-staaende-video",
+    "subject": "Plattform",
+    "name": "Lever TikTok-video i stående format",
+    "principle": "TikTok anbefaler at videoinnholdet fyller en stående skjerm med sideforhold 9:16.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes",
+        "url": "https://ads.tiktok.com/business/en-US/creative-codes",
+        "locator": "3. Be production-principled"
+      }
+    ],
+    "rule": "Bestått bare når videofilens bredde og høyde gir sideforhold 9:16, uten innebygde svarte felt som gjør selve innholdet liggende. Fellesporten plattform-ingen-ki-ugc-eller-falske-kunder skal bestås på det faktiske materiellet før publisering og har prioritet over format- og skaperråd. Dette registrerer en mulig feiltolkning av plattformråd, ikke et krav fra plattformen om syntetisk UGC.",
+    "check": "kode+kritiker",
+    "example_bad": "En 16:9-film er lagt midt i en svart 9:16-ramme.",
+    "example_good": "En 1080 × 1920-video fyller rammen med stående innhold.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [
+      "plattform-ingen-ki-ugc-eller-falske-kunder"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikToks Creative Codes anbefaler stående video i sideforholdet 9:16."
+  },
+  {
+    "id": "plattform-tiktok-minst-720p",
+    "subject": "Plattform",
+    "name": "Behold minst 720p i TikTok-video",
+    "principle": "TikTok anbefaler høy oppløsning, med 720p som nedre nivå.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes",
+        "url": "https://ads.tiktok.com/business/en-US/creative-codes",
+        "locator": "3. Be production-principled"
+      }
+    ],
+    "rule": "For stående 9:16-video: bestått bare når den leverte filen er minst 720 piksler bred og 1280 piksler høy.",
+    "check": "kode",
+    "example_bad": "Leveransen er 360 × 640 piksler.",
+    "example_good": "Leveransen er 1080 × 1920 piksler.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "aspect_ratio": "9:16",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikToks Creative Codes anbefaler produksjon med minst 720p oppløsning."
+  },
+  {
+    "id": "plattform-tiktok-frie-grensesnittsoner",
+    "subject": "Plattform",
+    "name": "Hold viktig innhold unna grensesnittet",
+    "principle": "Knapper og annen skjerminformasjon kan dekke tekst og produktdetaljer i TikTok.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes",
+        "url": "https://ads.tiktok.com/business/en-US/creative-codes",
+        "locator": "3. Be production-principled"
+      }
+    ],
+    "rule": "Bestått bare når tekst, logo, produktets demonstrerte funksjon og handlingsoppfordring er helt synlige i forhåndsvisningen med grensesnitt for hver valgt TikTok-plassering.",
+    "check": "menneske",
+    "example_bad": "Handlingsoppfordringen dekkes av knapper i forhåndsvisningen.",
+    "example_good": "Alle viktige elementer er synlige med plasseringens grensesnitt lagt over.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikToks Creative Codes anbefaler å holde viktig innhold innenfor soner der plattformens grensesnitt ikke dekker det."
+  },
+  {
+    "id": "plattform-tiktok-fungerende-lyd",
+    "subject": "Plattform",
+    "name": "Kontroller lyden i TikTok-leveransen",
+    "principle": "TikTok fremhever musikk, fortellerstemme og lydeffekter som deler av fortellingen.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes",
+        "url": "https://ads.tiktok.com/business/en-US/creative-codes",
+        "locator": "6. Build with sound"
+      }
+    ],
+    "rule": "Bestått bare når den ferdige videoen har hørbar lyd, og en lytter kan gjengi alle talte produktpåstander uten å dempe musikken manuelt.",
+    "check": "menneske",
+    "example_bad": "Musikken overdøver løftet som leses opp.",
+    "example_good": "Lytteren kan gjengi hele produktløftet ved én avspilling med musikken på.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikToks Creative Codes anbefaler lyd som en aktiv del av videoens uttrykk."
+  },
+  {
+    "id": "plattform-tiktok-innholdslovfte-tre-sekunder",
+    "subject": "Plattform",
+    "name": "Vis innholdsløftet innen tre sekunder",
+    "principle": "Seeren bør tidlig forstå hva TikTok-videoen tilbyr av innhold.",
+    "sources": [
+      {
+        "source": "TikTok — Creative best practices for performance ads",
+        "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+        "locator": "Reel them in; punktet om content proposition in the first 3 seconds"
+      }
+    ],
+    "rule": "Bestått bare når seeren innen 00:03 kan se eller høre hva videoen skal vise, forklare eller demonstrere.",
+    "check": "kritiker",
+    "example_bad": "Ti sekunder med et introbilde før demonstrasjonen varsles.",
+    "example_good": "Ved 00:02 står det «Se hvordan børsten tar flekken».",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler å introdusere hva innholdet tilbyr i de første tre sekundene."
+  },
+  {
+    "id": "plattform-tiktok-aapningsgrep-seks-sekunder",
+    "subject": "Plattform",
+    "name": "Legg åpningsgrepet i de første seks sekundene",
+    "principle": "TikTok anbefaler å prioritere et oppmerksomhetsgrep tidlig. Fumes kontroll krever at grepet kan pekes ut i selve videoen.",
+    "sources": [
+      {
+        "source": "TikTok — Creative best practices for performance ads",
+        "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+        "locator": "Reel them in; punktet om hook in the first 6 seconds"
+      }
+    ],
+    "rule": "Bestått bare når kontrolløren kan angi et tidspunkt senest 00:06 med et konkret spørsmål, en overraskelse, en synlig endring eller en demonstrasjon som åpner historien.",
+    "check": "kritiker",
+    "example_bad": "De første seks sekundene viser bare en stillestående emballasje.",
+    "example_good": "Ved 00:01 åpnes en lekkende matboks og spørsmålet «Tett i sekken?» vises.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler et oppmerksomhetsgrep i de første seks sekundene."
+  },
+  {
+    "id": "plattform-tiktok-aapning-budskap-handling",
+    "subject": "Plattform",
+    "name": "Gi TikTok-videoen tre tydelige deler",
+    "principle": "TikTok beskriver en struktur med åpning, hoveddel og avslutning som leder til handling.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes",
+        "url": "https://ads.tiktok.com/business/en-US/creative-codes",
+        "locator": "4. Stick to a structure"
+      }
+    ],
+    "rule": "Bestått bare når manus eller tidslinje angir en åpning, en hoveddel med produktbudskap og en avslutning med én konkret handling, i denne rekkefølgen.",
+    "check": "kritiker",
+    "example_bad": "Videoen slutter etter en vits uten produktbudskap eller neste handling.",
+    "example_good": "Åpning: lekkasje. Hoveddel: tetningen demonstreres. Avslutning: «Se størrelsene i nettbutikken».",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      5,
+      6,
+      9
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikToks Creative Codes anbefaler en struktur med åpning, hoveddel og avslutning."
+  },
+  {
+    "id": "plattform-tiktok-kontroller-undertekster",
+    "subject": "Plattform",
+    "name": "Kontroller undertekster mot talen",
+    "principle": "TikTok fremhever teksting og tekst på skjermen som hjelp til å formidle budskapet. Automatisk teksting må kontrolleres før publisering.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes: 6 principles for creating on TikTok",
+        "url": "https://ads.tiktok.com/business/en/blog/creative-best-practices-top-performing-ads",
+        "locator": "1. Build brand love by thinking TikTok-first; avsnittet om text overlays og auto captions"
+      }
+    ],
+    "rule": "For video med tale: bestått bare når all tale er tekstet og kontrolløren har bekreftet at ingen meningsbærende ord, priser eller produktnavn avviker fra lyden.",
+    "check": "menneske",
+    "example_bad": "Automatisk teksting gjør «uten binding» til «med binding».",
+    "example_good": "Underteksten er rettet til «uten binding» og kontrollert mot hele lydsporet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "format": "video",
+      "trigger": "tale",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler tekstlag og automatiske undertekster som del av plattformtilpasset kreativt arbeid."
+  },
+  {
+    "id": "plattform-tiktok-ulike-testvarianter",
+    "subject": "Plattform",
+    "name": "Lag tydelig forskjellige TikTok-varianter",
+    "principle": "TikTok anbefaler flere annonser med store forskjeller. Fumes testkrav bruker tre varianter som et konkret minimum.",
+    "sources": [
+      {
+        "source": "TikTok — Creative best practices for performance ads",
+        "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+        "locator": "Set up for success"
+      }
+    ],
+    "rule": "Bestått bare når hver annonsegruppe i den kreative testen har minst tre varianter, og hver variant har en registrert forskjell i åpning, demonstrasjon eller fortellergrep; bare endret filnavn, farge eller logo teller ikke.",
+    "check": "kritiker",
+    "example_bad": "Tre identiske videoer med ulike filnavn.",
+    "example_good": "Tre varianter åpner med henholdsvis spørsmål, produkttest og brukssituasjon.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "trigger": "kreativtest",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler flere varierte kreative alternativer i annonsegrupper for å undersøke hva som virker."
+  },
+  {
+    "id": "plattform-tiktok-plan-for-utskifting",
+    "subject": "Plattform",
+    "name": "Definer når en annonse skal fornyes",
+    "principle": "TikTok anbefaler å følge resultatene og fornye materiell ved vedvarende tilbakegang. Terskelen må bestemmes før evalueringen.",
+    "sources": [
+      {
+        "source": "TikTok — Creative best practices for performance ads",
+        "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+        "locator": "Evaluate and optimize"
+      }
+    ],
+    "rule": "Bestått bare når planen angir resultatmål, tallfestet grense, måleperiode, minste datagrunnlag og ansvarlig person for utskifting av annonsemateriellet.",
+    "check": "kritiker",
+    "example_bad": "«Vi bytter når resultatene føles svake.»",
+    "example_good": "Ansvarlig bytter variant hvis kostnad per henvendelse overstiger 400 kr i sju dager etter minst 30 henvendelser.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler å følge resultatene og fornye materiell når effekten svekkes."
+  },
+  {
+    "id": "plattform-tiktok-sporbart-materiell",
+    "subject": "Plattform",
+    "name": "Registrer materiell som kan gjenbrukes",
+    "principle": "Et bibliotek med annonsemateriell gjør senere variasjoner og fornyelser enklere. Fumes kontroll krever sporbarhet til originalen.",
+    "sources": [
+      {
+        "source": "TikTok — Creative best practices for performance ads",
+        "url": "https://ads.tiktok.com/help/article/creative-best-practices",
+        "locator": "Evaluate and optimize; punktet om library of creative assets"
+      }
+    ],
+    "rule": "Bestått bare når hver publiseringsklar fil har en unik materiell-ID, originalfilreferanse og versjonsnummer i materiellbiblioteket.",
+    "check": "kode",
+    "example_bad": "Tre filer heter «endelig», uten opplysninger om hvilken som ble godkjent.",
+    "example_good": "Annonse TT-042, versjon 3, peker til originalopptaket og eksportfilen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler å bygge et bibliotek av kreativt materiell for videre bruk og optimalisering."
+  },
+  {
+    "id": "plattform-tiktok-dater-trendvalget",
+    "subject": "Plattform",
+    "name": "Dokumenter trendens relevans",
+    "principle": "TikTok anbefaler å finne aktuelle trender i den relevante regionen. Trendvalg må bygge på en faktisk observasjon og en kobling til produktet.",
+    "sources": [
+      {
+        "source": "TikTok — Creative Codes: 6 principles for creating on TikTok",
+        "url": "https://ads.tiktok.com/business/en/blog/creative-best-practices-top-performing-ads",
+        "locator": "2. Use trends as storytelling templates"
+      }
+    ],
+    "rule": "Når en TikTok-idé begrunnes med en trend: bestått bare når notatet har kilde, observasjonsdato, region og én konkret forklaring på hvordan trenden brukes til å vise produktets nytte.",
+    "check": "kritiker",
+    "example_bad": "«Alle bruker denne trenden», uten kilde eller produktkobling.",
+    "example_good": "En datert trendobservasjon fra Norge brukes som mal for å demonstrere matboksens tetning.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "trigger": "trend",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      7
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler å bruke trender som utgangspunkt for fortellergrep."
+  },
+  {
+    "id": "plattform-tiktok-hendelse-svarer-til-handling",
+    "subject": "Plattform",
+    "name": "Knytt målehendelsen til kundens handling",
+    "principle": "TikToks måling bygger på hendelser fra kundereisen. Fumes kontroll krever en presis kobling mellom hendelsen og handlingen kampanjen skal skape.",
+    "sources": [
+      {
+        "source": "TikTok — Performance Fundamentals",
+        "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+        "locator": "Optimal Data Connection Setup → Events og Parameters"
+      }
+    ],
+    "rule": "For en kampanje med nettstedskonvertering: bestått bare når måleplanen navngir optimaliseringshendelsen, utløsende brukerhandling og nødvendige parametere, og en test viser at hendelsen utløses av den handlingen.",
+    "check": "kode+menneske",
+    "example_bad": "Et sidebesøk rapporteres som et fullført kjøp.",
+    "example_good": "Et testkjøp utløser kjøpshendelsen med riktig ordreverdi og valuta.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "trigger": "nettstedskonvertering",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok beskriver valg av hendelser og parametere som del av oppsettet for datatilkobling."
+  },
+  {
+    "id": "plattform-tiktok-registrer-attribusjonsvinduer",
+    "subject": "Plattform",
+    "name": "Oppgi vinduene bak konverteringstallene",
+    "principle": "TikTok skiller mellom konverteringer etter klikk og etter visning. Vinduene påvirker hvilke hendelser som tilskrives annonsen.",
+    "sources": [
+      {
+        "source": "TikTok — Performance Fundamentals",
+        "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+        "locator": "Attribution Strategy; tabellen med Click Through Attribution, View Through Attribution og Attribution Window Setting"
+      }
+    ],
+    "rule": "Bestått bare når rapporten oppgir hendelsen som telles, klikkvinduet, visningsvinduet eller at visningsattribusjon er av, og datoen innstillingene ble kontrollert.",
+    "check": "kode+menneske",
+    "example_bad": "Rapporten sier «50 kjøp fra TikTok» uten attribusjonsinnstillinger.",
+    "example_good": "Rapporten oppgir kjøpshendelse, sju dagers klikkvindu, én dags visningsvindu og kontrolldato.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "trigger": "resultatrapport",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok beskriver klikk- og visningsbaserte attribusjonsvinduer og deres betydning for måling."
+  },
+  {
+    "id": "plattform-sammenlign-like-maalegrunnlag",
+    "subject": "Plattform",
+    "name": "Kontroller målegrunnlaget mellom plattformer",
+    "principle": "TikTok advarer mot å sammenligne resultater fra ulike attribusjonsvinduer uten å ta hensyn til forskjellene.",
+    "sources": [
+      {
+        "source": "TikTok — Performance Fundamentals",
+        "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+        "locator": "Attribution Strategy → Assessing Impact; avsnittet om comparing attribution windows across different platforms"
+      }
+    ],
+    "rule": "Bestått bare når en rangering av plattformer etter konverteringskostnad bruker samme hendelsesdefinisjon og attribusjonsvinduer; ved forskjeller skal rangeringen utelates og forskjellene oppgis ved tallene.",
+    "check": "kritiker+menneske",
+    "example_bad": "TikTok med visningsattribusjon kåres til vinner mot Google med bare klikkattribusjon.",
+    "example_good": "Tall med ulike vinduer vises separat med innstillingene oppgitt, uten en vinner basert på kostnadstallene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "trigger": "resultatrapport",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok anbefaler å vurdere attribusjonsvinduer når resultater sammenlignes mellom plattformer."
+  },
+  {
+    "id": "plattform-tiktok-splittest-med-hypotese",
+    "subject": "Plattform",
+    "name": "Bestem hypotesen før splittesten",
+    "principle": "TikTok beskriver splittester som en måte å sammenligne annonseringsvalg på. Fumes kontroll gjør sammenligningen etterprøvbar.",
+    "sources": [
+      {
+        "source": "TikTok — Performance Fundamentals",
+        "url": "https://ads.tiktok.com/business/library/TikTok_Performance_Fundamentals.pdf",
+        "locator": "Campaign Measurement → Measurement Strategies → Split Testing"
+      }
+    ],
+    "rule": "Bestått bare når testplanen før oppstart angir hypotese, én variabel som endres, primært resultatmål, fordelingsmåte og stoppregel.",
+    "check": "kritiker",
+    "example_bad": "Etter kampanjen velges klikkrate som mål fordi den ga en ønsket vinner.",
+    "example_good": "Før oppstart registreres en test av to åpninger, tilfeldig fordeling, kostnad per kjøp og avtalt stoppregel.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "tiktok",
+      "trigger": "splittest",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "TikTok beskriver splittester som en metode for å undersøke forskjeller mellom kampanjealternativer."
+  },
+  {
+    "id": "plattform-google-sertifikat-person-og-dato",
+    "subject": "Plattform",
+    "name": "Kontroller hvem som er Google-sertifisert",
+    "principle": "Google Ads-sertifisering gjelder personen som bestod prøven, og må være gyldig når den brukes i markedsføring.",
+    "sources": [
+      {
+        "source": "Google Ads — About certifications",
+        "url": "https://support.google.com/google-ads/answer/9702955?hl=en",
+        "locator": "How to stay certified; Guidelines for communicating your certification status"
+      }
+    ],
+    "rule": "Når en person omtales som Google Ads-sertifisert: bestått bare når dokumentasjonen viser samme person, aktuelt produktområde og en utløpsdato som ikke er passert.",
+    "check": "menneske",
+    "example_bad": "En medarbeider bruker kollegaens utløpte sertifikat som bevis for egen sertifisering.",
+    "example_good": "Personens eget sertifikat for Google Ads Video er gyldig på publiseringsdatoen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "trigger": "egenmarkedsforing-google-kompetanse",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Google beskriver sertifisering som personlig og tidsbegrenset til det aktuelle produktområdet."
+  },
+  {
+    "id": "plattform-google-partner-er-egen-status",
+    "subject": "Plattform",
+    "name": "Skill sertifisering fra partnerstatus",
+    "principle": "Google skiller mellom personlige Ads-sertifikater og partnerstatus for selskaper.",
+    "sources": [
+      {
+        "source": "Google Ads — About certifications",
+        "url": "https://support.google.com/google-ads/answer/9702955?hl=en",
+        "locator": "The difference between Google Ads certifications and the Google Partner badge"
+      }
+    ],
+    "rule": "Når et selskap bruker Google Partner-navnet eller partnermerket: bestått bare når selskapets gjeldende partnerstatus er dokumentert; en ansatts sertifikat er ikke tilstrekkelig.",
+    "check": "menneske",
+    "example_bad": "Byrået kaller seg Google Partner fordi én ansatt har bestått en prøve.",
+    "example_good": "Byrået bruker partnermerket etter at selskapets gjeldende partnerstatus er kontrollert.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "trigger": "egenmarkedsforing-google-tjenester",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Google skiller mellom en persons produktsertifisering og en virksomhets Google Partner-status."
+  },
+  {
+    "id": "plattform-google-tilbud-finnes-paa-maalsiden",
+    "subject": "Plattform",
+    "name": "La tilbudet finnes på målsiden",
+    "principle": "Google krever sammenheng mellom annonse og destinasjon, og at annonserte tilbud faktisk er tilgjengelige.",
+    "sources": [
+      {
+        "source": "Google — Misrepresentation policy",
+        "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+        "locator": "Unclear relevance; Unavailable offers"
+      }
+    ],
+    "rule": "Bestått bare når annonsens produkt, pris og tilbudsvilkår kan finnes etter å ha åpnet den direkte lenkede målsiden, og det annonserte tilbudet kan bestilles på disse vilkårene.",
+    "check": "menneske",
+    "example_bad": "Annonsen lover en pakke til 299 kr, men lenken åpner en side der pakken ikke finnes.",
+    "example_good": "Lenken åpner den annonserte pakken til 299 kr med de samme vilkårene og fungerende bestilling.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-ads",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      5,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": false,
+    "source_says": "Google forbyr utilgjengelige tilbud og misvisende sammenheng mellom annonse og målinnhold."
+  },
+  {
+    "id": "plattform-google-ingen-falske-knapper",
+    "subject": "Plattform",
+    "name": "Fjern villedende grensesnittelementer",
+    "principle": "Google forbyr annonseutforming som etterligner funksjoner eller systemmeldinger på en villedende måte.",
+    "sources": [
+      {
+        "source": "Google — Misrepresentation policy",
+        "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+        "locator": "Misleading ad design"
+      }
+    ],
+    "rule": "Bestått bare når annonsen verken etterligner en systemmelding eller viser knapper, avkrysningsvalg eller inndatafelt som ikke utfører den viste funksjonen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Et tegnet søkefelt sender alle klikk til en kjøpsside uten å utføre et søk.",
+    "example_good": "En vanlig annonseknapp merket «Se produktet» åpner produktsiden.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-ads",
+      "country": "alle"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": false,
+    "source_says": "Google forbyr misvisende annonseutforming som etterligner systemmeldinger eller viser falske betjeningselementer."
+  },
+  {
+    "id": "plattform-google-vis-betalingsmodellen",
+    "subject": "Plattform",
+    "name": "Vis hva kunden faktisk skal betale",
+    "principle": "Google forbyr skjulte betalingsmodeller og prisutforming som gir et feil inntrykk av kostnaden.",
+    "sources": [
+      {
+        "source": "Google — Misrepresentation policy",
+        "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+        "locator": "Dishonest pricing practices"
+      }
+    ],
+    "rule": "Bestått bare når kontrollen av annonse, målside og bestilling finner betalingsintervall, alle obligatoriske kostnader og eventuelle prisendringer etter introduksjonsperioden før bestillingen bekreftes; annonsens pris må ikke motsi dette.",
+    "check": "menneske",
+    "example_bad": "Annonsen sier «99 kr totalt», mens bestillingen skjuler et obligatorisk månedsabonnement.",
+    "example_good": "Annonsen og målsiden oppgir 99 kr første måned, deretter 299 kr per måned, og obligatoriske kostnader vises før bekreftelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-ads",
+      "trigger": "prisbudskap",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": false,
+    "source_says": "Google krever tydelig informasjon om betalingsmodell og kostnader og forbyr villedende prispraksis."
+  },
+  {
+    "id": "plattform-ingen-ki-ugc-eller-falske-kunder",
+    "subject": "Plattform",
+    "name": "Avvis KI-laget UGC og falske KI-kunder",
+    "principle": "Fume tillater ikke KI-laget brukergenerert innhold eller KI-genererte personer som utgir seg for å være virkelige kunder. Dette gjelder også når en plattform tilbyr slike verktøy eller merking.",
+    "sources": [
+      {
+        "source": "Fume — BRIEF.md",
+        "url": "BRIEF.md",
+        "locator": "Step 2 — Skills; avsnittet Fume ethics beat platform advice"
+      }
+    ],
+    "rule": "Før publisering skal materielloversikten dekke alle personfremstillinger og innslag laget som UGC, med referanser til originale kildefiler, produksjonslogg, opptaksdato, ansvarlig produsent, tillatelser og eventuell KI-bruk. Et navngitt menneske skal kontrollere filene og loggen, særlig ved usikkert opphav; egenoppgitt opprinnelse alene er utilstrekkelig. Bestått krever null KI-genererte UGC-innslag og null KI-genererte personer fremstilt som virkelige kunder. Ukjent opphav gir avvist inntil dokumentasjonen er kontrollert; merking eller plattformtillatelse kan ikke oppheve forbudet. For tekstlig planlegging uten relevant materiell logges ikke relevant med begrunnelse; kontrollen må kjøres på faktisk materiell før publisering. Dette er felles etikkport også for juridisk kontroll. Ved potensiell spenning med plattform-shorts-ekte-produktbruk eller plattform-tiktok-staaende-video har Fume-forbudet alltid prioritet; plattformrådene krever ikke i seg selv forbudt innhold.",
+    "check": "kode+menneske",
+    "example_bad": "En KI-avatar sier «Jeg er kunde og har brukt dette i seks måneder», med KI-merking i hjørnet.",
+    "example_good": "En virkelig kunde forteller om egen erfaring i et sporbart originalopptak; materielloversikten dokumenterer at innslaget ikke er KI-laget.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      8,
+      9,
+      10
+    ],
+    "tier": "fume",
+    "conflicts_with": [
+      "plattform-shorts-ekte-produktbruk",
+      "plattform-tiktok-staaende-video"
+    ],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Fumes brief forbyr KI-generert UGC og KI-genererte personer som utgir seg for å være virkelige kunder."
+  }
+]

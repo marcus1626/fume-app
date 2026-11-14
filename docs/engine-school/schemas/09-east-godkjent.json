@@ -1,0 +1,199 @@
+{
+  "id": "09-east-godkjent",
+  "label_nb": "Prøv relevante EAST-tiltak mot observerte barrierer — steg 4",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "leser"
+  ],
+  "read_by": [
+    "east-tiltak-og-test",
+    "lovsjekk-per-land"
+  ],
+  "fields": [
+    {
+      "id": "09-east-godkjent.innhold.east",
+      "path": "innhold.east",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet east for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Samlet east for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-east-godkjent.innhold.east.barrierer",
+      "path": "innhold.east.barrierer",
+      "group": "innhold",
+      "label_nb": "Dokumenterte barrierer",
+      "type": "array",
+      "values": [],
+      "definition": "Kildebelagte observerte hindre knyttet til konkret handling og situasjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Kildebelagte observerte hindre knyttet til konkret handling og situasjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-east-godkjent.innhold.east.tiltak",
+      "path": "innhold.east.tiltak",
+      "group": "innhold",
+      "label_nb": "Relevante EAST-grep",
+      "type": "array",
+      "values": [],
+      "definition": "Grep med barriere-ID, virkemåte, etisk kontroll, forventning og testhypotese.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Grep med barriere-ID, virkemåte, etisk kontroll, forventning og testhypotese."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-east-godkjent.innhold.east.valg",
+      "path": "innhold.east.valg",
+      "group": "innhold",
+      "label_nb": "Menneskets tiltaksvalg",
+      "type": "object",
+      "values": [],
+      "definition": "Valgt tiltak og testutkast med måleeier, behandlingsgrunnlag, budsjett og stoppgrenser; endret utførelse krever ny kritikk og lovsjekk.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Valgt tiltak og testutkast med måleeier, behandlingsgrunnlag, budsjett og stoppgrenser; endret utførelse krever ny kritikk og lovsjekk."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "09-east-godkjent.innhold.east.tiltak[].grep",
+      "path": "innhold.east.tiltak[].grep",
+      "group": "innhold",
+      "label_nb": "EAST-grep",
+      "type": "array",
+      "values": [
+        {
+          "value": "easy",
+          "definition": "Gjør handling enklere."
+        },
+        {
+          "value": "attractive",
+          "definition": "Gjør relevant verdi synlig."
+        },
+        {
+          "value": "social",
+          "definition": "Bruker dokumentert sosial kontekst."
+        },
+        {
+          "value": "timely",
+          "definition": "Treffer relevant tidspunkt."
+        }
+      ],
+      "definition": "Velger relevante grep for observert barriere; ingen effektgaranti.",
+      "filled_by": "modell",
+      "source": {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "EAST; Easy, Attractive, Social, Timely"
+      },
+      "lever": {
+        "flows": [
+          "east-tiltak-og-test",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Velger relevante grep for observert barriere; ingen effektgaranti."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ]
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/09-east-godkjent.json",
+  "artifact_family": "east",
+  "producer": {
+    "flow": "east-tiltak-og-test",
+    "step": 4,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.east.",
+  "validation_profile": {
+    "step_validation": "flows/east-tiltak-og-test.json#/steps/3/validation",
+    "required_from_steps": {
+      "barrierer": 1,
+      "tiltak": 2,
+      "valg": 4
+    },
+    "critic_required": true,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

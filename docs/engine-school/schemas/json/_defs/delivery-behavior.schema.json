@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "hoppbar",
+    "ikke-hoppbar",
+    "brukerstartet",
+    "feed",
+    "ikke-relevant"
+  ],
+  "x-list": "../../lists/delivery-behavior.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/delivery-behavior.schema.json",
+  "title": "delivery-behavior"
+}

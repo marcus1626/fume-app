@@ -1,0 +1,1115 @@
+[
+  {
+    "id": "ide-samlet-skisse",
+    "subject": "Idé",
+    "name": "Vurder ord og bilde sammen",
+    "principle": "Samspillet mellom ord og bilde kan bære selve ideen.",
+    "sources": [
+      {
+        "source": "Bill Bernbach / DDB — Creative Hall of Fame",
+        "url": "https://creativehalloffame.org/inductees/bill-bernbach/",
+        "locator": "Career, avsnittene om samspillet mellom art director og tekstforfatter"
+      }
+    ],
+    "rule": "Bestått når hvert visuelt konsept som vurderes, har en skisse med både tekst og bilde; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "En overskrift vurderes uten bilde.",
+    "example_good": "Skissen viser overskriften sammen med hovedmotivet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Bernbach-omtalen beskriver samarbeid mellom tekstforfatter og art director om annonsens samlede uttrykk."
+  },
+  {
+    "id": "ide-bildets-bidrag",
+    "subject": "Idé",
+    "name": "Navngi bildets bidrag",
+    "principle": "Et bilde kan tilføre mening som ordene alene mangler.",
+    "sources": [
+      {
+        "source": "Bill Bernbach / DDB — Creative Hall of Fame",
+        "url": "https://creativehalloffame.org/inductees/bill-bernbach/",
+        "locator": "Career, avsnittene om samspillet mellom art director og tekstforfatter"
+      }
+    ],
+    "rule": "Konseptbeskrivelsen skal navngi en konkret tilleggsmening utover teksten. En uavhengig kritiker med annen faktisk modell enn tekst- og bildeskriver skal se selve skissen eller bildet, identifisere den synlige detaljen som formidler meningen og begrunne hva kombinasjonen tilfører. Skriverens påstand alene er utilstrekkelig; fraværende, uleselig eller tvetydig billedbelegg gir avvist og menneskelig vurdering. Bruk målgruppetesting der det lar seg gjøre, og logg om det er utført eller hvorfor det mangler. ide-metafor-med-forbindelse og ide-symbol-med-betydning gjelder bare sine særtilfeller og gjenbruker denne vurderingen; samme fravær av billedbelegg registreres som ett avvik.",
+    "check": "kritiker",
+    "example_bad": "Teksten sier rød stol; bildet viser en rød stol.",
+    "example_good": "Teksten lover plass; bildet viser et trangt rom som åpnes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Bernbach-omtalen fremhever samspillet mellom tekst og bilde i kreativt arbeid."
+  },
+  {
+    "id": "ide-felles-utvikling",
+    "subject": "Idé",
+    "name": "La begge fag påvirke ideen",
+    "principle": "Visuell utforming er en del av idéarbeidet.",
+    "sources": [
+      {
+        "source": "Bill Bernbach / DDB — Creative Hall of Fame",
+        "url": "https://creativehalloffame.org/inductees/bill-bernbach/",
+        "locator": "Career, avsnittene om samspillet mellom art director og tekstforfatter"
+      }
+    ],
+    "rule": "Bestått når konseptloggen inneholder et tekstlig og et visuelt forslag før hovedideen velges; ellers ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Bildet bestilles etter at ideen er låst.",
+    "example_good": "Tekstforslaget og bildeskissen vurderes før valget.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      8
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Bernbach-omtalen beskriver at tekstforfatter og art director utvikler annonser sammen."
+  },
+  {
+    "id": "ide-sted-i-fortelling",
+    "subject": "Idé",
+    "name": "Gi fortellingen et sted",
+    "principle": "Et gjenkjennelig sted gir handlingen sammenheng.",
+    "sources": [
+      {
+        "source": "System1 — Creative attention, Orlando Wood presentation",
+        "url": "https://system1group.com/wp-content/uploads/2023/03/System1-Finecast-TV-Innovation-Summit-030323-V2.pdf",
+        "locator": "PDF-side 17 (sideindeks 16), Right Brain Advertising Features"
+      }
+    ],
+    "rule": "Bestått når en fortellende filmskisse viser eller navngir stedet der handlingen foregår; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Mennesker svever foran en ubestemt bakgrunn.",
+    "example_good": "Handlingen foregår på et kjøkken under middagslagingen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Woods presentasjon knytter konkret sted til reklametrekk han forbinder med høyre hjernehalvdel."
+  },
+  {
+    "id": "ide-handling-med-utvikling",
+    "subject": "Idé",
+    "name": "Vis en endring i scenen",
+    "principle": "En fortelling utvikler seg gjennom det som skjer.",
+    "sources": [
+      {
+        "source": "System1 — Creative attention, Orlando Wood presentation",
+        "url": "https://system1group.com/wp-content/uploads/2023/03/System1-Finecast-TV-Innovation-Summit-030323-V2.pdf",
+        "locator": "PDF-side 17 (sideindeks 16), Right Brain Advertising Features"
+      }
+    ],
+    "rule": "Bestått når filmskissen viser en startsituasjon, en hendelse og en endret sluttsituasjon; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Tre nærbilder uten hendelsesforløp kalles en fortelling.",
+    "example_good": "Nøkkelen mangler, noen leter, døren åpnes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Woods presentasjon fremhever fortelling og hendelsesforløp som kreative kjennetegn."
+  },
+  {
+    "id": "ide-figur-med-handling",
+    "subject": "Idé",
+    "name": "La figuren gjøre noe",
+    "principle": "En handlende figur kan gi publikum noe å følge.",
+    "sources": [
+      {
+        "source": "System1 — Creative attention, Orlando Wood presentation",
+        "url": "https://system1group.com/wp-content/uploads/2023/03/System1-Finecast-TV-Innovation-Summit-030323-V2.pdf",
+        "locator": "PDF-side 17 (sideindeks 16), Right Brain Advertising Features"
+      }
+    ],
+    "rule": "Bestått når hovedfiguren i en fortellende filmskisse gjør et valg eller en handling som endrer hendelsesforløpet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Hovedfiguren står stille ved siden av varen.",
+    "example_good": "Hovedfiguren bruker varen for å løse situasjonen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "format": "video",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Woods presentasjon fremhever karakterer og handling i fortellende reklame."
+  },
+  {
+    "id": "ide-folelsestest",
+    "subject": "Idé",
+    "name": "Spør publikum om følelsen",
+    "principle": "Skaperens hensikt viser ikke hva publikum faktisk føler.",
+    "sources": [
+      {
+        "source": "System1 — Methodology",
+        "url": "https://system1group.com/methodology",
+        "locator": "The more people feel, the more they buy, metodeavsnittene før Proven to predict growth"
+      }
+    ],
+    "rule": "Bestått når en påstått målt følelsesreaksjon har registrerte svar fra publikum og beskriver spørsmålet som ble brukt; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Modellen mener filmen gjør folk glade.",
+    "example_good": "Deltakerne oppga glede etter visningen; spørsmålet er vedlagt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "System1 beskriver måling av publikums følelsesreaksjoner som del av sin annonsetestmetode."
+  },
+  {
+    "id": "ide-noytral-reaksjon",
+    "subject": "Idé",
+    "name": "Tillat svar uten følelse",
+    "principle": "En test må kunne registrere at en idé ikke vekker følelser.",
+    "sources": [
+      {
+        "source": "System1 — Methodology",
+        "url": "https://system1group.com/methodology",
+        "locator": "The more people feel, the more they buy, metodeavsnittene før Proven to predict growth"
+      }
+    ],
+    "rule": "Bestått når svaralternativene i en følelsestest inkluderer nøytral eller ingen følelse; ellers ikke bestått.",
+    "check": "kode",
+    "example_bad": "Alle må velge glede eller overraskelse.",
+    "example_good": "Deltakerne kan også velge ingen følelse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "System1s metode omfatter nøytral reaksjon i målingen av følelser."
+  },
+  {
+    "id": "ide-avsender-i-test",
+    "subject": "Idé",
+    "name": "Mål hvem publikum husker",
+    "principle": "En likt idé kan likevel bli knyttet til feil avsender.",
+    "sources": [
+      {
+        "source": "System1 — Methodology",
+        "url": "https://system1group.com/methodology",
+        "locator": "Make your brand known"
+      }
+    ],
+    "rule": "Bestått når rapporten fra en idétest med merkevare viser spørsmålet om avsender og andelen riktige svar; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Filmen fikk høy vurdering; avsender ble ikke undersøkt.",
+    "example_good": "Rapporten viser at 62 prosent navnga riktig merke.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "System1 beskriver måling av om publikum gjenkjenner merket i annonsen."
+  },
+  {
+    "id": "ide-metafor-med-forbindelse",
+    "subject": "Idé",
+    "name": "Forklar forbindelsen i metaforen",
+    "principle": "En visuell metafor forbinder noe kjent med budskapet.",
+    "sources": [
+      {
+        "source": "D&AD — Everything Starts With a Handmade Square",
+        "url": "https://www.dandad.org/work/new-blood-archive/everything-starts-with-a-handmade-square",
+        "locator": "Everything Starts With a Handmade Square, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når konseptbeskrivelsen navngir hva som sammenlignes, fellestrekket og forbindelsen til produktet; ellers ikke bestått. Dette er et særtilfelle av ide-bildets-bidrag: gjenbruk samme visuelle belegg og avviks-ID; vurder her bare det særskilte forholdet mellom metaforen eller symbolet og budskapet.",
+    "check": "kritiker",
+    "example_bad": "En tilfeldig romrakett skal bety tradisjon.",
+    "example_good": "Et sting og en piksel forbindes gjennom mønsterbygging.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD-caset bruker en håndlaget firkant som en visuell forbindelse til produktet og håndverket."
+  },
+  {
+    "id": "ide-samme-ide-i-kanaler",
+    "subject": "Idé",
+    "name": "Behold ideen gjennom kanalene",
+    "principle": "En idé kan få flere former uten å miste sin bærende forbindelse.",
+    "sources": [
+      {
+        "source": "D&AD — Everything Starts With a Handmade Square",
+        "url": "https://www.dandad.org/work/new-blood-archive/everything-starts-with-a-handmade-square",
+        "locator": "Everything Starts With a Handmade Square, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når hver planlagt kanalversjon viser det samme navngitte fellestrekket som hovedkonseptet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Plakat og spill har helt ulike budskap.",
+    "example_good": "Begge bygger mønstre av små håndlagde deler.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD-caset beskriver hvordan den håndlagde firkanten ble brukt som en gjennomgående kreativ idé."
+  },
+  {
+    "id": "ide-studentcase-status",
+    "subject": "Idé",
+    "name": "Merk studentarbeid som konsept",
+    "principle": "Et studentarbeid dokumenterer ikke at kampanjen er gjennomført.",
+    "sources": [
+      {
+        "source": "D&AD — Everything Starts With a Handmade Square",
+        "url": "https://www.dandad.org/work/new-blood-archive/everything-starts-with-a-handmade-square",
+        "locator": "Everything Starts With a Handmade Square, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når referanser til New Blood-arbeid er merket studentkonsept og ikke brukes som bevis for faktisk salgseffekt; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Studentkonseptet beviser økt salg.",
+    "example_good": "Studentkonseptet viser en mulig visuell løsning.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD presenterer arbeidet som et New Blood-studentkonsept."
+  },
+  {
+    "id": "ide-typografi-baerer-mening",
+    "subject": "Idé",
+    "name": "La skriften uttrykke budskapet",
+    "principle": "Typografi kan være en del av ideen.",
+    "sources": [
+      {
+        "source": "D&AD — Up to Our Necks",
+        "url": "https://www.dandad.org/work/new-blood-archive/up-to-our-necks",
+        "locator": "Up to Our Necks, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når en idé som bygger på skrift, forklarer hvilken endring i bokstavformen som uttrykker budskapet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "En tilfeldig skrifttype kalles ideen.",
+    "example_good": "Bokstaver som gradvis forsvinner, uttrykker tap.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD-caset bruker bokstavenes utforming til å uttrykke sakens budskap."
+  },
+  {
+    "id": "ide-symbol-med-betydning",
+    "subject": "Idé",
+    "name": "Definer hva symbolet betyr",
+    "principle": "Et visuelt symbol trenger en bestemt betydning når det skal forklare en sak.",
+    "sources": [
+      {
+        "source": "D&AD — Up to Our Necks",
+        "url": "https://www.dandad.org/work/new-blood-archive/up-to-our-necks",
+        "locator": "Up to Our Necks, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når konseptbeskrivelsen definerer hva hver gjentatt visuell enhet representerer; ellers ikke bestått. Dette er et særtilfelle av ide-bildets-bidrag: gjenbruk samme visuelle belegg og avviks-ID; vurder her bare det særskilte forholdet mellom metaforen eller symbolet og budskapet.",
+    "check": "kritiker",
+    "example_bad": "Prikker betyr litt av hvert.",
+    "example_good": "Hver prikk representerer ett registrert tilfelle.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD-caset bruker gjentatte visuelle enheter til å formidle omfanget av problemet."
+  },
+  {
+    "id": "ide-handling-for-saken",
+    "subject": "Idé",
+    "name": "Knytt saken til en handling",
+    "principle": "En sakskampanje trenger et mål utover oppmerksomhet.",
+    "sources": [
+      {
+        "source": "D&AD — Up to Our Necks",
+        "url": "https://www.dandad.org/work/new-blood-archive/up-to-our-necks",
+        "locator": "Up to Our Necks, de to beskrivende avsnittene"
+      }
+    ],
+    "rule": "Bestått når konseptet navngir både mottakeren av oppfordringen og handlingen mottakeren skal utføre; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi skal skape debatt.",
+    "example_good": "Kommunestyret oppfordres til å behandle forslaget i desember.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      6,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "D&AD-caset knytter en visuell fremstilling av problemet til en oppfordring om handling."
+  },
+  {
+    "id": "ide-konkret-hverdagsproblem",
+    "subject": "Idé",
+    "name": "Start med et observerbart hinder",
+    "principle": "En praktisk idé kan springe ut av et lite hinder i hverdagen.",
+    "sources": [
+      {
+        "source": "D&AD — Case Study: ThisAbles (fra Impact-oversikten)",
+        "url": "https://www.dandad.org/insights/awards/thisables-case-study-insights",
+        "locator": "Insight og Idea"
+      }
+    ],
+    "rule": "Bestått når konseptet beskriver en person, en oppgave og det konkrete hinderet ideen skal fjerne; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi skal gjøre hverdagen bedre.",
+    "example_good": "Et lite brytergrep gjør lampen vanskelig å slå på.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "ThisAbles-caset tar utgangspunkt i konkrete hindringer mennesker med funksjonsnedsettelser møter ved bruk av møbler."
+  },
+  {
+    "id": "ide-test-med-berorte",
+    "subject": "Idé",
+    "name": "Undersøk ideen med berørte brukere",
+    "principle": "Personer som møter hindret, kan oppdage feil teamet overser.",
+    "sources": [
+      {
+        "source": "D&AD — Case Study: ThisAbles (fra Impact-oversikten)",
+        "url": "https://www.dandad.org/insights/awards/thisables-case-study-insights",
+        "locator": "Design"
+      }
+    ],
+    "rule": "Bestått når en løsning for en bestemt brukergruppe har dokumentert tilbakemelding fra personer som selv møter det beskrevne hindret; ellers ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Teamet antar at grepet fungerer.",
+    "example_good": "Brukere prøver grepet og registrerer hvor det svikter.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "ThisAbles-caset beskriver utvikling sammen med mennesker som selv møter de aktuelle brukshindrene."
+  },
+  {
+    "id": "ide-praktisk-losning",
+    "subject": "Idé",
+    "name": "Vis hvordan ideen kan tas i bruk",
+    "principle": "En praktisk kampanjeidé må kunne bli mer enn en illustrasjon.",
+    "sources": [
+      {
+        "source": "D&AD — Case Study: ThisAbles (fra Impact-oversikten)",
+        "url": "https://www.dandad.org/insights/awards/thisables-case-study-insights",
+        "locator": "Production"
+      }
+    ],
+    "rule": "Bestått når et konsept som lover et hjelpemiddel, viser en prøvemodell og en beskrivelse av hvordan brukeren får og bruker det; ellers ikke bestått.",
+    "check": "menneske",
+    "example_bad": "En tegning presenteres som en ferdig løsning.",
+    "example_good": "Prøvemodellen har brukerveiledning og plan for utlevering.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "ThisAbles-caset beskriver konkrete hjelpemidler og hvordan de kunne gjøres tilgjengelige for brukerne."
+  },
+  {
+    "id": "ide-innsikt-som-har-endret-seg",
+    "subject": "Idé",
+    "name": "Finn hva som har endret seg",
+    "principle": "Et gammelt budskap kan miste forbindelsen til publikums oppfatninger.",
+    "sources": [
+      {
+        "source": "Effie — Dove: Igniting a New Vision in an Old Category",
+        "url": "https://effie.org/cases/dove-igniting-a-new-vision-in-an-old-category/",
+        "locator": "Executive Summary"
+      }
+    ],
+    "rule": "Bestått når en idé som skal fornye merkevaren, navngir gammel antakelse, nyere observasjon og kilde til observasjonen; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Unge vil sikkert ha noe nytt.",
+    "example_good": "Intervjuene viser at den gamle fremstillingen oppleves som foreldet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Effies Dove-case beskriver et nytt syn på kategorien som grunnlag for fornyet kommunikasjon."
+  },
+  {
+    "id": "ide-bevar-kjernen",
+    "subject": "Idé",
+    "name": "Skill kjernen fra uttrykket",
+    "principle": "En ny fremstilling kan videreføre en eksisterende merkeidé.",
+    "sources": [
+      {
+        "source": "Effie — Dove: Igniting a New Vision in an Old Category",
+        "url": "https://effie.org/cases/dove-igniting-a-new-vision-in-an-old-category/",
+        "locator": "Executive Summary"
+      }
+    ],
+    "rule": "Bestått når fornyelseskonseptet beskriver både hvilken merkeidé som videreføres, og hva i fremstillingen som endres; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Alt skal bli nytt uten nærmere forklaring.",
+    "example_good": "Løftet om nytelse beholdes; den stereotype rollen fjernes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Effies Dove-case beskriver fornyelse av uttrykket med en videreført merkevareidé."
+  },
+  {
+    "id": "ide-case-riktig-merke",
+    "subject": "Idé",
+    "name": "Kontroller hvilken merkevare casen gjelder",
+    "principle": "Like merkenavn kan tilhøre helt ulike kategorier.",
+    "sources": [
+      {
+        "source": "Effie — Dove: Igniting a New Vision in an Old Category",
+        "url": "https://effie.org/cases/dove-igniting-a-new-vision-in-an-old-category/",
+        "locator": "Executive Summary; Client; Advertiser(s); Markets Ran"
+      }
+    ],
+    "rule": "Bestått når en brukt casereferanse oppgir merke, eier, kategori og marked i samsvar med kilden; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Sjokoladecasen omtales som dokumentasjon for hudpleie.",
+    "example_good": "Referansen angir DOVE Chocolate, Mars, sjokolade og USA.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      3,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Effies case oppgir hvilket Dove-merke, hvilken annonsør, kategori og hvilke markeder arbeidet gjelder."
+  },
+  {
+    "id": "ide-tiltak-bak-saken",
+    "subject": "Idé",
+    "name": "Vis tiltaket bak budskapet",
+    "principle": "En kampanje om samfunnsendring kan bygge på det virksomheten faktisk gjør.",
+    "sources": [
+      {
+        "source": "Cannes Lions — Get to know the Creative Effectiveness Lions (Contract for Change)",
+        "url": "https://www.canneslions.com/news/get-to-know-the-creative-effectiveness-lions-31-03-23",
+        "locator": "Discover creative effectiveness in action., avsnittene om Contract for Change"
+      }
+    ],
+    "rule": "Bestått når konseptet navngir tiltaket som støtter saksløftet, og viser til dokumentasjon for tiltakets status; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vi forandrer landbruket uten noe tiltak.",
+    "example_good": "Avtalen beskriver støtten til gårder som legger om driften.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cannes Lions beskriver konkrete tiltak i Contract for Change som grunnlag for kampanjens formål."
+  },
+  {
+    "id": "ide-rapportert-ikke-bevist",
+    "subject": "Idé",
+    "name": "Skill rapportert resultat fra årsak",
+    "principle": "En prisomtale alene viser ikke hvor mye ideen forårsaket.",
+    "sources": [
+      {
+        "source": "Cannes Lions — Get to know the Creative Effectiveness Lions (Contract for Change)",
+        "url": "https://www.canneslions.com/news/get-to-know-the-creative-effectiveness-lions-31-03-23",
+        "locator": "Discover creative effectiveness in action., avsnittene om Contract for Change"
+      }
+    ],
+    "rule": "Bestått når resultater fra en prisomtale merkes rapportert, og ingen årsakseffekt tilskrives ideen uten dokumentert sammenligning; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Prisen beviser at ideen skapte hele veksten.",
+    "example_good": "Omtalen rapporterer vekst under kampanjen; årsaksbidraget er ikke isolert.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cannes Lions-omtalen gjengir resultater for Contract for Change uten i seg selv å fastsette en generell metode for årsaksbevis."
+  },
+  {
+    "id": "ide-begrunn-endringer",
+    "subject": "Idé",
+    "name": "Knytt endringskrav til oppgaven",
+    "principle": "Tilfeldige endringskrav kan viske ut en idé.",
+    "sources": [
+      {
+        "source": "Dave Trott — Blog",
+        "url": "https://davetrott.co.uk/2026/11/sabotaging-ourselves-2/",
+        "locator": "SABOTAGING OURSELVES, 9. november 2026, avsnittene etter listen med åtte handlinger"
+      }
+    ],
+    "rule": "Bestått når hvert pålagt konseptgrep har en skriftlig begrunnelse knyttet til brief, mottaker, dokumentasjon, etikk eller krav; ellers ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Gjør ideen tryggere fordi jeg foretrekker det.",
+    "example_good": "Motivet endres fordi det viser en udokumentert produkteffekt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      8,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Trott kritiserer endringer og inngrep som svekker kreativt arbeid uten å forbedre det."
+  },
+  {
+    "id": "ide-bevar-baerende-grep",
+    "subject": "Idé",
+    "name": "Kontroller ideen etter endringer",
+    "principle": "En serie små endringer kan fjerne det publikum skulle legge merke til.",
+    "sources": [
+      {
+        "source": "Dave Trott — Blog",
+        "url": "https://davetrott.co.uk/2026/11/sabotaging-ourselves-2/",
+        "locator": "SABOTAGING OURSELVES, 9. november 2026, avsnittene etter listen med åtte handlinger"
+      }
+    ],
+    "rule": "Bestått når revidert skisse fortsatt inneholder det navngitte bærende grepet, eller kunden har godkjent en ny konseptbeskrivelse; ellers ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Revisjonen fjerner poenget uten nytt valg.",
+    "example_good": "Grepet er erstattet og kunden har godkjent den nye ideen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      8,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Trott beskriver hvordan en idé kan miste kraft når dens bærende kreative grep fjernes."
+  },
+  {
+    "id": "ide-bilde-med-oppgave",
+    "subject": "Idé",
+    "name": "Gi hovedbildet en oppgave",
+    "principle": "Bilder bør bidra til kampanjens mål.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "sources/scientific-advertising.txt, kapittel 9; Art In Advertising, innledningen om bildets salgsargument"
+      }
+    ],
+    "rule": "Bestått når konseptbeskrivelsen knytter hovedbildet til en navngitt fordel, et bevis eller en kjøpssituasjon; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Et tilfeldig fossefall fyller annonseflaten.",
+    "example_good": "Bildet viser hvordan lokket hindrer søl i sekken.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins mener annonsebilder bør bidra med et salgsargument fremfor å være pynt alene."
+  },
+  {
+    "id": "ide-test-visuelt-valg",
+    "subject": "Idé",
+    "name": "Undersøk om bildevalget virker",
+    "principle": "Preferanser i teamet avgjør ikke hvilket bilde som fungerer best.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "sources/scientific-advertising.txt, kapittel 9; Art In Advertising, avsnittene om compared results"
+      }
+    ],
+    "rule": "Bestått når et påstått bedre bildevalg enten har sammenlignbare testresultater eller er merket hypotese med planlagt måling; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Dette bildet selger bedre fordi vi liker det.",
+    "example_good": "Bildevalget er en hypotese; kjøp per visning skal sammenlignes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler å sammenligne annonsebilders resultater fremfor å stole på personlig smak."
+  },
+  {
+    "id": "ide-grunn-til-a-bytte",
+    "subject": "Idé",
+    "name": "Gi ideen en grunn til å bytte",
+    "principle": "En idé som ber om bytte, må svare på hvorfor kunden skal endre vane.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "sources/scientific-advertising.txt, kapittel 12; Strategy, avsnittene om rival soap og People don’t quit habits without reason"
+      }
+    ],
+    "rule": "Bestått når konseptet navngir dagens alternativ og en dokumentert fordel ved å velge tilbudet; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Bytt bare fordi vi er nye.",
+    "example_good": "Bytt fra manuell registrering for å få automatisk overføring; funksjonen er dokumentert.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      7
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins påpeker at mennesker trenger en grunn til å endre vaner og velge et annet tilbud."
+  },
+  {
+    "id": "ide-sammenlign-ideer",
+    "subject": "Idé",
+    "name": "La markedet prøve ideene",
+    "principle": "Intern enighet er ikke en måling av publikums respons.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "sources/scientific-advertising.txt, kapittel 15; Test Campaigns, innledningen og avslutningen om sammenlignende tester"
+      }
+    ],
+    "rule": "Bestått når valg begrunnet med forventet effekt har en testplan med alternativer, målgruppe, resultatmål og beslutningskriterium; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Hele teamet liker ideen; derfor vinner den.",
+    "example_good": "To konsepter sammenlignes på bestillinger etter et forhåndsbestemt kriterium.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins anbefaler sammenlignende testkampanjer som grunnlag for valg av annonsering."
+  },
+  {
+    "id": "ide-ny-hypotese-etter-avslag",
+    "subject": "Idé",
+    "name": "Skill nye ideer fra gamle nederlag",
+    "principle": "At én løsning svikter, avgjør ikke utfallet for en annen.",
+    "sources": [
+      {
+        "source": "Claude Hopkins — Scientific Advertising (1923)",
+        "url": "https://www.scientificadvertising.com/ScientificAdvertising.pdf",
+        "locator": "sources/scientific-advertising.txt, kapittel 15; Test Campaigns, matvareeksemplet med to ulike produktformer"
+      }
+    ],
+    "rule": "Bestått når en idé som avvises på grunn av en tidligere test, har en begrunnelse som viser hvilken testet egenskap den deler med taperen; ellers ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Ingen nye former prøves fordi én mislyktes.",
+    "example_good": "Samme uleselige form avvises; et annet grep får egen hypotese.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      7,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Hopkins viser med et matvareeksempel at resultater for én produktform ikke uten videre gjelder en annen."
+  }
+]

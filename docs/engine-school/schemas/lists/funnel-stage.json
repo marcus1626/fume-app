@@ -1,0 +1,46 @@
+{
+  "id": "funnel-stage",
+  "label_nb": "Trakttrinn",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "topp",
+      "label_nb": "Topp",
+      "definition": "Bygge tilgjengelighet og første relevans."
+    },
+    {
+      "id": "midt",
+      "label_nb": "Midt",
+      "definition": "Hjelpe utforskning eller vurdering."
+    },
+    {
+      "id": "bunn",
+      "label_nb": "Bunn",
+      "definition": "Gjøre ønsket kjøp eller bestilling gjennomførbar."
+    },
+    {
+      "id": "lojalitet",
+      "label_nb": "Lojalitet",
+      "definition": "Hjelpe bruk, gjenkjøp eller fornyelse."
+    },
+    {
+      "id": "salgsrunde",
+      "label_nb": "Salgsrunde",
+      "definition": "Tillegg for avgrenset salgsaktivitet; aldri eneste hovedtrinn."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

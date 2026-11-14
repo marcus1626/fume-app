@@ -1,0 +1,10 @@
+{
+  "enum": [
+    "plan",
+    "etterkontroll"
+  ],
+  "x-list": "../../lists/media-plan-mode.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/media-plan-mode.schema.json",
+  "title": "media-plan-mode"
+}

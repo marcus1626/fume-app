@@ -1,0 +1,31 @@
+{
+  "id": "market",
+  "label_nb": "Marked",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "B2B",
+      "label_nb": "Virksomhetsmarked",
+      "definition": "Kjøp på vegne av en virksomhet."
+    },
+    {
+      "id": "B2C",
+      "label_nb": "Privatmarked",
+      "definition": "Kjøp som privatperson eller husholdning."
+    },
+    {
+      "id": "begge",
+      "label_nb": "Begge",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

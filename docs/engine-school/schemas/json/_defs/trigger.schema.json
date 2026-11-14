@@ -1,0 +1,23 @@
+{
+  "enum": [
+    "skjema",
+    "prisbudskap",
+    "egenmarkedsforing-google-tjenester",
+    "egenmarkedsforing-google-kompetanse",
+    "resultatrapport",
+    "trend",
+    "nettstedskonvertering",
+    "kreativtest",
+    "splittest",
+    "tale",
+    "persondemonstrasjon",
+    "skapersamarbeid",
+    "handling-som-mal",
+    "vurdering-som-mal",
+    "alle"
+  ],
+  "x-list": "../../lists/trigger.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/trigger.schema.json",
+  "title": "trigger"
+}

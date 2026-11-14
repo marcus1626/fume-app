@@ -1,0 +1,51 @@
+{
+  "id": "aspect-ratio",
+  "label_nb": "Sideforhold",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "9:16",
+      "label_nb": "9:16",
+      "definition": "Stående fullskjerm."
+    },
+    {
+      "id": "4:5",
+      "label_nb": "4:5",
+      "definition": "Stående feed."
+    },
+    {
+      "id": "1:1",
+      "label_nb": "1:1",
+      "definition": "Kvadratisk."
+    },
+    {
+      "id": "1.91:1",
+      "label_nb": "1.91:1",
+      "definition": "Bredt bildeformat."
+    },
+    {
+      "id": "16:9",
+      "label_nb": "16:9",
+      "definition": "Liggende video."
+    },
+    {
+      "id": "annet",
+      "label_nb": "Annet",
+      "definition": "Eksakt forhold må oppgis og kontrolleres mot valgt plassering."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning i denne filterdimensjonen; bare tillatt i ferdighet, aldri i konkret kontekst."
+    }
+  ]
+}

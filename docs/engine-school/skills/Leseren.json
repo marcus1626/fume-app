@@ -1,0 +1,1381 @@
+[
+  {
+    "id": "leseren-begrunn-kunnskapsnivaa",
+    "subject": "Leseren",
+    "name": "Begrunn leserens forkunnskaper",
+    "principle": "Budskapet må bygge på hva leseren vet om problemet, løsningene og produktet. Et valgt kunnskapsnivå er en vurdering, ikke en egenskap som følger av alder eller stilling.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "rule": "Leserkortet må angi ett nivå og begrunne det med en registrert observasjon eller en uttrykkelig merket antakelse: 1 kjenner ikke problemet, 2 kjenner problemet, 3 kjenner løsningstypen, 4 kjenner produktet, 5 kjenner og ønsker produktet. Ubegrunnet eller udefinert nivå gir ikke bestått.",
+    "check": "kode+kritiker",
+    "example_bad": "Nivå 5, fordi målgruppen er ledere.",
+    "example_good": "Nivå 4: Intervju 12 viser at innkjøperen kjenner produktet, men tviler på om det passer.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz deler lesere i fem nivåer etter kjennskap til problem, løsning og produkt samt ønske om produktet."
+  },
+  {
+    "id": "leseren-ukjent-problem",
+    "subject": "Leseren",
+    "name": "Start med en gjenkjennelig situasjon",
+    "principle": "En leser som ennå ikke ser problemet, trenger en inngang fra egen hverdag før produktets løsning kan gi mening.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "rule": "Ved nivå 1 skal åpningen beskrive en konkret hverdagssituasjon eller et observerbart symptom før første kjøpsoppfordring. En åpning som bare oppgir produkt, pris eller frist, gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Kjøp Ordreflyt Pro i dag.",
+    "example_good": "Skriver du de samme ordrene inn i to systemer hver ettermiddag? Se hvor dobbeltarbeidet oppstår.",
+    "applies_when": {
+      "awareness_level": 1,
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz beskriver det minst bevisste nivået som lesere som ennå ikke oppfatter problemet."
+  },
+  {
+    "id": "leseren-kjent-problem",
+    "subject": "Leseren",
+    "name": "Koble problemet til en løsningstype",
+    "principle": "Når leseren kjenner problemet, må teksten vise at det finnes en måte å løse det på.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "rule": "Ved nivå 2 skal teksten navngi problemet fra leserkortet og beskrive en løsningstype før første kjøpsoppfordring. Begge deler må kunne pekes ut i teksten.",
+    "check": "kritiker",
+    "example_bad": "Du er lei av dobbeltarbeid. Bestill nå.",
+    "example_good": "Lei av å registrere samme ordre to ganger? En kobling mellom systemene kan overføre ordrene automatisk.",
+    "applies_when": {
+      "awareness_level": 2,
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz beskriver problembevisste lesere som kjent med problemet uten å kjenne løsningen."
+  },
+  {
+    "id": "leseren-kjent-loesning",
+    "subject": "Leseren",
+    "name": "Plasser produktet i en kjent løsningstype",
+    "principle": "En leser som kjenner løsningstypen, trenger å forstå hvor dette tilbudet hører hjemme og hva det tilfører.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "rule": "Ved nivå 3 skal teksten navngi produktet, knytte det til løsningstypen i leserkortet og oppgi minst én dokumentert egenskap eller betingelse som kan brukes til å vurdere tilbudet.",
+    "check": "kritiker",
+    "example_bad": "Ordreflyt Pro er fremtiden.",
+    "example_good": "Ordreflyt Pro kobler nettbutikken til regnskapet. Produktarket viser hvilke tre regnskapssystemer som støttes.",
+    "applies_when": {
+      "awareness_level": 3,
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz beskriver løsningsbevisste lesere som kjent med løsningstypen uten nødvendigvis å kjenne produktet."
+  },
+  {
+    "id": "leseren-kjent-produkt",
+    "subject": "Leseren",
+    "name": "Svar på tvilen om produktet",
+    "principle": "Når produktet er kjent, bør argumentene svare på det som fortsatt hindrer et valg.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words"
+      }
+    ],
+    "rule": "Ved nivå 4 skal leserkortet angi minst ett ubesvart spørsmål om produktet, og teksten skal gi et svar med henvisning til et tilgjengelig bevis eller en oppgitt betingelse.",
+    "check": "kritiker",
+    "example_bad": "Du kjenner oss. Nå er tiden inne.",
+    "example_good": "Spørsmål i leserkortet: Kan vi flytte dataene selv? Teksten lenker til flytteveiledningen og oppgir at hjelpen er inkludert.",
+    "applies_when": {
+      "awareness_level": 4,
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz beskriver produktbevisste lesere som kjent med produktet, men ennå ikke overbevist om å velge det."
+  },
+  {
+    "id": "leseren-klar-for-kjoep",
+    "subject": "Leseren",
+    "name": "Gi kjøpsklare lesere tilbudet tidlig",
+    "principle": "Lesere som allerede ønsker produktet, kan trenge praktiske kjøpsopplysninger mer enn en ny innføring.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "The five levels, in plain words; Mistakes I see creators make with this"
+      }
+    ],
+    "rule": "Ved nivå 5 skal produktnavn, pris eller konkret pristilgang, og lenke til neste kjøpssteg stå før første bakgrunnshistorie. Mangler ett av punktene, er kontrollen ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Før bestillingslenken kommer historien om hvordan bedriften ble startet.",
+    "example_good": "Ordreflyt Pro koster 490 kroner per måned. Se vilkår og bestill her.",
+    "applies_when": {
+      "awareness_level": 5,
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "e-post",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz beskriver de mest bevisste som kjent med og interessert i produktet og opptatt av pris og kjøpsmulighet."
+  },
+  {
+    "id": "leseren-allerede-kunde",
+    "subject": "Leseren",
+    "name": "Skill kjøpere fra nye mottakere",
+    "principle": "En person som allerede har kjøpt, har andre informasjonsbehov enn en som vurderer sitt første kjøp.",
+    "sources": [
+      {
+        "source": "Eugene Schwartz — Breakthrough Advertising, awareness levels (free explanation)",
+        "url": "https://www.destinicopp.com/blog/eugene-schwartz-five-levels-of-awareness",
+        "locator": "Mistakes I see creators make with this; How to use it this week"
+      }
+    ],
+    "rule": "Før en salgse-post sendes, skal mottakere med registrert kjøp av samme tilbud enten være utelatt eller få en egen tekst som uttrykkelig gjelder for eksisterende kunder.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle får tilbud om å kjøpe kurset, også de som kjøpte det i går.",
+    "example_good": "Kjøpere er utelatt fra nykundetilbudet og får en e-post om hvordan de starter kurset.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "e-post",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      9,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Den gratis forklaringen av Schwartz advarer mot å behandle eksisterende kjøpere som om de ennå ikke kjenner tilbudet."
+  },
+  {
+    "id": "leseren-situasjon-og-fremgang",
+    "subject": "Leseren",
+    "name": "Beskriv situasjonen og ønsket fremgang",
+    "principle": "Kjøpet blir forståelig når vi vet hva personen prøver å få til i en bestemt situasjon. Demografiske kjennetegn alene forklarer ikke oppgaven.",
+    "sources": [
+      {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Definition"
+      },
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "Context over demographics"
+      }
+    ],
+    "rule": "Leserkortet skal inneholde både en utløsende situasjon og en ønsket endring i personens liv eller arbeid. En målgruppebeskrivelse med bare alder, inntekt eller stilling gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Målgruppe: økonomisjefer mellom 35 og 55 år.",
+    "example_good": "Når månedsavslutningen krever manuell avstemming, vil økonomisjefen få ferdig tallene før styremøtet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      4
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Christensen og Moesta forklarer kjøp gjennom situasjonen og fremgangen kunden ønsker, fremfor demografi alene."
+  },
+  {
+    "id": "leseren-tre-sider-av-jobben",
+    "subject": "Leseren",
+    "name": "Undersøk praktiske, følelsesmessige og sosiale behov",
+    "principle": "En kjøpsoppgave kan romme både et praktisk resultat, en følelse og et forhold til andre mennesker. Vi skal undersøke disse sidene uten å dikte dem opp.",
+    "sources": [
+      {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Helpful Tools → Infographic: Three critical must-knows → A job incorporates three key elements."
+      }
+    ],
+    "rule": "Leserkortet skal ha egne felt for praktisk resultat, ønsket følelse og sosial betydning. Hvert felt skal ha en henvisning til kundegrunnlaget eller være merket ukjent; ubekreftede behov skal ikke stå som fakta.",
+    "check": "kode+kritiker",
+    "example_bad": "Alle vil imponere sjefen, så vi skriver det som et faktum.",
+    "example_good": "Praktisk: ferdig før styremøtet, intervju 4. Følelse: ro, intervju 4. Sosial betydning: ukjent.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Christensen Institute beskriver jobber som sammensatt av funksjonelle, følelsesmessige og sosiale sider."
+  },
+  {
+    "id": "leseren-alternativet-i-hverdagen",
+    "subject": "Leseren",
+    "name": "Ta med det leseren gjør i dag",
+    "principle": "Alternativet til produktet kan være en manuell vane, et annet produkt eller å fortsette uten endring.",
+    "sources": [
+      {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Other notable examples of Jobs to Be Done → Morning milkshakes"
+      },
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "The high point: doing the interviews firsthand"
+      }
+    ],
+    "rule": "Leserkortet skal navngi minst én nåværende måte å løse oppgaven på og angi kilde eller merke opplysningen som antakelse. En liste med bare konkurrerende merkenavn er ikke nok uten kobling til oppgaven.",
+    "check": "kritiker",
+    "example_bad": "Konkurrenter: Firma A og Firma B.",
+    "example_good": "Nåværende løsning: Føreren sender bilder av kvitteringer på e-post; økonomiavdelingen taster dem inn, ifølge intervju 6.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      4
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "JTBD-eksemplene viser at produkter konkurrerer med andre måter å løse den samme oppgaven på."
+  },
+  {
+    "id": "leseren-uro-ved-bytte",
+    "subject": "Leseren",
+    "name": "Finn det som gjør byttet vanskelig",
+    "principle": "Et tilbud kan møte motstand fordi kunden frykter det som må forlates eller endres. Flere funksjoner svarer ikke nødvendigvis på denne uroen.",
+    "sources": [
+      {
+        "source": "Clayton Christensen Institute — Jobs to Be Done Theory",
+        "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+        "locator": "Case Studies → Condominium sales"
+      }
+    ],
+    "rule": "Når teksten ber leseren bytte løsning, skal leserkortet angi minst én undersøkt byttehindring eller at hindringer er ukjente. Hvis teksten lover å fjerne en navngitt hindring, skal et konkret tiltak og dets vilkår kunne dokumenteres.",
+    "check": "kritiker",
+    "example_bad": "Bytt nå, det er helt risikofritt.",
+    "example_good": "Kunden frykter å miste gamle bilag. Teksten viser til dokumentert eksportmulighet og hva flyttehjelpen omfatter.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Christensen Institutes boligeksempel viser at uro og praktiske hindringer kan holde kjøpere fra å bytte løsning."
+  },
+  {
+    "id": "leseren-rekonstruer-bytte",
+    "subject": "Leseren",
+    "name": "Spør om et faktisk bytte",
+    "principle": "En konkret kjøpshistorie kan vise hendelser og valg som generelle meninger skjuler.",
+    "sources": [
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "The high point: doing the interviews firsthand; Anxiety, memory, and getting to the details"
+      }
+    ],
+    "rule": "En intervjuguide for kjøpsbytte skal spørre om hva personen brukte før, hva som utløste søket, og hva som skjedde da valget ble tatt. Spørsmål om bare fremtidig kjøpslyst gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Ville du kjøpt dette hvis prisen var lavere?",
+    "example_good": "Hva brukte du før? Hva skjedde da du begynte å lete? Fortell om dagen du valgte den nye løsningen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Moesta beskriver detaljerte intervjuer om faktiske kjøpsbytter og hendelsene som ledet frem til dem."
+  },
+  {
+    "id": "leseren-fire-byttekrefter",
+    "subject": "Leseren",
+    "name": "Kartlegg kreftene bak et bytte",
+    "principle": "Misnøye og tiltrekning kan trekke mot en ny løsning, mens uro og vane kan holde leseren igjen.",
+    "sources": [
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "The Four Forces: push, pull, anxiety, and habit"
+      }
+    ],
+    "rule": "Ved analyse av et bytte skal leserkortet ha separate felt for misnøye med dagens løsning, tiltrekning ved den nye, uro ved byttet og vane som holder igjen. Hvert felt må ha kilde eller være merket ukjent.",
+    "check": "kode+kritiker",
+    "example_bad": "Kunden ønsker flere funksjoner.",
+    "example_good": "Misnøye: sen rapportering. Tiltrekning: automatisk rapport. Uro: datatap. Vane: innarbeidet regneark. Alle fire er knyttet til intervju 8.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      4
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Moesta beskriver misnøye, tiltrekning, uro og vane som fire krefter som påvirker et bytte."
+  },
+  {
+    "id": "leseren-aapne-intervjuspoersmaal",
+    "subject": "Leseren",
+    "name": "Ikke legg svaret i munnen på kunden",
+    "principle": "Spørsmål som tar produktets fordeler for gitt, kan skjule hva som faktisk drev kundens valg.",
+    "sources": [
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "Emptying your mind and looking past the product"
+      }
+    ],
+    "rule": "Hvert spørsmål som skal avdekke kjøpsårsaken, skal kunne besvares uten å bekrefte en påstått fordel ved vårt produkt. Spørsmål som forutsetter at kunden likte en funksjon eller kjøpte av en bestemt grunn, gir ikke bestått.",
+    "check": "kritiker+menneske",
+    "example_bad": "Hvor mye likte du den raske innføringen som gjorde at du valgte oss?",
+    "example_good": "Hva foregikk på jobb da du begynte å se etter en annen løsning?",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Moesta anbefaler å legge egne antakelser til side og undersøke kundens faktiske kjøpshistorie."
+  },
+  {
+    "id": "leseren-observasjon-og-tolkning",
+    "subject": "Leseren",
+    "name": "Skill det kunden sa fra vår tolkning",
+    "principle": "Intervjuanalyse krever at vi kan gå tilbake til hendelsene bak konklusjonen. En tolkning skal kunne skilles fra det som faktisk ble fortalt.",
+    "sources": [
+      {
+        "source": "Bob Moesta / Jobs-to-be-Done Radio — Switch Workshop Recap",
+        "url": "https://jobstobedone.org/radio/switch-workshop-recap-with-nick-owsley/",
+        "locator": "Why two interviewers are better than one"
+      }
+    ],
+    "rule": "Hver kjøpsforklaring i leserkortet skal ha henvisning til intervju og avsnitt eller tidsmerke, samt være merket kundeopplysning eller tolkning. En tolkning uten slik henvisning skal merkes ubekreftet og ikke brukes som dokumentert innsikt.",
+    "check": "kode+kritiker",
+    "example_bad": "Kunden er redd for å tape ansikt. Ingen henvisning eller merking.",
+    "example_good": "Tolkning: Kunden vil unngå kritikk i styret. Grunnlag: intervju 3, avsnitt 12 om forrige styremøte.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      3,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Moesta beskriver hvordan to intervjuere kan bidra til å oppdage og drøfte ulike tolkninger av kundens historie."
+  },
+  {
+    "id": "leseren-kartlegg-friksjon",
+    "subject": "Leseren",
+    "name": "Tell det leseren må gjøre",
+    "principle": "Små krav til tid, arbeid og opplysninger kan hindre en handling selv når leseren er interessert.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "1. Make it easy → 1.2 Reduce the effort required"
+      }
+    ],
+    "rule": "For den ønskede handlingen skal kontrollgrunnlaget liste alle obligatoriske steg og opplysninger fra første klikk til fullføring. Hvert krav må ha en oppgitt funksjon; et krav uten funksjon eller et utelatt obligatorisk steg gir ikke bestått. Observerte barrierer kan behandles i den valgfrie flyten east-tiltak-og-test. Velg bare relevante EAST-grep; tiltak må ha kildebelegg, etisk vurdering og måling før de anbefales videreført.",
+    "check": "menneske",
+    "example_bad": "Det er enkelt å bestille, men ingen har kontrollert skjemaet.",
+    "example_good": "Bestilling: velg tidspunkt, oppgi e-post, bekreft. E-post brukes til bekreftelsen. Telefonnummer er fjernet fordi det ikke trengs.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST anbefaler å redusere innsatsen som kreves for å utføre en handling og undersøke tiltak i sin kontekst."
+  },
+  {
+    "id": "leseren-presis-handling",
+    "subject": "Leseren",
+    "name": "Si nøyaktig hva leseren skal gjøre",
+    "principle": "En konkret forespørsel krever mindre tolking enn en generell oppfordring.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "1. Make it easy → 1.3 Simplify messages"
+      }
+    ],
+    "rule": "Hovedoppfordringen skal angi en handling og hva handlingen gjelder, samt gi én navngitt svarvei. En oppfordring som bare ber leseren komme i gang uten å angi neste handling, gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Ta grep og bli med på reisen.",
+    "example_good": "Velg en ledig tid i kalenderen for en demonstrasjon.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST anbefaler enkle budskap som gjør den ønskede handlingen lett å forstå."
+  },
+  {
+    "id": "leseren-begrunn-tidspunkt",
+    "subject": "Leseren",
+    "name": "Knytt påminnelsen til et beslutningsøyeblikk",
+    "principle": "Tidspunktet påvirker om en påminnelse treffer når leseren kan bruke den.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "4. Make it timely → 4.1 Choose the right moment"
+      }
+    ],
+    "rule": "Planen for en påminnelse skal angi hvilken hendelse eller frist som utløser den, og tidsavstanden til hendelsen. En plan som bare angir et generelt klokkeslett uten kobling til leserens situasjon, gir ikke bestått.",
+    "check": "kode+kritiker",
+    "example_bad": "Send hver tirsdag klokken ti fordi det pleier vi.",
+    "example_good": "Send veibeskrivelsen dagen før den bestilte demonstrasjonen; tidspunktet er knyttet til avtalen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST anbefaler å nå mennesker på tidspunkter der de er mottakelige for den aktuelle handlingen."
+  },
+  {
+    "id": "leseren-innsats-naa",
+    "subject": "Leseren",
+    "name": "Undersøk kostnaden ved å starte",
+    "principle": "En langsiktig gevinst opphever ikke den umiddelbare kostnaden ved å komme i gang.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "4. Make it timely → 4.2 Consider the immediate costs and benefits"
+      }
+    ],
+    "rule": "Når en tekst lover en fremtidig gevinst, skal kontrollgrunnlaget oppgi både hva leseren må betale eller gjøre ved oppstart, og når gevinsten tidligst kan oppstå. Teksten skal ikke motsi disse opplysningene.",
+    "check": "kritiker",
+    "example_bad": "Spar penger fra første sekund, selv om oppsettet tar en uke og har en startavgift.",
+    "example_good": "Oppsett koster 900 kroner og tar én uke. Deretter kan automatisk avstemming redusere det manuelle arbeidet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST anbefaler å ta hensyn til at umiddelbare kostnader og fordeler veier tungt i beslutninger."
+  },
+  {
+    "id": "leseren-planlegg-handlingen",
+    "subject": "Leseren",
+    "name": "Gjør fremtidige planer konkrete",
+    "principle": "En hensikt blir lettere å følge opp når personen har bestemt når og hvor handlingen skal skje.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "4. Make it timely → 4.3 Help people plan their responses to events"
+      }
+    ],
+    "rule": "Når et opplegg ber leseren planlegge en senere handling, skal det finnes felter eller spørsmål for hva som skal gjøres, når og hvor. Et løst løfte om å gjøre det senere er ikke tilstrekkelig.",
+    "check": "kritiker",
+    "example_bad": "Jeg skal se på veiledningen en gang.",
+    "example_good": "Sett av tirsdag klokken ni ved arbeidsplassen til å koble til testkontoen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST beskriver hvordan konkrete planer for når og hvordan man handler kan øke gjennomføring."
+  },
+  {
+    "id": "leseren-majoritet-med-grunnlag",
+    "subject": "Leseren",
+    "name": "Dokumenter påstander om hva flertallet gjør",
+    "principle": "En beskrivelse av andres atferd må gjelde den gruppen og handlingen teksten faktisk omtaler.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "3. Make it social → 3.1 Show that most people perform the desired behaviour"
+      },
+      {
+        "source": "Cialdini — Code of Ethics",
+        "url": "https://www.influenceatwork.com/about-iaw/",
+        "locator": "Cialdini Code of Ethics, punkt 1 og 3"
+      }
+    ],
+    "rule": "Ord som flertallet og de fleste om en atferd skal ha et datagrunnlag med handling, avgrenset gruppe, periode, teller og nevner. Andelen må være over 50 prosent, og tekstens gruppe må samsvare med datagrunnlaget.",
+    "check": "kode+kritiker",
+    "example_bad": "De fleste velger oss, basert på en måling av kjennskap.",
+    "example_good": "I vår kundeundersøkelse i oktober brukte 64 av 100 svarende kunder den automatiske rapporten siste måned.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST anbefaler å vise utbredt ønsket atferd, mens Cialdinis etikk krever sannferdig og redelig bruk av påvirkning."
+  },
+  {
+    "id": "leseren-maal-handling",
+    "subject": "Leseren",
+    "name": "Skill kjøpslyst fra faktisk handling",
+    "principle": "Det folk sier at de vil gjøre, og det de faktisk gjør, er forskjellige målinger.",
+    "sources": [
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "4. Make it timely → Behavioural pitfall 3: Why behaviour is different from intentions, beliefs or attitudes"
+      }
+    ],
+    "rule": "Et resultat skal merkes som uttalt hensikt, selvrapportert handling eller observert handling. Et tall for kjøpslyst skal ikke omtales som salg eller brukes som antall gjennomførte kjøp.",
+    "check": "kode+kritiker",
+    "example_bad": "70 prosent ville kjøpe, derfor regner vi 70 salg per 100 mottakere.",
+    "example_good": "70 prosent oppga kjøpslyst i spørreundersøkelsen. Gjennomførte kjøp måles separat i ordresystemet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      6,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "EAST advarer mot å behandle holdninger og uttalte hensikter som om de var faktisk atferd."
+  },
+  {
+    "id": "leseren-gi-foer-du-ber",
+    "subject": "Leseren",
+    "name": "Lever den lovede hjelpen",
+    "principle": "Et nyttig bidrag kan skape velvilje når det faktisk blir gitt, og ikke bare brukes som lokkemiddel.",
+    "sources": [
+      {
+        "source": "Robert Cialdini / Influence at Work — Principles of Persuasion",
+        "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+        "locator": "The First Universal Principle of Influence is Reciprocity"
+      },
+      {
+        "source": "Cialdini — Code of Ethics",
+        "url": "https://www.influenceatwork.com/about-iaw/",
+        "locator": "Cialdini Code of Ethics, punkt 1–4"
+      }
+    ],
+    "rule": "Hvis teksten sier at leseren får en gave før en forespørsel om kjøp, skal gaven være tilgjengelig uten kjøp, og krav for å motta den skal stå ved tilbudet. Et betalingskrav som først kommer etter klikk, gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Få malen gratis; etter klikk kreves kjøp av et abonnement.",
+    "example_good": "Last ned malen uten kjøp. Deretter kan du velge om du vil lese om kurset.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdini beskriver gjensidighet ved å gi først og krever redelig bruk av påvirkningsprinsippene."
+  },
+  {
+    "id": "leseren-ekte-knapphet",
+    "subject": "Leseren",
+    "name": "Bruk bare reell knapphet",
+    "principle": "En begrensning kan påvirke et valg, men må finnes uavhengig av teksten som forteller om den.",
+    "sources": [
+      {
+        "source": "Robert Cialdini / Influence at Work — Principles of Persuasion",
+        "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+        "locator": "The Second Universal Principle of Persuasion is Scarcity"
+      },
+      {
+        "source": "Cialdini — Code of Ethics",
+        "url": "https://www.influenceatwork.com/about-iaw/",
+        "locator": "Cialdini Code of Ethics, punkt 1, 3 og 4"
+      },
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 7"
+      },
+      {
+        "source": "Forbrukertilsynet — Salg og betingede tilbud (2025)",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2025/06/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.pdf",
+        "locator": "Side 4 punkt 2 (dokumentasjon når markedsføringen skjer); side 7–10 punkt 3.3–3.4; side 13 punkt 3.6; side 15–17 punkt 4.3–4.5; side 19 punkt 6 (rutiner og kampanjehistorikk). Lokal tekst: sources/fetched/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.txt, sidemarkører 4, 7–10, 13, 15–17 og 19; lest 2026-11-13. Norsk veiledning til klesbransjen; lagret sluttdato og kontrollport er Fumes operasjonalisering, ikke et eget UCPD-krav."
+      }
+    ],
+    "rule": "Hver påstand om få plasser eller begrenset lager skal ha en datert, kildebelagt lageropplysning eller kapasitetsgrense kontrollert før publisering; manglende eller usikkert belegg stopper publisering og går til ansvarlig menneske. Ved utløpende tilbud, tidsfrist eller nedtelling gjelder lov-eu-ekte-tidsfrist: Fristen skal være et lagret faktum med kilde: kundens skriftlig vedtatte kampanjeslutt med dato, klokkeslett, tidssone, hvilke varer/tilbud og hvilket marked den gjelder, eller annet etterprøvbart grunnlag for en reell utløpstid. En modellskrevet kampanjeplan eller en nedtelling er ikke alene kildebelegg. Før publisering skal kontrollgrunnlaget koble sluttdatoen til kilde og versjon og registrere kontrolltidspunkt, ansvarlig og resultat av kontroll mot kundens beslutning, publiseringsoppsettet og relevant pris- og tilbudshistorikk; historikken skal vise reell prisfordel og at samme eller tilsvarende tilbud ikke løper videre eller gjentas slik at tidsbegrensningen blir falsk. Kontroller også at nedtellingen ikke nullstilles for samme mottaker etter utløp. Mangler kildebelagt sluttdato, nødvendig historikk eller kontroll før publisering, eller er sluttdatoen eller tilbudets opphør usikkert, består ikke kontrollen: stopp publisering og send straks til ansvarlig menneske for dokumentasjon og avklaring; fristen må ikke diktes opp. Gjenbruk samme fristgrunnlag og avviks-ID som lov-eu-ekte-tidsfrist; ikke registrer to feil for samme manglende belegg.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "Bare to plasser igjen, uten kapasitetstall.",
+    "example_good": "Det finnes to ledige konsultasjoner fredag, kontrollert mot bookingkalenderen i dag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdini beskriver knapphet som påvirkningsmekanisme, mens UCPD forbyr falsk tidspressmarkedsføring og norsk veiledning krever reelle dokumenterbare prisfordeler."
+  },
+  {
+    "id": "leseren-relevant-autoritet",
+    "subject": "Leseren",
+    "name": "Vis hvorfor eksperten er relevant",
+    "principle": "Ekspertise hjelper leseren å vurdere et råd når kompetansen gjelder det rådet handler om.",
+    "sources": [
+      {
+        "source": "Robert Cialdini / Influence at Work — Principles of Persuasion",
+        "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+        "locator": "Our Third Principle of Influence is the Principle of Authority"
+      }
+    ],
+    "rule": "Når en person brukes som faglig autoritet, skal navn, etterprøvbar kvalifikasjon og kvalifikasjonens forbindelse til påstanden stå i kontrollgrunnlaget. Kjent navn uten relevant kompetanse gir ikke bestått som faglig bevis.",
+    "check": "menneske",
+    "example_bad": "En kjent skuespiller beviser at regnskapssystemet beregner avgift riktig.",
+    "example_good": "En navngitt statsautorisert regnskapsfører vurderer avgiftsberegningen; autorisasjon og vurdering er vedlagt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdini beskriver betydningen av troverdig og relevant ekspertise for autoritet."
+  },
+  {
+    "id": "leseren-frivillig-forpliktelse",
+    "subject": "Leseren",
+    "name": "La små forpliktelser være aktive valg",
+    "principle": "Et lite tidligere valg kan påvirke neste valg. Forpliktelsen må være frivillig og gjelde det leseren faktisk valgte.",
+    "sources": [
+      {
+        "source": "Robert Cialdini / Influence at Work — Principles of Persuasion",
+        "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+        "locator": "The Next Principle is Consistency"
+      }
+    ],
+    "rule": "En påstått tidligere forpliktelse skal kunne knyttes til en aktiv handling der omfanget ble oppgitt. Forhåndsavkryssing, taushet eller et klikk for å lese skal ikke regnes som løfte om kjøp.",
+    "check": "kode+kritiker",
+    "example_bad": "Du åpnet veiledningen, så du har allerede bestemt deg for å bestille.",
+    "example_good": "Du valgte å få en påminnelse om kurset. Her er påminnelsen; påmelding krever et eget valg.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdini beskriver hvordan frivillige og aktive forpliktelser kan støtte senere konsistent handling."
+  },
+  {
+    "id": "leseren-sammenlignbare-andre",
+    "subject": "Leseren",
+    "name": "Begrunn hvem leseren sammenlignes med",
+    "principle": "Andres valg kan være nyttige for leseren når sammenligningen gjelder mennesker i en tilsvarende situasjon.",
+    "sources": [
+      {
+        "source": "Robert Cialdini / Influence at Work — Principles of Persuasion",
+        "url": "https://www.influenceatwork.com/7-principles-of-persuasion/",
+        "locator": "The Sixth Principle is Social Proof"
+      }
+    ],
+    "rule": "Når en tekst omtaler andre som folk som deg, skal leserkortet navngi minst ett relevant felles kjennetegn ved kjøpssituasjonen, og datagrunnlaget skal gjelde denne gruppen. Generell popularitet alene gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Folk som deg velger dette, basert på alle kundene våre samlet.",
+    "example_good": "Andre verksteder med under ti ansatte bruker løsningen til månedsavslutning; gruppen og bruken er dokumentert i kundegrunnlaget.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      4,
+      5
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdini beskriver at andres atferd kan påvirke oss særlig når de ligner oss."
+  },
+  {
+    "id": "leseren-rettferdig-sammenligning",
+    "subject": "Leseren",
+    "name": "Sammenlign på samme grunnlag",
+    "principle": "En kontrast skal hjelpe leseren å forstå et faktisk valg. Ulike premisser kan gjøre en sammenligning misvisende.",
+    "sources": [
+      {
+        "source": "Cialdini — Code of Ethics",
+        "url": "https://www.influenceatwork.com/about-iaw/",
+        "locator": "Cialdini Code of Ethics, punkt 3 og 8"
+      }
+    ],
+    "rule": "En sammenligning skal bruke samme enhet, periode og avgrensning på begge sider, eller oppgi forskjellene ved selve sammenligningen. Uforklart sammenligning av månedspris og årspris gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Vårt produkt koster bare 99 kroner, mens alternativet koster 990 kroner; det første er per måned og det andre per år.",
+    "example_good": "Vårt produkt koster 1 188 kroner per år. Alternativet koster 990 kroner per år. Begge priser gjelder én bruker.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      10
+    ],
+    "tier": "praktiker",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Cialdinis etiske regler krever sannferdig fremstilling og avviser villedende bruk av kontraster og sammenligninger."
+  },
+  {
+    "id": "leseren-overskrifter-for-skumming",
+    "subject": "Leseren",
+    "name": "La mellomtitlene vise innholdet",
+    "principle": "Mange lesere leter etter utvalgte svar på siden. Mellomtitlene må gjøre det mulig å finne riktig avsnitt uten å lese alt.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How People Read Online",
+        "url": "https://www.nngroup.com/articles/how-people-read-online/",
+        "locator": "What Hasn’t Changed? → Tendency Towards Scanning"
+      }
+    ],
+    "rule": "På informasjonssider anvendes copy-mellomtittel-navngir-innhold: hvert tema eller spørsmål skal være gjenfinnbart i mellomtittelen. Bruk samme kontrollresultat og avviks-ID som den generelle kontrollen; ikke opprett en ny feil for samme tittel. En uavhengig kritiker vurderer at tittelen faktisk leder til avsnittets svar.",
+    "check": "kritiker",
+    "example_bad": "Del 1. Mer informasjon. Neste steg.",
+    "example_good": "Hva koster det? Slik flytter du dataene. Hvordan sier du opp?",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver at nettlesere ofte skanner teksten og bruker overskrifter til å finne relevant innhold."
+  },
+  {
+    "id": "leseren-svar-foerst",
+    "subject": "Leseren",
+    "name": "Sett leserens viktigste svar først",
+    "principle": "Når leseren skummer, kan en lang innledning skjule svaret som gjorde teksten relevant.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How People Read Online",
+        "url": "https://www.nngroup.com/articles/how-people-read-online/",
+        "locator": "What Hasn’t Changed? → Tendency Towards Scanning"
+      },
+      {
+        "source": "Behavioural Insights Team — EAST handbook",
+        "url": "https://www.bi.team/wp-content/uploads/2014/04/BIT-EAST-handbook.pdf",
+        "locator": "1. Make it easy → 1.3 Simplify messages"
+      }
+    ],
+    "rule": "Leserkortet skal angi ett hovedspørsmål for siden. Svaret eller en direkte lenke til svaret skal stå i første innholdsavsnitt, før bedriftshistorie og generell innledning.",
+    "check": "kritiker",
+    "example_bad": "Siden om levering åpner med tre avsnitt om bedriftens verdier.",
+    "example_good": "Vi leverer normalt innen tre virkedager. Se leveringstid for postnummeret ditt her.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver skanning av nettsider, og EAST anbefaler å forenkle budskap og fremheve viktig informasjon."
+  },
+  {
+    "id": "leseren-navngi-leseoppgaven",
+    "subject": "Leseren",
+    "name": "Navngi oppgaven på siden",
+    "principle": "Lesemønsteret avhenger blant annet av hva personen prøver å finne og hvor motivert personen er. Ett blikkmønster kan ikke forutsettes for alle sider.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — How People Read Online",
+        "url": "https://www.nngroup.com/articles/how-people-read-online/",
+        "locator": "What Hasn’t Changed? → Tendency Towards Scanning; Most Gaze Patterns"
+      }
+    ],
+    "rule": "Før en side vurderes, skal leserkortet angi om hovedoppgaven er å finne et bestemt svar, utforske alternativer eller undersøke et tema. Begrunnelsen for informasjonsrekkefølgen skal vise til denne oppgaven; bare henvisning til et universelt F-mønster gir ikke bestått.",
+    "check": "kritiker",
+    "example_bad": "Alle leser i en F, derfor plasserer vi all viktig informasjon til venstre.",
+    "example_good": "Leseren skal finne kompatible systemer. Siden åpner med en søkbar systemliste og lenker videre til detaljer.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver flere lesemønstre og at oppgaven påvirker hvordan mennesker leser på nett."
+  },
+  {
+    "id": "leseren-lenken-holder-loeftet",
+    "subject": "Leseren",
+    "name": "La lenketeksten forutsi målet",
+    "principle": "Leseren vurderer om et klikk er verdt innsatsen ut fra lenkens ord og sammenheng. Målet må levere det lenken lover.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — Information Scent",
+        "url": "https://www.nngroup.com/articles/information-scent/",
+        "locator": "What Makes Up Information Scent → What the User Sees → The Link Label; Why Click Bait Doesn’t Work in the Long Run"
+      }
+    ],
+    "rule": "Hver lenke til et tilbud eller en veiledning skal navngi innholdet eller handlingen på målsiden, og målsiden skal inneholde dette. Leseren skal ikke måtte klikke gjennom en uvedkommende salgsside for å finne det lovede innholdet.",
+    "check": "kritiker+menneske",
+    "example_bad": "Se prisene fører til et skjema uten priser.",
+    "example_good": "Se månedsprisene fører direkte til pristabellen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver hvordan tydelige lenketekster gir forventninger om målinnholdet og hvordan misvisende lokking svekker tillit."
+  },
+  {
+    "id": "leseren-lenkeomtale-gir-detaljer",
+    "subject": "Leseren",
+    "name": "Bruk lenkeomtalen til å avklare innholdet",
+    "principle": "En kort omtale kan hjelpe leseren å skille lignende lenker når den tilfører opplysninger utover tittelen.",
+    "sources": [
+      {
+        "source": "Nielsen Norman Group — Information Scent",
+        "url": "https://www.nngroup.com/articles/information-scent/",
+        "locator": "What Makes Up Information Scent → What the User Sees → Content that Accompanies the Link"
+      }
+    ],
+    "rule": "Hvis en lenke har en tilhørende omtale, skal omtalen oppgi minst én konkret opplysning om mål, innhold eller avgrensning som ikke allerede står i lenketeksten, og opplysningen skal finnes på målsiden.",
+    "check": "kritiker",
+    "example_bad": "Lenke: Flytteveiledning. Omtale: Les vår flytteveiledning.",
+    "example_good": "Lenke: Flytteveiledning. Omtale: Slik tar du med kunder, bilag og åpningssaldo fra det gamle systemet.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "NN/g beskriver at innhold ved en lenke bidrar til å vise om målsiden er relevant."
+  },
+  {
+    "id": "leseren-lettlest-er-ikke-bevis",
+    "subject": "Leseren",
+    "name": "Skill overbevisende form fra bevis",
+    "principle": "Gjentakelse og lett bearbeiding kan øke følelsen av at en påstand er sann. Det erstatter ikke dokumentasjon for innholdet.",
+    "sources": [
+      {
+        "source": "Reber & Unkelbach — The Epistemic Status of Processing Fluency",
+        "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC3339024/",
+        "locator": "Fluency and Commonsense Beliefs → Some Exceptions"
+      },
+      {
+        "source": "Norbert Schwarz — Of fluency, beauty, and truth",
+        "url": "https://dornsife.usc.edu/norbert-schwarz/wp-content/uploads/sites/231/2023/12/18_ch_Schwarz_Fluency_beauty_truth.pdf",
+        "locator": "Fluency and truth → Is there a lot of supporting evidence?"
+      },
+      {
+        "source": "Schwarz et al. — Metacognitive experiences in consumer judgment",
+        "url": "https://dornsife.usc.edu/norbert-schwarz/wp-content/uploads/sites/231/2023/12/21_CPR_Schwarz_et_al_Metacognitive_experiences_review.pdf",
+        "locator": "4 | FLUENCY AND TRUTH → 4.2 | Enhancing perceived truth → 4.2.1 | Repetition"
+      }
+    ],
+    "rule": "Hver faktisk produkt- eller effektpåstand skal ha en kilde som støtter akkurat innholdet, uavhengig av antall gjentakelser og vurdering av språk eller design. Hvis eneste begrunnelse er at påstanden føles sann eller er kjent, er kontrollen ikke bestått.",
+    "check": "kritiker+menneske",
+    "example_bad": "Vi har gjentatt at produktet halverer tidsbruken, så påstanden er troverdig.",
+    "example_good": "Tidsbesparelsen er avgrenset til en dokumentert test; god lesbarhet vurderes separat fra testens bevisverdi.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      10
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Fluensforskningen beskriver at lett bearbeiding og gjentakelse kan øke opplevd sannhet uten å sikre faktisk sannhet."
+  },
+  {
+    "id": "leseren-forkunnskap-foer-faguttrykk",
+    "subject": "Leseren",
+    "name": "Tilpass forklaringer til leserens erfaring",
+    "principle": "Hvor lett noe forstås, avhenger også av leserens erfaring. Kjente faguttrykk for eksperter kan kreve forklaring for nybegynnere.",
+    "sources": [
+      {
+        "source": "Reber, Schwarz & Winkielman (2004) — Processing Fluency and Aesthetic Pleasure",
+        "url": "https://pages.ucsd.edu/~pwinkielman/reber-schwarz-winkielman-beauty-PSPR-2004.pdf",
+        "locator": "Challenges and Conjectures → Experts and Novices"
+      },
+      {
+        "source": "Nielsen Norman Group — Information Scent",
+        "url": "https://www.nngroup.com/articles/information-scent/",
+        "locator": "What Makes Up Information Scent → What the User Sees → The Link Label"
+      }
+    ],
+    "rule": "Leserkortet skal angi om fagkunnskap er dokumentert eller ukjent. Ved ukjent eller manglende fagkunnskap skal alle faguttrykk og forkortelser som er nødvendige for å forstå tilbudet, forklares ved første bruk eller erstattes med vanlige ord.",
+    "check": "kritiker",
+    "example_bad": "For nye brukere: Aktiver SSO via IdP.",
+    "example_good": "For nye brukere: Logg inn med jobbens vanlige brukerkonto. Den tekniske veiledningen forklarer hvordan enkel pålogging settes opp.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle"
+    },
+    "checkpoints": [
+      2,
+      5,
+      9
+    ],
+    "tier": "forskning",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Fluensforskningen beskriver forskjeller mellom eksperter og nybegynnere, mens NN/g anbefaler forståelige signaler om lenkers innhold."
+  }
+]

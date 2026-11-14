@@ -1,0 +1,2587 @@
+{
+  "name": "Fume Engine — feltregistre",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "registry_contract": {
+    "field_required": [
+      "id",
+      "group",
+      "label_nb",
+      "type",
+      "values",
+      "definition",
+      "filled_by",
+      "source",
+      "lever",
+      "applies_when",
+      "scope",
+      "required",
+      "read_by"
+    ],
+    "type": [
+      "string",
+      "integer",
+      "number",
+      "boolean",
+      "object",
+      "array",
+      "integer|string"
+    ],
+    "values": "Lukket liste av {value, definition}; tom liste krever open_reason. Array-felt bruker listen på hvert element. integer|string brukes bare for nivåfilter med joker.",
+    "field_paths": "Punktbaner; [] betyr hvert listeelement. Leaf-felter og objektforeldre beskriver én nyttelast, ikke dupliserte lagrede fakta.",
+    "filled_by": [
+      "kode",
+      "modell",
+      "menneske",
+      "kunde"
+    ],
+    "critic": "Kritiker er en modellrolle, ikke en femte filled_by-verdi. Uavhengighet håndheves av felleskontrakten.",
+    "scope": [
+      "merkevarekonstant",
+      "kampanjevalg",
+      "begge"
+    ],
+    "applies_when": "all av felt-ID/op/value; tom all gjelder alltid. Tillatte operatorer: eq, in, contains, present.",
+    "source": "Fume eller pensumkilde med eksakt source, url og locator; interne arbeidsvalg må ikke tilskrives forskning.",
+    "read_by": "Eksisterende flow- eller skill-ID-er. Lever navngir berørte flyter og valget feltet styrer."
+  },
+  "taste_alignment": {
+    "refs": [
+      "ref/taste-schema.md",
+      "ref/20261110070000_taste_schema.sql"
+    ],
+    "principles": [
+      "Skill observasjon, tolkning og valg.",
+      "Versjoner skjema, kildegrunnlag og lesinger.",
+      "Ukjent er ikke fravær eller en godkjenning.",
+      "Bevar merkeprofil, kampanjevalg, sikkerhet og bevis hver for seg.",
+      "Dette er registre og kontrakter, ingen databaseendring eller kjørende Engine."
+    ]
+  },
+  "schemas": [
+    {
+      "id": "kampanje",
+      "file": "schemas/kampanje.json",
+      "field_count": 24,
+      "imports": [],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser",
+        "trakt-navngi-oppgaven"
+      ]
+    },
+    {
+      "id": "leser",
+      "file": "schemas/leser.json",
+      "field_count": 16,
+      "imports": [],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leseren-klar-for-kjoep",
+        "leseren-ukjent-problem",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "testplan-ekte-annonser",
+        "trakt-schwartz-fra-kunnskap"
+      ]
+    },
+    {
+      "id": "kategori",
+      "file": "schemas/kategori.json",
+      "field_count": 11,
+      "imports": [],
+      "read_by": [
+        "kampanjekort",
+        "leserkort",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "tilbud",
+      "file": "schemas/tilbud.json",
+      "field_count": 13,
+      "imports": [],
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format",
+      "file": "schemas/kanal-format.json",
+      "field_count": 21,
+      "imports": [],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "merkevare-vs-kampanje",
+      "file": "schemas/merkevare-vs-kampanje.json",
+      "field_count": 35,
+      "imports": [],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "copy-samme-avsenderstemme",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "linjebredde-og-valg",
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "skill-filter",
+      "file": "schemas/skill-filter.json",
+      "field_count": 13,
+      "imports": [],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "artefakt-felles",
+      "file": "schemas/artefakt-felles.json",
+      "field_count": 38,
+      "imports": [],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "brief-en-setning",
+        "east-tiltak-og-test",
+        "innsiktsjakt",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "konkurrenter-for-loftet",
+        "leserkort",
+        "linjebredde-og-valg",
+        "logikkjede",
+        "lovsjekk-per-land",
+        "merkeelement-revisjon",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan",
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "oppdrag",
+      "file": "schemas/oppdrag.json",
+      "field_count": 4,
+      "imports": [
+        "artefakt-felles"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-grunnlag",
+      "file": "schemas/00-kampanjekort-grunnlag.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-avklart",
+      "file": "schemas/00-kampanjekort-avklart.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-utkast",
+      "file": "schemas/00-kampanjekort-utkast.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-filtrert",
+      "file": "schemas/00-kampanjekort-filtrert.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-kritikk",
+      "file": "schemas/00-kampanjekort-kritikk.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "00-kampanjekort-godkjent",
+      "file": "schemas/00-kampanjekort-godkjent.json",
+      "field_count": 24,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "leser",
+        "merkevare-vs-kampanje",
+        "skill-filter",
+        "tilbud"
+      ],
+      "read_by": [
+        "brief-en-setning",
+        "kampanjekort"
+      ]
+    },
+    {
+      "id": "01-oppdragsgrunnlag",
+      "file": "schemas/01-oppdragsgrunnlag.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "tilbud"
+      ],
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    {
+      "id": "01-briefutkast",
+      "file": "schemas/01-briefutkast.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "tilbud"
+      ],
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    {
+      "id": "01-briefkritikk",
+      "file": "schemas/01-briefkritikk.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "tilbud"
+      ],
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    {
+      "id": "01-brief-godkjent",
+      "file": "schemas/01-brief-godkjent.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "tilbud"
+      ],
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "02-lesergrunnlag",
+      "file": "schemas/02-lesergrunnlag.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "leser"
+      ],
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    {
+      "id": "02-leserkortutkast",
+      "file": "schemas/02-leserkortutkast.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "leser"
+      ],
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    {
+      "id": "02-leserkortkritikk",
+      "file": "schemas/02-leserkortkritikk.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "leser"
+      ],
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    {
+      "id": "02-leserkort-godkjent",
+      "file": "schemas/02-leserkort-godkjent.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt",
+        "leserkort"
+      ]
+    },
+    {
+      "id": "03-innsiktskilder",
+      "file": "schemas/03-innsiktskilder.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    {
+      "id": "03-innsiktsforslag",
+      "file": "schemas/03-innsiktsforslag.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    {
+      "id": "03-innsikter-kildekontrollert",
+      "file": "schemas/03-innsikter-kildekontrollert.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    {
+      "id": "03-innsiktskritikk",
+      "file": "schemas/03-innsiktskritikk.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    {
+      "id": "03-innsikt-valgt",
+      "file": "schemas/03-innsikt-valgt.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "innsiktsjakt",
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-konkurrentkilder",
+      "file": "schemas/04-konkurrentkilder.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-konkurrentlesning",
+      "file": "schemas/04-konkurrentlesning.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-konkurrentlesning-godkjent",
+      "file": "schemas/04-konkurrentlesning-godkjent.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-lofteforslag",
+      "file": "schemas/04-lofteforslag.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-loftekritikk",
+      "file": "schemas/04-loftekritikk.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    {
+      "id": "04-lofte-godkjent",
+      "file": "schemas/04-lofte-godkjent.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "konkurrenter-for-loftet",
+        "logikkjede"
+      ]
+    },
+    {
+      "id": "05-logikkjedeutkast",
+      "file": "schemas/05-logikkjedeutkast.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    {
+      "id": "05-logikkjede-kontrollert",
+      "file": "schemas/05-logikkjede-kontrollert.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    {
+      "id": "05-logikkjedekritikk",
+      "file": "schemas/05-logikkjedekritikk.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    {
+      "id": "05-logikkjede-godkjent",
+      "file": "schemas/05-logikkjede-godkjent.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "linjebredde-og-valg",
+        "logikkjede",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "07-linjebank",
+      "file": "schemas/07-linjebank.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    {
+      "id": "07-linjer-luket",
+      "file": "schemas/07-linjer-luket.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    {
+      "id": "07-linjer-rangert",
+      "file": "schemas/07-linjer-rangert.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    {
+      "id": "08-kundekandidater",
+      "file": "schemas/08-kundekandidater.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    {
+      "id": "08-kundevalg",
+      "file": "schemas/08-kundevalg.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "linjebredde-og-valg"
+      ]
+    },
+    {
+      "id": "09-bildekonsepter",
+      "file": "schemas/09-bildekonsepter.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    {
+      "id": "09-bildekonseptkritikk",
+      "file": "schemas/09-bildekonseptkritikk.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    {
+      "id": "09-annonseutkast",
+      "file": "schemas/09-annonseutkast.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    {
+      "id": "09-annonseformat-kontrollert",
+      "file": "schemas/09-annonseformat-kontrollert.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    {
+      "id": "09-annonseutkast-kritikk",
+      "file": "schemas/09-annonseutkast-kritikk.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    {
+      "id": "09-annonseutforelse-godkjent",
+      "file": "schemas/09-annonseutforelse-godkjent.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "east-tiltak-og-test",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "10-land-og-regelgrunnlag",
+      "file": "schemas/10-land-og-regelgrunnlag.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "tilbud"
+      ],
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "10-lovkontrollutkast",
+      "file": "schemas/10-lovkontrollutkast.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "tilbud"
+      ],
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "10-lovkritikk",
+      "file": "schemas/10-lovkritikk.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "tilbud"
+      ],
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "10-landgodkjenninger",
+      "file": "schemas/10-landgodkjenninger.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "tilbud"
+      ],
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "10-annonser-lovsjekket",
+      "file": "schemas/10-annonser-lovsjekket.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "kategori",
+        "tilbud"
+      ],
+      "read_by": [
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "10-testgrunnlag",
+      "file": "schemas/10-testgrunnlag.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "10-testplanutkast",
+      "file": "schemas/10-testplanutkast.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "10-testplan-beregnet",
+      "file": "schemas/10-testplan-beregnet.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "10-testplankritikk",
+      "file": "schemas/10-testplankritikk.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "10-testplan-godkjent",
+      "file": "schemas/10-testplan-godkjent.json",
+      "field_count": 8,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kanal-format",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "resultater-og-laering",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "01-merkeelement-register",
+      "file": "schemas/01-merkeelement-register.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "01-merkeelement-maaling",
+      "file": "schemas/01-merkeelement-maaling.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "01-merkeelement-vurdering",
+      "file": "schemas/01-merkeelement-vurdering.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "01-merkeelement-kritikk",
+      "file": "schemas/01-merkeelement-kritikk.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "01-merkeelement-godkjent",
+      "file": "schemas/01-merkeelement-godkjent.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "leserkort",
+        "merkeelement-revisjon"
+      ]
+    },
+    {
+      "id": "06-kampanjerammer",
+      "file": "schemas/06-kampanjerammer.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "06-kampanjefordeling-utkast",
+      "file": "schemas/06-kampanjefordeling-utkast.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "06-kampanjefordeling-beregnet",
+      "file": "schemas/06-kampanjefordeling-beregnet.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "06-kampanjefordeling-kritikk",
+      "file": "schemas/06-kampanjefordeling-kritikk.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "06-kampanjefordeling-godkjent",
+      "file": "schemas/06-kampanjefordeling-godkjent.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "linjebredde-og-valg",
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    {
+      "id": "09-klarsprak-grunnlag",
+      "file": "schemas/09-klarsprak-grunnlag.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    {
+      "id": "09-klarsprak-utkast",
+      "file": "schemas/09-klarsprak-utkast.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    {
+      "id": "09-klarsprak-kritikk",
+      "file": "schemas/09-klarsprak-kritikk.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    {
+      "id": "09-klarsprak-forstaelsestest",
+      "file": "schemas/09-klarsprak-forstaelsestest.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    {
+      "id": "09-klarsprak-godkjent",
+      "file": "schemas/09-klarsprak-godkjent.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "leser",
+        "tilbud"
+      ],
+      "read_by": [
+        "klarsprak-revisjon",
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "09-kanalformat-krav",
+      "file": "schemas/09-kanalformat-krav.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "09-kanalformat-plan",
+      "file": "schemas/09-kanalformat-plan.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "09-kanalformat-varianter",
+      "file": "schemas/09-kanalformat-varianter.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "09-kanalformat-kontrollert",
+      "file": "schemas/09-kanalformat-kontrollert.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "09-kanalformat-kritikk",
+      "file": "schemas/09-kanalformat-kritikk.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "09-kanalformat-godkjent",
+      "file": "schemas/09-kanalformat-godkjent.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "read_by": [
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land"
+      ]
+    },
+    {
+      "id": "06-mediedekning-grunnlag",
+      "file": "schemas/06-mediedekning-grunnlag.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "06-mediedekning-utkast",
+      "file": "schemas/06-mediedekning-utkast.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "06-mediedekning-beregnet",
+      "file": "schemas/06-mediedekning-beregnet.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "06-mediedekning-kritikk",
+      "file": "schemas/06-mediedekning-kritikk.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "06-mediedekning-godkjent",
+      "file": "schemas/06-mediedekning-godkjent.json",
+      "field_count": 6,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "linjebredde-og-valg",
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    {
+      "id": "11-resultater-start",
+      "file": "schemas/11-resultater-start.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "11-resultater-data",
+      "file": "schemas/11-resultater-data.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "11-resultater-analysegrunnlag",
+      "file": "schemas/11-resultater-analysegrunnlag.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "11-resultater-tolkning",
+      "file": "schemas/11-resultater-tolkning.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "11-resultater-kritikk",
+      "file": "schemas/11-resultater-kritikk.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "11-resultater-beslutning",
+      "file": "schemas/11-resultater-beslutning.json",
+      "field_count": 7,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "kategori"
+      ],
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    {
+      "id": "09-east-barrierer",
+      "file": "schemas/09-east-barrierer.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    {
+      "id": "09-east-tiltak",
+      "file": "schemas/09-east-tiltak.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    {
+      "id": "09-east-kritikk",
+      "file": "schemas/09-east-kritikk.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    {
+      "id": "09-east-godkjent",
+      "file": "schemas/09-east-godkjent.json",
+      "field_count": 5,
+      "imports": [
+        "artefakt-felles",
+        "kampanje",
+        "leser"
+      ],
+      "read_by": [
+        "east-tiltak-og-test",
+        "lovsjekk-per-land"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "from": "kampanje",
+      "to": [
+        "leser",
+        "kategori",
+        "tilbud",
+        "kanal-format",
+        "merkevare-vs-kampanje"
+      ],
+      "via": [
+        "audience.reader_id",
+        "category_id",
+        "offer_id",
+        "channels",
+        "id"
+      ]
+    },
+    {
+      "from": "skill-filter",
+      "to": [
+        "skills/*.json",
+        "flows/kampanjekort.json"
+      ],
+      "via": "applies_when og del.kontekst; scripts/schema_filter.py"
+    },
+    {
+      "from": "artefakt-felles",
+      "to": "alle artefaktregistre",
+      "via": "imports; grunnlag med versjonsbundne snapshots og manifest; rekursivt modellspor"
+    },
+    {
+      "from": "merkevare-vs-kampanje",
+      "to": [
+        "kampanjekort",
+        "bilde-som-tredje-tanke",
+        "kanalformat-tilpasning"
+      ],
+      "via": "menneskegodkjent override.audit før kreativ bruk"
+    }
+  ],
+  "import_semantics": "Felleskontraktens felt ligger på toppnivå. Domeneimporter ligger under grunnlag.domener.<schema_id> som versjonsbundne snapshots, ikke flate kopier av alle feltene. Familiefelter ligger under innhold.<artifact_family>. Bare direkte oppgitte imports brukes; ingen implisitte sidefiler.",
+  "artifact_bindings": {
+    "artefakter/{oppdrag_id}/oppdrag.json": {
+      "schema": "schemas/oppdrag.json",
+      "producer": "ekstern",
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-grunnlag.json": {
+      "schema": "schemas/00-kampanjekort-grunnlag.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 1
+      },
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-avklart.json": {
+      "schema": "schemas/00-kampanjekort-avklart.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 2
+      },
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-utkast.json": {
+      "schema": "schemas/00-kampanjekort-utkast.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 3
+      },
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-filtrert.json": {
+      "schema": "schemas/00-kampanjekort-filtrert.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 4
+      },
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-kritikk.json": {
+      "schema": "schemas/00-kampanjekort-kritikk.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 5
+      },
+      "read_by": [
+        "kampanjekort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json": {
+      "schema": "schemas/00-kampanjekort-godkjent.json",
+      "producer": {
+        "flow": "kampanjekort",
+        "step": 6
+      },
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-oppdragsgrunnlag.json": {
+      "schema": "schemas/01-oppdragsgrunnlag.json",
+      "producer": {
+        "flow": "brief-en-setning",
+        "step": 1
+      },
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-briefutkast.json": {
+      "schema": "schemas/01-briefutkast.json",
+      "producer": {
+        "flow": "brief-en-setning",
+        "step": 2
+      },
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-briefkritikk.json": {
+      "schema": "schemas/01-briefkritikk.json",
+      "producer": {
+        "flow": "brief-en-setning",
+        "step": 3
+      },
+      "read_by": [
+        "brief-en-setning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-brief-godkjent.json": {
+      "schema": "schemas/01-brief-godkjent.json",
+      "producer": {
+        "flow": "brief-en-setning",
+        "step": 4
+      },
+      "read_by": [
+        "leserkort",
+        "merkeelement-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/02-lesergrunnlag.json": {
+      "schema": "schemas/02-lesergrunnlag.json",
+      "producer": {
+        "flow": "leserkort",
+        "step": 1
+      },
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/02-leserkortutkast.json": {
+      "schema": "schemas/02-leserkortutkast.json",
+      "producer": {
+        "flow": "leserkort",
+        "step": 2
+      },
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/02-leserkortkritikk.json": {
+      "schema": "schemas/02-leserkortkritikk.json",
+      "producer": {
+        "flow": "leserkort",
+        "step": 3
+      },
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/02-leserkort-godkjent.json": {
+      "schema": "schemas/02-leserkort-godkjent.json",
+      "producer": {
+        "flow": "leserkort",
+        "step": 4
+      },
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    "artefakter/{oppdrag_id}/03-innsiktskilder.json": {
+      "schema": "schemas/03-innsiktskilder.json",
+      "producer": {
+        "flow": "innsiktsjakt",
+        "step": 1
+      },
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    "artefakter/{oppdrag_id}/03-innsiktsforslag.json": {
+      "schema": "schemas/03-innsiktsforslag.json",
+      "producer": {
+        "flow": "innsiktsjakt",
+        "step": 2
+      },
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    "artefakter/{oppdrag_id}/03-innsikter-kildekontrollert.json": {
+      "schema": "schemas/03-innsikter-kildekontrollert.json",
+      "producer": {
+        "flow": "innsiktsjakt",
+        "step": 3
+      },
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    "artefakter/{oppdrag_id}/03-innsiktskritikk.json": {
+      "schema": "schemas/03-innsiktskritikk.json",
+      "producer": {
+        "flow": "innsiktsjakt",
+        "step": 4
+      },
+      "read_by": [
+        "innsiktsjakt"
+      ]
+    },
+    "artefakter/{oppdrag_id}/03-innsikt-valgt.json": {
+      "schema": "schemas/03-innsikt-valgt.json",
+      "producer": {
+        "flow": "innsiktsjakt",
+        "step": 5
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-konkurrentkilder.json": {
+      "schema": "schemas/04-konkurrentkilder.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 1
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-konkurrentlesning.json": {
+      "schema": "schemas/04-konkurrentlesning.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 2
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-konkurrentlesning-godkjent.json": {
+      "schema": "schemas/04-konkurrentlesning-godkjent.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 3
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-lofteforslag.json": {
+      "schema": "schemas/04-lofteforslag.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 4
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-loftekritikk.json": {
+      "schema": "schemas/04-loftekritikk.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 5
+      },
+      "read_by": [
+        "konkurrenter-for-loftet"
+      ]
+    },
+    "artefakter/{oppdrag_id}/04-lofte-godkjent.json": {
+      "schema": "schemas/04-lofte-godkjent.json",
+      "producer": {
+        "flow": "konkurrenter-for-loftet",
+        "step": 6
+      },
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    "artefakter/{oppdrag_id}/05-logikkjedeutkast.json": {
+      "schema": "schemas/05-logikkjedeutkast.json",
+      "producer": {
+        "flow": "logikkjede",
+        "step": 1
+      },
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    "artefakter/{oppdrag_id}/05-logikkjede-kontrollert.json": {
+      "schema": "schemas/05-logikkjede-kontrollert.json",
+      "producer": {
+        "flow": "logikkjede",
+        "step": 2
+      },
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    "artefakter/{oppdrag_id}/05-logikkjedekritikk.json": {
+      "schema": "schemas/05-logikkjedekritikk.json",
+      "producer": {
+        "flow": "logikkjede",
+        "step": 3
+      },
+      "read_by": [
+        "logikkjede"
+      ]
+    },
+    "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json": {
+      "schema": "schemas/05-logikkjede-godkjent.json",
+      "producer": {
+        "flow": "logikkjede",
+        "step": 4
+      },
+      "read_by": [
+        "linjebredde-og-valg",
+        "merkevare-og-salgsaktivering",
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    "artefakter/{oppdrag_id}/07-linjebank.json": {
+      "schema": "schemas/07-linjebank.json",
+      "producer": {
+        "flow": "linjebredde-og-valg",
+        "step": 1
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/07-linjer-luket.json": {
+      "schema": "schemas/07-linjer-luket.json",
+      "producer": {
+        "flow": "linjebredde-og-valg",
+        "step": 2
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/07-linjer-rangert.json": {
+      "schema": "schemas/07-linjer-rangert.json",
+      "producer": {
+        "flow": "linjebredde-og-valg",
+        "step": 3
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/08-kundekandidater.json": {
+      "schema": "schemas/08-kundekandidater.json",
+      "producer": {
+        "flow": "linjebredde-og-valg",
+        "step": 4
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/08-kundevalg.json": {
+      "schema": "schemas/08-kundevalg.json",
+      "producer": {
+        "flow": "linjebredde-og-valg",
+        "step": 5
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-bildekonsepter.json": {
+      "schema": "schemas/09-bildekonsepter.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 1
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-bildekonseptkritikk.json": {
+      "schema": "schemas/09-bildekonseptkritikk.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 2
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-annonseutkast.json": {
+      "schema": "schemas/09-annonseutkast.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 3
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-annonseformat-kontrollert.json": {
+      "schema": "schemas/09-annonseformat-kontrollert.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 4
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-annonseutkast-kritikk.json": {
+      "schema": "schemas/09-annonseutkast-kritikk.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 5
+      },
+      "read_by": [
+        "bilde-som-tredje-tanke"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json": {
+      "schema": "schemas/09-annonseutforelse-godkjent.json",
+      "producer": {
+        "flow": "bilde-som-tredje-tanke",
+        "step": 6
+      },
+      "read_by": [
+        "east-tiltak-og-test",
+        "kanalformat-tilpasning",
+        "klarsprak-revisjon",
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-land-og-regelgrunnlag.json": {
+      "schema": "schemas/10-land-og-regelgrunnlag.json",
+      "producer": {
+        "flow": "lovsjekk-per-land",
+        "step": 1
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-lovkontrollutkast.json": {
+      "schema": "schemas/10-lovkontrollutkast.json",
+      "producer": {
+        "flow": "lovsjekk-per-land",
+        "step": 2
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-lovkritikk.json": {
+      "schema": "schemas/10-lovkritikk.json",
+      "producer": {
+        "flow": "lovsjekk-per-land",
+        "step": 3
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-landgodkjenninger.json": {
+      "schema": "schemas/10-landgodkjenninger.json",
+      "producer": {
+        "flow": "lovsjekk-per-land",
+        "step": 4
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json": {
+      "schema": "schemas/10-annonser-lovsjekket.json",
+      "producer": {
+        "flow": "lovsjekk-per-land",
+        "step": 5
+      },
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-testgrunnlag.json": {
+      "schema": "schemas/10-testgrunnlag.json",
+      "producer": {
+        "flow": "testplan-ekte-annonser",
+        "step": 1
+      },
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-testplanutkast.json": {
+      "schema": "schemas/10-testplanutkast.json",
+      "producer": {
+        "flow": "testplan-ekte-annonser",
+        "step": 2
+      },
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-testplan-beregnet.json": {
+      "schema": "schemas/10-testplan-beregnet.json",
+      "producer": {
+        "flow": "testplan-ekte-annonser",
+        "step": 3
+      },
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-testplankritikk.json": {
+      "schema": "schemas/10-testplankritikk.json",
+      "producer": {
+        "flow": "testplan-ekte-annonser",
+        "step": 4
+      },
+      "read_by": [
+        "testplan-ekte-annonser"
+      ]
+    },
+    "artefakter/{oppdrag_id}/10-testplan-godkjent.json": {
+      "schema": "schemas/10-testplan-godkjent.json",
+      "producer": {
+        "flow": "testplan-ekte-annonser",
+        "step": 5
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-merkeelement-register.json": {
+      "schema": "schemas/01-merkeelement-register.json",
+      "producer": {
+        "flow": "merkeelement-revisjon",
+        "step": 1
+      },
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-merkeelement-maaling.json": {
+      "schema": "schemas/01-merkeelement-maaling.json",
+      "producer": {
+        "flow": "merkeelement-revisjon",
+        "step": 2
+      },
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-merkeelement-vurdering.json": {
+      "schema": "schemas/01-merkeelement-vurdering.json",
+      "producer": {
+        "flow": "merkeelement-revisjon",
+        "step": 3
+      },
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-merkeelement-kritikk.json": {
+      "schema": "schemas/01-merkeelement-kritikk.json",
+      "producer": {
+        "flow": "merkeelement-revisjon",
+        "step": 4
+      },
+      "read_by": [
+        "merkeelement-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/01-merkeelement-godkjent.json": {
+      "schema": "schemas/01-merkeelement-godkjent.json",
+      "producer": {
+        "flow": "merkeelement-revisjon",
+        "step": 5
+      },
+      "read_by": [
+        "leserkort"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-kampanjerammer.json": {
+      "schema": "schemas/06-kampanjerammer.json",
+      "producer": {
+        "flow": "merkevare-og-salgsaktivering",
+        "step": 1
+      },
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-kampanjefordeling-utkast.json": {
+      "schema": "schemas/06-kampanjefordeling-utkast.json",
+      "producer": {
+        "flow": "merkevare-og-salgsaktivering",
+        "step": 2
+      },
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-kampanjefordeling-beregnet.json": {
+      "schema": "schemas/06-kampanjefordeling-beregnet.json",
+      "producer": {
+        "flow": "merkevare-og-salgsaktivering",
+        "step": 3
+      },
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-kampanjefordeling-kritikk.json": {
+      "schema": "schemas/06-kampanjefordeling-kritikk.json",
+      "producer": {
+        "flow": "merkevare-og-salgsaktivering",
+        "step": 4
+      },
+      "read_by": [
+        "merkevare-og-salgsaktivering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-kampanjefordeling-godkjent.json": {
+      "schema": "schemas/06-kampanjefordeling-godkjent.json",
+      "producer": {
+        "flow": "merkevare-og-salgsaktivering",
+        "step": 5
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-klarsprak-grunnlag.json": {
+      "schema": "schemas/09-klarsprak-grunnlag.json",
+      "producer": {
+        "flow": "klarsprak-revisjon",
+        "step": 1
+      },
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-klarsprak-utkast.json": {
+      "schema": "schemas/09-klarsprak-utkast.json",
+      "producer": {
+        "flow": "klarsprak-revisjon",
+        "step": 2
+      },
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-klarsprak-kritikk.json": {
+      "schema": "schemas/09-klarsprak-kritikk.json",
+      "producer": {
+        "flow": "klarsprak-revisjon",
+        "step": 3
+      },
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-klarsprak-forstaelsestest.json": {
+      "schema": "schemas/09-klarsprak-forstaelsestest.json",
+      "producer": {
+        "flow": "klarsprak-revisjon",
+        "step": 4
+      },
+      "read_by": [
+        "klarsprak-revisjon"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json": {
+      "schema": "schemas/09-klarsprak-godkjent.json",
+      "producer": {
+        "flow": "klarsprak-revisjon",
+        "step": 5
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-krav.json": {
+      "schema": "schemas/09-kanalformat-krav.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 1
+      },
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-plan.json": {
+      "schema": "schemas/09-kanalformat-plan.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 2
+      },
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-varianter.json": {
+      "schema": "schemas/09-kanalformat-varianter.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 3
+      },
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-kontrollert.json": {
+      "schema": "schemas/09-kanalformat-kontrollert.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 4
+      },
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-kritikk.json": {
+      "schema": "schemas/09-kanalformat-kritikk.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 5
+      },
+      "read_by": [
+        "kanalformat-tilpasning"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-kanalformat-godkjent.json": {
+      "schema": "schemas/09-kanalformat-godkjent.json",
+      "producer": {
+        "flow": "kanalformat-tilpasning",
+        "step": 6
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-mediedekning-grunnlag.json": {
+      "schema": "schemas/06-mediedekning-grunnlag.json",
+      "producer": {
+        "flow": "rekkevidde-og-medieplan",
+        "step": 1
+      },
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-mediedekning-utkast.json": {
+      "schema": "schemas/06-mediedekning-utkast.json",
+      "producer": {
+        "flow": "rekkevidde-og-medieplan",
+        "step": 2
+      },
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-mediedekning-beregnet.json": {
+      "schema": "schemas/06-mediedekning-beregnet.json",
+      "producer": {
+        "flow": "rekkevidde-og-medieplan",
+        "step": 3
+      },
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-mediedekning-kritikk.json": {
+      "schema": "schemas/06-mediedekning-kritikk.json",
+      "producer": {
+        "flow": "rekkevidde-og-medieplan",
+        "step": 4
+      },
+      "read_by": [
+        "rekkevidde-og-medieplan"
+      ]
+    },
+    "artefakter/{oppdrag_id}/06-mediedekning-godkjent.json": {
+      "schema": "schemas/06-mediedekning-godkjent.json",
+      "producer": {
+        "flow": "rekkevidde-og-medieplan",
+        "step": 5
+      },
+      "read_by": [
+        "linjebredde-og-valg"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-start.json": {
+      "schema": "schemas/11-resultater-start.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 1
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-data.json": {
+      "schema": "schemas/11-resultater-data.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 2
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-analysegrunnlag.json": {
+      "schema": "schemas/11-resultater-analysegrunnlag.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 3
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-tolkning.json": {
+      "schema": "schemas/11-resultater-tolkning.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 4
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-kritikk.json": {
+      "schema": "schemas/11-resultater-kritikk.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 5
+      },
+      "read_by": [
+        "resultater-og-laering"
+      ]
+    },
+    "artefakter/{oppdrag_id}/11-resultater-beslutning.json": {
+      "schema": "schemas/11-resultater-beslutning.json",
+      "producer": {
+        "flow": "resultater-og-laering",
+        "step": 6
+      },
+      "read_by": []
+    },
+    "artefakter/{oppdrag_id}/09-east-barrierer.json": {
+      "schema": "schemas/09-east-barrierer.json",
+      "producer": {
+        "flow": "east-tiltak-og-test",
+        "step": 1
+      },
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-east-tiltak.json": {
+      "schema": "schemas/09-east-tiltak.json",
+      "producer": {
+        "flow": "east-tiltak-og-test",
+        "step": 2
+      },
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-east-kritikk.json": {
+      "schema": "schemas/09-east-kritikk.json",
+      "producer": {
+        "flow": "east-tiltak-og-test",
+        "step": 3
+      },
+      "read_by": [
+        "east-tiltak-og-test"
+      ]
+    },
+    "artefakter/{oppdrag_id}/09-east-godkjent.json": {
+      "schema": "schemas/09-east-godkjent.json",
+      "producer": {
+        "flow": "east-tiltak-og-test",
+        "step": 4
+      },
+      "read_by": [
+        "lovsjekk-per-land"
+      ]
+    }
+  },
+  "field_count_rule": "field_count teller lokale registreringsrader, inkludert objektforeldre. Importerte felles-/domenefelter telles separat én gang i sine egne registre; gjenbrukte felter i artefaktkontrakter telles per kontrakt. Dette er ikke antall unike markedsføringsbegreper.",
+  "flow_bindings": [
+    {
+      "flow": "bilde-som-tredje-tanke",
+      "input": "artefakter/{oppdrag_id}/08-kundevalg.json",
+      "input_schema": "schemas/08-kundevalg.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "output_artifact_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "brief-en-setning",
+      "input": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "input_schema": "schemas/00-kampanjekort-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "output_artifact_schema": "schemas/01-brief-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "east-tiltak-og-test",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-east-godkjent.json",
+      "output_artifact_schema": "schemas/09-east-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "innsiktsjakt",
+      "input": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+      "input_schema": "schemas/02-leserkort-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+      "output_artifact_schema": "schemas/03-innsikt-valgt.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "kampanjekort",
+      "input": "artefakter/{oppdrag_id}/oppdrag.json",
+      "input_schema": "schemas/oppdrag.json",
+      "output_artifact": "artefakter/{oppdrag_id}/00-kampanjekort-godkjent.json",
+      "output_artifact_schema": "schemas/00-kampanjekort-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/kategori.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/skill-filter.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "kanalformat-tilpasning",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-kanalformat-godkjent.json",
+      "output_artifact_schema": "schemas/09-kanalformat-godkjent.json",
+      "schema_reads": [
+        "schemas/kanal-format.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "klarsprak-revisjon",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/09-klarsprak-godkjent.json",
+      "output_artifact_schema": "schemas/09-klarsprak-godkjent.json",
+      "schema_reads": [
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "konkurrenter-for-loftet",
+      "input": "artefakter/{oppdrag_id}/03-innsikt-valgt.json",
+      "input_schema": "schemas/03-innsikt-valgt.json",
+      "output_artifact": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+      "output_artifact_schema": "schemas/04-lofte-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "leserkort",
+      "input": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "input_schema": "schemas/01-brief-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/02-leserkort-godkjent.json",
+      "output_artifact_schema": "schemas/02-leserkort-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/leser.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "linjebredde-og-valg",
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/08-kundevalg.json",
+      "output_artifact_schema": "schemas/08-kundevalg.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "logikkjede",
+      "input": "artefakter/{oppdrag_id}/04-lofte-godkjent.json",
+      "input_schema": "schemas/04-lofte-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "output_artifact_schema": "schemas/05-logikkjede-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "lovsjekk-per-land",
+      "input": "artefakter/{oppdrag_id}/09-annonseutforelse-godkjent.json",
+      "input_schema": "schemas/09-annonseutforelse-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "output_artifact_schema": "schemas/10-annonser-lovsjekket.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/kategori.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "merkeelement-revisjon",
+      "input": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+      "input_schema": "schemas/01-brief-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/01-merkeelement-godkjent.json",
+      "output_artifact_schema": "schemas/01-merkeelement-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/merkevare-vs-kampanje.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "merkevare-og-salgsaktivering",
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/06-kampanjefordeling-godkjent.json",
+      "output_artifact_schema": "schemas/06-kampanjefordeling-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "rekkevidde-og-medieplan",
+      "input": "artefakter/{oppdrag_id}/05-logikkjede-godkjent.json",
+      "input_schema": "schemas/05-logikkjede-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/06-mediedekning-godkjent.json",
+      "output_artifact_schema": "schemas/06-mediedekning-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "resultater-og-laering",
+      "input": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "input_schema": "schemas/10-testplan-godkjent.json",
+      "output_artifact": "artefakter/{oppdrag_id}/11-resultater-beslutning.json",
+      "output_artifact_schema": "schemas/11-resultater-beslutning.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kategori.json",
+        "schemas/artefakt-felles.json"
+      ]
+    },
+    {
+      "flow": "testplan-ekte-annonser",
+      "input": "artefakter/{oppdrag_id}/10-annonser-lovsjekket.json",
+      "input_schema": "schemas/10-annonser-lovsjekket.json",
+      "output_artifact": "artefakter/{oppdrag_id}/10-testplan-godkjent.json",
+      "output_artifact_schema": "schemas/10-testplan-godkjent.json",
+      "schema_reads": [
+        "schemas/kampanje.json",
+        "schemas/kanal-format.json",
+        "schemas/leser.json",
+        "schemas/tilbud.json",
+        "schemas/artefakt-felles.json"
+      ]
+    }
+  ],
+  "skill_bindings": {
+    "registry": "schemas/skill-filter.json",
+    "mapping": "review/schema-value-mapping.json",
+    "evaluator": "scripts/schema_filter.py",
+    "unknown": "Blokkerer; mennesker avklarer konkrete fakta.",
+    "format_family": "Videoformat matcher video gjennom eksplisitt familie; ingen automatisk kanal- eller territorieutvidelse."
+  },
+  "validation": {
+    "command": "python3 scripts/validate_schemas.py",
+    "report": "review/schema-validation.json",
+    "field_counts": "review/schema-counts.md"
+  }
+}

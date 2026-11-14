@@ -1,0 +1,36 @@
+{
+  "id": "media-class",
+  "label_nb": "Medieklasse",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "betalt",
+      "label_nb": "Betalt",
+      "definition": "Betalt distribusjon."
+    },
+    {
+      "id": "egen",
+      "label_nb": "Egen",
+      "definition": "Avsenderens egne flater uten mediekjøp."
+    },
+    {
+      "id": "fortjent",
+      "label_nb": "Fortjent",
+      "definition": "Redaksjonell eller annen omtale uten mediekjøp."
+    },
+    {
+      "id": "alle",
+      "label_nb": "Alle",
+      "definition": "Ingen avgrensning."
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "id": "01-brief-godkjent",
+  "label_nb": "Briefen i én setning og spørsmål til kunden — steg 4",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "tilbud"
+  ],
+  "read_by": [
+    "brief-en-setning",
+    "leserkort",
+    "merkeelement-revisjon"
+  ],
+  "fields": [
+    {
+      "id": "01-brief-godkjent.innhold.brief",
+      "path": "innhold.brief",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet brief for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "leserkort",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Samlet brief for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-brief-godkjent.innhold.brief.fakta",
+      "path": "innhold.brief.fakta",
+      "group": "innhold",
+      "label_nb": "Fakta og antakelser",
+      "type": "array",
+      "values": [],
+      "definition": "Kundens fakta, vedlegg, kilder, opphav og merkede mangler.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "leserkort",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Kundens fakta, vedlegg, kilder, opphav og merkede mangler."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-brief-godkjent.innhold.brief.setning",
+      "path": "innhold.brief.setning",
+      "group": "innhold",
+      "label_nb": "Brief i én setning",
+      "type": "string",
+      "values": [],
+      "definition": "Hvem vi skal nå, ønsket endring, tilbud og ramme i nøyaktig én setning.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "leserkort",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Hvem vi skal nå, ønsket endring, tilbud og ramme i nøyaktig én setning."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-brief-godkjent.innhold.brief.sporsmal",
+      "path": "innhold.brief.sporsmal",
+      "group": "innhold",
+      "label_nb": "Spørsmål til kunden",
+      "type": "array",
+      "values": [],
+      "definition": "Spørsmål-ID, hvorfor svaret trengs og om det blokkerer mål, målgruppe, tilbud eller ramme.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "leserkort",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Spørsmål-ID, hvorfor svaret trengs og om det blokkerer mål, målgruppe, tilbud eller ramme."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-brief-godkjent.innhold.brief.svar",
+      "path": "innhold.brief.svar",
+      "group": "innhold",
+      "label_nb": "Kundens svar",
+      "type": "array",
+      "values": [],
+      "definition": "Datert svar knyttet til hvert spørsmål; oppgaveendring krever nytt utkast og kritikk.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "brief-en-setning",
+          "leserkort",
+          "merkeelement-revisjon"
+        ],
+        "choices": "Datert svar knyttet til hvert spørsmål; oppgaveendring krever nytt utkast og kritikk."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "brief-en-setning",
+        "leserkort",
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/01-brief-godkjent.json",
+  "artifact_family": "brief",
+  "producer": {
+    "flow": "brief-en-setning",
+    "step": 4,
+    "who": "menneske"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.brief.",
+  "validation_profile": {
+    "step_validation": "flows/brief-en-setning.json#/steps/3/validation",
+    "required_from_steps": {
+      "fakta": 1,
+      "setning": 2,
+      "sporsmal": 2,
+      "svar": 4
+    },
+    "critic_required": true,
+    "human_decision_required": true,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

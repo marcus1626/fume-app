@@ -1,0 +1,36 @@
+{
+  "id": "request-size",
+  "label_nb": "Forespørselens størrelse",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "ingen",
+      "label_nb": "Ingen",
+      "definition": "Ingen oppfordret handling."
+    },
+    {
+      "id": "liten",
+      "label_nb": "Liten",
+      "definition": "Lav innsats uten betaling, kontaktdata eller binding."
+    },
+    {
+      "id": "middels",
+      "label_nb": "Middels",
+      "definition": "Begrunnet mellomnivå."
+    },
+    {
+      "id": "stor",
+      "label_nb": "Stor",
+      "definition": "Vesentlig tid, betaling, data eller forpliktelse."
+    }
+  ]
+}

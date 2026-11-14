@@ -1,0 +1,51 @@
+{
+  "id": "campaign-goal",
+  "label_nb": "Kampanjemål",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "kjennskap",
+      "label_nb": "Kjennskap",
+      "definition": "Øke kjennskap til avsender."
+    },
+    {
+      "id": "mental-tilgjengelighet",
+      "label_nb": "Mental tilgjengelighet",
+      "definition": "Knytte merke til kjøpssituasjon."
+    },
+    {
+      "id": "vurdering",
+      "label_nb": "Vurdering",
+      "definition": "Hjelpe vurdering av alternativer."
+    },
+    {
+      "id": "henvendelser",
+      "label_nb": "Henvendelser",
+      "definition": "Skape relevante henvendelser."
+    },
+    {
+      "id": "salg",
+      "label_nb": "Salg",
+      "definition": "Skape faktiske betalende kjøp."
+    },
+    {
+      "id": "bruk",
+      "label_nb": "Bruk",
+      "definition": "Hjelpe kunden å få bruksverdi."
+    },
+    {
+      "id": "fornyelse",
+      "label_nb": "Fornyelse",
+      "definition": "Bevare eller fornye kundeforhold."
+    }
+  ]
+}

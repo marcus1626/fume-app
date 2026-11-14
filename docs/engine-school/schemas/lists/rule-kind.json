@@ -1,0 +1,31 @@
+{
+  "id": "rule-kind",
+  "label_nb": "Kravtype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "krav",
+      "label_nb": "Krav",
+      "definition": "Dokumentert plattform- eller policykrav."
+    },
+    {
+      "id": "anbefaling",
+      "label_nb": "Anbefaling",
+      "definition": "Råd som ikke alene gjør ressursen ugyldig."
+    },
+    {
+      "id": "fume-valg",
+      "label_nb": "Fume valg",
+      "definition": "Eget godkjent produksjonsvalg."
+    }
+  ]
+}

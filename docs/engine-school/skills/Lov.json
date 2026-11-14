@@ -1,0 +1,1552 @@
+[
+  {
+    "id": "lov-no-dokumentasjon-for-publisering",
+    "subject": "Lov",
+    "name": "Knytt faktapåstander til dokumentasjon",
+    "principle": "Faktapåstander må ha dekning før annonsen publiseres.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 3, begge punktum"
+      }
+    ],
+    "rule": "Bestått bare når hver faktapåstand har en henvisning til tilgjengelig dokumentasjon hos annonsøren, datert senest ved publisering, som dekker produktet og virkningen som påstås.",
+    "check": "kritiker+menneske",
+    "example_bad": "Sparer 40 prosent strøm, med plan om å teste dette senere.",
+    "example_good": "I målingen av modell A under vilkår B var strømbruken 12 prosent lavere; rapporten ligger ved.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven krever at faktapåstander kan dokumenteres og at annonsøren har dokumentasjonen når markedsføringen skjer."
+  },
+  {
+    "id": "lov-no-egenskaper-stemmer",
+    "subject": "Lov",
+    "name": "Kontroller produktets egenskaper",
+    "principle": "Beskrivelsen må svare til produktet som faktisk tilbys.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 7 første ledd bokstav a og b"
+      }
+    ],
+    "rule": "Bestått bare når alle opplysninger om innhold, mengde, funksjoner og levering samsvarer med produktarket og leveringsvilkårene for den annonserte varianten.",
+    "check": "kritiker+menneske",
+    "example_bad": "Grunnpakken omtales med funksjoner som bare finnes i premium.",
+    "example_good": "Grunnpakken har fakturering; lønn krever premium.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven forbyr uriktige eller villedende opplysninger om blant annet produktets viktigste egenskaper."
+  },
+  {
+    "id": "lov-no-synlig-reklame",
+    "subject": "Lov",
+    "name": "Gjør reklamen gjenkjennelig",
+    "principle": "Mottakeren skal kunne oppfatte at innholdet er markedsføring.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 8 første ledd andre punktum; § 28"
+      }
+    ],
+    "rule": "Bestått bare når innholdets kommersielle formål fremgår tydelig av utformingen, eller av en synlig reklamemerking før mottakeren møter salgsbudskapet. Kontroller ferdig visning i den aktuelle kanalen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Betalt innlegg ser ut som en uavhengig nyhet uten merking.",
+    "example_good": "Innlegget starter med Reklame for Eksempel AS.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven krever gjenkjennelig markedsføring og forbyr villedende utelatelse av det kommersielle formålet."
+  },
+  {
+    "id": "lov-no-pris-med-tillegg",
+    "subject": "Lov",
+    "name": "Vis pris og tillegg ved kjøpsoppfordring",
+    "principle": "Kjøperen trenger kostnadene for å vurdere tilbudet.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 8, bokstav e i avsnittet Ved oppfordring til kjøp; definisjonen Med oppfordring til kjøp"
+      }
+    ],
+    "rule": "Ved kjøpsoppfordring: Bestått bare når pris inklusive avgifter og relevante frakt-, leverings- og portokostnader oppgis. Hvis en kostnad ikke rimelig kan beregnes på forhånd, må beregningsmåten for prisen eller mulige tillegg oppgis slik bestemmelsen krever.",
+    "check": "kode+menneske",
+    "example_bad": "Stolen koster 999 kroner, men obligatorisk avgift på 100 kroner skjules.",
+    "example_good": "Stolen koster 1 099 kroner inkludert avgifter, pluss 149 kroner frakt.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Ved kjøpsoppfordringer krever markedsføringsloven pris med avgifter og relevante tillegg eller opplysninger om beregning og mulige tillegg når beløp ikke kan beregnes på forhånd."
+  },
+  {
+    "id": "lov-no-selgerens-identitet",
+    "subject": "Lov",
+    "name": "Oppgi hvem som selger",
+    "principle": "En kjøpsoppfordring må gjøre selgeren identifiserbar.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 8, bokstav b i avsnittet Ved oppfordring til kjøp"
+      }
+    ],
+    "rule": "Ved kjøpsoppfordring: Bestått bare når selgerens navn og geografiske adresse fremgår av sammenhengen eller oppgis. Opptrer selgeren for en annen, må også dennes identitet og adresse oppgis der det er relevant.",
+    "check": "kritiker+menneske",
+    "example_bad": "Bestill fra Vår butikk, uten firmanavn eller adresse.",
+    "example_good": "Selger: Eksempel AS, Eksempelveien 1, 0001 Oslo.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Ved kjøpsoppfordringer regner markedsføringsloven selgerens identitet og geografiske adresse som vesentlige opplysninger dersom de ikke fremgår av sammenhengen."
+  },
+  {
+    "id": "lov-no-opplys-angrerett",
+    "subject": "Lov",
+    "name": "Opplys om angrerett når den gjelder",
+    "principle": "Kjøperen må få vite at angrerett eller avbestillingsrett finnes.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 8, bokstav d i avsnittet Ved oppfordring til kjøp"
+      }
+    ],
+    "rule": "Ved kjøpsoppfordring for en transaksjon med angrerett eller avbestillingsrett: Bestått bare når det opplyses at retten gjelder, med mindre dette allerede fremgår av sammenhengen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Kjøpssiden for en vare med angrerett utelater retten helt.",
+    "example_good": "Kjøpssiden opplyser at angrerett gjelder og lenker til vilkårene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Markedsføringsloven krever opplysning om eventuell angrerett eller avbestillingsrett ved kjøpsoppfordringer når den ikke fremgår av sammenhengen."
+  },
+  {
+    "id": "lov-no-forklar-omtaleverifisering",
+    "subject": "Lov",
+    "name": "Forklar hvordan omtaler kontrolleres",
+    "principle": "Leseren skal vite om og hvordan kundeomtaler blir verifisert.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 8, avsnittet som begynner med Når en næringsdrivende gir forbrukere tilgang til forbrukeromtaler"
+      }
+    ],
+    "rule": "Når virksomheten gir tilgang til forbrukeromtaler: Bestått bare når den publiserer en forklaring på om og hvordan den kontrollerer at avsenderne faktisk har brukt eller kjøpt ytelsen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Alle kan skrive, men siden forklarer ikke hvordan omtaler kontrolleres.",
+    "example_good": "Ved omtalene står det at avsenderens kjøp kontrolleres mot ordrenummer.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Markedsføringsloven krever informasjon om hvorvidt og hvordan virksomheten sikrer at tilgjengelige forbrukeromtaler kommer fra reelle brukere eller kjøpere."
+  },
+  {
+    "id": "lov-no-samtykke-elektronisk",
+    "subject": "Lov",
+    "name": "Kontroller grunnlaget for e-post og SMS",
+    "principle": "Markedsføring til fysiske personer krever normalt forhåndssamtykke, også når personen kontaktes på jobb.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 15 første og tredje ledd"
+      }
+    ],
+    "rule": "Før e-post eller SMS sendes til en fysisk person: Bestått bare når dokumentert forhåndssamtykke finnes, eller alle vilkårene for unntaket i § 15 tredje ledd er dokumentert. En offentlig e-postadresse alene gir ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Sender salgsbrev til navngitte ansatte fordi adressene ligger på nettet.",
+    "example_good": "Sender til mottakere med registrert samtykke som dekker denne utsendelsen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": [
+        "e-post",
+        "sms"
+      ],
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven krever som hovedregel forhåndssamtykke for elektronisk markedsføring til fysiske personer, med et avgrenset kundeunntak."
+  },
+  {
+    "id": "lov-no-kundeunntak",
+    "subject": "Lov",
+    "name": "Avgrens unntaket for eksisterende kunder",
+    "principle": "Et tidligere kjøp gir ikke fri adgang til å sende alle typer tilbud.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 15 tredje ledd"
+      }
+    ],
+    "rule": "Når kundeunntaket brukes: Bestått bare når adressen ble mottatt av avtaleparten ved salg i et eksisterende kundeforhold, tilbudet gjelder egne tilsvarende ytelser, og kunden fikk enkel og gebyrfri reservasjon ved innsamling og i hver melding.",
+    "check": "kode+menneske",
+    "example_bad": "Et skokjøp brukes som grunnlag for tilbud om en samarbeidspartners forsikring.",
+    "example_good": "Skobutikken sender tilbud om egne sko i et dokumentert eksisterende kundeforhold, med reservasjon ved innsamling og i meldingen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": [
+        "e-post",
+        "sms"
+      ],
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Kundeunntaket gjelder egne tilsvarende ytelser når adressen er mottatt ved salg og kunden får enkel og gebyrfri reservasjon ved innsamling og hver henvendelse."
+  },
+  {
+    "id": "lov-no-gratis-avmelding",
+    "subject": "Lov",
+    "name": "Prøv avmeldingen",
+    "principle": "Reservasjon må fungere enkelt og uten gebyr når kundeunntaket brukes.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 15 tredje ledd tredje punktum"
+      }
+    ],
+    "rule": "For hver mal som bruker kundeunntaket: Bestått bare når en prøvemottaker kan reservere seg uten gebyr via meldingen, og en etterfølgende prøveutsendelse utelukker mottakeren.",
+    "check": "kode+menneske",
+    "example_bad": "Avmelding krever et betalt telefonanrop, og mottakeren får neste kampanje.",
+    "example_good": "Avmeldingslenken registrerer reservasjonen, og prøveutsendelsen utelukker adressen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": [
+        "e-post",
+        "sms"
+      ],
+      "country": "NO"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven krever enkel og gebyrfri reservasjon i hver elektroniske markedsføringshenvendelse som bruker kundeunntaket."
+  },
+  {
+    "id": "lov-no-barn-kjopspress",
+    "subject": "Lov",
+    "name": "Fjern direkte kjøpsoppfordringer til barn",
+    "principle": "Reklame må ikke be barn kjøpe eller overtale voksne til å kjøpe.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 20 andre ledd"
+      }
+    ],
+    "rule": "For reklame rettet mot barn: Bestått bare når ingen tekst, replikk eller knapp direkte oppfordrer barnet til å kjøpe ytelsen eller overtale en voksen til kjøp.",
+    "check": "kritiker+menneske",
+    "example_bad": "Be mamma kjøpe spillet nå!",
+    "example_good": "Spillet inneholder tre baner og er beregnet på barn over åtte år.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      2,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Markedsføringsloven forbyr direkte kjøpsoppfordringer til barn og oppfordringer om å overtale voksne til kjøp."
+  },
+  {
+    "id": "lov-no-barn-sosialt-press",
+    "subject": "Lov",
+    "name": "Kontroller sosialt press mot barn",
+    "principle": "Markedsføring til barn må vurderes for utnyttelse av sosial usikkerhet og kroppspress.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 21 bokstav b"
+      }
+    ],
+    "rule": "For markedsføring til barn: Bestått bare når ingen del av annonsen hevder eller viser at barnet trenger produktet for å unngå utestenging, skam eller en mindreverdig kropp. Mennesket kontrollerer både tekst og bilder.",
+    "check": "menneske",
+    "example_bad": "Uten disse skoene vil ingen være med deg.",
+    "example_good": "Skoene har borrelås og såle for innendørs bruk.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      2,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Ved vurdering av markedsføring overfor barn skal det blant annet tas hensyn til om den spiller på sosial usikkerhet eller dårlig samvittighet."
+  },
+  {
+    "id": "lov-no-b2b-faktasjekk",
+    "subject": "Lov",
+    "name": "Kontroller også påstander til bedrifter",
+    "principle": "Villedende fremstillinger er også et problem i markedsføring mellom bedrifter.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 26 første og andre ledd; § 3"
+      }
+    ],
+    "rule": "For en B2B-annonse: Bestått bare når alle kontrollerbare utsagn, bilder og demonstrasjoner om tilbudet stemmer med den dokumenterte leveransen. En demonstrasjon av en fremtidig funksjon må identifiseres som fremtidig.",
+    "check": "kritiker+menneske",
+    "example_bad": "En konseptvideo viser automatisk regnskapsføring som en tilgjengelig funksjon.",
+    "example_good": "Videoen merker funksjonen som planlagt; produktlisten viser hva som leveres i dag.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2B",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven forbyr villedende fremstillinger som kan påvirke etterspørselen mellom næringsdrivende og krever dokumentasjon for faktapåstander."
+  },
+  {
+    "id": "lov-no-garantivilkar",
+    "subject": "Lov",
+    "name": "Kontroller garantivilkårene",
+    "principle": "En garanti må forklare hva kunden faktisk får og hvordan den brukes.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 23 første ledd bokstav a–e og andre og tredje ledd"
+      }
+    ],
+    "rule": "Når garanti tilbys: Bestått bare når garantivilkårene oppgir innhold og begrensninger, lovfestede rettigheter, bruksmåte, varighet, geografisk område og garantigiverens navn og adresse. Kontroller også opplysningene i bokstav d og e når de er aktuelle, norsk språk ved markedsføring mot norske forbrukere og planlagt utlevering på varig medium senest ved levering.",
+    "check": "menneske",
+    "example_bad": "Livstidsgaranti uten vilkår, garantigiver eller forklaring av varigheten.",
+    "example_good": "Garantidokumentet på norsk angir fem års dekning i Norge, begrensninger, fremgangsmåte, garantigiver med adresse og alle aktuelle opplysninger om lovfestede rettigheter. Dokumentet følger varen som PDF.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "Markedsføringsloven fastsetter hvilke opplysninger garantivilkår skal inneholde og krav til språk og utlevering på varig medium."
+  },
+  {
+    "id": "lov-no-forvekslende-etterligning",
+    "subject": "Lov",
+    "name": "Stopp forvekslende etterligning",
+    "principle": "Kopiering av en annens uttrykk kan utnytte innsatsen deres og skape forveksling.",
+    "sources": [
+      {
+        "source": "Norge — Markedsføringsloven",
+        "url": "https://lovdata.no/dokument/NL/lov/2009-01-09-2",
+        "locator": "§ 30"
+      }
+    ],
+    "rule": "Når et utkast etterligner en identifisert konkurrents kjennetegn eller reklamemiddel: Bestått bare når en menneskelig vurdering avviser minst ett av vilkårene urimelig utnyttelse og fare for forveksling, med begrunnelse. Uavklart vurdering gir ikke bestått.",
+    "check": "menneske",
+    "example_bad": "Utkastet kopierer konkurrentens logo og pakningsfront uten vurdering.",
+    "example_good": "Utkastet bruker egne kjennetegn; vurderingen dokumenterer hvorfor mottakeren ikke vil forveksle avsenderne.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "NO"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Markedsføringsloven forbyr etterligning som både urimelig utnytter andres innsats eller resultater og medfører fare for forveksling."
+  },
+  {
+    "id": "lov-de-samme-behov",
+    "subject": "Lov",
+    "name": "Sammenlign produkter for samme behov",
+    "principle": "En konkurrenttest må sammenligne tilbud som løser samme behov eller formål.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 6 Absatz 2 Nummer 1"
+      }
+    ],
+    "rule": "Ved sammenligning med en gjenkjennelig konkurrent: Bestått bare når begge produkter har samme dokumenterte behov eller bruksformål i sammenligningen.",
+    "check": "kritiker+menneske",
+    "example_bad": "Sammenligner prisen på et tomt programskall med konkurrentens komplette regnskapstjeneste.",
+    "example_good": "Sammenligner to regnskapsabonnementer med samme bruksformål og angir pakkene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UWG krever at sammenlignende reklame gjelder varer eller tjenester som dekker samme behov eller formål."
+  },
+  {
+    "id": "lov-de-etterprovbar-sammenligning",
+    "subject": "Lov",
+    "name": "Bruk etterprøvbare sammenligninger",
+    "principle": "Sammenligningen må bygge på relevante og representative egenskaper.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 6 Absatz 2 Nummer 2"
+      }
+    ],
+    "rule": "Ved konkurrentsammenligning: Bestått bare når hver sammenlignet egenskap eller pris er vesentlig, relevant, typisk og etterprøvbar, og dokumentasjonen viser målegrunnlaget for begge tilbud.",
+    "check": "kritiker+menneske",
+    "example_bad": "Vi er bedre enn Konkurrent A, uten å oppgi hva som måles.",
+    "example_good": "Pakkene sammenlignes på pris for ti brukere, med daterte prislister og samme bindingstid.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UWG krever objektiv sammenligning av vesentlige, relevante, etterprøvbare og representative egenskaper eller pris."
+  },
+  {
+    "id": "lov-de-telefon-samtykke",
+    "subject": "Lov",
+    "name": "Krev uttrykkelig samtykke til forbrukersamtaler",
+    "principle": "Tysk telefonmarkedsføring til forbrukere krever uttrykkelig forhåndssamtykke.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 7 Absatz 2 Nummer 1"
+      }
+    ],
+    "rule": "Før en forbruker ringes med reklame: Bestått bare når uttrykkelig samtykke til telefonmarkedsføring er dokumentert fra før samtalen og dekker henvendelsen.",
+    "check": "kode+menneske",
+    "example_bad": "Ringer en forbruker fordi vedkommende står i telefonkatalogen.",
+    "example_good": "Ringer etter at mottakeren uttrykkelig har samtykket til den aktuelle telefonmarkedsføringen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "telefon",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UWG krever uttrykkelig forhåndssamtykke for reklamesamtaler til forbrukere."
+  },
+  {
+    "id": "lov-de-oppbevar-telefonsamtykke",
+    "subject": "Lov",
+    "name": "Bevar beviset for telefonsamtykke",
+    "principle": "Samtykke til tysk telefonreklame må kunne dokumenteres over tid.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 7a Absatz 1 og Absatz 2 Satz 1"
+      }
+    ],
+    "rule": "For telefonreklame til forbrukere: Bestått bare når samtykket dokumenteres ved avgivelsen og oppbevaringsoppsettet bevarer beviset i fem år fra avgivelsen og fra hver bruk. Kontroller at siste bruk flytter slettedatoen.",
+    "check": "kode+menneske",
+    "example_bad": "Samtykkebevis slettes ett år etter registrering selv om nummeret fortsatt brukes.",
+    "example_good": "Siste bruk registreres, og beviset bevares fem år fra den datoen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "telefon",
+      "country": "DE"
+    },
+    "checkpoints": [
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UWG krever at samtykke til telefonreklame dokumenteres ved avgivelsen og oppbevares i fem år fra avgivelsen og hver bruk."
+  },
+  {
+    "id": "lov-de-epost-grunnlag",
+    "subject": "Lov",
+    "name": "Kontroller tysk grunnlag for e-postreklame",
+    "principle": "Tyske regler for e-postreklame omfatter også bedriftsmottakere.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 7 Absatz 2 Nummer 2 og Absatz 3 Nummer 1–4"
+      }
+    ],
+    "rule": "Før e-postreklame sendes: Bestått bare når uttrykkelig forhåndssamtykke finnes, eller alle fire vilkår i § 7 tredje ledd er dokumentert: adresse fra salg, egne lignende ytelser, ingen innsigelse og informasjon om enkel reservasjon ved innsamling og hver bruk til høyst grunntakst.",
+    "check": "kode+menneske",
+    "example_bad": "Sender kald salgsreklame til bedrifter uten samtykke eller kundeunntak.",
+    "example_good": "Utsendelseslisten inneholder bare mottakere med dokumentert samtykke eller fullført kontroll av alle fire unntaksvilkår.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "e-post",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UWG krever uttrykkelig forhåndssamtykke til e-postreklame med et avgrenset unntak for egne lignende ytelser til eksisterende kunder."
+  },
+  {
+    "id": "lov-de-forklar-rangering",
+    "subject": "Lov",
+    "name": "Forklar rangeringen i produktsøk",
+    "principle": "En tjeneste med tilbud fra flere selgere må forklare hva som avgjør produktrekkefølgen.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 5b Absatz 2 Nummer 1 og 2 samt etterfølgende setninger"
+      }
+    ],
+    "rule": "For produktsøk omfattet av § 5b andre ledd: Bestått bare når en direkte og lett tilgjengelig forklaring fra resultatsiden oppgir hovedparametrene for rangering og deres relative betydning. Unntaket for nettbaserte søkemotorer må avklares før kontrollen utelates.",
+    "check": "menneske",
+    "example_bad": "En markedsplass rangerer produkter uten forklaring.",
+    "example_good": "Ved resultatene finnes lenken Slik rangerer vi, som forklarer pris, relevans og vektingen mellom dem.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "markedsplass",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UWG krever lett tilgjengelig informasjon om hovedparametere for produktrangering og deres relative betydning, med et unntak for nettbaserte søkemotorer."
+  },
+  {
+    "id": "lov-de-forklar-omtaler",
+    "subject": "Lov",
+    "name": "Opplys om kontroll av tyske kundeomtaler",
+    "principle": "Kjøperen trenger å vite hva omtalenes avsenderkontroll består i.",
+    "sources": [
+      {
+        "source": "Tyskland — UWG, gjeldende tysk tekst",
+        "url": "https://www.gesetze-im-internet.de/uwg_2004/BJNR141400004.html",
+        "locator": "§ 5b Absatz 3"
+      }
+    ],
+    "rule": "Når forbrukeromtaler gjøres tilgjengelige: Bestått bare når det står om og hvordan virksomheten sikrer at omtalene kommer fra personer som har brukt eller kjøpt varen eller tjenesten.",
+    "check": "kritiker+menneske",
+    "example_bad": "Fem stjerner vises uten opplysninger om kontroll av avsenderne.",
+    "example_good": "Ved omtalene står det at bare kunder med registrert kjøp kan sende inn omtaler, og hvordan kjøpet bekreftes.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "nettside",
+      "country": "DE"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UWG krever informasjon om hvorvidt og hvordan tilgjengelige omtaler kontrolleres som skrevet av reelle brukere eller kjøpere."
+  },
+  {
+    "id": "lov-eu-godkjenning-av-merker",
+    "subject": "Lov",
+    "name": "Kontroller retten til å bruke merker",
+    "principle": "Et kvalitetsmerke krever tillatelse, og en påstått godkjenning må være reell.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 2 og 4"
+      }
+    ],
+    "rule": "Bestått bare når hvert tillits- eller kvalitetsmerke og hver påstått godkjenning har dokumentert tillatelse som dekker aktuell vare og bruk, og vilkårene er oppfylt.",
+    "check": "menneske",
+    "example_bad": "Setter et sertifiseringsmerke på et produkt uten lisens.",
+    "example_good": "Bruker merket på produktet som er omfattet av den gyldige tillatelsen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UCPD forbyr bruk av tillitsmerker uten tillatelse og uriktige påstander om godkjenning eller om at godkjenningsvilkår er oppfylt."
+  },
+  {
+    "id": "lov-eu-ekte-tidsfrist",
+    "subject": "Lov",
+    "name": "Bruk ekte tidsfrister",
+    "principle": "En kort tilbudsfrist skal være reell og bygge på kildebelagte fakta som kontrolleres før publisering. Fume krever lagret sluttdato og kontrollgrunnlag; manglende eller usikkert belegg stopper publisering og går til menneske.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 7"
+      },
+      {
+        "source": "Forbrukertilsynet — Salg og betingede tilbud (2025)",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2025/06/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.pdf",
+        "locator": "Side 4 punkt 2 (dokumentasjon når markedsføringen skjer); side 7–10 punkt 3.3–3.4; side 13 punkt 3.6; side 15–17 punkt 4.3–4.5; side 19 punkt 6 (rutiner og kampanjehistorikk). Lokal tekst: sources/fetched/veiledning-om-reglene-som-gjelder-ved-markedsforing-av-salg-og-betingede-tilbud-l2398774.txt, sidemarkører 4, 7–10, 13, 15–17 og 19; lest 2026-11-13. Norsk veiledning til klesbransjen; lagret sluttdato og kontrollport er Fumes operasjonalisering, ikke et eget UCPD-krav."
+      }
+    ],
+    "rule": "Når annonsen oppgir en tidsbegrensning, tilbudsfrist eller nedtelling: Fristen skal være et lagret faktum med kilde: kundens skriftlig vedtatte kampanjeslutt med dato, klokkeslett, tidssone, hvilke varer/tilbud og hvilket marked den gjelder, eller annet etterprøvbart grunnlag for en reell utløpstid. En modellskrevet kampanjeplan eller en nedtelling er ikke alene kildebelegg. Før publisering skal kontrollgrunnlaget koble sluttdatoen til kilde og versjon og registrere kontrolltidspunkt, ansvarlig og resultat av kontroll mot kundens beslutning, publiseringsoppsettet og relevant pris- og tilbudshistorikk; historikken skal vise reell prisfordel og at samme eller tilsvarende tilbud ikke løper videre eller gjentas slik at tidsbegrensningen blir falsk. Kontroller også at nedtellingen ikke nullstilles for samme mottaker etter utløp. Mangler kildebelagt sluttdato, nødvendig historikk eller kontroll før publisering, eller er sluttdatoen eller tilbudets opphør usikkert, består ikke kontrollen: stopp publisering og send straks til ansvarlig menneske for dokumentasjon og avklaring; fristen må ikke diktes opp.",
+    "check": "kode+kritiker+menneske",
+    "example_bad": "En kampanjeplan sier søndag uten skriftlig kundegrunnlag; samme tilbud fortsetter etter nedtellingen.",
+    "example_good": "Kundens skriftlige sluttdato med tidssone og referanse samt pris- og tilbudshistorikk er lagret; ansvarlig har kontrollert oppsettet og reelt opphør før publisering.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UCPD forbyr falske påstander om svært begrenset tilbudstid som presser frem raske valg, og norsk veiledning krever reelle dokumenterbare prisfordeler."
+  },
+  {
+    "id": "lov-eu-avgrens-miljopastand",
+    "subject": "Lov",
+    "name": "La miljøpåstanden gjelde riktig del",
+    "principle": "En dokumentert fordel for emballasjen er ikke automatisk en fordel for hele produktet. Både ord og bilder må avgrense påstanden tydelig og gi et samlet inntrykk som dokumentasjonen dekker.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 4b, innført ved direktiv (EU) 2024/825; konsolidert tekst 27.09.2026"
+      },
+      {
+        "source": "Forbrukertilsynet — Bærekraftpåstander",
+        "url": "https://www.forbrukertilsynet.no/wp-content/uploads/2020/09/Veiledning-om-bruk-av-bk-p%C3%A5stander_versj2.pdf",
+        "locator": "Punkt 3.2–3.4.3, trykt side 6–8 (PDF-side 4–5); punkt 3.4.3, trykt side 8 (PDF-side 5): skill hele produktet fra deler som emballasje og fra virksomheten. Lokal tekst: sources/fetched/Veiledning-om-bruk-av-bk-pastander_versj2.txt, sidemarkører 4–5; lest 2026-11-13. Norsk veiledning supplerer UCPD-kilden, uten å utvide dens geografiske virkning."
+      }
+    ],
+    "rule": "Bestått bare når miljøpåstandens omfang i tekst og bilder er begrenset til produktdelen eller aktiviteten som dokumentasjonen gjelder. Dokumentasjon bare om emballasje gir ikke bestått for en påstand om hele produktet. Kontroller helhetsinntrykket, også symboler og bilder: det må være tydelig om fordelen gjelder hele produktet, en bestemt del som emballasjen eller virksomheten. Når norsk markedsføring bruker en generell miljøpåstand med presisering, må den nødvendige forklaringen kunne leses sammen med påstanden i første informasjonslag; en forklaring bare via lenke er ikke tilstrekkelig hvis førsteinntrykket villeder.",
+    "check": "kritiker+menneske",
+    "example_bad": "Hele produktet omtales som grønt fordi esken inneholder resirkulert papp.",
+    "example_good": "Esken inneholder 80 prosent resirkulert papp, med dokumentasjon for denne andelen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UCPD forbyr miljøpåstander om hele produktet eller virksomheten som bare gjelder en del, og norsk veiledning krever presis avgrensning og et ikke-villedende helhetsinntrykk."
+  },
+  {
+    "id": "lov-eu-ikke-eksklusive-lovrettigheter",
+    "subject": "Lov",
+    "name": "Ikke gjør lovfestede rettigheter til særfordeler",
+    "principle": "En rettighet alle forbrukere har, skal ikke fremstilles som et særtilbud.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 10"
+      }
+    ],
+    "rule": "Bestått bare når annonsen ikke fremstiller en lovfestet forbrukerrettighet som en eksklusiv fordel hos annonsøren. Sammenlign påståtte særfordeler med rettighetene som gjelder for kjøpet.",
+    "check": "kritiker+menneske",
+    "example_bad": "Bare hos oss får du den lovpålagte angreretten.",
+    "example_good": "Du har angrerett etter loven. I tillegg tilbyr vi 30 dagers frivillig returrett med oppgitte vilkår.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UCPD forbyr å presentere lovfestede forbrukerrettigheter som en særfordel ved tilbudet."
+  },
+  {
+    "id": "lov-eu-merk-betalt-rangering",
+    "subject": "Lov",
+    "name": "Merk betalte søkeresultater",
+    "principle": "Betaling for plassering må være synlig for forbrukeren.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 11a"
+      }
+    ],
+    "rule": "Når betaling gir en annonseplass eller høyere plassering i produktsøk: Bestått bare når dette opplyses tydelig ved de aktuelle resultatene. Kontroller ferdig visning på mobil og datamaskin.",
+    "check": "menneske",
+    "example_bad": "Betalt førsteplass fremstår som et uavhengig best treff.",
+    "example_good": "Den betalte oppføringen er tydelig merket Annonse.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "produktsok",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UCPD forbyr å vise søkeresultater uten tydelig opplysning om betaling som gir annonsering eller høyere rangering."
+  },
+  {
+    "id": "lov-eu-ekte-kundeomtaler",
+    "subject": "Lov",
+    "name": "Stopp falske kundeomtaler",
+    "principle": "Omtaler og anbefalinger må ikke diktes opp eller fordreies.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 23b og 23c"
+      }
+    ],
+    "rule": "Bestått bare når ingen omtale eller anbefaling er oppdiktet, bestilt som falsk eller fordreid. Ved påstand om ekte brukere eller kjøpere må kontrollgrunnlaget vise rimelige og forholdsmessige tiltak for å bekrefte dette.",
+    "check": "kode+menneske",
+    "example_bad": "Byrået skriver fem kundevurderinger og publiserer dem som ekte.",
+    "example_good": "Omtalene gjengis fra dokumenterte innsendelser, og kjøpermerking bygger på kontroll mot kjøp.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      5,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UCPD forbyr falske eller fordreide omtaler og udokumentert påstand om at omtaler kommer fra reelle brukere uten rimelige kontrolltiltak."
+  },
+  {
+    "id": "lov-eu-gratis-uten-skjulte-gebyrer",
+    "subject": "Lov",
+    "name": "Kontroller hva gratis koster",
+    "principle": "Et gratistilbud kan ikke skjule betaling for selve ytelsen.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 20"
+      }
+    ],
+    "rule": "Ved bruk av gratis eller tilsvarende: Bestått bare når kunden ikke må betale annet enn uunngåelige kostnader ved å svare og hente varen eller få den levert. Administrasjons- eller behandlingsgebyr gir ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Gratis prøvepakke med 99 kroner i obligatorisk behandlingsgebyr.",
+    "example_good": "Gratis prøvepakke; kunden betaler bare den oppgitte, uunngåelige leveringskostnaden.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "UCPD tillater bare uunngåelige svar-, hente- eller leveringskostnader når en ytelse omtales som gratis."
+  },
+  {
+    "id": "lov-eu-ikke-utgi-selger-for-kunde",
+    "subject": "Lov",
+    "name": "Ikke utgi selgeren for å være kunde",
+    "principle": "En kommersiell avsender må ikke opptre som en uavhengig forbruker.",
+    "sources": [
+      {
+        "source": "EU — Unfair Commercial Practices Directive 2005/29/EC, konsolidert 27.09.2026",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:02005L0029-20260927",
+        "locator": "Vedlegg I punkt 22"
+      }
+    ],
+    "rule": "Bestått bare når alle innlegg laget av virksomheten eller dens representanter viser den kommersielle rollen og ingen avsender feilaktig fremstilles som en uavhengig forbruker.",
+    "check": "kritiker+menneske",
+    "example_bad": "En ansatt anbefaler eget produkt under oppdiktet kundenavn.",
+    "example_good": "Den ansatte oppgir tilknytningen til virksomheten ved omtalen.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "sosiale-medier",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "UCPD forbyr å skjule kommersiell opptreden som privat forbrukeratferd eller å gi uriktig inntrykk av å være forbruker."
+  },
+  {
+    "id": "lov-mat-godkjent-helsepastand",
+    "subject": "Lov",
+    "name": "Kontroller godkjenning av helsepåstander",
+    "principle": "Helsepåstander om mat krever normalt godkjenning og oppfylte bruksvilkår, men dokumentert overgangsbruk etter artikkel 28 kan være tillatt. Botaniske påstander som fortsatt er til behandling må vurderes mot riktig overgangsregel, med menneskelig avklaring ved usikkerhet.",
+    "sources": [
+      {
+        "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006R1924-20141213",
+        "locator": "Artikkel 10 nr. 1; artikkel 5–6; artikkel 13 nr. 1 bokstav a–c og nr. 3; artikkel 28, særlig nr. 5 og nr. 6 bokstav a–b; artikkel 29. Konsolidert tekst 13.12.2014, lest 2026-11-13."
+      },
+      {
+        "source": "EU-kommisjonen — EU register of health claims",
+        "url": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/eu-register-health-claims_en",
+        "locator": "About the EU register (kun informasjon); Claims not in the EU Register → Some function claims ... not finalised, inkludert botaniske stoffer; lest 2026-11-13."
+      },
+      {
+        "source": "EU-kommisjonen — Article 13.1 claims for which evaluation is not finalised",
+        "url": "https://ec.europa.eu/food/food-feed-portal/backend/claims/files/claims_pending.pdf",
+        "locator": "PDF side 1–4; side 1: Claims on botanical substances for which finalisation is pending; arbeidsdokument 12.06.2013 lenket fra gjeldende registerside, ikke en godkjenningsliste; åpnet 2026-11-13."
+      },
+      {
+        "source": "EU-domstolen — C-386/23 Novel Nutriology, 30.04.2025",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:62023CJ0386",
+        "locator": "Avsnitt 55–60, 66, 72 og 83 samt domsslutningen; artikkel 28 nr. 5–6 og særskilt nr. 6 for psykiske/adferdsmessige påstander; lest 2026-11-13."
+      }
+    ],
+    "rule": "Bestått ved enten dokumentert godkjenning etter artikkel 10 nr. 1 med lenke til gjeldende rettsakt/listet påstand, samme betydning i ordlyden og oppfylte bruksvilkår og krav i kapittel II og IV, eller dokumentert fortsatt tillatt overgangsbruk etter artikkel 28. For botaniske påstander under artikkel 13 som er til behandling eller satt på vent (on hold), skal kontrollarket identifisere den konkrete påstanden og stoffet og kontrollere Kommisjonens venteliste, EU-registeret og eventuelle senere vedtak; fravær fra registeret er ikke alene avslagsgrunn og ventestatus er ikke alene tillatelse. Artikkel 28 nr. 5 kan bare brukes for påstander etter artikkel 13 nr. 1 bokstav a som fortsatt omfattes av overgangen, med oppfylte krav i forordningen, herunder vitenskapelig belegg etter artikkel 5 og 6, gjeldende nasjonale regler og eventuelle sikkerhetstiltak. For andre påstander, blant annet psykiske eller adferdsmessige funksjoner etter artikkel 13 nr. 1 bokstav b, må artikkel 28 nr. 6 vurderes: lovlig bruk etter nasjonale regler før ikrafttredelsen 19. januar 2007 og enten tidligere nasjonal vurdering/godkjenning med medlemsstatens innmelding innen 31. januar 2008 etter bokstav a, eller søknad før 19. januar 2008 etter bokstav b. Kontroller om et senere avslag og seksmånedersfristen etter nr. 6 har avsluttet bruksadgangen; utløpte overganger, blant annet nr. 1–3, er ikke ny tillatelse. Lagret rettsgrunnlag, dato, relevant land og belegg for hvert anvendt overgangsvilkår kreves før bestått. Uklart påstandsgrunnlag, ventestatus, historisk bruk, søknadsfrist, nasjonal regel eller senere vedtak gir uavklart, stopper publisering og går til juridisk ansvarlig menneske; dokumentert overgangsbruk skal ikke avvises bare fordi påstanden ikke er godkjent.",
+    "check": "kritiker+menneske",
+    "example_bad": "Avviser en botanisk påstand bare fordi den mangler i EU-registeret, uten å undersøke dokumentert overgangsbruk.",
+    "example_good": "Kontrollarket viser den konkrete påstanden, oppfylte produktvilkår og enten godkjenningsrettsakten eller dokumentert anvendelig artikkel 28-overgang; uklare tilfeller går til juridisk ansvarlig.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "regulation": "mat",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      5,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Forordningen krever normalt godkjent helsepåstand med oppfylte vilkår, men artikkel 28 åpner avgrenset overgangsbruk også for enkelte uavklarte botaniske påstander."
+  },
+  {
+    "id": "lov-mat-generell-helsefordel",
+    "subject": "Lov",
+    "name": "Knytt generell helsefordel til en spesifikk påstand",
+    "principle": "Generelle helsefordeler skal normalt ledsages av en relevant spesifikk påstand på listen etter artikkel 13 eller 14. Et mulig unntak krever konkret grunnlag i artikkel 28, ikke bare at en botanisk påstand er satt på vent.",
+    "sources": [
+      {
+        "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006R1924-20141213",
+        "locator": "Artikkel 10 nr. 3 sammenholdt med artikkel 13 og artikkel 28 nr. 5–6; for generelle botaniske helsefordeler uten listeført ledsagelse: C-386/23 avsnitt 83 og domsslutningen. Konsolidert tekst 13.12.2014, lest 2026-11-13."
+      },
+      {
+        "source": "EU-kommisjonen — EU register of health claims",
+        "url": "https://food.ec.europa.eu/food-safety/labelling-and-nutrition/nutrition-and-health-claims/eu-register-health-claims_en",
+        "locator": "About the EU register (kun informasjon); Claims not in the EU Register → Some function claims ... not finalised, inkludert botaniske stoffer; lest 2026-11-13."
+      },
+      {
+        "source": "EU-kommisjonen — Article 13.1 claims for which evaluation is not finalised",
+        "url": "https://ec.europa.eu/food/food-feed-portal/backend/claims/files/claims_pending.pdf",
+        "locator": "PDF side 1–4; side 1: Claims on botanical substances for which finalisation is pending; arbeidsdokument 12.06.2013 lenket fra gjeldende registerside, ikke en godkjenningsliste; åpnet 2026-11-13."
+      },
+      {
+        "source": "EU-domstolen — C-386/23 Novel Nutriology, 30.04.2025",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:62023CJ0386",
+        "locator": "Avsnitt 55–60, 66, 72 og 83 samt domsslutningen; artikkel 28 nr. 5–6 og særskilt nr. 6 for psykiske/adferdsmessige påstander; lest 2026-11-13."
+      }
+    ],
+    "rule": "For en generell, uspesifikk helsefordel: Bestått når den ledsages av en relevant spesifikk påstand på listen etter artikkel 13 eller 14, med oppfylte bruksvilkår, eller når lovlig overgangsbruk for den konkrete formuleringen er dokumentert. For botaniske generelle helsefordeler uten en slik listeført ledsagende påstand skal unntaket vurderes særskilt etter artikkel 28 nr. 6 slik C-386/23 avsnitt 83 og domsslutningen krever; nr. 5 eller ventestatus alene opphever ikke ledsagelseskravet. For botaniske påstander under artikkel 13 som er til behandling eller satt på vent (on hold), skal kontrollarket identifisere den konkrete påstanden og stoffet og kontrollere Kommisjonens venteliste, EU-registeret og eventuelle senere vedtak; fravær fra registeret er ikke alene avslagsgrunn og ventestatus er ikke alene tillatelse. Artikkel 28 nr. 5 kan bare brukes for påstander etter artikkel 13 nr. 1 bokstav a som fortsatt omfattes av overgangen, med oppfylte krav i forordningen, herunder vitenskapelig belegg etter artikkel 5 og 6, gjeldende nasjonale regler og eventuelle sikkerhetstiltak. For andre påstander, blant annet psykiske eller adferdsmessige funksjoner etter artikkel 13 nr. 1 bokstav b, må artikkel 28 nr. 6 vurderes: lovlig bruk etter nasjonale regler før ikrafttredelsen 19. januar 2007 og enten tidligere nasjonal vurdering/godkjenning med medlemsstatens innmelding innen 31. januar 2008 etter bokstav a, eller søknad før 19. januar 2008 etter bokstav b. Kontroller om et senere avslag og seksmånedersfristen etter nr. 6 har avsluttet bruksadgangen; utløpte overganger, blant annet nr. 1–3, er ikke ny tillatelse. Lagret rettsgrunnlag, dato, relevant land og belegg for hvert anvendt overgangsvilkår kreves før bestått. Uklart påstandsgrunnlag, ventestatus, historisk bruk, søknadsfrist, nasjonal regel eller senere vedtak gir uavklart, stopper publisering og går til juridisk ansvarlig menneske; dokumentert overgangsbruk skal ikke avvises bare fordi påstanden ikke er godkjent.",
+    "check": "kritiker+menneske",
+    "example_bad": "God for helsen uten ledsagende listeført påstand, begrunnet bare med at planten står på ventelisten.",
+    "example_good": "Den generelle fordelen ledsages av en relevant listeført påstand med oppfylte vilkår, eller den konkrete overgangsbruken er dokumentert etter artikkel 28 nr. 6; tvil sendes til juridisk ansvarlig.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "regulation": "mat",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Generelle helsefordeler krever normalt en ledsagende spesifikk listeført påstand, men overgangsreglene kan gi unntak der deres konkrete vilkår er oppfylt."
+  },
+  {
+    "id": "lov-mat-ikke-vekttapstall",
+    "subject": "Lov",
+    "name": "Fjern løfter om vekttapets mengde og fart",
+    "principle": "Helsepåstander om mat kan ikke angi hvor mye eller hvor raskt man går ned i vekt.",
+    "sources": [
+      {
+        "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006R1924-20141213",
+        "locator": "Artikkel 12 bokstav b; artikkel 28 nr. 5–6 sammenholdt med artikkel 13 (overgangsbruk opphever ikke forbudet); lest 2026-11-13."
+      }
+    ],
+    "rule": "Bestått bare når ingen helsepåstand i tekst, bilde, lyd eller kundeuttalelse angir mengde eller hastighet for vekttap. Overgangsreglene i artikkel 28 nr. 5–6 for enkelte påstander etter artikkel 13, også botaniske påstander på vent, opphever ikke forbudet i artikkel 12 bokstav b. Usikker klassifisering eller overgangsanvendelse gir uavklart, stopper publisering og går til juridisk ansvarlig menneske; bruksadgangen vurderes etter lov-mat-godkjent-helsepastand.",
+    "check": "kritiker+menneske",
+    "example_bad": "Gå ned fem kilo på to uker med denne teen.",
+    "example_good": "Te med mynte og sitron, uten påstand om vekttap.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "regulation": "mat",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Artikkel 12 bokstav b forbyr helsepåstander som viser til vekttapets hastighet eller størrelse, også når påstanden ellers kan brukes under overgangsreglene."
+  },
+  {
+    "id": "lov-mat-sukkerfri-grense",
+    "subject": "Lov",
+    "name": "Kontroller grensen for sukkerfri",
+    "principle": "Sukkerfri har en bestemt grense for sukkerinnhold.",
+    "sources": [
+      {
+        "source": "EU — Nutrition and Health Claims Regulation 1924/2006, konsolidert 13.12.2014",
+        "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:02006R1924-20141213",
+        "locator": "Vedlegget, SUGARS-FREE; artikkel 8 nr. 1; artikkel 28, særlig utløpt nr. 3 og helsepåstandsreglene i nr. 5–6 (ikke et generelt unntak fra sukkergrensen); lest 2026-11-13."
+      }
+    ],
+    "rule": "Ved sukkerfri eller en formulering med samme betydning: Bestått bare når dokumentert sukkerinnhold er høyst 0,5 gram per 100 gram eller 100 milliliter av produktet som påstanden gjelder. Dette er en ernæringspåstand etter vedlegget, ikke en botanisk helsepåstand etter artikkel 13: ventestatus og artikkel 28 nr. 5–6 gjør ikke unntak fra sukkergrensen. Usikker klassifisering eller påstått annet overgangsgrunnlag etter artikkel 28 gir uavklart, stopper publisering og går til juridisk ansvarlig menneske.",
+    "check": "kode+menneske",
+    "example_bad": "Sukkerfri drikk med 1,2 gram sukker per 100 milliliter.",
+    "example_good": "Sukkerfri drikk med dokumentert 0,3 gram sukker per 100 milliliter.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "regulation": "mat",
+      "country": "alle",
+      "legal_area": "EU"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": true,
+    "source_says": "Vedlegget tillater sukkerfri og uttrykk med samme betydning ved høyst 0,5 gram sukker per 100 gram eller 100 milliliter, uten noe generelt botanisk overgangsunntak fra denne grensen."
+  },
+  {
+    "id": "lov-uk-forbehold-uten-motsigelse",
+    "subject": "Lov",
+    "name": "La forbehold presisere løftet",
+    "principle": "Et forbehold kan ikke rette opp et løfte det motsier.",
+    "sources": [
+      {
+        "source": "UK — CAP Code section 03, Misleading advertising",
+        "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+        "locator": "Regel 3.9 og 3.10"
+      }
+    ],
+    "rule": "Bestått bare når vesentlige begrensninger er tydelig presentert og ingen av dem motsier hovedløftet.",
+    "check": "kritiker+menneske",
+    "example_bad": "Alle varer halv pris, med skjult forbehold om at bare én vare er omfattet.",
+    "example_good": "Halv pris på modell A; øvrige modeller har ordinær pris.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "legal_area": "CAP",
+      "country": "GB"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "CAP Code krever tydelige vesentlige forbehold som presiserer fremfor å motsi hovedpåstanden."
+  },
+  {
+    "id": "lov-uk-tillatelse-til-kundeuttalelse",
+    "subject": "Lov",
+    "name": "Kontroller tillatelse til kundeuttalelser",
+    "principle": "Bruk av en kundeuttalelse må ha et gyldig grunnlag.",
+    "sources": [
+      {
+        "source": "UK — CAP Code section 03, Misleading advertising",
+        "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+        "locator": "Regel 3.50"
+      }
+    ],
+    "rule": "Bestått bare når tillatelse til bruk av uttalelsen foreligger, eller et konkret unntak etter regel 3.50 er dokumentert.",
+    "check": "menneske",
+    "example_bad": "En e-post fra kunden publiseres som annonse uten tillatelse.",
+    "example_good": "Kunden har gitt dokumentert tillatelse til den aktuelle annonsebruken.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "legal_area": "CAP",
+      "country": "GB"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "CAP Code krever tillatelse til kundeuttalelser med avgrensede unntak i regel 3.50."
+  },
+  {
+    "id": "lov-uk-opplys-belonnede-omtaler",
+    "subject": "Lov",
+    "name": "Opplys om belønning for omtaler",
+    "principle": "Leseren må se når en omtale er belønnet.",
+    "sources": [
+      {
+        "source": "UK — CAP Code section 03, Misleading advertising",
+        "url": "https://www.asa.org.uk/type/non_broadcast/code_section/03.html",
+        "locator": "Regel 3.45"
+      }
+    ],
+    "rule": "Bestått bare når det fremgår tydelig ved hver belønnet forbrukeromtale at avsenderen fikk en fordel for å skrive den.",
+    "check": "kritiker+menneske",
+    "example_bad": "En omtale utløst av gavekort vises uten opplysning om belønningen.",
+    "example_good": "Ved omtalen står det at kunden fikk gavekort for å sende inn en vurdering.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "B2C",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "alle",
+      "legal_area": "CAP",
+      "country": "GB"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "lov",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "house_rule": false,
+    "source_says": "CAP Code krever tydelig opplysning om at en forbrukeromtale er gitt mot en fordel."
+  },
+  {
+    "id": "lov-google-ekte-grensesnitt",
+    "subject": "Lov",
+    "name": "Fjern falske knapper og systemvarsler",
+    "principle": "Annonseutformingen skal ikke lure brukeren om hva et klikk gjør.",
+    "sources": [
+      {
+        "source": "Google — Misrepresentation policy",
+        "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+        "locator": "Misleading ad design, punktlisten om knapper, ikoner og systemvarsler"
+      }
+    ],
+    "rule": "Bestått bare når annonsen ikke etterligner systemvarsler og alle viste betjeningsknapper utfører funksjonen de signaliserer. En falsk avspillingsknapp som bare åpner en salgsside gir ikke bestått.",
+    "check": "kode+menneske",
+    "example_bad": "Falskt sikkerhetsvarsel med en lukkeknapp som åpner butikken.",
+    "example_good": "Tydelig annonse med knappen Se produktet som åpner produktsiden.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-ads",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": false,
+    "source_says": "Google forbyr annonseutforming som etterligner systemvarsler eller inneholder misvisende betjeningselementer."
+  },
+  {
+    "id": "lov-google-finnbart-tilbud",
+    "subject": "Lov",
+    "name": "Kontroller tilbudet på landingssiden",
+    "principle": "Tilbudet i annonsen må finnes og kunne leveres.",
+    "sources": [
+      {
+        "source": "Google — Misrepresentation policy",
+        "url": "https://support.google.com/adspolicy/answer/6020955?hl=en",
+        "locator": "Unavailable offers"
+      }
+    ],
+    "rule": "Bestått bare når annonsert produkt eller kampanjetilbud er tilgjengelig og lett å finne fra målsiden ved en kontroll før publisering. Lagre kontrollens tidspunkt og resultat.",
+    "check": "kode+menneske",
+    "example_bad": "Annonsen lover en rabattkode som verken finnes eller virker på målsiden.",
+    "example_good": "Rabattkoden vises på målsiden og virker i en prøvebestilling innen kampanjevilkårene.",
+    "applies_when": {
+      "awareness_level": "alle",
+      "market": "begge",
+      "funnel": {
+        "stage": "alle",
+        "mode": "begge"
+      },
+      "channel": "google-ads",
+      "country": "alle"
+    },
+    "checkpoints": [
+      4,
+      9,
+      10
+    ],
+    "tier": "plattform",
+    "conflicts_with": [],
+    "state": "PROPOSED",
+    "lang": "nb",
+    "read_on": "2026-11-13",
+    "house_rule": true,
+    "source_says": "Google forbyr annonsering av tilbud som ikke er tilgjengelige eller ikke lett kan finnes på målsiden."
+  }
+]

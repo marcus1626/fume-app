@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "maskulint",
+    "feminint",
+    "blandet",
+    "noytralt",
+    "ukjent"
+  ],
+  "x-list": "../../lists/gender-expression.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/gender-expression.schema.json",
+  "title": "gender-expression"
+}

@@ -1,0 +1,581 @@
+{
+  "result": "PASS",
+  "synthetic_artifact_count": 87,
+  "test_count": 143,
+  "tests": [
+    {
+      "test": "synthetic-artifact:00-kampanjekort-avklart",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:00-kampanjekort-filtrert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:00-kampanjekort-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:00-kampanjekort-grunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:00-kampanjekort-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:00-kampanjekort-utkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-brief-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-briefkritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-briefutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-merkeelement-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-merkeelement-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-merkeelement-maaling",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-merkeelement-register",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-merkeelement-vurdering",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:01-oppdragsgrunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:02-lesergrunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:02-leserkort-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:02-leserkortkritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:02-leserkortutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:03-innsikt-valgt",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:03-innsikter-kildekontrollert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:03-innsiktsforslag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:03-innsiktskilder",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:03-innsiktskritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-konkurrentkilder",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-konkurrentlesning-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-konkurrentlesning",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-lofte-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-lofteforslag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:04-loftekritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:05-logikkjede-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:05-logikkjede-kontrollert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:05-logikkjedekritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:05-logikkjedeutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-kampanjefordeling-beregnet",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-kampanjefordeling-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-kampanjefordeling-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-kampanjefordeling-utkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-kampanjerammer",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-mediedekning-beregnet",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-mediedekning-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-mediedekning-grunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-mediedekning-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:06-mediedekning-utkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:07-linjebank",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:07-linjer-luket",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:07-linjer-rangert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:08-kundekandidater",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:08-kundevalg",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-annonseformat-kontrollert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-annonseutforelse-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-annonseutkast-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-annonseutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-bildekonsepter",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-bildekonseptkritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-east-barrierer",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-east-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-east-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-east-tiltak",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-kontrollert",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-krav",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-plan",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-kanalformat-varianter",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-klarsprak-forstaelsestest",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-klarsprak-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-klarsprak-grunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-klarsprak-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:09-klarsprak-utkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-annonser-lovsjekket",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-land-og-regelgrunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-landgodkjenninger",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-lovkontrollutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-lovkritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-testgrunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-testplan-beregnet",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-testplan-godkjent",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-testplankritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:10-testplanutkast",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-analysegrunnlag",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-beslutning",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-data",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-kritikk",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-start",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:11-resultater-tolkning",
+      "passed": true
+    },
+    {
+      "test": "synthetic-artifact:oppdrag",
+      "passed": true
+    },
+    {
+      "test": "list-negative:missing-id",
+      "passed": true
+    },
+    {
+      "test": "list-negative:invalid-id-pattern",
+      "passed": true
+    },
+    {
+      "test": "list-negative:empty-value-definition",
+      "passed": true
+    },
+    {
+      "test": "list-negative:impossible-date",
+      "passed": true
+    },
+    {
+      "test": "list-negative:extra-value-property",
+      "passed": true
+    },
+    {
+      "test": "missing-envelope:schema_id",
+      "passed": true
+    },
+    {
+      "test": "missing-envelope:schema_version",
+      "passed": true
+    },
+    {
+      "test": "missing-envelope:forrige_artefakt",
+      "passed": true
+    },
+    {
+      "test": "missing-envelope:kritikk",
+      "passed": true
+    },
+    {
+      "test": "missing-envelope:godkjenning",
+      "passed": true
+    },
+    {
+      "test": "unknown-top-level-property",
+      "passed": true
+    },
+    {
+      "test": "wrong-artifact-identity",
+      "passed": true
+    },
+    {
+      "test": "filter-family-is-not-concrete-channel",
+      "passed": true
+    },
+    {
+      "test": "group-is-not-country-code",
+      "passed": true
+    },
+    {
+      "test": "unnormalized-country-alias",
+      "passed": true
+    },
+    {
+      "test": "invalid-calendar-date",
+      "passed": true
+    },
+    {
+      "test": "conditional-price-required",
+      "passed": true
+    },
+    {
+      "test": "exactly-one-main-stage:[]",
+      "passed": true
+    },
+    {
+      "test": "exactly-one-main-stage:['salgsrunde']",
+      "passed": true
+    },
+    {
+      "test": "exactly-one-main-stage:['topp', 'midt']",
+      "passed": true
+    },
+    {
+      "test": "invalid-sha256",
+      "passed": true
+    },
+    {
+      "test": "empty-model-attest",
+      "passed": true
+    },
+    {
+      "test": "empty-human-decision",
+      "passed": true
+    },
+    {
+      "test": "lossless-format:video",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:video:creative_medium",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:video:ad_product",
+      "passed": true
+    },
+    {
+      "test": "missing-format-axis:video",
+      "passed": true
+    },
+    {
+      "test": "lossless-format:yt-bumper",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-bumper:creative_medium",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-bumper:ad_product",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-bumper:delivery_behavior",
+      "passed": true
+    },
+    {
+      "test": "missing-format-axis:yt-bumper",
+      "passed": true
+    },
+    {
+      "test": "lossless-format:yt-non-skippable",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-non-skippable:creative_medium",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-non-skippable:ad_product",
+      "passed": true
+    },
+    {
+      "test": "inconsistent-format:yt-non-skippable:delivery_behavior",
+      "passed": true
+    },
+    {
+      "test": "missing-format-axis:yt-non-skippable",
+      "passed": true
+    },
+    {
+      "test": "wildcard-is-not-concrete-channel",
+      "passed": true
+    },
+    {
+      "test": "boolean-is-not-awareness-integer",
+      "passed": true
+    },
+    {
+      "test": "b2b-roles-conditional-across-imports",
+      "passed": true
+    },
+    {
+      "test": "registered-open-record-remains-open",
+      "passed": true
+    },
+    {
+      "test": "generic-placement-channel:e-post",
+      "passed": true
+    },
+    {
+      "test": "generic-placement-channel:youtube",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-condition-operand",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-metadata-who",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-read-by",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-skill-reference",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-conflict-reference",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:unknown-list-value",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:missing-source-locator",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:definition-extra-property",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:missing-list-member",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:weakened-artifact-schema",
+      "passed": true
+    },
+    {
+      "test": "cli-rejects:invalid-iso-date",
+      "passed": true
+    },
+    {
+      "test": "original-registry-rebuild-preserves-data",
+      "passed": true,
+      "drift": []
+    },
+    {
+      "test": "cli-validates-synthetic-artifact",
+      "passed": true
+    }
+  ],
+  "limits": "Synthetic structural fixtures only; no actual approvals, signatures, customer data or flow execution."
+}

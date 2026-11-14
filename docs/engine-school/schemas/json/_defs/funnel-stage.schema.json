@@ -1,0 +1,35 @@
+{
+  "enum": [
+    "topp",
+    "midt",
+    "bunn",
+    "lojalitet",
+    "salgsrunde",
+    "alle"
+  ],
+  "x-list": "../../lists/funnel-stage.json",
+  "$defs": {
+    "subset-175da1183dca79cf": {
+      "enum": [
+        "topp",
+        "midt",
+        "bunn",
+        "lojalitet",
+        "salgsrunde"
+      ],
+      "x-list": "../../lists/funnel-stage.json"
+    },
+    "subset-955a27536de32fcb": {
+      "enum": [
+        "topp",
+        "midt",
+        "bunn",
+        "lojalitet"
+      ],
+      "x-list": "../../lists/funnel-stage.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/funnel-stage.schema.json",
+  "title": "funnel-stage"
+}

@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "kjennskap",
+    "mental-tilgjengelighet",
+    "vurdering",
+    "henvendelser",
+    "salg",
+    "bruk",
+    "fornyelse"
+  ],
+  "x-list": "../../lists/campaign-goal.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/campaign-goal.schema.json",
+  "title": "campaign-goal"
+}

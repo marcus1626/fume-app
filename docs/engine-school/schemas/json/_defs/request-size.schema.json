@@ -1,0 +1,12 @@
+{
+  "enum": [
+    "ingen",
+    "liten",
+    "middels",
+    "stor"
+  ],
+  "x-list": "../../lists/request-size.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/request-size.schema.json",
+  "title": "request-size"
+}

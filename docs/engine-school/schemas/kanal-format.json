@@ -1,0 +1,2460 @@
+{
+  "id": "kanal-format",
+  "label_nb": "Kanal, plassering, format og daterte krav",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [],
+  "read_by": [
+    "bilde-som-tredje-tanke",
+    "kampanjekort",
+    "kanalformat-tilpasning",
+    "lovsjekk-per-land",
+    "testplan-ekte-annonser"
+  ],
+  "fields": [
+    {
+      "id": "kanal-format.channel",
+      "path": "channel",
+      "group": "channel",
+      "label_nb": "Kanal",
+      "type": "string",
+      "values": [
+        {
+          "value": "meta",
+          "definition": "Meta-distribusjon; plattform/flate bestemmes av plassering."
+        },
+        {
+          "value": "google-ads-other",
+          "definition": "Google Ads uten Demand Gen og uten YouTube-levering."
+        },
+        {
+          "value": "google-demand-gen",
+          "definition": "Demand Gen, også når valgt flate er YouTube; velges først."
+        },
+        {
+          "value": "youtube",
+          "definition": "YouTube-levering uten Demand Gen; betalt/egen/fortjent er egen akse."
+        },
+        {
+          "value": "tiktok",
+          "definition": "TikTok-distribusjon."
+        },
+        {
+          "value": "linkedin",
+          "definition": "LinkedIn-distribusjon."
+        },
+        {
+          "value": "e-post",
+          "definition": "E-post, også digitale kundebrev sendt som e-post."
+        },
+        {
+          "value": "sms",
+          "definition": "SMS."
+        },
+        {
+          "value": "nettside",
+          "definition": "Eget nettsted, også digitalt brev eller skjema på nettstedet."
+        },
+        {
+          "value": "brev",
+          "definition": "Bare fysisk postlagt brev."
+        },
+        {
+          "value": "telefon",
+          "definition": "Telefon."
+        },
+        {
+          "value": "produktsok",
+          "definition": "Produktsøk utenfor de navngitte systemene."
+        },
+        {
+          "value": "markedsplass",
+          "definition": "Markedsplass utenfor de navngitte systemene."
+        },
+        {
+          "value": "annet-sosialt",
+          "definition": "Annen navngitt sosial plattform; binding må oppgi hvilken."
+        },
+        {
+          "value": "annen",
+          "definition": "Annen dokumentert distribusjon; binding kreves, ingen ukjent restklasse."
+        }
+      ],
+      "definition": "Eksklusiv distribusjonsrute. Forrang: Demand Gen før YouTube før andre Google Ads; navngitt system før generisk produktsøk/markedsplass. Film er format, skjema er komponent, brev er fysisk post. Ukjent kombinasjon blokkeres.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Eksklusiv distribusjonsrute. Forrang: Demand Gen før YouTube før andre Google Ads; navngitt system før generisk produktsøk/markedsplass. Film er format, skjema er komponent, brev er fysisk post. Ukjent kombinasjon blokkeres."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.placement",
+      "path": "placement",
+      "group": "placement",
+      "label_nb": "Plassering",
+      "type": "string",
+      "values": [
+        {
+          "value": "fb-feed",
+          "definition": "Facebook-feed, inkludert Friends etter oppgitt utrulling.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll",
+          "included_surfaces": [
+            "Facebook Friends-fanen fra mars 2026; ikke et separat plasseringsvalg."
+          ]
+        },
+        {
+          "value": "fb-profile-feed",
+          "definition": "Feed på Facebook-profil; avhengig av kontotilgang.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — Available ad placements and ad formats by ad objectives",
+            "url": "https://www.facebook.com/business/help/279271845888065",
+            "locator": "Tabeller per Awareness, Traffic, Engagement, Leads, App promotion og Sales"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "threads-feed",
+          "definition": "Threads-feed.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-feed",
+          "definition": "Instagram-feed.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-profile-feed",
+          "definition": "Feed ved Instagram-profil.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-marketplace",
+          "definition": "Facebook Marketplace.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-right-column",
+          "definition": "Facebooks høyre kolonne.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-notifications",
+          "definition": "Facebook-varsler.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-business-explore",
+          "definition": "Facebook Business Explore.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-explore-home",
+          "definition": "Hjemflaten i Instagram Explore.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-stories",
+          "definition": "Facebook Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-stories",
+          "definition": "Instagram Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "messenger-stories",
+          "definition": "Messenger Stories.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-reels",
+          "definition": "Instagram Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-reels",
+          "definition": "Facebook Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "whatsapp-status",
+          "definition": "WhatsApp Status.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-in-stream-reels",
+          "definition": "Facebook in-stream ved Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-reels-overlay",
+          "definition": "Annonser oppå Facebook Reels.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "fb-search",
+          "definition": "Facebook-søkeresultater.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "ig-search",
+          "definition": "Instagram-søkeresultater.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "audience-network-native-banner-interstitial",
+          "definition": "Native, banner eller mellomannonse i Audience Network.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "audience-network-rewarded",
+          "definition": "Belønnet video i Audience Network.",
+          "channel": "meta",
+          "source": {
+            "source": "Meta — About ad placements across Meta technologies",
+            "url": "https://www.facebook.com/business/help/407108559393196",
+            "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-search",
+          "definition": "Google-søkeresultater.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-display",
+          "definition": "Nettsteder og apper i Google Display Network.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-shopping",
+          "definition": "Shopping-oppføringer etter oppsett.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-app",
+          "definition": "App-kampanjens kvalifiserte flater.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About ad formats available in different campaign types",
+            "url": "https://support.google.com/google-ads/answer/1722124",
+            "locator": "Ad formats available in a Google Ads account"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-in-stream",
+          "definition": "I eller rundt YouTube-video.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-home",
+          "definition": "YouTube-forside.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-search",
+          "definition": "YouTube-søkeresultater.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-watch-next",
+          "definition": "YouTube Watch Next.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-subscriptions",
+          "definition": "YouTube-abonnementsfeed.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-shorts",
+          "definition": "YouTube Shorts-feed.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "google-video-partners",
+          "definition": "Google video partneres nettsteder eller apper; ikke YouTube-flate.",
+          "channel": "google-ads-other",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-discover",
+          "definition": "Discover-feed.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-gmail",
+          "definition": "Gmail-flater.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-feed",
+          "definition": "YouTube-feeder ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-in-stream",
+          "definition": "YouTube in-stream ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-youtube-shorts",
+          "definition": "Shorts ved Demand Gen.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "dg-display",
+          "definition": "Display ved Demand Gen der tilgjengelig.",
+          "channel": "google-demand-gen",
+          "source": {
+            "source": "Google Ads — Video assets specifications for Demand Gen",
+            "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+            "locator": "Eligible ad formats by placement"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-for-you",
+          "definition": "TikTok For You-feed; kan inkludere dokumenterte underflater.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-search-feed",
+          "definition": "TikTok-søkefeed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-search-results",
+          "definition": "TikTok-søkeresultatside med målbegrensninger.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "tt-profile-feed",
+          "definition": "Underflate ved profil når For You inkluderer den.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-following-feed",
+          "definition": "Underflate i Following-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-friends-feed",
+          "definition": "Underflate i Friends-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-lite",
+          "definition": "TikTok Lite i tilgjengelige markeder.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-web",
+          "definition": "TikTok for Web i tilgjengelige markeder.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-mini-drama",
+          "definition": "Mini Drama-feed.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-lemon8",
+          "definition": "Lemon8 bare i markedene angitt i aktuell kilde.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "tt-pinedrama",
+          "definition": "PineDrama bare i markedene angitt i aktuell kilde.",
+          "channel": "tiktok",
+          "source": {
+            "source": "TikTok — About TikTok Placement",
+            "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+            "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+          },
+          "read_on": "2026-11-13",
+          "parent": "tt-for-you",
+          "selection_note": "Eksponeringsflate, ikke nødvendigvis et selvstendig valg i Ads Manager.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "li-feed",
+          "definition": "LinkedIn-feed for støttet sponset innhold.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-messaging",
+          "definition": "LinkedIn-meldinger der format og marked tillater.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-right-rail",
+          "definition": "LinkedIn-sidekolonne for tekst/dynamiske format.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Ads Guide",
+            "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+            "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "li-audience-network",
+          "definition": "LinkedIn Audience Network på partnerflater.",
+          "channel": "linkedin",
+          "source": {
+            "source": "LinkedIn — Create your first campaign",
+            "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+            "locator": "8. Choose where your ads appear"
+          },
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        },
+        {
+          "value": "yt-playables",
+          "definition": "YouTube Playables i mobilappen; skippable, non-skippable og bumper etter faktisk kampanje-/kontostøtte.",
+          "channel": "youtube",
+          "source": {
+            "source": "Google Ads — About video ad formats",
+            "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+            "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+          },
+          "read_on": "2026-11-13",
+          "parent": "yt-in-stream",
+          "selection_note": "Dokumentert eksponeringsflate, ikke påstått selvstendig valg.",
+          "selection_kind": "underflate",
+          "selectable": "ikke-selvstendig"
+        },
+        {
+          "value": "egen-flate",
+          "definition": "Eget nettsted, brev, skjema eller direkte kanal; eksakt sted i bindingen.",
+          "channel": [
+            "e-post",
+            "sms",
+            "nettside",
+            "brev",
+            "telefon"
+          ],
+          "source": "Fume",
+          "read_on": "2026-11-13",
+          "selection_kind": "plassering",
+          "selectable": "krever-kontokontroll"
+        }
+      ],
+      "definition": "Velger konkret leveringsflate. Liste over kjente flater er ikke bevis for kontotilgang eller støtte for alle format.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "Meta — About ad placements across Meta technologies",
+          "url": "https://www.facebook.com/business/help/407108559393196",
+          "locator": "Ad placements across Meta technologies: Feeds; Stories, Status and Reels; In-stream; Search; Apps and sites"
+        },
+        {
+          "source": "Meta — Available ad placements and ad formats by ad objectives",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Tabeller per Awareness, Traffic, Engagement, Leads, App promotion og Sales"
+        },
+        {
+          "source": "Google Ads — About ad formats available in different campaign types",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account"
+        },
+        {
+          "source": "Google Ads — About video ad formats",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+        },
+        {
+          "source": "Google Ads — Video assets specifications for Demand Gen",
+          "url": "https://support.google.com/google-ads/answer/17141078?hl=en",
+          "locator": "Eligible ad formats by placement"
+        },
+        {
+          "source": "TikTok — About TikTok Placement",
+          "url": "https://ads.tiktok.com/help/article/tiktok-placement?lang=en",
+          "locator": "About TikTok Placement; For You Feed; Search Feed; Search Results Page"
+        },
+        {
+          "source": "LinkedIn — Ads Guide",
+          "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+          "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+        },
+        {
+          "source": "LinkedIn — Create your first campaign",
+          "url": "https://business.linkedin.com/advertise/ads/best-practices/create-your-first-campaign",
+          "locator": "8. Choose where your ads appear"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger konkret leveringsflate. Liste over kjente flater er ikke bevis for kontotilgang eller støtte for alle format."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.format",
+      "path": "format",
+      "group": "format",
+      "label_nb": "Format",
+      "type": "string",
+      "values": [
+        {
+          "value": "tekst",
+          "definition": "Tekstannonse eller tekstleveranse."
+        },
+        {
+          "value": "bilde",
+          "definition": "Ett stillbilde."
+        },
+        {
+          "value": "video",
+          "definition": "Én videoressurs."
+        },
+        {
+          "value": "karusell",
+          "definition": "Flere kort som kan blas."
+        },
+        {
+          "value": "samling",
+          "definition": "Produktsamling med hovedressurs."
+        },
+        {
+          "value": "fleksibel",
+          "definition": "Meta setter sammen ressurser i støttet oppsett."
+        },
+        {
+          "value": "responsiv-display",
+          "definition": "Google kombinerer ressurser til display."
+        },
+        {
+          "value": "shopping",
+          "definition": "Google-produktoppføring fra produktdata."
+        },
+        {
+          "value": "app",
+          "definition": "Google-annonse for appinstallasjon eller bruk."
+        },
+        {
+          "value": "yt-skippable",
+          "definition": "Video som kan hoppes over."
+        },
+        {
+          "value": "yt-non-skippable",
+          "definition": "Video uten hopp over, etter kampanjetype."
+        },
+        {
+          "value": "yt-in-feed",
+          "definition": "Videoannonse valgt fra YouTube-feed eller søk."
+        },
+        {
+          "value": "yt-bumper",
+          "definition": "Kort YouTube-video med egen lengdegrense."
+        },
+        {
+          "value": "yt-masthead",
+          "definition": "Reservasjonsformat på YouTube-forsiden."
+        },
+        {
+          "value": "yt-shorts",
+          "definition": "Video i YouTube Shorts."
+        },
+        {
+          "value": "tt-spark",
+          "definition": "Annonse fra autorisert organisk TikTok-innlegg."
+        },
+        {
+          "value": "tt-non-spark",
+          "definition": "Separat opplastet TikTok in-feed-annonse."
+        },
+        {
+          "value": "li-dokument",
+          "definition": "Dokumentannonse i LinkedIn."
+        },
+        {
+          "value": "li-event",
+          "definition": "Annonse for LinkedIn-arrangement."
+        },
+        {
+          "value": "li-melding",
+          "definition": "Direkte sponsormelding der tilgjengelig."
+        },
+        {
+          "value": "li-samtale",
+          "definition": "Sponset meldingsforløp med svarvalg."
+        },
+        {
+          "value": "li-follower",
+          "definition": "Dynamisk LinkedIn-annonse for følgere."
+        },
+        {
+          "value": "li-spotlight",
+          "definition": "Dynamisk LinkedIn-annonse for tilbud."
+        },
+        {
+          "value": "li-jobb",
+          "definition": "LinkedIn jobbannonse."
+        },
+        {
+          "value": "li-artikkel-nyhetsbrev",
+          "definition": "Sponset LinkedIn-artikkel eller nyhetsbrev."
+        },
+        {
+          "value": "li-thought-leader",
+          "definition": "Sponset innlegg fra autorisert person."
+        }
+      ],
+      "definition": "Velger ressurs-/annonseformat uavhengig av kanal. Bare kombinasjoner bekreftet i bindingen kan brukes.",
+      "filled_by": "menneske",
+      "source": [
+        {
+          "source": "Meta — Available ad placements and ad formats by ad objectives",
+          "url": "https://www.facebook.com/business/help/279271845888065",
+          "locator": "Tabeller per Awareness, Traffic, Engagement, Leads, App promotion og Sales"
+        },
+        {
+          "source": "Google Ads — About ad formats available in different campaign types",
+          "url": "https://support.google.com/google-ads/answer/1722124",
+          "locator": "Ad formats available in a Google Ads account"
+        },
+        {
+          "source": "Google Ads — About video ad formats",
+          "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+          "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+        },
+        {
+          "source": "TikTok — Auction In-Feed Ads specifications",
+          "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+          "locator": "Spark Ads (Pull); Non-Spark Ads; Safe Zone"
+        },
+        {
+          "source": "LinkedIn Help — Ad formats for objective-based advertising",
+          "url": "https://www.linkedin.com/help/lms/answer/a422880",
+          "locator": "Ad Objective / Goal / Ad Formats; Ad formats"
+        }
+      ],
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Velger ressurs-/annonseformat uavhengig av kanal. Bare kombinasjoner bekreftet i bindingen kan brukes."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.binding.creative_medium",
+      "path": "binding.creative_medium",
+      "group": "binding",
+      "label_nb": "Kreativt medium",
+      "type": "string",
+      "values": [
+        {
+          "value": "tekst",
+          "definition": "Tekst."
+        },
+        {
+          "value": "bilde",
+          "definition": "Stillbilde."
+        },
+        {
+          "value": "video",
+          "definition": "Video."
+        },
+        {
+          "value": "dokument",
+          "definition": "Dokument."
+        },
+        {
+          "value": "sammensatt",
+          "definition": "Flere medietyper i samme leveranse."
+        }
+      ],
+      "definition": "Faktisk medium; velges separat fra annonseprodukt og leveringsatferd.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Faktisk medium; velges separat fra annonseprodukt og leveringsatferd."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.binding.ad_product",
+      "path": "binding.ad_product",
+      "group": "binding",
+      "label_nb": "Annonseprodukt",
+      "type": "string",
+      "values": [
+        {
+          "value": "generisk",
+          "definition": "Ingen navngitt annonseprodukttype."
+        },
+        {
+          "value": "karusell",
+          "definition": "Flere kort som kan blas."
+        },
+        {
+          "value": "samling",
+          "definition": "Produktsamling med hovedressurs."
+        },
+        {
+          "value": "fleksibel",
+          "definition": "Meta setter sammen ressurser i støttet oppsett."
+        },
+        {
+          "value": "responsiv-display",
+          "definition": "Google kombinerer ressurser til display."
+        },
+        {
+          "value": "shopping",
+          "definition": "Google-produktoppføring fra produktdata."
+        },
+        {
+          "value": "app",
+          "definition": "Google-annonse for appinstallasjon eller bruk."
+        },
+        {
+          "value": "yt-skippable",
+          "definition": "Video som kan hoppes over."
+        },
+        {
+          "value": "yt-non-skippable",
+          "definition": "Video uten hopp over, etter kampanjetype."
+        },
+        {
+          "value": "yt-in-feed",
+          "definition": "Videoannonse valgt fra YouTube-feed eller søk."
+        },
+        {
+          "value": "yt-bumper",
+          "definition": "Kort YouTube-video med egen lengdegrense."
+        },
+        {
+          "value": "yt-masthead",
+          "definition": "Reservasjonsformat på YouTube-forsiden."
+        },
+        {
+          "value": "yt-shorts",
+          "definition": "Video i YouTube Shorts."
+        },
+        {
+          "value": "tt-spark",
+          "definition": "Annonse fra autorisert organisk TikTok-innlegg."
+        },
+        {
+          "value": "tt-non-spark",
+          "definition": "Separat opplastet TikTok in-feed-annonse."
+        },
+        {
+          "value": "li-dokument",
+          "definition": "Dokumentannonse i LinkedIn."
+        },
+        {
+          "value": "li-event",
+          "definition": "Annonse for LinkedIn-arrangement."
+        },
+        {
+          "value": "li-melding",
+          "definition": "Direkte sponsormelding der tilgjengelig."
+        },
+        {
+          "value": "li-samtale",
+          "definition": "Sponset meldingsforløp med svarvalg."
+        },
+        {
+          "value": "li-follower",
+          "definition": "Dynamisk LinkedIn-annonse for følgere."
+        },
+        {
+          "value": "li-spotlight",
+          "definition": "Dynamisk LinkedIn-annonse for tilbud."
+        },
+        {
+          "value": "li-jobb",
+          "definition": "LinkedIn jobbannonse."
+        },
+        {
+          "value": "li-artikkel-nyhetsbrev",
+          "definition": "Sponset LinkedIn-artikkel eller nyhetsbrev."
+        },
+        {
+          "value": "li-thought-leader",
+          "definition": "Sponset innlegg fra autorisert person."
+        }
+      ],
+      "definition": "Mest spesifikke kjente produkt velges før generisk medium. Bumper er eget produkt selv om det ikke kan hoppes over.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Mest spesifikke kjente produkt velges før generisk medium. Bumper er eget produkt selv om det ikke kan hoppes over."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.binding.delivery_behavior",
+      "path": "binding.delivery_behavior",
+      "group": "binding",
+      "label_nb": "Leveringsatferd",
+      "type": "string",
+      "values": [
+        {
+          "value": "hoppbar",
+          "definition": "Kan hoppes over."
+        },
+        {
+          "value": "ikke-hoppbar",
+          "definition": "Kan ikke hoppes over."
+        },
+        {
+          "value": "brukerstartet",
+          "definition": "Brukeren starter avspilling."
+        },
+        {
+          "value": "feed",
+          "definition": "Leveres i feed."
+        },
+        {
+          "value": "ikke-relevant",
+          "definition": "Ingen avspillingsatferd for denne leveransen."
+        }
+      ],
+      "definition": "Faktisk atferd for denne leveransen; ingen slutning fra video alene.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Faktisk atferd for denne leveransen; ingen slutning fra video alene."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.asset_features",
+      "path": "asset_features",
+      "group": "asset_features",
+      "label_nb": "Tilleggsressurser",
+      "type": "array",
+      "values": [
+        {
+          "value": "lead-gen-form",
+          "definition": "Skjema for kontaktinnhenting."
+        },
+        {
+          "value": "undertekst",
+          "definition": "Tekstet tale."
+        },
+        {
+          "value": "lyd",
+          "definition": "Musikk eller tale med rettigheter."
+        },
+        {
+          "value": "produktkatalog",
+          "definition": "Katalogdata med godkjent kilde."
+        }
+      ],
+      "definition": "Ressurser som må kontrolleres sammen med hovedformatet.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Ressurser som må kontrolleres sammen med hovedformatet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "kanal-format.specs.aspect_ratio",
+      "path": "specs.aspect_ratio",
+      "group": "specs",
+      "label_nb": "Sideforhold",
+      "type": "string",
+      "values": [
+        {
+          "value": "9:16",
+          "definition": "Stående fullskjerm."
+        },
+        {
+          "value": "4:5",
+          "definition": "Stående feed."
+        },
+        {
+          "value": "1:1",
+          "definition": "Kvadratisk."
+        },
+        {
+          "value": "1.91:1",
+          "definition": "Bredt bildeformat."
+        },
+        {
+          "value": "16:9",
+          "definition": "Liggende video."
+        },
+        {
+          "value": "annet",
+          "definition": "Eksakt forhold må oppgis og kontrolleres mot valgt plassering."
+        }
+      ],
+      "definition": "Velger målforhold; eksakt støtte kontrolleres for valgt kombinasjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Velger målforhold; eksakt støtte kontrolleres for valgt kombinasjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "kanal-format.specs.width_px",
+      "path": "specs.width_px",
+      "group": "specs",
+      "label_nb": "Bredde",
+      "type": "integer",
+      "values": [],
+      "definition": "Målt bredde i faktiske dekodede medier; over null.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Målt bredde i faktiske dekodede medier; over null."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kanal-format.format",
+            "op": "in",
+            "value": [
+              "bilde",
+              "video",
+              "karusell",
+              "samling",
+              "responsiv-display",
+              "yt-skippable",
+              "yt-non-skippable",
+              "yt-in-feed",
+              "yt-bumper",
+              "yt-masthead",
+              "yt-shorts",
+              "tt-spark",
+              "tt-non-spark"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 1
+      }
+    },
+    {
+      "id": "kanal-format.specs.height_px",
+      "path": "specs.height_px",
+      "group": "specs",
+      "label_nb": "Høyde",
+      "type": "integer",
+      "values": [],
+      "definition": "Målt høyde i faktiske dekodede medier; over null.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Målt høyde i faktiske dekodede medier; over null."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kanal-format.format",
+            "op": "in",
+            "value": [
+              "bilde",
+              "video",
+              "karusell",
+              "samling",
+              "responsiv-display",
+              "yt-skippable",
+              "yt-non-skippable",
+              "yt-in-feed",
+              "yt-bumper",
+              "yt-masthead",
+              "yt-shorts",
+              "tt-spark",
+              "tt-non-spark"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 1
+      }
+    },
+    {
+      "id": "kanal-format.specs.duration_s",
+      "path": "specs.duration_s",
+      "group": "specs",
+      "label_nb": "Varighet",
+      "type": "number",
+      "values": [],
+      "definition": "Faktisk varighet i sekunder; skill grense fra anbefaling.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Faktisk varighet i sekunder; skill grense fra anbefaling."
+      },
+      "applies_when": {
+        "all": [
+          {
+            "field": "kanal-format.format",
+            "op": "in",
+            "value": [
+              "video",
+              "yt-skippable",
+              "yt-non-skippable",
+              "yt-in-feed",
+              "yt-bumper",
+              "yt-masthead",
+              "yt-shorts",
+              "tt-spark",
+              "tt-non-spark"
+            ]
+          }
+        ]
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "minimum": 0
+      }
+    },
+    {
+      "id": "kanal-format.specs.max_bytes",
+      "path": "specs.max_bytes",
+      "group": "specs",
+      "label_nb": "Filgrense",
+      "type": "integer",
+      "values": [],
+      "definition": "Kildebelagt maksimal filstørrelse i byte, med avklart MB-definisjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Kildebelagt maksimal filstørrelse i byte, med avklart MB-definisjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kanal-format.specs.mime",
+      "path": "specs.mime",
+      "group": "specs",
+      "label_nb": "Filtype",
+      "type": "array",
+      "values": [
+        {
+          "value": "image/jpeg",
+          "definition": "JPEG-bilde."
+        },
+        {
+          "value": "image/png",
+          "definition": "PNG-bilde."
+        },
+        {
+          "value": "image/gif",
+          "definition": "GIF-ressurs."
+        },
+        {
+          "value": "video/mp4",
+          "definition": "MP4-video."
+        },
+        {
+          "value": "video/quicktime",
+          "definition": "MOV-video."
+        },
+        {
+          "value": "application/pdf",
+          "definition": "PDF-dokument."
+        },
+        {
+          "value": "text/plain",
+          "definition": "Ren tekst."
+        },
+        {
+          "value": "annet",
+          "definition": "Eksakt MIME-type må dokumenteres og bekreftes."
+        }
+      ],
+      "definition": "Tillatte typer for den bekreftede kombinasjonen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Tillatte typer for den bekreftede kombinasjonen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "kanal-format.specs.text_limits",
+      "path": "specs.text_limits",
+      "group": "specs",
+      "label_nb": "Tekstgrenser",
+      "type": "object",
+      "values": [],
+      "definition": "Tegn-/ordgrenser per tekstfelt med tellemetode og kilde.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Tegn-/ordgrenser per tekstfelt med tellemetode og kilde."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kanal-format.specs.safe_zone",
+      "path": "specs.safe_zone",
+      "group": "specs",
+      "label_nb": "Sikker tekstsone",
+      "type": "object",
+      "values": [],
+      "definition": "Kildebelagt mal og målt koordinatsystem, dimensjoner og UI-versjon.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Kildebelagt mal og målt koordinatsystem, dimensjoner og UI-versjon."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kanal-format.specs.rule_kind",
+      "path": "specs.rule_kind",
+      "group": "specs",
+      "label_nb": "Kravets styrke",
+      "type": "string",
+      "values": [
+        {
+          "value": "krav",
+          "definition": "Dokumentert plattform- eller policykrav."
+        },
+        {
+          "value": "anbefaling",
+          "definition": "Råd som ikke alene gjør ressursen ugyldig."
+        },
+        {
+          "value": "fume-valg",
+          "definition": "Eget godkjent produksjonsvalg."
+        }
+      ],
+      "definition": "Skiller plattformkrav, anbefaling og Fume-valg i kontrollen.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Skiller plattformkrav, anbefaling og Fume-valg i kontrollen."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ]
+    },
+    {
+      "id": "kanal-format.specs.read_on",
+      "path": "specs.read_on",
+      "group": "specs",
+      "label_nb": "Lesedato",
+      "type": "string",
+      "values": [],
+      "definition": "ISO-dato for faktisk lesing av kravkilden; er ikke gyldighetsgaranti.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "ISO-dato for faktisk lesing av kravkilden; er ikke gyldighetsgaranti."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste.",
+      "constraints": {
+        "format": "ISO-8601-date",
+        "actual_fetch_required": true
+      }
+    },
+    {
+      "id": "kanal-format.specs.source",
+      "path": "specs.source",
+      "group": "specs",
+      "label_nb": "Kravkilde",
+      "type": "object",
+      "values": [],
+      "definition": "Offisiell URL, seksjon/tabell, hentemetode og lesedato for hvert krav.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort",
+          "kanalformat-tilpasning"
+        ],
+        "choices": "Offisiell URL, seksjon/tabell, hentemetode og lesedato for hvert krav."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort",
+        "kanalformat-tilpasning"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kanal-format.availability",
+      "path": "availability",
+      "group": "availability",
+      "label_nb": "Tilgjengelighet",
+      "type": "string",
+      "values": [
+        {
+          "value": "bekreftet",
+          "definition": "Mål, land, konto, format og plassering er kontrollert."
+        },
+        {
+          "value": "ikke-tilgjengelig",
+          "definition": "Valgt kombinasjon støttes ikke."
+        },
+        {
+          "value": "uavklart",
+          "definition": "Kontroll mangler eller kilder strider mot hverandre."
+        }
+      ],
+      "definition": "Blokkerer bruk av ubekreftede kombinasjoner i faktisk oppsett.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Blokkerer bruk av ubekreftede kombinasjoner i faktisk oppsett."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ]
+    },
+    {
+      "id": "kanal-format.binding",
+      "path": "binding",
+      "group": "binding",
+      "label_nb": "Kombinasjonsgrunnlag",
+      "type": "object",
+      "values": [],
+      "definition": "Kanal, plassering, format, annonsemål, land, konto, kontrolltid, offisiell kilde og ansvarlig.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land",
+          "testplan-ekte-annonser"
+        ],
+        "choices": "Kanal, plassering, format, annonsemål, land, konto, kontrolltid, offisiell kilde og ansvarlig."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land",
+        "testplan-ekte-annonser"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "kanal-format.component",
+      "path": "component",
+      "group": "component",
+      "label_nb": "Komponent",
+      "type": "string",
+      "values": [
+        {
+          "value": "skjema",
+          "definition": "Skjema inngår."
+        },
+        {
+          "value": "ingen",
+          "definition": "Ingen skjemakomponent."
+        }
+      ],
+      "definition": "Skjema er en komponent uavhengig av kanal og format.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "bilde-som-tredje-tanke",
+          "kampanjekort",
+          "kanalformat-tilpasning",
+          "lovsjekk-per-land"
+        ],
+        "choices": "Skjema er en komponent uavhengig av kanal og format."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "bilde-som-tredje-tanke",
+        "kampanjekort",
+        "kanalformat-tilpasning",
+        "lovsjekk-per-land"
+      ]
+    }
+  ],
+  "format_contract": {
+    "precedence": "Navngitt annonseprodukt før generisk medium; yt-bumper før yt-non-skippable. Ikke-hoppbar er atferd, ikke synonym for ett produkt.",
+    "axes": [
+      "binding.creative_medium",
+      "binding.ad_product",
+      "binding.delivery_behavior"
+    ],
+    "rows": [
+      {
+        "format": "tekst",
+        "ad_product": "generisk",
+        "creative_medium": [
+          "tekst"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "bilde",
+        "ad_product": "generisk",
+        "creative_medium": [
+          "bilde"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "video",
+        "ad_product": "generisk",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "karusell",
+        "ad_product": "karusell",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "samling",
+        "ad_product": "samling",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "fleksibel",
+        "ad_product": "fleksibel",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "responsiv-display",
+        "ad_product": "responsiv-display",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "shopping",
+        "ad_product": "shopping",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "app",
+        "ad_product": "app",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "yt-skippable",
+        "ad_product": "yt-skippable",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "hoppbar"
+        ]
+      },
+      {
+        "format": "yt-non-skippable",
+        "ad_product": "yt-non-skippable",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "ikke-hoppbar"
+        ]
+      },
+      {
+        "format": "yt-in-feed",
+        "ad_product": "yt-in-feed",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "brukerstartet"
+        ]
+      },
+      {
+        "format": "yt-bumper",
+        "ad_product": "yt-bumper",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "ikke-hoppbar"
+        ]
+      },
+      {
+        "format": "yt-masthead",
+        "ad_product": "yt-masthead",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "yt-shorts",
+        "ad_product": "yt-shorts",
+        "creative_medium": [
+          "video"
+        ],
+        "delivery_behavior": [
+          "feed"
+        ]
+      },
+      {
+        "format": "tt-spark",
+        "ad_product": "tt-spark",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "tt-non-spark",
+        "ad_product": "tt-non-spark",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-dokument",
+        "ad_product": "li-dokument",
+        "creative_medium": [
+          "dokument"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-event",
+        "ad_product": "li-event",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-melding",
+        "ad_product": "li-melding",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-samtale",
+        "ad_product": "li-samtale",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-follower",
+        "ad_product": "li-follower",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-spotlight",
+        "ad_product": "li-spotlight",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-jobb",
+        "ad_product": "li-jobb",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-artikkel-nyhetsbrev",
+        "ad_product": "li-artikkel-nyhetsbrev",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      },
+      {
+        "format": "li-thought-leader",
+        "ad_product": "li-thought-leader",
+        "creative_medium": [
+          "tekst",
+          "bilde",
+          "video",
+          "dokument",
+          "sammensatt"
+        ],
+        "delivery_behavior": [
+          "hoppbar",
+          "ikke-hoppbar",
+          "brukerstartet",
+          "feed",
+          "ikke-relevant"
+        ]
+      }
+    ]
+  },
+  "verified_examples": [
+    {
+      "channel": "youtube",
+      "placement": "yt-in-stream",
+      "format": "yt-bumper",
+      "rule_kind": "krav",
+      "constraint": {
+        "duration_s": {
+          "minimum": 5,
+          "maximum": 6
+        }
+      },
+      "source": {
+        "source": "Google Ads — About video ad formats",
+        "url": "https://support.google.com/google-ads/answer/2375464?hl=en",
+        "locator": "Sammenligningstabell; Where it serves; Bumper ads"
+      },
+      "read_on": "2026-11-13",
+      "availability": "uavklart"
+    },
+    {
+      "channel": "tiktok",
+      "placement": "tt-for-you",
+      "format": "tt-non-spark",
+      "rule_kind": "anbefaling",
+      "constraint": {
+        "aspect_ratio": "9:16",
+        "min_width_px": 540,
+        "min_height_px": 960
+      },
+      "source": {
+        "source": "TikTok — Auction In-Feed Ads specifications",
+        "url": "https://ads.tiktok.com/resources/help/article/tiktok-auction-in-feed-ads?lang=en",
+        "locator": "Spark Ads (Pull); Non-Spark Ads; Safe Zone"
+      },
+      "read_on": "2026-11-13",
+      "availability": "uavklart"
+    },
+    {
+      "channel": "linkedin",
+      "placement": "li-feed",
+      "format": "bilde",
+      "rule_kind": "anbefaling",
+      "constraint": {
+        "width_px": 1200,
+        "height_px": 627
+      },
+      "source": {
+        "source": "LinkedIn — Ads Guide",
+        "url": "https://business.linkedin.com/advertise/ads/ads-guide",
+        "locator": "Single Image Ads; Video Ads; Sponsored Messaging; Dynamic Ads"
+      },
+      "read_on": "2026-11-13",
+      "availability": "uavklart"
+    }
+  ],
+  "freshness_rule": "Før produksjon/frigivelse: hent gjeldende kilde og kontroller faktisk konto × mål × land × plassering × format. Ingen global TTL eller read_on alene godkjenner. Motstrid (f.eks. TikTok policy 5–60 s mot Non-Spark opptil 10 min) gir uavklart og menneskelig kontroll.",
+  "channel_contract": {
+    "axes": [
+      "channel = eksklusiv distribusjonsrute",
+      "placement = fysisk/digital leveringsflate",
+      "format = ressursformat",
+      "component = skjema/ingen",
+      "media_class = betalt/egen/fortjent"
+    ],
+    "precedence": [
+      "google-demand-gen ved Demand Gen uansett flate",
+      "youtube ved annen YouTube-levering",
+      "google-ads-other ved øvrig Google Ads",
+      "navngitt system før generell markedsplass/produktsok",
+      "brev bare ved fysisk post; digitalt brev følger e-post/nettside"
+    ],
+    "families_only_in_predicate": [
+      "google-ads",
+      "sosiale-medier"
+    ],
+    "unknown": "Mangler eller ikke dokumentert binding gir uavklart; annen krever navngitt distribusjon.",
+    "youtube_demand_gen": "dg-youtube-* utløser YouTube-familie i tillegg til Demand Gen og Google Ads. Andre Demand Gen-flater utløser ikke YouTube."
+  },
+  "meta_verification": {
+    "read_on": "2026-11-13",
+    "method": "web.open innlogging/blokkering; Firecrawl maxAge=0 HTTP 200 for begge offisielle sider; innhold og mål-/formatmatrise lest på nytt.",
+    "coverage": "22 navngitte plasseringsrader fra unionen av hovedliste og måltabeller; Facebook profile feed finnes i måltabell. Friends er underflate av feed. Ingen garanti for konto/land/mål.",
+    "selection": "Plassering er mulig valg bare etter kontokontroll; underflater er ikke selvstendige valg."
+  },
+  "read_by_semantics": "Erklærte konkrete feltlesninger i flows/*.json field_reads og eksplisitte skill-forbrukere; ingen påstand om observert runtime-lesing."
+}

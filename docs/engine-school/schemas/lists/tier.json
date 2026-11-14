@@ -1,0 +1,41 @@
+{
+  "id": "tier",
+  "label_nb": "Kildeklasse",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "praktiker",
+      "label_nb": "Praktiker",
+      "definition": "Kildeklasse: praktiker."
+    },
+    {
+      "id": "fume",
+      "label_nb": "Fume",
+      "definition": "Kildeklasse: fume."
+    },
+    {
+      "id": "forskning",
+      "label_nb": "Forskning",
+      "definition": "Kildeklasse: forskning."
+    },
+    {
+      "id": "lov",
+      "label_nb": "Lov",
+      "definition": "Kildeklasse: lov."
+    },
+    {
+      "id": "plattform",
+      "label_nb": "Plattform",
+      "definition": "Kildeklasse: plattform."
+    }
+  ]
+}

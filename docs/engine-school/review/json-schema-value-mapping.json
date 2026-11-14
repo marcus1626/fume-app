@@ -1,0 +1,2940 @@
+{
+  "changes": [
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/0/value",
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/1/value",
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/2/value",
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/3/value",
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/4/value",
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjebank.json",
+      "pointer": "/fields/7/values/5/value",
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/0/value",
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/1/value",
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/2/value",
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/3/value",
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/4/value",
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-luket.json",
+      "pointer": "/fields/7/values/5/value",
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/0/value",
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/1/value",
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/2/value",
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/3/value",
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/4/value",
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/07-linjer-rangert.json",
+      "pointer": "/fields/7/values/5/value",
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/0/value",
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/1/value",
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/2/value",
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/3/value",
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/4/value",
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundekandidater.json",
+      "pointer": "/fields/7/values/5/value",
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/0/value",
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/1/value",
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/2/value",
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/3/value",
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/4/value",
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "schemas/08-kundevalg.json",
+      "pointer": "/fields/7/values/5/value",
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Display label normalized to stable list ID."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Spørsmål",
+      "after": "sporsmal",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Kontrast",
+      "after": "kontrast",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "Tørr humor",
+      "after": "torr-humor",
+      "reason": "Keep original registry generator in sync with canonical list IDs."
+    },
+    {
+      "file": "schemas/kanal-format.json",
+      "pointer": "/fields/1/values/54/channel",
+      "list": "channel",
+      "before": "egen",
+      "after": [
+        "e-post",
+        "sms",
+        "nettside",
+        "brev",
+        "telefon"
+      ],
+      "reason": "Media class was incorrectly used as channel; bind generic placement to its actual distribution routes."
+    },
+    {
+      "file": "schemas/skill-filter.json",
+      "pointer": "/fields/12/values/54/channel",
+      "list": "channel",
+      "before": "egen",
+      "after": [
+        "e-post",
+        "sms",
+        "nettside",
+        "brev",
+        "telefon"
+      ],
+      "reason": "Media class was incorrectly used as channel; bind generic placement to its actual distribution routes."
+    },
+    {
+      "file": "scripts/build_schemas.py",
+      "before": "placement('egen-flate','Eget nettsted, brev, skjema eller direkte kanal; eksakt sted i bindingen.','egen', 'Fume')",
+      "after": "placement('egen-flate','Eget nettsted, brev, skjema eller direkte kanal; eksakt sted i bindingen.',['e-post','sms','nettside','brev','telefon'], 'Fume')",
+      "reason": "Persist corrected concrete placement/channel binding in registry generator."
+    }
+  ],
+  "aliases": [
+    {
+      "list": "line-style",
+      "before": "Rett på sak",
+      "after": "rett-pa-sak"
+    },
+    {
+      "list": "line-style",
+      "before": "Gjenkjennelig hverdag",
+      "after": "gjenkjennelig-hverdag"
+    },
+    {
+      "list": "line-style",
+      "before": "Spørsmål",
+      "after": "sporsmal"
+    },
+    {
+      "list": "line-style",
+      "before": "Kontrast",
+      "after": "kontrast"
+    },
+    {
+      "list": "line-style",
+      "before": "Konkret bevis",
+      "after": "konkret-bevis"
+    },
+    {
+      "list": "line-style",
+      "before": "Tørr humor",
+      "after": "torr-humor"
+    },
+    {
+      "list": "country",
+      "before": "UK",
+      "after": "GB"
+    },
+    {
+      "list": "country",
+      "before": "Norge",
+      "after": "NO"
+    },
+    {
+      "list": "country",
+      "before": "Tyskland",
+      "after": "DE"
+    },
+    {
+      "list": "country",
+      "before": "Storbritannia",
+      "after": "GB"
+    },
+    {
+      "list": "country-group",
+      "before": "EØS",
+      "after": "EEA"
+    },
+    {
+      "list": "channel",
+      "before": "epost",
+      "after": "e-post"
+    },
+    {
+      "list": "format",
+      "before": "film",
+      "after": "video"
+    },
+    {
+      "list": "funnel-mode",
+      "before": "høsting",
+      "after": "hosting"
+    }
+  ],
+  "notes": [
+    "Existing channel/country/funnel IDs were already normalized in round 3B/C; no guessed semantic remapping.",
+    "Native integer and boolean IDs remain JSON integers/booleans. Display labels stay in label_nb.",
+    "UK/Norge/EØS aliases are import mappings only; EU/EEA are groups, never concrete country codes.",
+    "Historical many-to-one mappings remain in review/schema-value-mapping.json; no historical log rewritten."
+  ],
+  "canonical_values": [
+    {
+      "list": "actor-type",
+      "id": "menneske"
+    },
+    {
+      "list": "approval-decision",
+      "id": "godkjent"
+    },
+    {
+      "list": "approval-decision",
+      "id": "avvist"
+    },
+    {
+      "list": "approval-decision",
+      "id": "avventer"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "9:16"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "4:5"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "1:1"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "1.91:1"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "16:9"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "annet"
+    },
+    {
+      "list": "aspect-ratio",
+      "id": "alle"
+    },
+    {
+      "list": "asset-feature",
+      "id": "lead-gen-form"
+    },
+    {
+      "list": "asset-feature",
+      "id": "undertekst"
+    },
+    {
+      "list": "asset-feature",
+      "id": "lyd"
+    },
+    {
+      "list": "asset-feature",
+      "id": "produktkatalog"
+    },
+    {
+      "list": "availability",
+      "id": "bekreftet"
+    },
+    {
+      "list": "availability",
+      "id": "ikke-tilgjengelig"
+    },
+    {
+      "list": "availability",
+      "id": "uavklart"
+    },
+    {
+      "list": "awareness-level",
+      "id": 1
+    },
+    {
+      "list": "awareness-level",
+      "id": 2
+    },
+    {
+      "list": "awareness-level",
+      "id": 3
+    },
+    {
+      "list": "awareness-level",
+      "id": 4
+    },
+    {
+      "list": "awareness-level",
+      "id": 5
+    },
+    {
+      "list": "awareness-level",
+      "id": "alle"
+    },
+    {
+      "list": "boolean",
+      "id": true
+    },
+    {
+      "list": "boolean",
+      "id": false
+    },
+    {
+      "list": "budget-class",
+      "id": "mikro"
+    },
+    {
+      "list": "budget-class",
+      "id": "liten"
+    },
+    {
+      "list": "budget-class",
+      "id": "middels"
+    },
+    {
+      "list": "budget-class",
+      "id": "stor"
+    },
+    {
+      "list": "buying-expertise",
+      "id": "produkt"
+    },
+    {
+      "list": "buying-expertise",
+      "id": "prosess"
+    },
+    {
+      "list": "buying-function",
+      "id": "fag"
+    },
+    {
+      "list": "buying-function",
+      "id": "innkjop"
+    },
+    {
+      "list": "buying-function",
+      "id": "okonomi"
+    },
+    {
+      "list": "buying-function",
+      "id": "juridisk"
+    },
+    {
+      "list": "buying-function",
+      "id": "drift"
+    },
+    {
+      "list": "buying-function",
+      "id": "annet"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "initiativtaker"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "pavirker"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "portvakt"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "innkjoper"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "beslutter"
+    },
+    {
+      "list": "buying-role-b2b",
+      "id": "bruker"
+    },
+    {
+      "list": "buying-role-b2c",
+      "id": "initiativtaker"
+    },
+    {
+      "list": "buying-role-b2c",
+      "id": "pavirker"
+    },
+    {
+      "list": "buying-role-b2c",
+      "id": "velger"
+    },
+    {
+      "list": "buying-role-b2c",
+      "id": "betaler"
+    },
+    {
+      "list": "buying-role-b2c",
+      "id": "bruker"
+    },
+    {
+      "list": "buying-situation",
+      "id": "nykjop"
+    },
+    {
+      "list": "buying-situation",
+      "id": "endret-gjenkjop"
+    },
+    {
+      "list": "buying-situation",
+      "id": "rent-gjenkjop"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "kjennskap"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "mental-tilgjengelighet"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "vurdering"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "henvendelser"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "salg"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "bruk"
+    },
+    {
+      "list": "campaign-goal",
+      "id": "fornyelse"
+    },
+    {
+      "list": "category-type",
+      "id": "produkt"
+    },
+    {
+      "list": "category-type",
+      "id": "tjeneste"
+    },
+    {
+      "list": "category-type",
+      "id": "opplevelse"
+    },
+    {
+      "list": "category-type",
+      "id": "kombinasjon"
+    },
+    {
+      "list": "cep-cue",
+      "id": "motiv"
+    },
+    {
+      "list": "cep-cue",
+      "id": "folelse"
+    },
+    {
+      "list": "cep-cue",
+      "id": "tid"
+    },
+    {
+      "list": "cep-cue",
+      "id": "sted"
+    },
+    {
+      "list": "cep-cue",
+      "id": "sammen-med"
+    },
+    {
+      "list": "cep-cue",
+      "id": "aktivitet"
+    },
+    {
+      "list": "cep-cue",
+      "id": "annet"
+    },
+    {
+      "list": "channel",
+      "id": "meta"
+    },
+    {
+      "list": "channel",
+      "id": "google-ads-other"
+    },
+    {
+      "list": "channel",
+      "id": "google-demand-gen"
+    },
+    {
+      "list": "channel",
+      "id": "youtube"
+    },
+    {
+      "list": "channel",
+      "id": "tiktok"
+    },
+    {
+      "list": "channel",
+      "id": "linkedin"
+    },
+    {
+      "list": "channel",
+      "id": "e-post"
+    },
+    {
+      "list": "channel",
+      "id": "sms"
+    },
+    {
+      "list": "channel",
+      "id": "nettside"
+    },
+    {
+      "list": "channel",
+      "id": "brev"
+    },
+    {
+      "list": "channel",
+      "id": "telefon"
+    },
+    {
+      "list": "channel",
+      "id": "produktsok"
+    },
+    {
+      "list": "channel",
+      "id": "markedsplass"
+    },
+    {
+      "list": "channel",
+      "id": "annet-sosialt"
+    },
+    {
+      "list": "channel",
+      "id": "annen"
+    },
+    {
+      "list": "channel",
+      "id": "google-ads"
+    },
+    {
+      "list": "channel",
+      "id": "sosiale-medier"
+    },
+    {
+      "list": "channel",
+      "id": "alle"
+    },
+    {
+      "list": "check-type",
+      "id": "kritiker"
+    },
+    {
+      "list": "check-type",
+      "id": "kode"
+    },
+    {
+      "list": "check-type",
+      "id": "kritiker+menneske"
+    },
+    {
+      "list": "check-type",
+      "id": "menneske"
+    },
+    {
+      "list": "check-type",
+      "id": "kode+kritiker"
+    },
+    {
+      "list": "check-type",
+      "id": "kode+menneske"
+    },
+    {
+      "list": "check-type",
+      "id": "kode+kritiker+menneske"
+    },
+    {
+      "list": "checkpoint",
+      "id": 2
+    },
+    {
+      "list": "checkpoint",
+      "id": 4
+    },
+    {
+      "list": "checkpoint",
+      "id": 9
+    },
+    {
+      "list": "checkpoint",
+      "id": 5
+    },
+    {
+      "list": "checkpoint",
+      "id": 7
+    },
+    {
+      "list": "checkpoint",
+      "id": 8
+    },
+    {
+      "list": "checkpoint",
+      "id": 10
+    },
+    {
+      "list": "checkpoint",
+      "id": 1
+    },
+    {
+      "list": "checkpoint",
+      "id": 3
+    },
+    {
+      "list": "checkpoint",
+      "id": 6
+    },
+    {
+      "list": "claim-type",
+      "id": "helse"
+    },
+    {
+      "list": "claim-type",
+      "id": "ernaering"
+    },
+    {
+      "list": "claim-type",
+      "id": "miljo"
+    },
+    {
+      "list": "claim-type",
+      "id": "pris"
+    },
+    {
+      "list": "claim-type",
+      "id": "sammenligning"
+    },
+    {
+      "list": "claim-type",
+      "id": "effekt"
+    },
+    {
+      "list": "claim-type",
+      "id": "superlativ"
+    },
+    {
+      "list": "claim-type",
+      "id": "knapphet"
+    },
+    {
+      "list": "component",
+      "id": "skjema"
+    },
+    {
+      "list": "component",
+      "id": "ingen"
+    },
+    {
+      "list": "condition-operator",
+      "id": "present"
+    },
+    {
+      "list": "condition-operator",
+      "id": "in"
+    },
+    {
+      "list": "condition-operator",
+      "id": "eq"
+    },
+    {
+      "list": "country",
+      "id": "AD"
+    },
+    {
+      "list": "country",
+      "id": "AE"
+    },
+    {
+      "list": "country",
+      "id": "AF"
+    },
+    {
+      "list": "country",
+      "id": "AG"
+    },
+    {
+      "list": "country",
+      "id": "AI"
+    },
+    {
+      "list": "country",
+      "id": "AL"
+    },
+    {
+      "list": "country",
+      "id": "AM"
+    },
+    {
+      "list": "country",
+      "id": "AO"
+    },
+    {
+      "list": "country",
+      "id": "AQ"
+    },
+    {
+      "list": "country",
+      "id": "AR"
+    },
+    {
+      "list": "country",
+      "id": "AS"
+    },
+    {
+      "list": "country",
+      "id": "AT"
+    },
+    {
+      "list": "country",
+      "id": "AU"
+    },
+    {
+      "list": "country",
+      "id": "AW"
+    },
+    {
+      "list": "country",
+      "id": "AX"
+    },
+    {
+      "list": "country",
+      "id": "AZ"
+    },
+    {
+      "list": "country",
+      "id": "BA"
+    },
+    {
+      "list": "country",
+      "id": "BB"
+    },
+    {
+      "list": "country",
+      "id": "BD"
+    },
+    {
+      "list": "country",
+      "id": "BE"
+    },
+    {
+      "list": "country",
+      "id": "BF"
+    },
+    {
+      "list": "country",
+      "id": "BG"
+    },
+    {
+      "list": "country",
+      "id": "BH"
+    },
+    {
+      "list": "country",
+      "id": "BI"
+    },
+    {
+      "list": "country",
+      "id": "BJ"
+    },
+    {
+      "list": "country",
+      "id": "BL"
+    },
+    {
+      "list": "country",
+      "id": "BM"
+    },
+    {
+      "list": "country",
+      "id": "BN"
+    },
+    {
+      "list": "country",
+      "id": "BO"
+    },
+    {
+      "list": "country",
+      "id": "BQ"
+    },
+    {
+      "list": "country",
+      "id": "BR"
+    },
+    {
+      "list": "country",
+      "id": "BS"
+    },
+    {
+      "list": "country",
+      "id": "BT"
+    },
+    {
+      "list": "country",
+      "id": "BV"
+    },
+    {
+      "list": "country",
+      "id": "BW"
+    },
+    {
+      "list": "country",
+      "id": "BY"
+    },
+    {
+      "list": "country",
+      "id": "BZ"
+    },
+    {
+      "list": "country",
+      "id": "CA"
+    },
+    {
+      "list": "country",
+      "id": "CC"
+    },
+    {
+      "list": "country",
+      "id": "CD"
+    },
+    {
+      "list": "country",
+      "id": "CF"
+    },
+    {
+      "list": "country",
+      "id": "CG"
+    },
+    {
+      "list": "country",
+      "id": "CH"
+    },
+    {
+      "list": "country",
+      "id": "CI"
+    },
+    {
+      "list": "country",
+      "id": "CK"
+    },
+    {
+      "list": "country",
+      "id": "CL"
+    },
+    {
+      "list": "country",
+      "id": "CM"
+    },
+    {
+      "list": "country",
+      "id": "CN"
+    },
+    {
+      "list": "country",
+      "id": "CO"
+    },
+    {
+      "list": "country",
+      "id": "CR"
+    },
+    {
+      "list": "country",
+      "id": "CU"
+    },
+    {
+      "list": "country",
+      "id": "CV"
+    },
+    {
+      "list": "country",
+      "id": "CW"
+    },
+    {
+      "list": "country",
+      "id": "CX"
+    },
+    {
+      "list": "country",
+      "id": "CY"
+    },
+    {
+      "list": "country",
+      "id": "CZ"
+    },
+    {
+      "list": "country",
+      "id": "DE"
+    },
+    {
+      "list": "country",
+      "id": "DJ"
+    },
+    {
+      "list": "country",
+      "id": "DK"
+    },
+    {
+      "list": "country",
+      "id": "DM"
+    },
+    {
+      "list": "country",
+      "id": "DO"
+    },
+    {
+      "list": "country",
+      "id": "DZ"
+    },
+    {
+      "list": "country",
+      "id": "EC"
+    },
+    {
+      "list": "country",
+      "id": "EE"
+    },
+    {
+      "list": "country",
+      "id": "EG"
+    },
+    {
+      "list": "country",
+      "id": "EH"
+    },
+    {
+      "list": "country",
+      "id": "ER"
+    },
+    {
+      "list": "country",
+      "id": "ES"
+    },
+    {
+      "list": "country",
+      "id": "ET"
+    },
+    {
+      "list": "country",
+      "id": "FI"
+    },
+    {
+      "list": "country",
+      "id": "FJ"
+    },
+    {
+      "list": "country",
+      "id": "FK"
+    },
+    {
+      "list": "country",
+      "id": "FM"
+    },
+    {
+      "list": "country",
+      "id": "FO"
+    },
+    {
+      "list": "country",
+      "id": "FR"
+    },
+    {
+      "list": "country",
+      "id": "GA"
+    },
+    {
+      "list": "country",
+      "id": "GB"
+    },
+    {
+      "list": "country",
+      "id": "GD"
+    },
+    {
+      "list": "country",
+      "id": "GE"
+    },
+    {
+      "list": "country",
+      "id": "GF"
+    },
+    {
+      "list": "country",
+      "id": "GG"
+    },
+    {
+      "list": "country",
+      "id": "GH"
+    },
+    {
+      "list": "country",
+      "id": "GI"
+    },
+    {
+      "list": "country",
+      "id": "GL"
+    },
+    {
+      "list": "country",
+      "id": "GM"
+    },
+    {
+      "list": "country",
+      "id": "GN"
+    },
+    {
+      "list": "country",
+      "id": "GP"
+    },
+    {
+      "list": "country",
+      "id": "GQ"
+    },
+    {
+      "list": "country",
+      "id": "GR"
+    },
+    {
+      "list": "country",
+      "id": "GS"
+    },
+    {
+      "list": "country",
+      "id": "GT"
+    },
+    {
+      "list": "country",
+      "id": "GU"
+    },
+    {
+      "list": "country",
+      "id": "GW"
+    },
+    {
+      "list": "country",
+      "id": "GY"
+    },
+    {
+      "list": "country",
+      "id": "HK"
+    },
+    {
+      "list": "country",
+      "id": "HM"
+    },
+    {
+      "list": "country",
+      "id": "HN"
+    },
+    {
+      "list": "country",
+      "id": "HR"
+    },
+    {
+      "list": "country",
+      "id": "HT"
+    },
+    {
+      "list": "country",
+      "id": "HU"
+    },
+    {
+      "list": "country",
+      "id": "ID"
+    },
+    {
+      "list": "country",
+      "id": "IE"
+    },
+    {
+      "list": "country",
+      "id": "IL"
+    },
+    {
+      "list": "country",
+      "id": "IM"
+    },
+    {
+      "list": "country",
+      "id": "IN"
+    },
+    {
+      "list": "country",
+      "id": "IO"
+    },
+    {
+      "list": "country",
+      "id": "IQ"
+    },
+    {
+      "list": "country",
+      "id": "IR"
+    },
+    {
+      "list": "country",
+      "id": "IS"
+    },
+    {
+      "list": "country",
+      "id": "IT"
+    },
+    {
+      "list": "country",
+      "id": "JE"
+    },
+    {
+      "list": "country",
+      "id": "JM"
+    },
+    {
+      "list": "country",
+      "id": "JO"
+    },
+    {
+      "list": "country",
+      "id": "JP"
+    },
+    {
+      "list": "country",
+      "id": "KE"
+    },
+    {
+      "list": "country",
+      "id": "KG"
+    },
+    {
+      "list": "country",
+      "id": "KH"
+    },
+    {
+      "list": "country",
+      "id": "KI"
+    },
+    {
+      "list": "country",
+      "id": "KM"
+    },
+    {
+      "list": "country",
+      "id": "KN"
+    },
+    {
+      "list": "country",
+      "id": "KP"
+    },
+    {
+      "list": "country",
+      "id": "KR"
+    },
+    {
+      "list": "country",
+      "id": "KW"
+    },
+    {
+      "list": "country",
+      "id": "KY"
+    },
+    {
+      "list": "country",
+      "id": "KZ"
+    },
+    {
+      "list": "country",
+      "id": "LA"
+    },
+    {
+      "list": "country",
+      "id": "LB"
+    },
+    {
+      "list": "country",
+      "id": "LC"
+    },
+    {
+      "list": "country",
+      "id": "LI"
+    },
+    {
+      "list": "country",
+      "id": "LK"
+    },
+    {
+      "list": "country",
+      "id": "LR"
+    },
+    {
+      "list": "country",
+      "id": "LS"
+    },
+    {
+      "list": "country",
+      "id": "LT"
+    },
+    {
+      "list": "country",
+      "id": "LU"
+    },
+    {
+      "list": "country",
+      "id": "LV"
+    },
+    {
+      "list": "country",
+      "id": "LY"
+    },
+    {
+      "list": "country",
+      "id": "MA"
+    },
+    {
+      "list": "country",
+      "id": "MC"
+    },
+    {
+      "list": "country",
+      "id": "MD"
+    },
+    {
+      "list": "country",
+      "id": "ME"
+    },
+    {
+      "list": "country",
+      "id": "MF"
+    },
+    {
+      "list": "country",
+      "id": "MG"
+    },
+    {
+      "list": "country",
+      "id": "MH"
+    },
+    {
+      "list": "country",
+      "id": "MK"
+    },
+    {
+      "list": "country",
+      "id": "ML"
+    },
+    {
+      "list": "country",
+      "id": "MM"
+    },
+    {
+      "list": "country",
+      "id": "MN"
+    },
+    {
+      "list": "country",
+      "id": "MO"
+    },
+    {
+      "list": "country",
+      "id": "MP"
+    },
+    {
+      "list": "country",
+      "id": "MQ"
+    },
+    {
+      "list": "country",
+      "id": "MR"
+    },
+    {
+      "list": "country",
+      "id": "MS"
+    },
+    {
+      "list": "country",
+      "id": "MT"
+    },
+    {
+      "list": "country",
+      "id": "MU"
+    },
+    {
+      "list": "country",
+      "id": "MV"
+    },
+    {
+      "list": "country",
+      "id": "MW"
+    },
+    {
+      "list": "country",
+      "id": "MX"
+    },
+    {
+      "list": "country",
+      "id": "MY"
+    },
+    {
+      "list": "country",
+      "id": "MZ"
+    },
+    {
+      "list": "country",
+      "id": "NA"
+    },
+    {
+      "list": "country",
+      "id": "NC"
+    },
+    {
+      "list": "country",
+      "id": "NE"
+    },
+    {
+      "list": "country",
+      "id": "NF"
+    },
+    {
+      "list": "country",
+      "id": "NG"
+    },
+    {
+      "list": "country",
+      "id": "NI"
+    },
+    {
+      "list": "country",
+      "id": "NL"
+    },
+    {
+      "list": "country",
+      "id": "NO"
+    },
+    {
+      "list": "country",
+      "id": "NP"
+    },
+    {
+      "list": "country",
+      "id": "NR"
+    },
+    {
+      "list": "country",
+      "id": "NU"
+    },
+    {
+      "list": "country",
+      "id": "NZ"
+    },
+    {
+      "list": "country",
+      "id": "OM"
+    },
+    {
+      "list": "country",
+      "id": "PA"
+    },
+    {
+      "list": "country",
+      "id": "PE"
+    },
+    {
+      "list": "country",
+      "id": "PF"
+    },
+    {
+      "list": "country",
+      "id": "PG"
+    },
+    {
+      "list": "country",
+      "id": "PH"
+    },
+    {
+      "list": "country",
+      "id": "PK"
+    },
+    {
+      "list": "country",
+      "id": "PL"
+    },
+    {
+      "list": "country",
+      "id": "PM"
+    },
+    {
+      "list": "country",
+      "id": "PN"
+    },
+    {
+      "list": "country",
+      "id": "PR"
+    },
+    {
+      "list": "country",
+      "id": "PS"
+    },
+    {
+      "list": "country",
+      "id": "PT"
+    },
+    {
+      "list": "country",
+      "id": "PW"
+    },
+    {
+      "list": "country",
+      "id": "PY"
+    },
+    {
+      "list": "country",
+      "id": "QA"
+    },
+    {
+      "list": "country",
+      "id": "RE"
+    },
+    {
+      "list": "country",
+      "id": "RO"
+    },
+    {
+      "list": "country",
+      "id": "RS"
+    },
+    {
+      "list": "country",
+      "id": "RU"
+    },
+    {
+      "list": "country",
+      "id": "RW"
+    },
+    {
+      "list": "country",
+      "id": "SA"
+    },
+    {
+      "list": "country",
+      "id": "SB"
+    },
+    {
+      "list": "country",
+      "id": "SC"
+    },
+    {
+      "list": "country",
+      "id": "SD"
+    },
+    {
+      "list": "country",
+      "id": "SE"
+    },
+    {
+      "list": "country",
+      "id": "SG"
+    },
+    {
+      "list": "country",
+      "id": "SH"
+    },
+    {
+      "list": "country",
+      "id": "SI"
+    },
+    {
+      "list": "country",
+      "id": "SJ"
+    },
+    {
+      "list": "country",
+      "id": "SK"
+    },
+    {
+      "list": "country",
+      "id": "SL"
+    },
+    {
+      "list": "country",
+      "id": "SM"
+    },
+    {
+      "list": "country",
+      "id": "SN"
+    },
+    {
+      "list": "country",
+      "id": "SO"
+    },
+    {
+      "list": "country",
+      "id": "SR"
+    },
+    {
+      "list": "country",
+      "id": "SS"
+    },
+    {
+      "list": "country",
+      "id": "ST"
+    },
+    {
+      "list": "country",
+      "id": "SV"
+    },
+    {
+      "list": "country",
+      "id": "SX"
+    },
+    {
+      "list": "country",
+      "id": "SY"
+    },
+    {
+      "list": "country",
+      "id": "SZ"
+    },
+    {
+      "list": "country",
+      "id": "TC"
+    },
+    {
+      "list": "country",
+      "id": "TD"
+    },
+    {
+      "list": "country",
+      "id": "TF"
+    },
+    {
+      "list": "country",
+      "id": "TG"
+    },
+    {
+      "list": "country",
+      "id": "TH"
+    },
+    {
+      "list": "country",
+      "id": "TJ"
+    },
+    {
+      "list": "country",
+      "id": "TK"
+    },
+    {
+      "list": "country",
+      "id": "TL"
+    },
+    {
+      "list": "country",
+      "id": "TM"
+    },
+    {
+      "list": "country",
+      "id": "TN"
+    },
+    {
+      "list": "country",
+      "id": "TO"
+    },
+    {
+      "list": "country",
+      "id": "TR"
+    },
+    {
+      "list": "country",
+      "id": "TT"
+    },
+    {
+      "list": "country",
+      "id": "TV"
+    },
+    {
+      "list": "country",
+      "id": "TW"
+    },
+    {
+      "list": "country",
+      "id": "TZ"
+    },
+    {
+      "list": "country",
+      "id": "UA"
+    },
+    {
+      "list": "country",
+      "id": "UG"
+    },
+    {
+      "list": "country",
+      "id": "UM"
+    },
+    {
+      "list": "country",
+      "id": "US"
+    },
+    {
+      "list": "country",
+      "id": "UY"
+    },
+    {
+      "list": "country",
+      "id": "UZ"
+    },
+    {
+      "list": "country",
+      "id": "VA"
+    },
+    {
+      "list": "country",
+      "id": "VC"
+    },
+    {
+      "list": "country",
+      "id": "VE"
+    },
+    {
+      "list": "country",
+      "id": "VG"
+    },
+    {
+      "list": "country",
+      "id": "VI"
+    },
+    {
+      "list": "country",
+      "id": "VN"
+    },
+    {
+      "list": "country",
+      "id": "VU"
+    },
+    {
+      "list": "country",
+      "id": "WF"
+    },
+    {
+      "list": "country",
+      "id": "WS"
+    },
+    {
+      "list": "country",
+      "id": "YE"
+    },
+    {
+      "list": "country",
+      "id": "YT"
+    },
+    {
+      "list": "country",
+      "id": "ZA"
+    },
+    {
+      "list": "country",
+      "id": "ZM"
+    },
+    {
+      "list": "country",
+      "id": "ZW"
+    },
+    {
+      "list": "country",
+      "id": "alle"
+    },
+    {
+      "list": "country-group",
+      "id": "EU"
+    },
+    {
+      "list": "country-group",
+      "id": "EEA"
+    },
+    {
+      "list": "customer-status",
+      "id": "nye"
+    },
+    {
+      "list": "customer-status",
+      "id": "eksisterende"
+    },
+    {
+      "list": "customer-status",
+      "id": "begge"
+    },
+    {
+      "list": "east-principle",
+      "id": "easy"
+    },
+    {
+      "list": "east-principle",
+      "id": "attractive"
+    },
+    {
+      "list": "east-principle",
+      "id": "social"
+    },
+    {
+      "list": "east-principle",
+      "id": "timely"
+    },
+    {
+      "list": "ethics",
+      "id": "ingen-ki-ugc"
+    },
+    {
+      "list": "ethics",
+      "id": "ingen-falske-kunder"
+    },
+    {
+      "list": "field-type",
+      "id": "string"
+    },
+    {
+      "list": "field-type",
+      "id": "integer"
+    },
+    {
+      "list": "field-type",
+      "id": "number"
+    },
+    {
+      "list": "field-type",
+      "id": "boolean"
+    },
+    {
+      "list": "field-type",
+      "id": "object"
+    },
+    {
+      "list": "field-type",
+      "id": "array"
+    },
+    {
+      "list": "field-type",
+      "id": "integer|string"
+    },
+    {
+      "list": "filled-by",
+      "id": "menneske"
+    },
+    {
+      "list": "filled-by",
+      "id": "kunde"
+    },
+    {
+      "list": "filled-by",
+      "id": "modell"
+    },
+    {
+      "list": "filled-by",
+      "id": "kode"
+    },
+    {
+      "list": "format",
+      "id": "tekst"
+    },
+    {
+      "list": "format",
+      "id": "bilde"
+    },
+    {
+      "list": "format",
+      "id": "video"
+    },
+    {
+      "list": "format",
+      "id": "karusell"
+    },
+    {
+      "list": "format",
+      "id": "samling"
+    },
+    {
+      "list": "format",
+      "id": "fleksibel"
+    },
+    {
+      "list": "format",
+      "id": "responsiv-display"
+    },
+    {
+      "list": "format",
+      "id": "shopping"
+    },
+    {
+      "list": "format",
+      "id": "app"
+    },
+    {
+      "list": "format",
+      "id": "yt-skippable"
+    },
+    {
+      "list": "format",
+      "id": "yt-non-skippable"
+    },
+    {
+      "list": "format",
+      "id": "yt-in-feed"
+    },
+    {
+      "list": "format",
+      "id": "yt-bumper"
+    },
+    {
+      "list": "format",
+      "id": "yt-masthead"
+    },
+    {
+      "list": "format",
+      "id": "yt-shorts"
+    },
+    {
+      "list": "format",
+      "id": "tt-spark"
+    },
+    {
+      "list": "format",
+      "id": "tt-non-spark"
+    },
+    {
+      "list": "format",
+      "id": "li-dokument"
+    },
+    {
+      "list": "format",
+      "id": "li-event"
+    },
+    {
+      "list": "format",
+      "id": "li-melding"
+    },
+    {
+      "list": "format",
+      "id": "li-samtale"
+    },
+    {
+      "list": "format",
+      "id": "li-follower"
+    },
+    {
+      "list": "format",
+      "id": "li-spotlight"
+    },
+    {
+      "list": "format",
+      "id": "li-jobb"
+    },
+    {
+      "list": "format",
+      "id": "li-artikkel-nyhetsbrev"
+    },
+    {
+      "list": "format",
+      "id": "li-thought-leader"
+    },
+    {
+      "list": "format",
+      "id": "alle"
+    },
+    {
+      "list": "funnel-mode",
+      "id": "merkebygging"
+    },
+    {
+      "list": "funnel-mode",
+      "id": "hosting"
+    },
+    {
+      "list": "funnel-mode",
+      "id": "begge"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "topp"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "midt"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "bunn"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "lojalitet"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "salgsrunde"
+    },
+    {
+      "list": "funnel-stage",
+      "id": "alle"
+    },
+    {
+      "list": "gender-expression",
+      "id": "maskulint"
+    },
+    {
+      "list": "gender-expression",
+      "id": "feminint"
+    },
+    {
+      "list": "gender-expression",
+      "id": "blandet"
+    },
+    {
+      "list": "gender-expression",
+      "id": "noytralt"
+    },
+    {
+      "list": "gender-expression",
+      "id": "ukjent"
+    },
+    {
+      "list": "hypothesis-status",
+      "id": "stottet"
+    },
+    {
+      "list": "hypothesis-status",
+      "id": "ikke-stottet"
+    },
+    {
+      "list": "hypothesis-status",
+      "id": "uavklart"
+    },
+    {
+      "list": "involvement",
+      "id": "lav"
+    },
+    {
+      "list": "involvement",
+      "id": "hoy"
+    },
+    {
+      "list": "involvement",
+      "id": "varierer"
+    },
+    {
+      "list": "involvement",
+      "id": "ukjent"
+    },
+    {
+      "list": "jtbd-dimension",
+      "id": "funksjonell"
+    },
+    {
+      "list": "jtbd-dimension",
+      "id": "emosjonell"
+    },
+    {
+      "list": "jtbd-dimension",
+      "id": "sosial"
+    },
+    {
+      "list": "language",
+      "id": "nb"
+    },
+    {
+      "list": "legal-area",
+      "id": "EU"
+    },
+    {
+      "list": "legal-area",
+      "id": "CAP"
+    },
+    {
+      "list": "legal-area",
+      "id": "alle"
+    },
+    {
+      "list": "line-style",
+      "id": "rett-pa-sak"
+    },
+    {
+      "list": "line-style",
+      "id": "gjenkjennelig-hverdag"
+    },
+    {
+      "list": "line-style",
+      "id": "sporsmal"
+    },
+    {
+      "list": "line-style",
+      "id": "kontrast"
+    },
+    {
+      "list": "line-style",
+      "id": "konkret-bevis"
+    },
+    {
+      "list": "line-style",
+      "id": "torr-humor"
+    },
+    {
+      "list": "market",
+      "id": "B2B"
+    },
+    {
+      "list": "market",
+      "id": "B2C"
+    },
+    {
+      "list": "market",
+      "id": "begge"
+    },
+    {
+      "list": "media-class",
+      "id": "betalt"
+    },
+    {
+      "list": "media-class",
+      "id": "egen"
+    },
+    {
+      "list": "media-class",
+      "id": "fortjent"
+    },
+    {
+      "list": "media-class",
+      "id": "alle"
+    },
+    {
+      "list": "media-plan-mode",
+      "id": "plan"
+    },
+    {
+      "list": "media-plan-mode",
+      "id": "etterkontroll"
+    },
+    {
+      "list": "metric",
+      "id": "kjennskap"
+    },
+    {
+      "list": "metric",
+      "id": "cep-kobling"
+    },
+    {
+      "list": "metric",
+      "id": "unik-rekkevidde"
+    },
+    {
+      "list": "metric",
+      "id": "kvalifiserte-henvendelser"
+    },
+    {
+      "list": "metric",
+      "id": "betalende-kunder"
+    },
+    {
+      "list": "metric",
+      "id": "inntekt"
+    },
+    {
+      "list": "metric",
+      "id": "kostnad-per-kunde"
+    },
+    {
+      "list": "metric",
+      "id": "gjenkjop"
+    },
+    {
+      "list": "metric",
+      "id": "fornyelse"
+    },
+    {
+      "list": "metric",
+      "id": "frafall"
+    },
+    {
+      "list": "metric",
+      "id": "respons"
+    },
+    {
+      "list": "metric",
+      "id": "annet"
+    },
+    {
+      "list": "mime",
+      "id": "image/jpeg"
+    },
+    {
+      "list": "mime",
+      "id": "image/png"
+    },
+    {
+      "list": "mime",
+      "id": "image/gif"
+    },
+    {
+      "list": "mime",
+      "id": "video/mp4"
+    },
+    {
+      "list": "mime",
+      "id": "video/quicktime"
+    },
+    {
+      "list": "mime",
+      "id": "application/pdf"
+    },
+    {
+      "list": "mime",
+      "id": "text/plain"
+    },
+    {
+      "list": "mime",
+      "id": "annet"
+    },
+    {
+      "list": "model-role",
+      "id": "skriver"
+    },
+    {
+      "list": "model-role",
+      "id": "bilde"
+    },
+    {
+      "list": "model-role",
+      "id": "kritiker"
+    },
+    {
+      "list": "offer-type",
+      "id": "ordinaer-pris"
+    },
+    {
+      "list": "offer-type",
+      "id": "prisnedsettelse"
+    },
+    {
+      "list": "offer-type",
+      "id": "betinget-tilbud"
+    },
+    {
+      "list": "offer-type",
+      "id": "kombinasjon"
+    },
+    {
+      "list": "offer-type",
+      "id": "ikke-relevant"
+    },
+    {
+      "list": "origin",
+      "id": "virkelig"
+    },
+    {
+      "list": "origin",
+      "id": "ki"
+    },
+    {
+      "list": "origin",
+      "id": "blandet"
+    },
+    {
+      "list": "origin",
+      "id": "ukjent"
+    },
+    {
+      "list": "override-approval",
+      "id": "foreslatt"
+    },
+    {
+      "list": "override-approval",
+      "id": "godkjent"
+    },
+    {
+      "list": "override-approval",
+      "id": "avvist"
+    },
+    {
+      "list": "override-approval",
+      "id": "utlopt"
+    },
+    {
+      "list": "placement",
+      "id": "fb-feed"
+    },
+    {
+      "list": "placement",
+      "id": "fb-profile-feed"
+    },
+    {
+      "list": "placement",
+      "id": "threads-feed"
+    },
+    {
+      "list": "placement",
+      "id": "ig-feed"
+    },
+    {
+      "list": "placement",
+      "id": "ig-profile-feed"
+    },
+    {
+      "list": "placement",
+      "id": "fb-marketplace"
+    },
+    {
+      "list": "placement",
+      "id": "fb-right-column"
+    },
+    {
+      "list": "placement",
+      "id": "fb-notifications"
+    },
+    {
+      "list": "placement",
+      "id": "fb-business-explore"
+    },
+    {
+      "list": "placement",
+      "id": "ig-explore-home"
+    },
+    {
+      "list": "placement",
+      "id": "fb-stories"
+    },
+    {
+      "list": "placement",
+      "id": "ig-stories"
+    },
+    {
+      "list": "placement",
+      "id": "messenger-stories"
+    },
+    {
+      "list": "placement",
+      "id": "ig-reels"
+    },
+    {
+      "list": "placement",
+      "id": "fb-reels"
+    },
+    {
+      "list": "placement",
+      "id": "whatsapp-status"
+    },
+    {
+      "list": "placement",
+      "id": "fb-in-stream-reels"
+    },
+    {
+      "list": "placement",
+      "id": "fb-reels-overlay"
+    },
+    {
+      "list": "placement",
+      "id": "fb-search"
+    },
+    {
+      "list": "placement",
+      "id": "ig-search"
+    },
+    {
+      "list": "placement",
+      "id": "audience-network-native-banner-interstitial"
+    },
+    {
+      "list": "placement",
+      "id": "audience-network-rewarded"
+    },
+    {
+      "list": "placement",
+      "id": "google-search"
+    },
+    {
+      "list": "placement",
+      "id": "google-display"
+    },
+    {
+      "list": "placement",
+      "id": "google-shopping"
+    },
+    {
+      "list": "placement",
+      "id": "google-app"
+    },
+    {
+      "list": "placement",
+      "id": "yt-in-stream"
+    },
+    {
+      "list": "placement",
+      "id": "yt-home"
+    },
+    {
+      "list": "placement",
+      "id": "yt-search"
+    },
+    {
+      "list": "placement",
+      "id": "yt-watch-next"
+    },
+    {
+      "list": "placement",
+      "id": "yt-subscriptions"
+    },
+    {
+      "list": "placement",
+      "id": "yt-shorts"
+    },
+    {
+      "list": "placement",
+      "id": "google-video-partners"
+    },
+    {
+      "list": "placement",
+      "id": "dg-discover"
+    },
+    {
+      "list": "placement",
+      "id": "dg-gmail"
+    },
+    {
+      "list": "placement",
+      "id": "dg-youtube-feed"
+    },
+    {
+      "list": "placement",
+      "id": "dg-youtube-in-stream"
+    },
+    {
+      "list": "placement",
+      "id": "dg-youtube-shorts"
+    },
+    {
+      "list": "placement",
+      "id": "dg-display"
+    },
+    {
+      "list": "placement",
+      "id": "tt-for-you"
+    },
+    {
+      "list": "placement",
+      "id": "tt-search-feed"
+    },
+    {
+      "list": "placement",
+      "id": "tt-search-results"
+    },
+    {
+      "list": "placement",
+      "id": "tt-profile-feed"
+    },
+    {
+      "list": "placement",
+      "id": "tt-following-feed"
+    },
+    {
+      "list": "placement",
+      "id": "tt-friends-feed"
+    },
+    {
+      "list": "placement",
+      "id": "tt-lite"
+    },
+    {
+      "list": "placement",
+      "id": "tt-web"
+    },
+    {
+      "list": "placement",
+      "id": "tt-mini-drama"
+    },
+    {
+      "list": "placement",
+      "id": "tt-lemon8"
+    },
+    {
+      "list": "placement",
+      "id": "tt-pinedrama"
+    },
+    {
+      "list": "placement",
+      "id": "li-feed"
+    },
+    {
+      "list": "placement",
+      "id": "li-messaging"
+    },
+    {
+      "list": "placement",
+      "id": "li-right-rail"
+    },
+    {
+      "list": "placement",
+      "id": "li-audience-network"
+    },
+    {
+      "list": "placement",
+      "id": "egen-flate"
+    },
+    {
+      "list": "placement-kind",
+      "id": "plassering"
+    },
+    {
+      "list": "placement-kind",
+      "id": "underflate"
+    },
+    {
+      "list": "placement-selection",
+      "id": "krever-kontokontroll"
+    },
+    {
+      "list": "placement-selection",
+      "id": "ikke-selvstendig"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "ukentlig"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "manedlig"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "kvartalsvis"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "arlig"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "sjeldnere"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "engang"
+    },
+    {
+      "list": "purchase-frequency",
+      "id": "ukjent"
+    },
+    {
+      "list": "registry-kind",
+      "id": "field_registry"
+    },
+    {
+      "list": "regulation",
+      "id": "generell"
+    },
+    {
+      "list": "regulation",
+      "id": "mat"
+    },
+    {
+      "list": "regulation",
+      "id": "helse"
+    },
+    {
+      "list": "regulation",
+      "id": "finans"
+    },
+    {
+      "list": "regulation",
+      "id": "alkohol"
+    },
+    {
+      "list": "regulation",
+      "id": "barn"
+    },
+    {
+      "list": "regulation",
+      "id": "personvern"
+    },
+    {
+      "list": "regulation",
+      "id": "annet"
+    },
+    {
+      "list": "regulation",
+      "id": "uavklart"
+    },
+    {
+      "list": "regulation",
+      "id": "alle"
+    },
+    {
+      "list": "request-size",
+      "id": "ingen"
+    },
+    {
+      "list": "request-size",
+      "id": "liten"
+    },
+    {
+      "list": "request-size",
+      "id": "middels"
+    },
+    {
+      "list": "request-size",
+      "id": "stor"
+    },
+    {
+      "list": "rule-kind",
+      "id": "krav"
+    },
+    {
+      "list": "rule-kind",
+      "id": "anbefaling"
+    },
+    {
+      "list": "rule-kind",
+      "id": "fume-valg"
+    },
+    {
+      "list": "scope",
+      "id": "kampanjevalg"
+    },
+    {
+      "list": "scope",
+      "id": "merkevarekonstant"
+    },
+    {
+      "list": "scope",
+      "id": "begge"
+    },
+    {
+      "list": "seasonality",
+      "id": "helars"
+    },
+    {
+      "list": "seasonality",
+      "id": "kalender"
+    },
+    {
+      "list": "seasonality",
+      "id": "vaer"
+    },
+    {
+      "list": "seasonality",
+      "id": "hendelse"
+    },
+    {
+      "list": "seasonality",
+      "id": "fornyelse"
+    },
+    {
+      "list": "seasonality",
+      "id": "ukjent"
+    },
+    {
+      "list": "state",
+      "id": "PROPOSED"
+    },
+    {
+      "list": "subject",
+      "id": "Copy"
+    },
+    {
+      "list": "subject",
+      "id": "Idé"
+    },
+    {
+      "list": "subject",
+      "id": "Leseren"
+    },
+    {
+      "list": "subject",
+      "id": "Lov"
+    },
+    {
+      "list": "subject",
+      "id": "Plattform"
+    },
+    {
+      "list": "subject",
+      "id": "Strategi"
+    },
+    {
+      "list": "subject",
+      "id": "Trakt"
+    },
+    {
+      "list": "taste-kind",
+      "id": "product_alone"
+    },
+    {
+      "list": "taste-kind",
+      "id": "people"
+    },
+    {
+      "list": "taste-kind",
+      "id": "whole"
+    },
+    {
+      "list": "taste-standing",
+      "id": "always"
+    },
+    {
+      "list": "taste-standing",
+      "id": "usually"
+    },
+    {
+      "list": "taste-standing",
+      "id": "by_campaign"
+    },
+    {
+      "list": "taste-standing",
+      "id": "free"
+    },
+    {
+      "list": "taste-standing",
+      "id": "unknown"
+    },
+    {
+      "list": "tier",
+      "id": "praktiker"
+    },
+    {
+      "list": "tier",
+      "id": "fume"
+    },
+    {
+      "list": "tier",
+      "id": "forskning"
+    },
+    {
+      "list": "tier",
+      "id": "lov"
+    },
+    {
+      "list": "tier",
+      "id": "plattform"
+    },
+    {
+      "list": "trigger",
+      "id": "skjema"
+    },
+    {
+      "list": "trigger",
+      "id": "prisbudskap"
+    },
+    {
+      "list": "trigger",
+      "id": "egenmarkedsforing-google-tjenester"
+    },
+    {
+      "list": "trigger",
+      "id": "egenmarkedsforing-google-kompetanse"
+    },
+    {
+      "list": "trigger",
+      "id": "resultatrapport"
+    },
+    {
+      "list": "trigger",
+      "id": "trend"
+    },
+    {
+      "list": "trigger",
+      "id": "nettstedskonvertering"
+    },
+    {
+      "list": "trigger",
+      "id": "kreativtest"
+    },
+    {
+      "list": "trigger",
+      "id": "splittest"
+    },
+    {
+      "list": "trigger",
+      "id": "tale"
+    },
+    {
+      "list": "trigger",
+      "id": "persondemonstrasjon"
+    },
+    {
+      "list": "trigger",
+      "id": "skapersamarbeid"
+    },
+    {
+      "list": "trigger",
+      "id": "handling-som-mal"
+    },
+    {
+      "list": "trigger",
+      "id": "vurdering-som-mal"
+    },
+    {
+      "list": "trigger",
+      "id": "alle"
+    },
+    {
+      "list": "validation-status",
+      "id": "bestått"
+    },
+    {
+      "list": "validation-status",
+      "id": "avvist"
+    },
+    {
+      "list": "validation-status",
+      "id": "uavklart"
+    },
+    {
+      "list": "validation-status",
+      "id": "avventer"
+    },
+    {
+      "list": "who",
+      "id": "modell"
+    },
+    {
+      "list": "who",
+      "id": "kode"
+    },
+    {
+      "list": "who",
+      "id": "kritiker"
+    },
+    {
+      "list": "who",
+      "id": "kode+kritiker"
+    },
+    {
+      "list": "who",
+      "id": "menneske"
+    },
+    {
+      "list": "who",
+      "id": "kode+menneske"
+    },
+    {
+      "list": "who",
+      "id": "kode+modell"
+    }
+  ],
+  "occurrence_log": "review/json-schema-inventory.json",
+  "change_count": 39
+}

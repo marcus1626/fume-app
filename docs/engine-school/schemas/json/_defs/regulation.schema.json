@@ -1,0 +1,34 @@
+{
+  "enum": [
+    "generell",
+    "mat",
+    "helse",
+    "finans",
+    "alkohol",
+    "barn",
+    "personvern",
+    "annet",
+    "uavklart",
+    "alle"
+  ],
+  "x-list": "../../lists/regulation.json",
+  "$defs": {
+    "subset-02f0e43eb7869992": {
+      "enum": [
+        "generell",
+        "mat",
+        "helse",
+        "finans",
+        "alkohol",
+        "barn",
+        "personvern",
+        "annet",
+        "uavklart"
+      ],
+      "x-list": "../../lists/regulation.json"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/regulation.schema.json",
+  "title": "regulation"
+}

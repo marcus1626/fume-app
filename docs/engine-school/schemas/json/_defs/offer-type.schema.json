@@ -1,0 +1,13 @@
+{
+  "enum": [
+    "ordinaer-pris",
+    "prisnedsettelse",
+    "betinget-tilbud",
+    "kombinasjon",
+    "ikke-relevant"
+  ],
+  "x-list": "../../lists/offer-type.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/offer-type.schema.json",
+  "title": "offer-type"
+}

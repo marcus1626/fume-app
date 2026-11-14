@@ -1,0 +1,10 @@
+{
+  "enum": [
+    "EU",
+    "EEA"
+  ],
+  "x-list": "../../lists/country-group.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/country-group.schema.json",
+  "title": "country-group"
+}

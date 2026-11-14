@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "channel": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-94379b4daa678b2a"
+    },
+    "awareness_level": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8589aaa197776b6d"
+    },
+    "market": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-77cf53a19a4f1f35"
+    },
+    "country": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-30285a326533df78"
+    },
+    "funnel": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-23e6270b32eb4187"
+    },
+    "format": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-4e87fe2231c1edac"
+    },
+    "aspect_ratio": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-ebe9bdbcb6d8d16d"
+    },
+    "regulation": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-1d0fcfda6b6915b7"
+    },
+    "legal_area": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-8153d1d67ca005c8"
+    },
+    "media_class": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-36e52b4e8a8ad55a"
+    },
+    "trigger": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-11b48c9de4f8c0a2"
+    },
+    "placement": {
+      "$ref": "_defs/artifact-parts.schema.json#/$defs/part-35ff3cdacbd30789"
+    }
+  },
+  "required": [
+    "channel",
+    "awareness_level",
+    "market",
+    "country",
+    "funnel",
+    "format",
+    "aspect_ratio",
+    "regulation",
+    "legal_area",
+    "media_class",
+    "trigger",
+    "placement"
+  ],
+  "additionalProperties": false,
+  "x-registry": "../skill-filter.json",
+  "$comment": "Generert fra feltregister. Åpne record-felt beholder open_reason. Kildebelegg, signaturmyndighet og faglig validering krever flytens runtime-porter.",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/skill-filter.schema.json",
+  "title": "skill-filter"
+}

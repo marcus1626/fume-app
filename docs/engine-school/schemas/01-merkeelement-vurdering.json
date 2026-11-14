@@ -1,0 +1,197 @@
+{
+  "id": "01-merkeelement-vurdering",
+  "label_nb": "Gjennomgang av merkeelementer — steg 3",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kategori",
+    "merkevare-vs-kampanje"
+  ],
+  "read_by": [
+    "merkeelement-revisjon"
+  ],
+  "fields": [
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement",
+      "path": "innhold.merkeelement",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet merkeelement for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Samlet merkeelement for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement.elementer",
+      "path": "innhold.merkeelement.elementer",
+      "group": "innhold",
+      "label_nb": "Merkeelementer",
+      "type": "array",
+      "values": [],
+      "definition": "Element-ID, fil/ref, opphav, land, kategori, planlagt bruk og videreføring/erstatning/nytt marked.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Element-ID, fil/ref, opphav, land, kategori, planlagt bruk og videreføring/erstatning/nytt marked."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement.malinger",
+      "path": "innhold.merkeelement.malinger",
+      "group": "innhold",
+      "label_nb": "Kjennskap og entydighet",
+      "type": "array",
+      "values": [],
+      "definition": "Faktiske kjøpersvar, metode, utvalg og dato; kjennskap skilles fra merketilknytning. Ingen modelloppdiktede svar.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Faktiske kjøpersvar, metode, utvalg og dato; kjennskap skilles fra merketilknytning. Ingen modelloppdiktede svar."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement.maleplan",
+      "path": "innhold.merkeelement.maleplan",
+      "group": "innhold",
+      "label_nb": "Plan ved manglende måling",
+      "type": "object",
+      "values": [],
+      "definition": "Datert plan i nytt marked og synlig merkenavn inntil måling; erstatning krever måling først.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Datert plan i nytt marked og synlig merkenavn inntil måling; erstatning krever måling først."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement.rad",
+      "path": "innhold.merkeelement.rad",
+      "group": "innhold",
+      "label_nb": "Elementråd",
+      "type": "array",
+      "values": [],
+      "definition": "Videreføre, undersøke eller endre med kilde og usikkerhet; ingen universell terskel.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Videreføre, undersøke eller endre med kilde og usikkerhet; ingen universell terskel."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "01-merkeelement-vurdering.innhold.merkeelement.tillatt_bruk",
+      "path": "innhold.merkeelement.tillatt_bruk",
+      "group": "innhold",
+      "label_nb": "Tillatt bruk",
+      "type": "array",
+      "values": [],
+      "definition": "Menneskevedtak per element, marked, versjon og begrensning; briefendring krever ny brief.",
+      "filled_by": "modell",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "merkeelement-revisjon"
+        ],
+        "choices": "Menneskevedtak per element, marked, versjon og begrensning; briefendring krever ny brief."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "merkeelement-revisjon"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/01-merkeelement-vurdering.json",
+  "artifact_family": "merkeelement",
+  "producer": {
+    "flow": "merkeelement-revisjon",
+    "step": 3,
+    "who": "modell"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.merkeelement.",
+  "validation_profile": {
+    "step_validation": "flows/merkeelement-revisjon.json#/steps/2/validation",
+    "required_from_steps": {
+      "elementer": 1,
+      "malinger": 2,
+      "maleplan": 2,
+      "rad": 3,
+      "tillatt_bruk": 5
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

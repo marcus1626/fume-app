@@ -1,0 +1,251 @@
+{
+  "id": "02-lesergrunnlag",
+  "label_nb": "Leserkort med kunnskapsnivå, kjøpssituasjoner og jobb — steg 1",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles",
+    "kampanje",
+    "kategori",
+    "leser"
+  ],
+  "read_by": [
+    "leserkort"
+  ],
+  "fields": [
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort",
+      "path": "innhold.leserkort",
+      "group": "innhold",
+      "label_nb": "Innhold",
+      "type": "object",
+      "values": [],
+      "definition": "Samlet leserkort for dette steget; grunnlaget videreføres uten tap.",
+      "filled_by": "kode",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Samlet leserkort for dette steget; grunnlaget videreføres uten tap."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.kildeoversikt",
+      "path": "innhold.leserkort.kildeoversikt",
+      "group": "innhold",
+      "label_nb": "Lesergrunnlag",
+      "type": "array",
+      "values": [],
+      "definition": "Kilder med dato, utvalg, avsnitt/tidsmerke og manglende data; minimerte referater.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Kilder med dato, utvalg, avsnitt/tidsmerke og manglende data; minimerte referater."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.leser_id",
+      "path": "innhold.leserkort.leser_id",
+      "group": "innhold",
+      "label_nb": "Valgt leser",
+      "type": "string",
+      "values": [],
+      "definition": "Identitet og versjon i leserregistret.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Identitet og versjon i leserregistret."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.schwartz",
+      "path": "innhold.leserkort.schwartz",
+      "group": "innhold",
+      "label_nb": "Nivå med belegg",
+      "type": "object",
+      "values": [],
+      "definition": "Ett nivå og grunnlag for problem-, løsnings- og produktkunnskap samt kjøpsønske.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Ett nivå og grunnlag for problem-, løsnings- og produktkunnskap samt kjøpsønske."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.ceps",
+      "path": "innhold.leserkort.ceps",
+      "group": "innhold",
+      "label_nb": "Prioriterte kjøpssituasjoner",
+      "type": "array",
+      "values": [],
+      "definition": "Kildebelagte interne/eksterne signaler, situasjon, relevans og prioriteringsgrunnlag.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Kildebelagte interne/eksterne signaler, situasjon, relevans og prioriteringsgrunnlag."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.jtbd",
+      "path": "innhold.leserkort.jtbd",
+      "group": "innhold",
+      "label_nb": "Jobben",
+      "type": "object",
+      "values": [],
+      "definition": "Omstendighet, fremgang, dimensjoner og alternative løsninger med belegg.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Omstendighet, fremgang, dimensjoner og alternative løsninger med belegg."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.oppfatninger_og_innvendinger",
+      "path": "innhold.leserkort.oppfatninger_og_innvendinger",
+      "group": "innhold",
+      "label_nb": "Oppfatninger og hindre",
+      "type": "array",
+      "values": [],
+      "definition": "Dokumenterte oppfatninger, motbelegg og kjøpsspørsmål.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Dokumenterte oppfatninger, motbelegg og kjøpsspørsmål."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "02-lesergrunnlag.innhold.leserkort.arbeidshypoteser",
+      "path": "innhold.leserkort.arbeidshypoteser",
+      "group": "innhold",
+      "label_nb": "Godkjente hypoteser",
+      "type": "array",
+      "values": [],
+      "definition": "Antakelser med ansvarlig, undersøkelsesplan og frist; godkjenning gjør dem ikke til fakta.",
+      "filled_by": "menneske",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "leserkort"
+        ],
+        "choices": "Antakelser med ansvarlig, undersøkelsesplan og frist; godkjenning gjør dem ikke til fakta."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": false,
+      "read_by": [
+        "leserkort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/02-lesergrunnlag.json",
+  "artifact_family": "leserkort",
+  "producer": {
+    "flow": "leserkort",
+    "step": 1,
+    "who": "kode"
+  },
+  "storage_rule": "Ett JSON-objekt. Importerte domeneverdier er versjonsbundne snapshots i grunnlag.domener; familiefeltene ligger under innhold.leserkort.",
+  "validation_profile": {
+    "step_validation": "flows/leserkort.json#/steps/0/validation",
+    "required_from_steps": {
+      "kildeoversikt": 1,
+      "leser_id": 2,
+      "schwartz": 2,
+      "ceps": 2,
+      "jtbd": 2,
+      "oppfatninger_og_innvendinger": 2,
+      "arbeidshypoteser": 4
+    },
+    "critic_required": false,
+    "human_decision_required": false,
+    "semantic_gate": "Påkrevde felt og enumtreff er bare strukturell kontroll; flytens faglige kontroller og menneskeporter gjelder i tillegg."
+  }
+}

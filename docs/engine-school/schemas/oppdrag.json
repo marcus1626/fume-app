@@ -1,0 +1,123 @@
+{
+  "id": "oppdrag",
+  "label_nb": "Eksternt oppdragsgrunnlag",
+  "version": 1,
+  "state": "PROPOSED",
+  "lang": "nb",
+  "kind": "field_registry",
+  "definition": "Feltregister for Engine. Felter med [] er elementbaner. Påkrevde felt gjelder når applies_when er sann; manglende er aldri det samme som false.",
+  "imports": [
+    "artefakt-felles"
+  ],
+  "read_by": [
+    "kampanjekort"
+  ],
+  "fields": [
+    {
+      "id": "oppdrag.innhold.kunde",
+      "path": "innhold.kunde",
+      "group": "innhold",
+      "label_nb": "Kunde",
+      "type": "object",
+      "values": [],
+      "definition": "Kundens identitet og ansvarlig kontaktrolle; minimer personopplysninger.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Kundens identitet og ansvarlig kontaktrolle; minimer personopplysninger."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "oppdrag.innhold.ansvarlig",
+      "path": "innhold.ansvarlig",
+      "group": "innhold",
+      "label_nb": "Oppdragsansvarlig",
+      "type": "object",
+      "values": [],
+      "definition": "Navngitt intern ansvarlig for avklaringer og menneskevedtak.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Navngitt intern ansvarlig for avklaringer og menneskevedtak."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "oppdrag.innhold.oppgavetekst",
+      "path": "innhold.oppgavetekst",
+      "group": "innhold",
+      "label_nb": "Bestilling",
+      "type": "string",
+      "values": [],
+      "definition": "Faktisk oppgave fra kunden, uten modelloppfunne fakta.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Faktisk oppgave fra kunden, uten modelloppfunne fakta."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    },
+    {
+      "id": "oppdrag.innhold.tilgjengelig_grunnlag",
+      "path": "innhold.tilgjengelig_grunnlag",
+      "group": "innhold",
+      "label_nb": "Kjent og ukjent",
+      "type": "object",
+      "values": [],
+      "definition": "Produkt, mål, publikum, land, språk, kanaler, budsjett og frister oppgis eller merkes ukjent; vedlegg i manifestet.",
+      "filled_by": "kunde",
+      "source": "Fume",
+      "lever": {
+        "flows": [
+          "kampanjekort"
+        ],
+        "choices": "Produkt, mål, publikum, land, språk, kanaler, budsjett og frister oppgis eller merkes ukjent; vedlegg i manifestet."
+      },
+      "applies_when": {
+        "all": []
+      },
+      "scope": "kampanjevalg",
+      "required": true,
+      "read_by": [
+        "kampanjekort"
+      ],
+      "open_reason": "Identifikator, måling, kildebelegg eller konkret oppdragsinnhold kan ikke avgrenses til en faglig uttømmende ordliste."
+    }
+  ],
+  "artifact_path": "artefakter/{oppdrag_id}/oppdrag.json",
+  "artifact_family": "oppdrag"
+}

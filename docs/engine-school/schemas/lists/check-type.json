@@ -1,0 +1,51 @@
+{
+  "id": "check-type",
+  "label_nb": "Kontrolltype",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "kritiker",
+      "label_nb": "Kritiker",
+      "definition": "Kombinasjon av kontrollroller: kritiker."
+    },
+    {
+      "id": "kode",
+      "label_nb": "Kode",
+      "definition": "Kombinasjon av kontrollroller: kode."
+    },
+    {
+      "id": "kritiker+menneske",
+      "label_nb": "Kritiker+menneske",
+      "definition": "Kombinasjon av kontrollroller: kritiker+menneske."
+    },
+    {
+      "id": "menneske",
+      "label_nb": "Menneske",
+      "definition": "Kombinasjon av kontrollroller: menneske."
+    },
+    {
+      "id": "kode+kritiker",
+      "label_nb": "Kode+kritiker",
+      "definition": "Kombinasjon av kontrollroller: kode+kritiker."
+    },
+    {
+      "id": "kode+menneske",
+      "label_nb": "Kode+menneske",
+      "definition": "Kombinasjon av kontrollroller: kode+menneske."
+    },
+    {
+      "id": "kode+kritiker+menneske",
+      "label_nb": "Kode+kritiker+menneske",
+      "definition": "Kombinasjon av kontrollroller: kode+kritiker+menneske."
+    }
+  ]
+}

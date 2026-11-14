@@ -1,0 +1,31 @@
+{
+  "id": "model-role",
+  "label_nb": "Modellrolle",
+  "source": [
+    {
+      "source": "Fume",
+      "url": "schemas/_index.json",
+      "locator": "registry_contract; schemas; feltets opprinnelige source",
+      "read_on": "2026-11-13",
+      "verified": true,
+      "verification_note": "Maskinelt uttrekk av lukkede feltverdier og strukturerte metadata; ingen ny ekstern fagpåstand."
+    }
+  ],
+  "values": [
+    {
+      "id": "skriver",
+      "label_nb": "Skriver",
+      "definition": "Har skrevet eller endret tekst."
+    },
+    {
+      "id": "bilde",
+      "label_nb": "Bilde",
+      "definition": "Har laget eller endret bildeinnhold."
+    },
+    {
+      "id": "kritiker",
+      "label_nb": "Kritiker",
+      "definition": "Vurderer materiale uten å skrive det om."
+    }
+  ]
+}

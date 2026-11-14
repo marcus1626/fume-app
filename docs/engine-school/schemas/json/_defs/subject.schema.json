@@ -1,0 +1,15 @@
+{
+  "enum": [
+    "Copy",
+    "Idé",
+    "Leseren",
+    "Lov",
+    "Plattform",
+    "Strategi",
+    "Trakt"
+  ],
+  "x-list": "../../lists/subject.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://fume.school/schemas/json/_defs/subject.schema.json",
+  "title": "subject"
+}
